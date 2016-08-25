@@ -1,0 +1,158 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// ì˙ñ{åÍ resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_MAIN_ICON           ICON                    "tspiro.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_TSPIRO DIALOGEX 0, 0, 96, 144
+STYLE DS_SETFONT | DS_3DLOOK | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_NOPARENTNOTIFY
+CAPTION "ì¡éÍSPIê›íË"
+FONT 9, "ÇlÇr ÇoÉSÉVÉbÉN", 0, 0, 0x0
+BEGIN
+    CONTROL         "ëSñ≥å¯",IDC_RO_ENABLE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,0,0,32,9
+    CONTROL         "èIå„óLå¯",IDC_CONT_PARAM,"Button",BS_AUTOCHECKBOX | 
+                    BS_LEFT | WS_TABSTOP,0,12,37,9
+    CONTROL         "dib32(clut)",IDC_RO_DIB32_BPP8,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,40,2,44,9
+    CONTROL         "dib32(ëΩêF)",IDC_RO_DIB32,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,40,12,44,9
+    PUSHBUTTON      "?",IDC_USAGE,85,1,10,10
+    PUSHBUTTON      "ex",IDC_CLUT_DISP,85,12,10,10
+    PUSHBUTTON      "dflt",IDC_DFLT_LOAD,8,22,14,9
+    LTEXT           "ãPìx",IDC_STATIC,10,33,16,9
+    EDITTEXT        IDC_RO_TONE,25,31,20,11,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "ClutOfs",IDC_STATIC,2,44,22,9
+    EDITTEXT        IDC_RO_CLUT_OFS,25,42,20,11,ES_RIGHT | ES_AUTOHSCROLL
+    CONTROL         "ÉøîΩì]",IDC_RO_ALP_REV,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,52,25,30,9
+    CONTROL         "Éø128",IDC_RO_ALP_HALF,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,52,35,30,9
+    CONTROL         "Éø0ïsìßñæ",IDC_RO_ALP_MODE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,52,45,44,9
+    GROUPBOX        "ìßñæêF",IDC_STATIC,1,55,56,48
+    CONTROL         "ñ≥Çµ",IDC_RO_KEY_MODE_0,"Button",BS_AUTORADIOBUTTON | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,2,66,28,10
+    CONTROL         "óLÇË",IDC_RO_KEY_MODE_1,"Button",BS_AUTORADIOBUTTON | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,2,77,23,10
+    EDITTEXT        IDC_RO_COL_KEY,28,74,26,12,ES_RIGHT | ES_AUTOHSCROLL
+    CONTROL         "CLUTï ",IDC_RO_KEY_MODE_2,"Button",BS_AUTORADIOBUTTON | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,2,88,34,10
+    EDITTEXT        IDC_RO_CLUT_KEY,36,87,18,12,ES_RIGHT | ES_AUTOHSCROLL
+    GROUPBOX        "ÉøââéZ",IDC_STATIC,57,55,38,48
+    CONTROL         "ñ≥éã",IDC_RO_ALP_TYPE_0,"Button",BS_AUTORADIOBUTTON | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,60,65,30,9
+    CONTROL         "ÉuÉåÉìÉh",IDC_RO_ALP_TYPE_1,"Button",BS_AUTORADIOBUTTON | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,60,74,34,9
+    CONTROL         "â¡éZ",IDC_RO_ALP_TYPE_2,"Button",BS_AUTORADIOBUTTON | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,60,83,27,9
+    CONTROL         "å∏éZ",IDC_RO_ALP_TYPE_3,"Button",BS_AUTORADIOBUTTON | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,60,92,25,9
+    GROUPBOX        "",IDC_STATIC,1,100,94,44
+    CONTROL         "BG/Grid",IDC_RO_BG_GRID,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,3,105,40,9
+    LTEXT           "WH",IDC_STATIC,3,120,11,8
+    EDITTEXT        IDC_RO_GRID_W,13,118,15,10,ES_RIGHT | ES_AUTOHSCROLL
+    EDITTEXT        IDC_RO_GRID_H,28,118,16,10,ES_RIGHT | ES_AUTOHSCROLL
+    CONTROL         "ó\îı",IDC_MAPOFFSW,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,3,132,27,8
+    PUSHBUTTON      "BGêF1",IDC_RO_BG_COL_BTN1,45,107,21,10
+    EDITTEXT        IDC_RO_BG_COL1,67,107,26,10,ES_RIGHT | ES_AUTOHSCROLL
+    PUSHBUTTON      "BGêF2",IDC_RO_BG_COL_BTN2,45,119,21,10
+    EDITTEXT        IDC_RO_BG_COL2,67,119,26,10,ES_RIGHT | ES_AUTOHSCROLL
+    CONTROL         "",IDC_RO_GRID_FLG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    37,131,10,10
+    PUSHBUTTON      "gridê¸",IDC_RO_GRID_COL_BTN,45,131,21,10
+    EDITTEXT        IDC_RO_GRID_COL,67,131,26,10,ES_RIGHT | ES_AUTOHSCROLL
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_TSPIRO, DIALOG
+    BEGIN
+        HORZGUIDE, 16
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // ì˙ñ{åÍ resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

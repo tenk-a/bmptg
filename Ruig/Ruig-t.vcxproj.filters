@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="sources">
+      <UniqueIdentifier>{be65edbf-06f0-46ca-9925-b79fc11c3ed9}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>
+    </Filter>
+    <Filter Include="Proc">
+      <UniqueIdentifier>{6a8e7f19-7065-4331-ac65-fcc9a608d2cf}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{40553d64-5f4f-4aa2-a557-2c6ab908ecc9}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="ImgFmt">
+      <UniqueIdentifier>{75c363b4-7fab-4f5e-b3cc-f585e6e3aa7b}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Ruig.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="RuigMgr.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\ExArgv.c">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\JpgDecoder.cpp">
+      <Filter>ImgFmt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\fks_file_time.c">
+      <Filter>Misc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RuigMgr.hpp">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\BppCnvImg.hpp">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\misc\def.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\misc\ExArgv.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\misc\intrusive_ptr.hpp">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\misc\intrusive_ptr_ref_count.hpp">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImgFmt\JpgDecoder.hpp">
+      <Filter>ImgFmt</Filter>
+    </ClInclude>
+    <ClInclude Include="ImgLoader.hpp">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="NamedImg.hpp">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\misc\fks_file_time.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

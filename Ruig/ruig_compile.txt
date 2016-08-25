@@ -1,0 +1,68 @@
+ruig コンパイルについて
+
+Visual Studio 2013(vc12) で開発. (一応 VS2008(vc9)でもコンパイル確認)
+Ruig.sln	vc12用 libjpeg版
+Ruig-vc9.sln	vc9用 libjpeg版
+Ruig-t.sln	vc12用 turbo-jpeg版
+
+
+■必要なソース
+
+ruigのソース以外にも、jpeg 関係は libjpeg, png 関係は libpng & zlib
+を使うため、それらのソースが必要.
+
+zlib は
+  http://www.zlib.net/
+あたりから zlib 1.2.8 のソース
+  zlib128.zip
+をダウンロード.
+  ImgFmt/zlib/
+フォルダにzip展開.
+
+libpng は
+  http://www.libpng.org/pub/png/libpng.html
+あたりから libpng 1.6.16 のソース
+  lpng1616.zip
+をダウンロード.
+  ImgFmt/libpng/
+フォルダにzip解凍、
+  libpng/scripts/pnglibconf.h.prebuilt
+を
+  libpng/pnglibconf.h 
+にコピーする.
+
+libjpeg は 
+  http://www.ijg.org/
+あたりから v9a のソース
+  jpegsr9a.zip
+をダウンロード.
+  ImgFmt/jpeg/
+フォルダにzip解凍、
+  jpeg/jconfig.vc
+を
+  jpeg/jconfig.h
+にコピーする. 
+
+jpeg,png,zlib は 必要なソースを直接コンパイル対象にしているため
+libファイルの作成は必要無し.
+逆に ソース・ファイル構成の影響をもろに受けるため、
+ライブラリのバージョンが違うとソース・ファイル名が変わってることも
+ありえるので注意.
+
+
+libjpeg の代わりに libjpeg-turbo を用いる(ruig-t.slnの)場合、
+asmファイル等面倒もあるので、こちらは 配布されてるモノの手順にしたがって
+lib 生成して利用することにする.
+   http://sourceforge.net/projects/libjpeg-turbo/files/
+より v1.4.x 付近、surceforge の code の snapshot で trunk 
+(試したのはrev1537)のソースを入手.
+   ImgFmt/turbojpeg/
+に解凍.
+dos窓(コマンドライン)で カレントを ImgFmt/ にしておき
+vc の環境設定バッチで 32bit 環境にして
+   mk_turbojpeg.bat 32
+で turbojpeg-static32.lib を生成.
+64ビット環境に切り替えて
+   mk_turbojpeg.bat 64
+で turbojpeg-static64.lib を生成.
+※debug版libを生成する場合は 32d や 64d を指定

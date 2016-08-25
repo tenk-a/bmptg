@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="sources">
+      <UniqueIdentifier>{1fc144e7-fce9-47ba-8a85-0602f0a7ce25}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>
+    </Filter>
+    <Filter Include="Proc">
+      <UniqueIdentifier>{aac72962-0524-4170-9bad-6ebe995caf94}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{0561f702-3a86-404f-b854-298b5f11601a}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="ImgFmt sources">
+      <UniqueIdentifier>{89e4b228-7e4c-4598-8551-277354195230}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>
+    </Filter>
+    <Filter Include="ImgFmt sources\libpng">
+      <UniqueIdentifier>{b2ccea4b-0e4a-4208-9fb3-76c5b6e8844b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImgFmt sources\zlib">
+      <UniqueIdentifier>{4e975abf-81c8-4f7b-96ec-53ab8ec1f430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImgFmt header">
+      <UniqueIdentifier>{765c3b7a-7b13-4b11-a2d5-e20e6a337838}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BmImgLoad.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="BmImgSave.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="bmptg.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvOne.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="gen.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="gen_clm8.c">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="gen_clmp.c">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Proc\pix32.c">
+      <Filter>Proc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Proc\pix32_kyuv.c">
+      <Filter>Proc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Proc\pix32_resizeAveragingI.c">
+      <Filter>Proc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Proc\pix32_resizeBicubic.c">
+      <Filter>Proc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Proc\pix32_resizeBilinear.c">
+      <Filter>Proc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Proc\pix8.c">
+      <Filter>Proc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\StrExpr.c">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\misc\subr.c">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\beta.c">
+      <Filter>ImgFmt sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\bmp_read.c">
+      <Filter>ImgFmt sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\bmp_wrt.c">
+      <Filter>ImgFmt sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\JpgDecoder.cpp">
+      <Filter>ImgFmt sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\JpgEncoder.cpp">
+      <Filter>ImgFmt sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\PngDecoder.cpp">
+      <Filter>ImgFmt sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\PngEncoder.cpp">
+      <Filter>ImgFmt sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\tga_read.c">
+      <Filter>ImgFmt sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\tga_wrt.c">
+      <Filter>ImgFmt sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\libpng\png.c">
+      <Filter>ImgFmt sources\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\libpng\pngerror.c">
+      <Filter>ImgFmt sources\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\libpng\pngget.c">
+      <Filter>ImgFmt sources\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\libpng\pngmem.c">
+      <Filter>ImgFmt sources\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\libpng\pngpread.c">
+      <Filter>ImgFmt sources\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\libpng\pngread.c">
+      <Filter>ImgFmt sources\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\libpng\pngrio.c">
+      <Filter>ImgFmt sources\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\libpng\pngrtran.c">
+      <Filter>ImgFmt sources\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\libpng\pngrutil.c">
+      <Filter>ImgFmt sources\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\libpng\pngset.c">
+      <Filter>ImgFmt sources\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\libpng\pngtrans.c">
+      <Filter>ImgFmt sources\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\libpng\pngwio.c">
+      <Filter>ImgFmt sources\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\libpng\pngwrite.c">
+      <Filter>ImgFmt sources\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\libpng\pngwtran.c">
+      <Filter>ImgFmt sources\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\libpng\pngwutil.c">
+      <Filter>ImgFmt sources\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\zlib\adler32.c">
+      <Filter>ImgFmt sources\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\zlib\compress.c">
+      <Filter>ImgFmt sources\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\zlib\crc32.c">
+      <Filter>ImgFmt sources\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\zlib\deflate.c">
+      <Filter>ImgFmt sources\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\zlib\infback.c">
+      <Filter>ImgFmt sources\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\zlib\inffast.c">
+      <Filter>ImgFmt sources\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\zlib\inflate.c">
+      <Filter>ImgFmt sources\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\zlib\inftrees.c">
+      <Filter>ImgFmt sources\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\zlib\trees.c">
+      <Filter>ImgFmt sources\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\zlib\uncompr.c">
+      <Filter>ImgFmt sources\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ImgFmt\zlib\zutil.c">
+      <Filter>ImgFmt sources\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Proc\pix32_resizeLanczos3.c">
+      <Filter>Proc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Proc\pix32_resizeNearestNeighbor.c">
+      <Filter>Proc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Proc\pix32_resizeSpline36.c">
+      <Filter>Proc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BmImgLoad.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="BmImgSave.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvOne.hpp">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="gen.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\BppCnvImg.hpp">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\DecreaseColorHst.hpp">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\DecreaseColorIfWithin256.hpp">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\DecreaseColorMC.hpp">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\FixedClut256.hpp">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\PaternDither.hpp">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\pix32.h">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\pix32_bokashi.h">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\pix32_colCnv.h">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\pix32_kyuv.h">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\Pix32_Paint.hpp">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\Pix32_Resize.h">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\pix32_resizeAveragingI.h">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\pix32_resizeBicubic.h">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\pix32_resizeBilinear.h">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\pix8.h">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\pix_subr.h">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\misc\def.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\misc\subr.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImgFmt\beta.h">
+      <Filter>ImgFmt header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImgFmt\bmp_read.h">
+      <Filter>ImgFmt header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImgFmt\bmp_wrt.h">
+      <Filter>ImgFmt header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImgFmt\JpgDecoder.hpp">
+      <Filter>ImgFmt header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImgFmt\JpgEncoder.hpp">
+      <Filter>ImgFmt header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImgFmt\PngDecoder.hpp">
+      <Filter>ImgFmt header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImgFmt\PngEncoder.hpp">
+      <Filter>ImgFmt header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImgFmt\tga_read.h">
+      <Filter>ImgFmt header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ImgFmt\tga_wrt.h">
+      <Filter>ImgFmt header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\pix32_resizeLanczos3.h">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\pix32_resizeNearestNeighbor.h">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\pix32_resizeSpline36.h">
+      <Filter>Proc</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

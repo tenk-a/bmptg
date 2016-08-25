@@ -1,0 +1,115 @@
+bmptg修正履歴
+
+v2.37	2016-08
+・拡縮関係: lanczos-3,spline36,NearestNeighbor拡縮追加. bilinear,bicubic 内部でのyuv止めrgbで処理.
+            bilinearの0.5ピクセルずれ修正.
+・任意角回転の -xi[R] 追加.
+・-xvにy基準位置を指定するu|m|dオプション追加.
+・ファイル名の最後が数字の奇数なら左詰(-xv)・偶数なら右詰(-xvr)にする -xve を追加.
+・-xv系2度指定可能に. 
+・-xvの旧形式だった-xl廃止.
+
+v2.36	2015-10
+・A,R,G,B チャンネルいずれかを用いてモノクロ化(-cgc)
+・A,R,G,B 各々を自乗する(-cem)
+・-xv のセンタリング版-xvc, 右寄せ版-xvr 追加
+・左90度回転 -xjl 追加
+・灰色画像変換での jpgクロリティ指定 -xqg 追加
+・出力bpp無指定時、灰色化した場合はなるべく256色画像で出力.
+
+v2.35	2015-03
+・バイキュービック法の拡大縮小を追加（これをデフォルトに)
+・使用する libjpeg, libpng, zlib を
+    jpegsr9a, lpng1616 , zlib128 
+  に更新.
+・mingw gcc4.8.1, dmc 8.57, open watcom-c1.9, borland-c5.5.1 でも一応コンパイル可能に.
+・その他細々バグ取りとか警告減らしとか
+  ※ソースばっちぃので綺麗にしたいけれど、今じゃあまり使いそうにない（チェックしずらい）
+   機能等 改修した場合のチェック作業量を思うと めげて結局現状残すのが無難な状態.
+   というか、実際やりかけて腐った状態で長らく放置してたのをやっとこさ ある程度復活
+   させたというのが実情.
+
+v2.34	2015-02
+・ バイリニア拡縮関係の修正
+・ sln を vc2008 用に(手元でvs2003がマトモに動かない為)
+
+v2.33	20??-??
+・ -xv で元画像の(x,y)を指定可能に.
+
+v2.32   200?
+・ソースのフォルダ構成とかいろいろ変更した模様.
+・ソース的にはともかくビルド環境的には vc のみの状態.
+
+v2.31b	2007-06
+・ dmc(8.50bata) でコンパイル通るように修正. (型チェックが厳しい模様)
+
+ 問題は libpng 側も要修正...どうも PNG_CONST が有名無実化して const が使われ
+  libpng/pngerror.c(116): const static PNG_CONST char png_digit[16] = {
+  libpng/pngtrans.c(255): const static PNG_CONST png_byte onebppswaptable[256] = {
+  libpng/pngtrans.c(290): const static PNG_CONST png_byte twobppswaptable[256] = {
+  libpng/pngtrans.c(325): const static PNG_CONST png_byte fourbppswaptable[256] = {
+ のように両方指定があったり....でdmcが怒ってくれるのだった.
+ PNG_NO_CONST定義してPNG_CONSTを無効化したら、今度は const でないといけない
+ ものが非const化してエラーになるので、結局上記４行の先頭のconstを削除することで対処.
+  (dmcでコンパイルする場合は各自が上記４行の修正をしてください)
+
+
+v2.31	2007-06
+
+・libpngでpngにも対応.
+
+・コンパイルについて.
+  jpg & png 対応やc++化とかで、実質 vc 用. 
+  (mingwでもコンパイルできたけど、後は全滅)
+
+  libjpeg & libpng+zlib を使うので、
+    libjepg  
+    libpng   http://www.libpng.org/pub/png/libpng.html
+    zlib     http://www.zlib.net/
+  あたりから、適当に入手して、
+    src/jpeg/
+    src/libpng/
+    src/zlib/
+  のにそれぞれを展開していれてください。
+  （己の使ったバージョンは, libjpeg version 6b,
+    libpng ver.1.2.18, zlib ver.1.2.3  )
+
+  bmptg.vcproj ( .net2003用) を vs 2003/2005
+  あたりでコンパイル.
+
+  コマンドラインの場合は、gnu make が gmake.exe と
+  いう名である状態で mk.bat を実行.
+
+
+・気が付くと結構いろいろバグバグでしたm(_ _)m
+  気づいたものは修正したけれど... さらに必要以上に
+  いじってしまってるのでエンバグもありそ...
+
+v2.30
+・libjpeg使って楽にいけたので、こいつにも組込。
+
+v2.21	007-05
+・aNiMな8ビット色減色モードを追加.
+
+v2.20
+・なんとなく、メディアンカットの減色をしてみたので組み込み。
+　淵半透明の減色が結構まともぽくなる。
+
+v2.10
+・v2.00 から何かバグとったような気がするが不明。
+・スパゲティ・ソースに自分で耐えられなくなってたので、一部ソースを
+  class化... よって c++でしかコンパイルできなくなった。
+・ぼかし関係の追加
+・-xca 四隅を抜き色でペイントしてαプレーンを生成
+・usageの１ページ表示制限をやめる.
+
+v2.00	2001-07
+・拡縮をバイリニアサンプリングを用いた方法に変更。
+
+v1.??
+・bmp-rle関係
+・ディザ処理改. clut画への減色機能強化.
+・tgaの16bit色のαの扱いがポカしてたのを(0x80でなく0xFFに)修正.
+
+v1.00	2000-??
+・自作のbmp2tga,tga2bmpを統合したツールに.

@@ -1,0 +1,15 @@
+ifbmp.spi   v0.83  ---- TSPIRO対応 BMP画像ロード Susieプラグイン
+
+　拙作tspiroに対応したbmpの susieプラグイン.
+bmptg.exe の bmp_read.c のチェック用にでっちあげたモノで、
+Win-APIでなく自前でbmpを扱うので、古い範囲の仕様のみでしょう。
+一応、RLEは対応してるけど...
+
+実際のところ、使用するとアプリによっては（というか大半のアプリで）
+イロイロ不都合が起きるので、使用しないほうが吉^^;
+
+利用条件等は iftga.spi/tspiro を入手してること、で、
+あとは iftga.spi と同じ扱い。
+
+tenka@6809.net
+http://www.6809.net/tenk/

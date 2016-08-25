@@ -1,0 +1,107 @@
+bmptg コンパイルについて
+
+一応 バッチ+ makefile(bmptg.mak) にてコンパイルできるようにしているが
+メイン(開発環境)は vs2008 IDEにてコンパイル&作業.
+(配布の exe は vs2008 IDEにてのもの)
+
+■必要なソース
+
+bmptgのソース以外にも、jpeg 関係は libjpeg, png 関係は libpng & zlib
+を使うため、それらのソースが必要.
+
+zlib は
+  http://www.zlib.net/
+あたりから zlib 1.2.8 のソース
+  zlib128.zip
+をダウンロード.
+  ImgFmt/zlib/
+フォルダにzip展開.
+
+libpng は
+  http://www.libpng.org/pub/png/libpng.html
+あたりから libpng 1.6.16 のソース
+  lpng1616.zip
+をダウンロード.
+  ImgFmt/libpng/
+フォルダにzip解凍、
+  libpng/scripts/pnglibconf.h.prebuilt
+を
+  libpng/pnglibconf.h 
+にコピーする.
+
+watcomc でコンパイルしたい場合は、コピーした
+libpng/pnglibconf.h をテキストエディタで開け
+  #define PNG_API_RULE 0
+の1行を
+  #ifdef __WATCOMC__
+  #define PNG_API_RULE 2
+  #else
+  #define PNG_API_RULE 0
+  #endif
+に置換.
+
+libjpeg は 
+  http://www.ijg.org/
+あたりから v9a のソース
+  jpegsr9a.zip
+をダウンロード.
+  ImgFmt/jpeg/
+フォルダにzip解凍、
+  jpeg/jconfig.vc
+を
+  jpeg/jconfig.h
+にコピーする. 
+※とりあえずvc用. 
+  バッチでコンパイルする場合はバッチ内でコンパイラに合わせたjconfig.*をコピー.
+
+
+jpeg,png,zlib は 必要なソースを直接コンパイル対象にしているため
+libファイルの作成は必要無し.
+逆に ソース・ファイル構成の影響をもろに受けるため、
+ライブラリのバージョンが違うとソース・ファイル名が変わってることも
+ありえるので注意.
+
+
+※ vc に限り libjpeg の代わりに libjpeg-turbo を用いれるようにしている.
+asmファイル等面倒もあるので、こちらは 配布されてるモノの手順にしたがって
+lib 生成して利用することにする.
+   http://sourceforge.net/projects/libjpeg-turbo/files/
+より v1.4.x 付近、surceforge の code の snapshot で trunk 
+(試したのはrev1537)のソースを入手.
+   ImgFmt/turbojpeg/
+に解凍.
+dos窓(コマンドライン)で カレントを ImgFmt/ にしておき
+vc の環境設定バッチで 32bit 環境にして
+   mk_turbojpeg.bat 32
+で turbojpeg-static32.lib を生成.
+64ビット環境に切り替えて
+   mk_turbojpeg.bat 64
+で turbojpeg-static64.lib を生成.
+
+
+
+■コンパイル
+
+vs 2008 (及び それ以降) ならば bmptg.sln/vcproj でコンパイルできる(はず)
+
+また mingw32-make.exe をpath通した状態で、
+
+mk_vc.bat       vc7.1以降でのコンパイル用.
+mk_mingw.bat	mingw gcc 用 (4.8.1でコンパイル確認)
+mk_dmc.bat	dmc用 (8.57でコンパイル確認)
+mk_wat.bat	open watcom 1.9用.
+mk_bcc.bat	borland-c++ 5.5.1 でコンパイル確認.
+
+vc以外は、コンパイルを通してbmptgのヘルプ出して後は2,3ファイル変換した
+だけなので ちゃんと使えるかは不明.
+
+※ libjpeg-turbo を用いる場合は
+vc環境 および mingw32-make , nasm へのpathを通しておいて
+  mk_vc_tj.bat  32 (あるいは 64)
+で 生成.
+
+
+
+■ 変換テスト
+  bmptg_smp/readme.txt
+を参照のこと

@@ -1,0 +1,20 @@
+ifpng.spi
+
+拙作tspiro 対応に対応した png のsusieプラグイン.
+
+libpngを用いて とりあえず作ってみた(だけ)、って感じの代物で、
+ガンマ処理やエラー処理等、手を抜いてるので不味い部分もあるかも。
+テストも不十分.
+
+
+コンパイルをする場合は、libpng, zlib を手にいれて、
+src\ImgFmt\libpng
+src\ImgFmt\zlib
+にソースを入れてからコンパイルしてください.
+
+
+使用条件等は iftga のほうを見てください.
+
+
+tenka@6809.net
+http://www.6809.net/tenk/

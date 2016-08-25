@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FF5F2673-5C14-485D-BA45-50730967ECB4}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Ruig</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)exe_$(Configuration)_$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)obj_$(Configuration)_$(Platform)</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)exe_$(Configuration)_$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)obj_$(Configuration)_$(Platform)</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)exe_$(Configuration)_$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)obj_$(Configuration)_$(Platform)</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)exe_$(Configuration)_$(Platform)</OutDir>
+    <IntDir>$(SolutionDir)obj_$(Configuration)_$(Platform)</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>../Ruig;../ImgFmt/zlib</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>../Ruig;../ImgFmt/zlib</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;E;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../Ruig;../ImgFmt/zlib</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;E;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../Ruig;../ImgFmt/zlib</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\ImgFmt\JpgDecoder.h" />
+    <ClInclude Include="..\ImgFmt\JpgEncoder.h" />
+    <ClInclude Include="..\ImgFmt\PngDecoder.h" />
+    <ClInclude Include="..\ImgFmt\PngEncoder.h" />
+    <ClInclude Include="..\misc\ExArgv.h" />
+    <ClInclude Include="..\misc\File.h" />
+    <ClInclude Include="..\misc\fks_file_time.h" />
+    <ClInclude Include="..\misc\intrusive_ptr.hpp" />
+    <ClInclude Include="..\misc\intrusive_ptr_ref_count.hpp" />
+    <ClInclude Include="..\misc\mem_mac.h" />
+    <ClInclude Include="..\misc\misc.h" />
+    <ClInclude Include="..\misc\subr.h" />
+    <ClInclude Include="..\Proc\BppCnvImg.h" />
+    <ClInclude Include="..\Proc\DecreaseColorHst.h" />
+    <ClInclude Include="..\Proc\DecreaseColorIfWithin256.h" />
+    <ClInclude Include="..\Proc\DecreaseColorMC.h" />
+    <ClInclude Include="..\Proc\FixedClut256.h" />
+    <ClInclude Include="..\Proc\PaternDither.h" />
+    <ClInclude Include="..\Proc\pix32_bokashi.h" />
+    <ClInclude Include="..\Proc\pix32_colCnv.h" />
+    <ClInclude Include="..\Proc\pix32_filter.h" />
+    <ClInclude Include="..\Proc\pix32_paint.h" />
+    <ClInclude Include="..\Proc\pix32_resize.h" />
+    <ClInclude Include="..\Proc\pix_subr.h" />
+    <ClInclude Include="RuigMgr.hpp" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\ImgFmt\JpgDecoder.cpp" />
+    <ClCompile Include="..\ImgFmt\JpgEncoder.cpp" />
+    <ClCompile Include="..\ImgFmt\PngDecoder.cpp" />
+    <ClCompile Include="..\ImgFmt\PngEncoder.cpp" />
+    <ClCompile Include="..\ImgFmt\libpng\png.c" />
+    <ClCompile Include="..\ImgFmt\libpng\pngerror.c" />
+    <ClCompile Include="..\ImgFmt\libpng\pngget.c" />
+    <ClCompile Include="..\ImgFmt\libpng\pngmem.c" />
+    <ClCompile Include="..\ImgFmt\libpng\pngpread.c" />
+    <ClCompile Include="..\ImgFmt\libpng\pngread.c" />
+    <ClCompile Include="..\ImgFmt\libpng\pngrio.c" />
+    <ClCompile Include="..\ImgFmt\libpng\pngrtran.c" />
+    <ClCompile Include="..\ImgFmt\libpng\pngrutil.c" />
+    <ClCompile Include="..\ImgFmt\libpng\pngset.c" />
+    <ClCompile Include="..\ImgFmt\libpng\pngtrans.c" />
+    <ClCompile Include="..\ImgFmt\libpng\pngwio.c" />
+    <ClCompile Include="..\ImgFmt\libpng\pngwrite.c" />
+    <ClCompile Include="..\ImgFmt\libpng\pngwtran.c" />
+    <ClCompile Include="..\ImgFmt\libpng\pngwutil.c" />
+    <ClCompile Include="..\ImgFmt\zlib\adler32.c" />
+    <ClCompile Include="..\ImgFmt\zlib\compress.c" />
+    <ClCompile Include="..\ImgFmt\zlib\crc32.c" />
+    <ClCompile Include="..\ImgFmt\zlib\deflate.c" />
+    <ClCompile Include="..\ImgFmt\zlib\infback.c" />
+    <ClCompile Include="..\ImgFmt\zlib\inffast.c" />
+    <ClCompile Include="..\ImgFmt\zlib\inflate.c" />
+    <ClCompile Include="..\ImgFmt\zlib\inftrees.c" />
+    <ClCompile Include="..\ImgFmt\zlib\trees.c" />
+    <ClCompile Include="..\ImgFmt\zlib\uncompr.c" />
+    <ClCompile Include="..\ImgFmt\zlib\zutil.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jaricom.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jcapimin.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jcapistd.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jcarith.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jccoefct.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jccolor.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jcdctmgr.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jchuff.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jcinit.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jcmainct.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jcmarker.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jcmaster.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jcomapi.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jcparam.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jcprepct.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jcsample.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jctrans.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdapimin.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdapistd.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdarith.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdatadst.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdatasrc.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdcoefct.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdcolor.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jddctmgr.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdhuff.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdinput.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdmainct.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdmarker.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdmaster.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdmerge.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdpostct.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdsample.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jdtrans.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jerror.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jfdctflt.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jfdctfst.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jfdctint.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jidctflt.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jidctfst.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jidctint.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jmemmgr.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jmemnobs.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jquant1.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jquant2.c" />
+    <ClCompile Include="..\ImgFmt\jpeg\jutils.c" />
+    <ClCompile Include="..\misc\ExArgv.c" />
+    <ClCompile Include="..\misc\fks_file_time.c" />
+    <ClCompile Include="..\misc\StrExpr.c" />
+    <ClCompile Include="..\misc\subr.c" />
+    <ClCompile Include="Ruig.cpp" />
+    <ClCompile Include="RuigMgr.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
