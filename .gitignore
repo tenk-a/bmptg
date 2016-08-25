@@ -4,11 +4,13 @@ sav
 *.sav
 tmp
 *.tmp
-bmptg_smp/src_
-bmptg_smp/dst_
-bmptg_smp/tst_
+bmptg_smp/src_*
+bmptg_smp/dst_*
+bmptg_smp/tst_*
+bmptg_smp/tmp*
 smp
 tst
+test
 *.obj
 *.exe
 *.pbk
