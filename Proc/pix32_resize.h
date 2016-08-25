@@ -13,7 +13,14 @@
 #include "pix32_resizeSpline36.h"
 #include "pix32_resizeLanczos3.h"
 
-/** 拡大縮小
+/** 画像の拡大縮小
+ * @param dst   出力画像
+ * @param dstW  出力横幅
+ * @param dstH  出力縦幅
+ * @param src   入力画像
+ * @param srcW  入力横幅
+ * @param srcH  入力縦幅
+ * @param type  変換の種類: 0,1=バイリニア 2=バイキュービック 3,4=Spline36
  */
 inline void pix32_resize(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH, int type)
 {

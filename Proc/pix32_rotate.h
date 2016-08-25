@@ -9,10 +9,11 @@
 
 #include "def.h"
 
+/// 画像を回転した結果の新規画像の情報
 typedef struct pix32_rotate_dst_t {
-	uint32_t*	mallocMem;
-	uint32_t	w;
-	uint32_t	h;
+	uint32_t*	mallocMem;			///< 画像. mallocされたメモリ
+	uint32_t	w;					///< 横幅
+	uint32_t	h;					///< 縦幅
 } pix32_rotate_dst_t;
 
 #if defined __cplusplus
@@ -28,7 +29,14 @@ int  pix32_rotateSpline36(pix32_rotate_dst_t* dst, const unsigned *src, unsigned
 #endif
 
 
-/** 拡大縮小
+/** 画像の回転.
+ * @param dst   出力画像
+ * @param src   入力画像
+ * @param srcW  入力横幅
+ * @param srcH  入力縦幅
+ * @param rot   右への回転角度
+ * @param dcol  範囲外の隙間が出来た時に埋める色
+ * @param type  変換の種類: 0,1=バイリニア 2=バイキュービック 3,4=Spline36
  */
 inline int  pix32_rotate(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol, int type)
 {

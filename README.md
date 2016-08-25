@@ -8,5 +8,5 @@ bmptg, ruig, tspiro, iftga,ifpng のソース
 簡易類似画像チェック＆copy|moveバッチ生成ツール
 - tspiro  
 tspiro対応susieプラグインのオプション設定等を行うツール(clut表示等も)
-- iftga, ifpng, iffontx2
+- iftga, ifpng, iffontx2  
 tspiro対応susieプラグイン
