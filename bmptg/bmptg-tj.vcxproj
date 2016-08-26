@@ -349,6 +349,9 @@
     <ClCompile Include="..\Proc\pix32_resizeLanczos3.c" />
     <ClCompile Include="..\Proc\pix32_resizeNearestNeighbor.c" />
     <ClCompile Include="..\Proc\pix32_resizeSpline36.c" />
+    <ClCompile Include="..\Proc\pix32_rotateBicubic.c" />
+    <ClCompile Include="..\Proc\pix32_rotateBilinear.c" />
+    <ClCompile Include="..\Proc\pix32_rotateSpline36.c" />
     <ClCompile Include="..\Proc\pix8.c" />
     <ClCompile Include="BmImgLoad.cpp" />
     <ClCompile Include="BmImgSave.cpp" />
@@ -393,6 +396,7 @@
     <ClInclude Include="..\Proc\pix32_resizeLanczos3.h" />
     <ClInclude Include="..\Proc\pix32_resizeNearestNeighbor.h" />
     <ClInclude Include="..\Proc\pix32_resizeSpline36.h" />
+    <ClInclude Include="..\Proc\pix32_rotate.h" />
     <ClInclude Include="..\Proc\pix8.h" />
     <ClInclude Include="..\Proc\pix_subr.h" />
     <ClInclude Include="BmImgLoad.h" />

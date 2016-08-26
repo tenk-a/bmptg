@@ -77,7 +77,7 @@ vc の環境設定バッチで 32bit 環境にして
 64ビット環境に切り替えて
    mk_turbojpeg.bat 64
 で turbojpeg-static64.lib を生成.
-
+※debug版libを生成する場合は 32d や 64d を指定
 
 
 ■コンパイル

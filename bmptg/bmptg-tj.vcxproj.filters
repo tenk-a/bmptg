@@ -188,6 +188,15 @@
     <ClCompile Include="..\Proc\pix32_resizeSpline36.c">
       <Filter>Proc</Filter>
     </ClCompile>
+    <ClCompile Include="..\Proc\pix32_rotateBicubic.c">
+      <Filter>Proc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Proc\pix32_rotateBilinear.c">
+      <Filter>Proc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Proc\pix32_rotateSpline36.c">
+      <Filter>Proc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmImgLoad.h">
@@ -293,6 +302,9 @@
       <Filter>Proc</Filter>
     </ClInclude>
     <ClInclude Include="..\Proc\pix32_resizeSpline36.h">
+      <Filter>Proc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Proc\pix32_rotate.h">
       <Filter>Proc</Filter>
     </ClInclude>
   </ItemGroup>
