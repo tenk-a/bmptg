@@ -299,7 +299,10 @@ bool ConvOne::imageLoad() {
 
     pixBpp_ = (bpp_ <= 8) ? 8 : 32; // clut_ 付き画は一旦 256色画に、多色画は 32bit色画にする
 	//
-	fullColFlg_ = opts_.fullColFlg || opts_.dstFmt == BM_FMT_JPG || opts_.dstFmt == BM_FMT_MY1 || (opts_.bpp == 0 && (opts_.rszN || opts_.bokashiCnt));
+	fullColFlg_ = opts_.fullColFlg || opts_.dstFmt == BM_FMT_JPG || (opts_.bpp == 0 && (opts_.rszN || opts_.bokashiCnt));
+  #ifdef MY_H
+	fullColFlg_ = fullColFlg_ || opts_.dstFmt == BM_FMT_MY1;
+  #endif
 	if (fullColFlg_)
         pixBpp_     = 32;
 
@@ -1241,7 +1244,10 @@ void ConvOne::changeChipAndMap() {
     if (opts_.mapMode && bo_->celW && bo_->celH) {      // マップ化
         int     celNum;
         int     styl  = opts_.celStyl | (opts_.mapNoCmp << 1) | (opts_.mapEx256x256<<3);	// 1bit|2bit|1bit
-        int     f     = 1 | ((opts_.dstFmt == BM_FMT_MY4)<<2);
+        int     f     = 1;
+      #ifdef MY_H
+        f     |= ((opts_.dstFmt == BM_FMT_MY4)<<2);
+      #endif
         if (opts_.mapMode == 3) {
             if      (w_ <=   64 && h_ <= 1024) bo_->celW = bo_->mapTexW =   64, bo_->celH = bo_->mapTexH = 1024;
             else if (w_ <=  128 && h_ <=  512) bo_->celW = bo_->mapTexW =  128, bo_->celH = bo_->mapTexH =  512;
@@ -1322,7 +1328,11 @@ bool ConvOne::saveImage() {
 	// 出力BPP指定ない場合、24bit画なら可能ならclut画にする(サイズ縮小のため. 32bit画(alpha付)のclut画フォーマットは微妙なので回避.
 	int dstFmt = opts_.dstFmt;
 	if (opts_.bpp == 0 && pixBpp_ == 32) {
-		if (dstBpp_ == 24 && (dstFmt == BM_FMT_PNG || dstFmt == BM_FMT_TGA || dstFmt == BM_FMT_BMP || dstFmt == BM_FMT_MY2 || dstFmt == BM_FMT_MY3)) {
+		if (dstBpp_ == 24 && (dstFmt == BM_FMT_PNG || dstFmt == BM_FMT_TGA || dstFmt == BM_FMT_BMP
+			#ifdef MY_H
+							|| dstFmt == BM_FMT_MY2 || dstFmt == BM_FMT_MY3
+			#endif
+		)) {
 			uint8_t* pix2     = NULL;
 			// モノラル化済みの場合
 			if (mono_ || FixedClut256<>::isGrey((uint32_t const*)pix_, w_, h_)) {
