@@ -301,7 +301,7 @@ bool ConvOne::imageLoad() {
 	//
 	fullColFlg_ = opts_.fullColFlg || opts_.dstFmt == BM_FMT_JPG || (opts_.bpp == 0 && (opts_.rszN || opts_.bokashiCnt));
   #ifdef MY_H
-	fullColFlg_ = fullColFlg_ || opts_.dstFmt == BM_FMT_MY1;
+	fullColFlg_ = fullColFlg_ || MY_IMAGELOAD_EX_FULLCOLFLG(opts_.dstFmt);
   #endif
 	if (fullColFlg_)
         pixBpp_     = 32;
@@ -1246,7 +1246,7 @@ void ConvOne::changeChipAndMap() {
         int     styl  = opts_.celStyl | (opts_.mapNoCmp << 1) | (opts_.mapEx256x256<<3);	// 1bit|2bit|1bit
         int     f     = 1;
       #ifdef MY_H
-        f     |= ((opts_.dstFmt == BM_FMT_MY4)<<2);
+        f     |= MY_CHANGE_CHP_AND_MAP_APPEND_FLAG(opts_.dstFmt);
       #endif
         if (opts_.mapMode == 3) {
             if      (w_ <=   64 && h_ <= 1024) bo_->celW = bo_->mapTexW =   64, bo_->celH = bo_->mapTexH = 1024;
@@ -1330,9 +1330,10 @@ bool ConvOne::saveImage() {
 	if (opts_.bpp == 0 && pixBpp_ == 32) {
 		if (dstBpp_ == 24 && (dstFmt == BM_FMT_PNG || dstFmt == BM_FMT_TGA || dstFmt == BM_FMT_BMP
 			#ifdef MY_H
-							|| dstFmt == BM_FMT_MY2 || dstFmt == BM_FMT_MY3
+							|| MY_IS_AUTO_BPP8_FMT(dstFmt)
 			#endif
 		)) {
+			unsigned clutSize = 256;
 			uint8_t* pix2     = NULL;
 			// モノラル化済みの場合
 			if (mono_ || FixedClut256<>::isGrey((uint32_t const*)pix_, w_, h_)) {
@@ -1342,14 +1343,19 @@ bool ConvOne::saveImage() {
 				FixedClut256<>::fromGreyToBpp8(pix2, (uint32_t const*)pix_, w_, h_);
 				mono_ = true;
 			} else {	// 色数が 256以下なら clut画に変換
-				pix2 = DecreaseColorIfWithin256<>::convToNewArray((uint32_t*)pix_, w_, h_, clut_, 256, false, 0xFFFFFFFF);
-				if (pix2 && varbose_) printf("->auto-256");
+				pix2 = DecreaseColorIfWithin256<>::convToNewArray((uint32_t*)pix_, w_, h_, clut_, clutSize, false, 0xFFFFFFFF);
+				if (pix2 && varbose_) {
+					if (clutSize <= 16)
+						printf("->auto-16");
+					else
+						printf("->auto-256");
+				}
 			}
 			if (pix2) {	// 変換成功時
-				dstBpp_  = 8;
 				delete[] pix_;
+				dstBpp_  = (clutSize <= 16 && dstFmt != BM_FMT_TGA) ? 4 : 8;
 				pix_ 	 = pix2;
-				pixBpp_  = dstBpp_;
+				pixBpp_  = 8;
 				dstColN_ = 1 << dstBpp_;
 				pixWb_   = w_;
 			}
@@ -1381,19 +1387,15 @@ bool ConvOne::saveImage() {
         if (clutAlpFlg == 0 && pixBpp_ == 8 && dstBpp_ <= 8) {
             clutAlpFlg = pix32_isUseAlpha(clut_, 1<<dstBpp_, 1);
         }
-      #if 1
-        int flgs = 0;
-        flgs    |= opts_.encMode    << 7;
-        flgs    |= clutAlpFlg       << 6;
-        flgs    |= (opts_.colKeyNA == 0 && (opts_.colKey >= 0 || nukiClut_ >= 0)) << 5;
-      #else
-        int flgs = opts_.encMode*0x80 + clutAlpFlg*0x40 + (opts_.colKey >= 0 || nukiClut_ >= 0)*0x20 + 0;
-      #endif
+        int dir_flgs = 0;
+		dir_flgs    |= opts_.encMode    << BM_FLAG_EX_ENC_SH;												// 特別の圧縮をするか
+        dir_flgs    |= clutAlpFlg       << BM_FLAG_CLUT_ALP_SH;												// alpha付clutにするか
+        dir_flgs    |= (opts_.colKeyNA == 0 && (opts_.colKey >= 0 || nukiClut_ >= 0)) << BM_FLAG_COLKEY_SH;	// 抜き色があるか
 		if (dstFmt == BM_FMT_JPG) {
 			printf("->JpgQ=%2d", ((bo_->mono && bo_->quality_grey >= 0) ? bo_->quality_grey : bo_->quality));
 		}
         bo_->clutNum = dstColN_;
-        sz_   = bm_write(dstFmt, dst_, w_, h_, dstBpp_, pix_, pixWb_, pixBpp_, clut_, flgs, bo_);
+        sz_   = bm_write(dstFmt, dst_, w_, h_, dstBpp_, pix_, pixWb_, pixBpp_, clut_, dir_flgs, bo_);
         if (sz_ <= 0) {
             if (varbose_) printf("\n");
             //x printf("%s を %s に変換中にエラーがありました\n", srcName_, opts_.dstExt);

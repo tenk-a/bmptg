@@ -293,10 +293,14 @@ static inline void beta_putPix32(uint8_t *d, int x, int c, int bpp, int bo)
 	uint8_t r,g,b;
 
 	if (bpp <= 1) {
-		r = (uint8_t)(c >> 16);
-		g = (uint8_t)(c >>  8);
-		b = (uint8_t)(c >>  0);
-		c = ((r|g|b) != 0);
+		//if (sbpp > 8) {
+		//	r = (uint8_t)(c >> 16);
+		//	g = (uint8_t)(c >>  8);
+		//	b = (uint8_t)(c >>  0);
+		//	c = ((r|g|b) != 0);
+		//} else {
+			c = c & 1;
+		//}
 		d += x >> 3;
 		x &= 7;
 		if (bo == 0)
@@ -305,7 +309,14 @@ static inline void beta_putPix32(uint8_t *d, int x, int c, int bpp, int bo)
 		*d |= c << x;
 		return;
 	} else if (bpp <= 2) {
-		//c = (g * 9 + r * 5 + b * 2) >> 10;
+		//if (sbpp > 8) {
+		//	r = (uint8_t)(c >> 16);
+		//	g = (uint8_t)(c >>  8);
+		//	b = (uint8_t)(c >>  0);
+		//	c = (g * 9 + r * 5 + b * 2) >> 10;
+		//} else {
+			c &= 3;
+		//}
 		d += x >> 2;
 		x = (x&3) << 1;
 		if (bo == 0)
@@ -314,7 +325,14 @@ static inline void beta_putPix32(uint8_t *d, int x, int c, int bpp, int bo)
 		*d |= c << x;
 		return;
 	} else if (bpp <= 4) {
-		//c = (g * 9 + r * 5 + b * 2) >> 8;
+		//if (sbpp > 8) {
+		//	r = (uint8_t)(c >> 16);
+		//	g = (uint8_t)(c >>  8);
+		//	b = (uint8_t)(c >>  0);
+		//	c = (g * 9 + r * 5 + b * 2) >> 10;
+		//} else {
+			c &= 0x0f;
+		//}
 		if (bo == 0) {
 			if (x & 1)	d[x>>1] |= c;
 			else		d[x>>1] = (c << 4);
@@ -324,7 +342,12 @@ static inline void beta_putPix32(uint8_t *d, int x, int c, int bpp, int bo)
 		}
 		return;
 	} else if (bpp <= 8) {
-		//d[x] = (((g >> 5)<<5) | ((r >> 5)<<2) | (b >> 6));
+		//if (sbpp > 8) {
+		//	r = (uint8_t)(c >> 16);
+		//	g = (uint8_t)(c >>  8);
+		//	b = (uint8_t)(c >>  0);
+		//	c = (g * 9 + r * 5 + b * 2) >> 10;
+		//}
 		d[x] = c;
 		return;
 	} else if (bpp <= 12) {
@@ -383,17 +406,17 @@ static inline void beta_putPix32(uint8_t *d, int x, int c, int bpp, int bo)
 
 
 
-#define beta_pixCpy(d,dbpp,s,sbpp,sw,y0,y1,yd,d_pat,s_pat,boI,boO) do {\
-	int xx_,yy_;\
-	for (yy_ = (y0); yy_ != (y1); yy_ += (yd)) {\
-		for (xx_ = 0; xx_ < (sw); xx_++) {\
-			int cc_ = beta_getPix32((s), xx_, (sbpp),(boI),(dbpp));\
-			beta_putPix32((d), xx_, cc_, (dbpp),(boO));\
-		}\
-		(s) += (s_pat);\
-		(d) += (d_pat);\
-	}\
-} while (0)
+static inline void beta_pixCpy(uint8_t *d, int dbpp, uint8_t const* s, int sbpp, int sw, int y0, int y1, int yd, int d_pat, int s_pat, int boI, int boO) {
+	int xx_,yy_;
+	for (yy_ = (y0); yy_ != (y1); yy_ += (yd)) {
+		for (xx_ = 0; xx_ < (sw); xx_++) {
+			int cc_ = beta_getPix32((s), xx_, (sbpp),(boI),(dbpp));
+			beta_putPix32((d), xx_, cc_, (dbpp),(boO));
+		}
+		(s) += (s_pat);
+		(d) += (d_pat);
+	}
+}
 
 
 
@@ -575,7 +598,7 @@ int  beta_write(const void *beta_data, int w, int h, int dbpp, const void *src, 
  *	boI,boO : 入力&出力バイトオーダー
  *	 		0:リトルエンディアン(インテル) 1:ビッグエンディアン(モトローラ)
  *			1バイトのピクセルのときは,バイト内の詰め順.
- *		 	0:上詰め(bmpに同じ)		1:下詰め(towns-tiff/tim系)
+ *		 	0:上詰め(bmpに同じ)		1:下詰め(towns-tiff系)
  */
 int  beta_conv(const void *beta_data, int dstWb, int h, int dbpp, const void *src, int srcWb, int sbpp, const void *clut, int flags, int boI, int boO)
 {
