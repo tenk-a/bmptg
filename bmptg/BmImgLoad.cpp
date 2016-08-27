@@ -39,9 +39,10 @@ int  bm_getHdr(const void *bm_data, unsigned sz, int *w_p, int *h_p, int *bpp_p,
         if (bmp_getHdr(s, w_p, h_p,bpp_p, clutNum_p))
             return BM_FMT_BMP;
   #ifdef MY_H
-    } else if (MY_IS_FMT_MY6_HDR(s)) {
-        if (my6_getHdr(s, w_p, h_p,bpp_p, clutNum_p))
-            return BM_FMT_MY6;
+    } else if (MY_IS_PRE_MY_FMT(s)) {
+		int fmt = MY_bm_preGetHdr(s, sz, w_p, h_p,bpp_p, clutNum_p);
+        if (fmt)
+            return fmt;
   #endif
   #if defined USE_JPG
     } else if (JpgDecoder::isSupported(s)) {    // if (memcmp(s, "\xFF\xD8\xFF\xE0\x00\x10JFIF", 10) == 0)
@@ -107,8 +108,11 @@ int  bm_read(const void *bm_data, unsigned dataSz, void *dst, int wb, int h, int
             PngDecoder dec(bm_data, dataSz);
             if (dec.clutSize())
                 dec.getClut((unsigned*)clut);
-            if (dec.bpp() < 8)
+			int byteOdr = 0;
+			if (dec.bpp() < 8) {
+				//byteOdr = 1;
                 dec.setBigEndian();
+			}
             //if (bpp== 8)
             //  dec.toClutBpp8();
             //if (bpp == 32)    // αの有無でbppが24,32どちらになるかわかりにくいので、普通に展開後自前で行う.
@@ -119,7 +123,7 @@ int  bm_read(const void *bm_data, unsigned dataSz, void *dst, int wb, int h, int
                     memcpy(dst, s, wb * h);
                     n = 1;
                 } else {
-                    n = beta_conv(dst, wb, h, bpp, s, dec.widthByte(1), dec.bpp(), clut, dir, 0,0);
+                    n = beta_conv(dst, wb, h, bpp, s, dec.widthByte(1), dec.bpp(), clut, dir, byteOdr, 0);
                 }
                 free(s);
             }

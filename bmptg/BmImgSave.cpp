@@ -92,11 +92,12 @@ int  bm_write(int fmt, void *bm_data, int w, int h, int bpp, const void *src, in
   #if defined USE_PNG
     case BM_FMT_PNG:
         {
-            bpp = (bpp <= 8) ? bpp : (bpp == 15) ? 32 : (bpp == 24) ? 24 : 32;
-            unsigned    wb      = WID2BYT(w, bpp);
+			bpp = (bpp <= 1) ? 1 : (bpp <= 4) ? 4 : (bpp <= 8) ? 8 : (bpp == 15) ? 32 : (bpp == 24) ? 24 : 32;
+            int         byteOdr = 0; //(bpp < 8);
+			unsigned    wb      = WID2BYT(w, bpp);
             unsigned    dataSz  = wb * h + 0x10;
             uint8_t*    tmp     = (uint8_t*)callocE(1, dataSz);
-            n = beta_conv(tmp, wb, h, bpp, src, srcWb, srcBpp, clut, dir_flags, 0,0);
+            n = beta_conv(tmp, wb, h, bpp, src, srcWb, srcBpp, clut, dir_flags, 0, byteOdr);
             dataSz = bm_encodeWorkSize(BM_FMT_PNG,w,h,bpp);
             n = PngEncoder().write((uint8_t*)bm_data, dataSz, tmp, w, h, bpp, (unsigned*)clut, wb, 0);
 			freeE(tmp);

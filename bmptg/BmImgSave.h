@@ -30,8 +30,17 @@ typedef struct bm_opt_t {
 } bm_opt_t;
 
 
+typedef enum BM_FLAG_T {
+	BM_FLAG_COLKEY_SH   = 5,
+	BM_FLAG_CLUT_ALP_SH	= 6,
+	BM_FLAG_EX_ENC_SH	= 7,
+	BM_FLAG_COLKEY      = 1 << BM_FLAG_COLKEY_SH,		///< ”²‚«F‚ª‚ ‚é‚©
+	BM_FLAG_CLUT_ALP    = 1 << BM_FLAG_CLUT_ALP_SH,		///< alpha•tclut‚É‚·‚é‚©
+	BM_FLAG_EX_ENC      = 1 << BM_FLAG_EX_ENC_SH,		///< “Á•Ê‚Ìˆ³k‚ð‚·‚é‚©
+} BM_FLAG_T;
 
-int  bm_write(int fmt, void *bm_data, int w, int h, int bpp, const void *src, int srcWb, int srcBpp, const void *clut, int dir, const bm_opt_t *o);
+
+int  bm_write(int fmt, void *bm_data, int w, int h, int bpp, const void *src, int srcWb, int srcBpp, const void *clut, int dir_flags, const bm_opt_t *o);
 int  bm_chkDstBpp(int fmt, int bpp);
 int  bm_encodeWorkSize(int fmt, int w, int h, int bpp);
 
