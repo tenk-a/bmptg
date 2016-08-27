@@ -11,6 +11,7 @@ bmptg_smp/tmp*
 smp
 tst
 test
+obj_*
 *.obj
 *.exe
 *.pbk
@@ -18,7 +19,9 @@ test
 *.sdf
 *.opensdf
 Debug
+Debug_*
 Release
+Release_*
 CMakeFiles
 CMakeCache.txt
 *.spi

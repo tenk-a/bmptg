@@ -19,8 +19,8 @@ zlib は
 
 libpng は
   http://www.libpng.org/pub/png/libpng.html
-あたりから libpng 1.6.16 のソース
-  lpng1616.zip
+あたりから libpng 1.6.24 のソース
+  lpng1624.zip
 をダウンロード.
   ImgFmt/libpng/
 フォルダにzip解凍、
