@@ -176,6 +176,7 @@ private:
     void aptRect();
     void alphaBlendByColor();
     void setDstBpp();
+	void checkSrcDstBpp();
     void decreaseColor();
     void changeChipAndMap();
     void reverseOutputAlpha();

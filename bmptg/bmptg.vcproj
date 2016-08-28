@@ -482,11 +482,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Proc\DecreaseColorLowBpp.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\Proc\DecreaseColorMC.hpp"
 				>
 			</File>
 			<File
 				RelativePath="..\Proc\FixedClut256.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Proc\GrayClut.hpp"
 				>
 			</File>
 			<File

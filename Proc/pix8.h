@@ -19,6 +19,8 @@ void pix8_copyWH(void *dst, int dstW, void *src, int srcW, int rctW, int rctH);
 /// 単純な拡大
 void pix8_resize(uint8_t *pix2, unsigned rszW, unsigned rszH, const uint8_t *pix, unsigned w, unsigned h);
 
+/// src画像中に bpp の範囲外になる番号があるかチェック. あれば負数を返す.
+int pix8_hasPixOutOfIdx(uint8_t const* src, int w, int h, int idx);
 
 //x /// 背景色以外が使っている矩形を求める。抜き色はインデックス・カラー
 //x int pix8_getNukiRectI(void *pix0, int xsz, int ysz, int nukiClut, int *x_p, int *y_p, int *w_p, int *h_p);

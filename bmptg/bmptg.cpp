@@ -27,6 +27,8 @@
  *  2015-10     v2.36 -cgc -cem -xvc -xvr -xjl -xqg 追加. 出力bpp指定無しでモノクロ化した場合はなるべく256色画像で出力.
  *  2016-08     v2.37 lanczos-3,spline36,NearestNeighbor拡縮追加. bilinear,bicubic 内部でのyuv止めrgbで処理. bilinearの0.5ピクセルずれ修正.
  *					  -xvにu|m|d|eオプション追加. -xv系2度指定可能に. -xl廃止. -xi[R] 任意角回転追加.
+ *  2016-08		v2.38 モノクロ画減色を改善. 1bpp画,2bpp画出力専用の減色を追加.
+ *                    clut画で入力bpp>出力bpp時に出力bppに収まらないピクセルがあれば一旦フルカラー化する.
  */
 
 
@@ -48,7 +50,7 @@ char *g_appName;
 
 void usage(void)
 {
-    printf("usage> %s [-opts] file(s)   // v2.37 " __DATE__ "  by tenk*\n", g_appName);
+    printf("usage> %s [-opts] file(s)   // v2.38 " __DATE__ "  by tenk*\n", g_appName);
     printf(
        "  bmp tga jpg png 等画像を相互に変換.\n"
        "  α値は有効で00:透明～0xFF:不透明. α無画は0xFFとして抜色はα=0として処理.\n"

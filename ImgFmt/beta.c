@@ -6,7 +6,9 @@
 
 
 #include "beta.h"
+#include "def.h"
 #include <stddef.h>
+#include <assert.h>
 
 
 /*---------------------------------------------------------------------------*/
@@ -166,7 +168,448 @@ int  beta_read(const void *dmy_data, void *dmy_dst, int dmy_wb, int dmy_h, int d
 }
 
 
-#if 1	// bpp変換コピー clut対応
+// ----------------------------------------------------------------------------
+
+#if 1
+
+enum {
+	BPPIDX_01,
+	BPPIDX_02,
+	//BPPIDX_03,
+	BPPIDX_04,
+	BPPIDX_08,
+	BPPIDX_12,
+	BPPIDX_15,
+	BPPIDX_16,
+	BPPIDX_24,
+	BPPIDX_32,
+	BPPIDX_NUM,
+};
+
+static inline int beta_bpp2idx(int bpp) {
+	return  (bpp <=  1) ?  BPPIDX_01
+	      : (bpp <=  2) ?  BPPIDX_02
+	      //: (bpp <=  3) ?  BPPIDX_03
+	      : (bpp <=  4) ?  BPPIDX_04
+	      : (bpp <=  8) ?  BPPIDX_08
+	      : (bpp <= 12) ?  BPPIDX_12
+	      : (bpp <= 15) ?  BPPIDX_15
+	      : (bpp <= 16) ?  BPPIDX_16
+	      : (bpp <= 24) ?  BPPIDX_24
+	      :                BPPIDX_32;
+}
+
+
+static uint32_t beta_rgb2idx_bpp01(int r, int g, int b) {
+	return ((g|r|b) != 0);
+}
+
+static uint32_t beta_rgb2idx_bpp02(int r, int g, int b) {
+	return (g * 9 + r * 5 + b * 2) >> (4+8-2);
+}
+
+static uint32_t beta_rgb2idx_bpp04(int r, int g, int b) {
+	return ((g >= 0x80) << 2) | ((r >= 0x80) << 1) | (b >= 0x80);
+}
+
+static uint32_t beta_rgb2idx_bpp08(int r, int g, int b) {
+	return (g & 0xE0) | ((r >> 3) & 0x1C) | ((b >> 6) & 3);
+}
+
+
+typedef uint32_t (*beta_getIdx_sub_t)(int r, int g, int b);
+static beta_getIdx_sub_t const s_beta_getIdx_sub_tbl[] = {
+	beta_rgb2idx_bpp01,
+	beta_rgb2idx_bpp02,
+	beta_rgb2idx_bpp04,
+	beta_rgb2idx_bpp08,
+};
+
+beta_getIdx_sub_t	beta_getIdx_sub	= beta_rgb2idx_bpp08;
+
+static void beta_set_rgb2idx(int bpp) {
+	int     idx = beta_bpp2idx(bpp);
+	assert(idx <= BPPIDX_08);
+	beta_getIdx_sub = s_beta_getIdx_sub_tbl[idx];
+
+}
+
+
+
+
+static uint32_t beta_getRgb_bpp01(const uint8_t *s, int x, int bo) {
+	int c;
+	s += x >> 3;
+	x = (x & 7);
+	if (bo == 0)
+		x ^= 7;		/* x = 7 - x; */
+	c = (*s >> x) & 1;
+	return beta_clut[c];
+}
+
+static uint32_t beta_getIdx_bpp01(const uint8_t *s, int x, int bo) {
+	int c;
+	s += x >> 3;
+	x = (x & 7);
+	if (bo == 0)
+		x ^= 7;		/* x = 7 - x; */
+	c = (*s >> x) & 1;
+	return c;
+}
+
+static uint32_t beta_getRgb_bpp02(const uint8_t *s, int x, int bo) {
+	int c;
+	s += x >> 2;
+	x  = (x & 3) << 1;
+	if (bo == 0)
+		x ^= 6;		/* x = 6 - x; */
+	c = (*s >> x) & 3;
+	return beta_clut[c];
+}
+
+static uint32_t beta_getIdx_bpp02(const uint8_t *s, int x, int bo) {
+	int c;
+	s += x >> 2;
+	x  = (x & 3) << 1;
+	if (bo == 0)
+		x ^= 6;		/* x = 6 - x; */
+	c = (*s >> x) & 3;
+	return c;
+}
+
+static uint32_t beta_getRgb_bpp04(const uint8_t *s, int x, int bo) {
+	int c;
+	s += x >> 1;
+	x  = (x & 1) << 2;
+	if (bo == 0)
+		x ^= 4;		/* x = 4 - x; */
+	c = (*s >> x) & 15;
+	return beta_clut[c];
+}
+
+static uint32_t beta_getIdx_bpp04(const uint8_t *s, int x, int bo) {
+	int c;
+	s += x >> 1;
+	x  = (x & 1) << 2;
+	if (bo == 0)
+		x ^= 4;		/* x = 4 - x; */
+	c = (*s >> x) & 15;
+	return c;
+}
+
+static uint32_t beta_getRgb_bpp08(const uint8_t *s, int x, int bo) {
+	return beta_clut[s[x]];
+}
+
+static uint32_t beta_getIdx_bpp08(const uint8_t *s, int x, int bo) {
+	return s[x];
+}
+
+
+static uint32_t beta_getRgb_bpp12(const uint8_t *s, int x, int bo) {
+	uint8_t a,r,g,b;
+	int     c;
+	s += x * 2;
+	if (bo) c = PEEKmW(s);
+	else	c = PEEKiW(s);
+	a = (c & 0xF000)>> 8 ; a |= a >> 4;
+	r = (c & 0x0F00)>> 4 ; r |= r >> 4;
+	g =  c & 0x00F0      ; g |= g >> 4;
+	b = (uint8_t)(c << 4); b |= b >> 4;
+	return ARGB(a,r,g,b);
+}
+
+static uint32_t beta_getIdx_bpp12(const uint8_t *s, int x, int bo) {
+	uint8_t a,r,g,b;
+	int     c;
+	s += x * 2;
+	if (bo) c = PEEKmW(s);
+	else	c = PEEKiW(s);
+	a = (c & 0xF000)>> 8;a |= a >> 4;
+	r = (c & 0x0F00)>> 4;r |= r >> 4;
+	g =  c & 0x00F0;     g |= g >> 4;
+	b = (uint8_t)(c << 4); b |= b >> 4;
+	return beta_getIdx_sub(r,g,b);
+}
+
+static uint32_t beta_getRgb_bpp15(const uint8_t *s, int x, int bo) {
+	uint8_t a,r,g,b;
+	int     c;
+	s += x * 2;
+	if (bo) c = PEEKmW(s);
+	else	c = PEEKiW(s);
+	a = (uint16_t)((int16_t)c >> 7) >> 8;
+	r = (c & 0x7C00) >> 7;
+	r |= r >> 5;
+	g = (c & 0x03E0) >> 2;
+	g |= g >> 5;
+	b = (c & 0x001F) << 3;
+	b |= b >> 5;
+	return ARGB(a,r,g,b);
+}
+
+static uint32_t beta_getIdx_bpp15(const uint8_t *s, int x, int bo) {
+	uint8_t a,r,g,b;
+	int     c;
+	s += x * 2;
+	if (bo) c = PEEKmW(s);
+	else	c = PEEKiW(s);
+	a = (uint16_t)((int16_t)c >> 7) >> 8;
+	r = (c & 0x7C00) >> 7;
+	r |= r >> 5;
+	g = (c & 0x03E0) >> 2;
+	g |= g >> 5;
+	b = (c & 0x001F) << 3;
+	b |= b >> 5;
+	return beta_getIdx_sub(r,g,b);
+}
+
+
+static uint32_t beta_getRgb_bpp16(const uint8_t *s, int x, int bo) {
+	uint8_t r,g,b;
+	int     c;
+	s += x * 2;
+	if (bo) c = PEEKmW(s);
+	else	c = PEEKiW(s);
+	r = (c & 0xF800) >> 8;
+	r |= r >> 5;
+	g = (c & 0x07E0) >> 3;
+	r |= r >> 6;
+	b = (c & 0x001F) << 3;
+	b |= b >> 5;
+	return ARGB(0xFF,r,g,b);
+}
+
+static uint32_t beta_getIdx_bpp16(const uint8_t *s, int x, int bo) {
+	uint8_t r,g,b;
+	int     c;
+	s += x * 2;
+	if (bo) c = PEEKmW(s);
+	else	c = PEEKiW(s);
+	r = (c & 0xF800) >> 8;
+	r |= r >> 5;
+	g = (c & 0x07E0) >> 3;
+	r |= r >> 6;
+	b = (c & 0x001F) << 3;
+	b |= b >> 5;
+	return beta_getIdx_sub(r,g,b);
+}
+
+
+static uint32_t beta_getRgb_bpp24(const uint8_t *s, int x, int bo) {
+	uint32_t c;
+	s += x * 3;
+	if (bo)	c = ARGB(0xFF,s[0],s[1],s[2]);	/* big */
+	else	c = ARGB(0xFF,s[2],s[1],s[0]);	/* ltl */
+	return c;
+}
+
+static uint32_t beta_getIdx_bpp24(const uint8_t *s, int x, int bo) {
+	uint8_t r,g,b;
+	s += x * 3;
+	if (bo) r = s[0], g = s[1], b = s[2];
+	else    r = s[2], g = s[1], b = s[0];
+	return beta_getIdx_sub(r,g,b);
+}
+
+
+static uint32_t beta_getRgb_bpp32(const uint8_t *s, int x, int bo) {
+	uint32_t  c;
+	s += x * 4;
+	if (bo)	c = PEEKmD(s);					/* big */
+	else	c = PEEKiD(s);					/* ltl */
+	return c;
+}
+
+static uint32_t beta_getIdx_bpp32(const uint8_t *s, int x, int bo) {
+	uint8_t r,g,b;
+	s += x * 4;
+	if (bo) r = s[0], g = s[1], b = s[2];
+	else    r = s[2], g = s[1], b = s[0];
+	return beta_getIdx_sub(r,g,b);
+}
+
+
+typedef uint32_t (*beta_getPix_t)(const uint8_t *s, int x, int bo);
+
+static beta_getPix_t const s_beta_getPix_tbl[2][BPPIDX_NUM] = {
+	{
+		beta_getIdx_bpp01,
+		beta_getIdx_bpp02,
+		beta_getIdx_bpp04,
+		beta_getIdx_bpp08,
+		beta_getIdx_bpp12,
+		beta_getIdx_bpp15,
+		beta_getIdx_bpp16,
+		beta_getIdx_bpp24,
+		beta_getIdx_bpp32,
+	}, {
+		beta_getRgb_bpp01,
+		beta_getRgb_bpp02,
+		beta_getRgb_bpp04,
+		beta_getRgb_bpp08,
+		beta_getRgb_bpp12,
+		beta_getRgb_bpp15,
+		beta_getRgb_bpp16,
+		beta_getRgb_bpp24,
+		beta_getRgb_bpp32,
+	}
+};
+static beta_getPix_t	s_beta_getPix	= beta_getRgb_bpp32;
+
+static void beta_set_getPix(int srcBpp, int dstBpp) {
+	int srcIdx = beta_bpp2idx(srcBpp);
+	assert(srcIdx <= BPPIDX_NUM);
+	if (dstBpp <= 8) {	// index
+		if (srcBpp > 8) {
+			beta_set_rgb2idx(dstBpp);
+		}
+		s_beta_getPix = s_beta_getPix_tbl[0][srcIdx];
+	} else {
+		s_beta_getPix = s_beta_getPix_tbl[1][srcIdx];
+	}
+}
+
+
+
+static void beta_putPix_bpp01(uint8_t *d, int x, int c, int bo) {
+	c = c & 1;
+	d += x >> 3;
+	x &= 7;
+	if (bo == 0)
+		x = 7-x;
+	*d &= ~(1 << x);
+	*d |= c << x;
+}
+
+
+static void beta_putPix_bpp02(uint8_t *d, int x, int c, int bo) {
+	c &= 3;
+	d += x >> 2;
+	x = (x&3) << 1;
+	if (bo == 0)
+		x = 6 - x;
+	*d &= ~(3 << x);
+	*d |= c << x;
+}
+
+static void beta_putPix_bpp04(uint8_t *d, int x, int c, int bo) {
+	c &= 0x0f;
+	if (bo == 0) {
+		if (x & 1)	d[x>>1] |= c;
+		else		d[x>>1] = (c << 4);
+	} else {
+		if (x & 1)	d[x>>1] |= (c << 4);
+		else		d[x>>1] = c;
+	}
+}
+
+static void beta_putPix_bpp08(uint8_t *d, int x, int c, int bo) {
+	d[x] = c;
+}
+
+static void beta_putPix_bpp12(uint8_t *d, int x, int c, int bo) {
+	int     a;
+	uint8_t r,g,b;
+	r = (uint8_t)(c >> 16);
+	g = (uint8_t)(c >>  8);
+	b = (uint8_t)(c >>  0);
+	a = ((uint32_t)c >> 24);
+	a = (a + 15) >> 4; if (a > 15) a = 15;
+	c = (a << 12) | ((r >> 4)<<8) | ((g >> 4)<<4) | (b >> 4);
+	d += x*2;
+	if (bo) POKEmW(d, c);
+	else 	POKEiW(d, c);
+}
+
+static void beta_putPix_bpp15(uint8_t *d, int x, int c, int bo) {
+	int     a;
+	uint8_t r,g,b;
+	r = (uint8_t)(c >> 16);
+	g = (uint8_t)(c >>  8);
+	b = (uint8_t)(c >>  0);
+	a = ((uint32_t)c >> 24) ? 0x8000 : 0;
+	c = a | ((r >> 3)<<10) | ((g >> 3)<<5) | (b >> 3);
+	d += x*2;
+	if (bo) POKEmW(d, c);
+	else 	POKEiW(d, c);
+}
+
+static void beta_putPix_bpp16(uint8_t *d, int x, int c, int bo) {
+	uint8_t r,g,b;
+	r = (uint8_t)(c >> 16);
+	g = (uint8_t)(c >>  8);
+	b = (uint8_t)(c >>  0);
+	c = ((r >> 3)<<11) | ((g >> 2)<<5) | (b >> 3);
+	d += x*2;
+	if (bo) POKEmW(d, c);
+	else 	POKEiW(d, c);
+	return;
+}
+
+static void beta_putPix_bpp24(uint8_t *d, int x, int c, int bo) {
+	uint8_t r,g,b;
+	r = (uint8_t)(c >> 16);
+	g = (uint8_t)(c >>  8);
+	b = (uint8_t)(c >>  0);
+	d += x*3;
+	if (bo) {
+		d[0] = r;
+		d[1] = g;
+		d[2] = b;
+	} else {
+		d[0] = b;
+		d[1] = g;
+		d[2] = r;
+	}
+}
+
+static void beta_putPix_bpp32(uint8_t *d, int x, int c, int bo) {
+	d += x*4;
+	if (bo)	POKEmD(d, c);
+	else	POKEiD(d, c);
+}
+
+typedef void (*beta_putPix_t)(uint8_t *d, int x, int c, int bo);
+
+static beta_putPix_t const s_beta_putPix_tbl[BPPIDX_NUM] = {
+	beta_putPix_bpp01,
+	beta_putPix_bpp02,
+	beta_putPix_bpp04,
+	beta_putPix_bpp08,
+	beta_putPix_bpp12,
+	beta_putPix_bpp15,
+	beta_putPix_bpp16,
+	beta_putPix_bpp24,
+	beta_putPix_bpp32,
+};
+static beta_putPix_t 	s_beta_putPix = beta_putPix_bpp32;
+
+static inline void beta_set_putPix(int dstBpp)
+{
+	int    dstIdx = beta_bpp2idx(dstBpp);
+	s_beta_putPix =	s_beta_putPix_tbl[dstIdx];
+}
+
+
+static inline void beta_pixCpy(uint8_t *d, int dstBpp, uint8_t const* s, int srcBpp, int sw
+							   , int y0, int y1, int yd, int d_pat, int s_pat, int boI, int boO)
+{
+	int x, y;
+	beta_set_getPix(srcBpp, dstBpp);
+	beta_set_putPix(dstBpp);
+	for (y = y0; y != y1; y += yd) {
+		for (x = 0; x < sw; x++) {
+			uint32_t   c = s_beta_getPix(s, x, boI);
+			s_beta_putPix(d, x, c, boO);
+		}
+		s += s_pat;
+		d += d_pat;
+	}
+}
+
+
+#else
 
 static inline int beta_getPix32sub(int dbpp, int r, int g, int b)
 {
@@ -401,9 +844,7 @@ static inline void beta_putPix32(uint8_t *d, int x, int c, int bpp, int bo)
 		else	POKEiD(d, c);
 		return;
 	}
-
 }
-
 
 
 static inline void beta_pixCpy(uint8_t *d, int dbpp, uint8_t const* s, int sbpp, int sw, int y0, int y1, int yd, int d_pat, int s_pat, int boI, int boO) {
@@ -418,181 +859,9 @@ static inline void beta_pixCpy(uint8_t *d, int dbpp, uint8_t const* s, int sbpp,
 	}
 }
 
-
-
-#else  	// clut 未対応
-
-static inline int beta_getPix32(uint8_t *s, int x, int bpp, int bo)
-{
-	int c;
-	if (bpp <= 1) {
-		s += x >> 3;
-		x = (x & 7);
-		if (bo == 0)
-			x ^= 7;		// x = 7 - x;
-		c = (*s >> x) & 1;
-		return beta_clut[c];
-	} else if (bpp <= 2) {
-		s += x >> 2;
-		x  = (x & 3) << 1;
-		if (bo == 0)
-			x ^= 6;		// x = 6 - x;
-		c = (*s >> x) & 3;
-		return beta_clut[c];
-	} else if (bpp <= 4) {
-		s += x >> 1;
-		x  = (x & 1) << 2;
-		if (bo == 0)
-			x ^= 4;		// x = 4 - x;
-		c = (*s >> x) & 15;
-		return beta_clut[c];
-	} else if (bpp <= 8) {
-		return beta_clut[s[x]];
-	} else if (bpp <= 12) {
-		uint8_t a,r,g,b;
-		s += x * 2;
-		if (bo) c = PEEKmW(s);
-		else	c = PEEKiW(s);
-		a = (c & 0xF000)>> 8;a |= a >> 4;
-		r = (c & 0x0F00)>> 4;r |= r >> 4;
-		g =  c & 0x00F0;     g |= g >> 4;
-		b = (uint8_t)(c << 4); b |= b >> 4;
-		return ARGB(a,r,g,b);
-	} else if (bpp <= 15) {
-		uint8_t a,r,g,b;
-		s += x * 2;
-		if (bo) c = PEEKmW(s);
-		else	c = PEEKiW(s);
-		a = (uint16_t)((int16_t)c >> 7) >> 8;
-		r = (c & 0x7C00) >> 7;
-		g = (c & 0x03E0) >> 2;
-		b = (c & 0x001F) << 3;
-		return ARGB(a,r,g,b);
-	} else if (bpp <= 16) {
-		uint8_t r,g,b;
-		s += x * 2;
-		if (bo) c = PEEKmW(s);
-		else	c = PEEKiW(s);
-		r = (c & 0xF800) >> 8;
-		g = (c & 0x07E0) >> 3;
-		b = (c & 0x001F) << 3;
-		return ARGB(0,r,g,b);
-	} else if (bpp <= 24) {
-		s += x * 3;
-		if (bo)	c = ARGB(0,s[0],s[1],s[2]);	// big
-		else	c = ARGB(0,s[2],s[1],s[0]);	// ltl
-		return c;
-	} else {
-		s += x * 4;
-		if (bo)	c = PEEKmD(s);					// big
-		else	c = PEEKiD(s);					// ltl
-		return c;
-	}
-}
-
-
-
-static inline void beta_putPix32(uint8_t *d, int x, int c, int bpp, int bo)
-{
-	int   a;
-	uint8_t r,g,b;
-
-	r = (uint8_t)(c >> 16);
-	g = (uint8_t)(c >>  8);
-	b = (uint8_t)(c >>  0);
-	if (bpp <= 1) {
-		d += x >> 3;
-		c = ((r|g|b) != 0);
-		x &= 7;
-		if (bo == 0)
-			x = 7-x;
-		*d &= 1 << x;
-		*d |= c << x;
-		return;
-	} else if (bpp <= 2) {
-		c = (g * 9 + r * 5 + b * 2) >> 10;
-		d += x >> 2;
-		x = (x&3) << 1;
-		if (bo == 0)
-			x = 6 - x;
-		*d &= 3 << x;
-		*d |= c << x;
-		return;
-	} else if (bpp <= 4) {
-		c = (g * 9 + r * 5 + b * 2) >> 8;
-		if ((x & 1) ^ bo)	d[x>>1] |= c;
-		else				d[x>>1] = (c << 4);
-		return;
-	} else if (bpp <= 8) {
-		d[x] = (((g >> 5)<<5) | ((r >> 5)<<2) | (b >> 6));
-		return;
-	} else if (bpp <= 12) {
-		a = ((uint32_t)c >> 24);
-		a = (a + 15) >> 4; if (a > 15) a = 15;
-		c = (a << 12) | ((r >> 4)<<8) | ((g >> 4)<<4) | (b >> 4);
-		d += x*2;
-		if (bo) POKEmW(d, c);
-		else 	POKEiW(d, c);
-		return;
-	} else if (bpp <= 15) {
-		a = ((uint32_t)c >> 24) ? 0x8000 : 0;
-		c = a | ((r >> 3)<<10) | ((g >> 3)<<5) | (b >> 3);
-		d += x*2;
-		if (bo) POKEmW(d, c);
-		else 	POKEiW(d, c);
-		return;
-	} else if (bpp <= 16) {
-		c = ((r >> 3)<<11) | ((g >> 2)<<5) | (b >> 3);
-		d += x*2;
-		if (bo) POKEmW(d, c);
-		else 	POKEiW(d, c);
-		return;
-	} else if (bpp <= 24) {
-		d += x*3;
-		if (bo) {
-			d[0] = r;
-			d[1] = g;
-			d[2] = b;
-		} else {
-			d[0] = b;
-			d[1] = g;
-			d[2] = r;
-		}
-		return;
-	} else {
-		d += x*4;
-		if (bo)	POKEmD(d, c);
-		else	POKEiD(d, c);
-		return;
-	}
-
-}
-
-
-
-#define beta_pixCpy(d,dbpp,s,sbpp,sw,y0,y1,yd,d_pat,s_pat,boI,boO) do {\
-	int xx_,yy_;\
-	for (yy_ = (y0); yy_ != (y1); yy_ += (yd)) {\
-		for (xx_ = 0; xx_ < (sw); xx_++) {\
-			int cc_ = beta_getPix32((s), xx_, (sbpp),(boI));\
-			beta_putPix32((d), xx_, cc_, (dbpp),(boO));\
-		}\
-		(s) += (s_pat);\
-		(d) += (d_pat);\
-	}\
-} while (0)
-
-
 #endif
 
-
-
-
-int  beta_write(const void *beta_data, int w, int h, int dbpp, const void *src, int srcWb, int sbpp, void *clut, int dir)
-{
-	return beta_conv(beta_data, WID2BYT(w,dbpp), h, dbpp, src, srcWb, sbpp, clut, dir, 0, 0);
-}
-
+// ----------------------------------------------------------------------------
 
 /** flags;bit 0:Y反転
  *	boI,boO : 入力&出力バイトオーダー
@@ -631,3 +900,9 @@ int  beta_conv(const void *beta_data, int dstWb, int h, int dbpp, const void *sr
 	return dstWb * h;
 }
 
+
+
+int  beta_write(const void *beta_data, int w, int h, int dbpp, const void *src, int srcWb, int sbpp, void *clut, int dir)
+{
+	return beta_conv(beta_data, WID2BYT(w,dbpp), h, dbpp, src, srcWb, sbpp, clut, dir, 0, 0);
+}

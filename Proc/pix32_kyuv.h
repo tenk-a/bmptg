@@ -63,6 +63,7 @@ typedef union pix32_kyuv_t {
 
 enum {
     PIX32_KYUV_BIT     = 13,      // 11 .. 14 ‚ğ‘z’è (8..10 bit‚¾‚Ærgb‚É–ß‚·‚ÌŒë·‚ª‚¨‚«‚â‚·‚¢)
+    PIX32_KYUV_MAX	   = (1 << PIX32_KYUV_BIT) - 1,
     PIX32_KYUV_SHIFT_K = PIX32_KYUV_BIT - 8,
     PIX32_KYUV_MUL_K   = 1 << PIX32_KYUV_SHIFT_K,
 };

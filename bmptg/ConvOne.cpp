@@ -18,7 +18,9 @@
 #include "DecreaseColorMC.hpp"
 #include "DecreaseColorHst.hpp"
 #include "DecreaseColorIfWithin256.hpp"
+#include "DecreaseColorLowBpp.hpp"
 #include "FixedClut256.hpp"
+#include "GrayClut.hpp"
 #include "pix32_colCnv.h"
 #include "pix32_kyuv.h"
 #include "pix32_resize.h"
@@ -149,6 +151,7 @@ int ConvOne::main() {
     rotR90(opts_.rotR90);               // 右90°
 	rotateImage();						// 任意角回転
     setDstBpp();                        // 出力bppを設定.
+	checkSrcDstBpp();					// clut画同士の変換で、出力bppより色番号が多い時、ソース側をフルカラー化(減色するの前提)
 
 	convNukiBlack();                    // 抜き色が色(0,0,0)固定のハード向けに、真黒を(0,0,m)に、抜きドットを(0,0,0)に変換.
     resizeImage1st();                   // 縦横拡縮サイズ変更   // 初回
@@ -298,6 +301,7 @@ bool ConvOne::imageLoad() {
     }
 
     pixBpp_ = (bpp_ <= 8) ? 8 : 32; // clut_ 付き画は一旦 256色画に、多色画は 32bit色画にする
+
 	//
 	fullColFlg_ = opts_.fullColFlg || opts_.dstFmt == BM_FMT_JPG || (opts_.bpp == 0 && (opts_.rszN || opts_.bokashiCnt));
   #ifdef MY_H
@@ -727,8 +731,8 @@ void ConvOne::rotateImage() {
 void ConvOne::toMono() {
 	//bo_->mono = opts_.mono;
 	if (opts_.monoNear) {		// グレイに近い色なら、モノクロ扱いにする
-		if ((pixBpp_ == 8 && FixedClut256<>::isNearGrey(clut_, 1, 256))
-			|| FixedClut256<>::isNearGrey((UINT32_T*)pix_, w_, h_)
+		if ((pixBpp_ == 8 && GrayClut<>::isNearGrey(clut_, 1, 256))
+			|| GrayClut<>::isNearGrey((UINT32_T*)pix_, w_, h_)
 		){
 			mono_ = true;
 		}
@@ -846,6 +850,25 @@ void ConvOne::setDstBpp()
         dstColN_ = CLUT_NUM;
     if (dstBpp_ > 8)
         dstColN_ = 0;
+}
+
+
+/** srcBpp,dstBpp共にclut画で、dstBpp < srcBpp の時、dstに収まりきらないsrcがあるかチェック
+ *  srcの色番号がはみ出すようなら、いっそ、src をフルカラーに変換(減色に任す)
+ */
+void ConvOne::checkSrcDstBpp()
+{
+	if (dstBpp_ >= pixBpp_ || dstBpp_ > 8 || pixBpp_ != 8)
+		return;
+	if (pix8_hasPixOutOfIdx(pix_, w_, h_, (1 << dstBpp_) - 1)) {
+		uint32_t* pix2 = (uint32_t*)callocE(1, w_ * h_ * sizeof(uint32_t));
+		int       wb   = WID2BYT(w_, 32);
+        beta_conv(pix2, wb, h_, 32,  pix_, pixWb_, pixBpp_, clut_, 0, 0, 0);
+        freeE(pix_);
+        pix_    = (uint8_t*)pix2;
+        pixWb_  = wb;
+        pixBpp_ = 32;
+	}
 }
 
 
@@ -1113,27 +1136,46 @@ void ConvOne::decreaseColor() {
 
 			default:	// 範囲外ならとりあえず、メディアンカット(yuv)へ.
             //case 0:
-				md = 3;
+				md = -1;
 				// 続く
             case 3: // メディアンカット(yuv)
             case 4: // メディアンカット(rgb)
             case 5: // 頻度順 clut
-                // 32ビット色画が、もとよりclutNum色以内なら、そのまま変換.
-				if (alpFlg == 0 && alpNum < 0 && colNum == 256 && dstBpp_ == 8 && (mono_ || FixedClut256<>::isGrey((UINT32_T*)pix_, w_, h_))) {
-					FixedClut256<>::getFixedGreyClut(clut_, 256, 8);
-					FixedClut256<>::fromGreyToBpp8(p, (UINT32_T*)pix_, w_, h_);
+				if (alpFlg == 0 && alpNum < 0 && colNum >= (1 << dstBpp_) && (mono_ || GrayClut<>::isGrey((UINT32_T*)pix_, w_, h_))) {
+					// モノクロ画像専用の減色
+					if (dstBpp_ > 4 && colNum >= 256) {
+						GrayClut<>::getFixedGreyClut(clut_, 256, 8);
+						GrayClut<>::fromGreyToBpp8(p, (UINT32_T*)pix_, w_, h_);
+					} else if (dstBpp_ >= 3) {
+						GrayClut<>::fromGreyToBpp4Clut(p, (UINT32_T*)pix_, w_, h_, clut_);
+					} else if (dstBpp_ >= 2) {
+						GrayClut<>::fromGreyToBpp2Clut(p, (UINT32_T*)pix_, w_, h_, clut_);
+					} else {
+						GrayClut<>::fromGreyToBpp1Clut(p, (UINT32_T*)pix_, w_, h_, clut_);
+					}
 					if (varbose_)
-                        printf("->cltGry256");
+                    printf("->cltGry%d", 1 << dstBpp_);
 				} else if (DecreaseColorIfWithin256<>::conv(p, (UINT32_T*)pix_, w_, h_, clut_, colNum, alpFlg)) {
+	                // 32ビット色画が、もとよりclutNum色以内なら、そのまま変換.
                     if (varbose_)
                         printf("->clt%d", dstBpp_);
-				} else if (md == 5) {	// 頻度順 clut で現職.
+                } else if ((dstBpp_ == 1 || dstBpp_ == 2) && colNum >= (1<<dstBpp_)) {
+					// 1bit色,2bit色専用の減色処理
+					if (dstBpp_ == 1)
+						DecreaseColorLowBpp<>::convPix32ToBpp1(p, (UINT32_T*)pix_, w_, h_, clut_);
+					else
+						DecreaseColorLowBpp<>::convPix32ToBpp2(p, (UINT32_T*)pix_, w_, h_, clut_);
+					if (varbose_)
+	                    printf("->cltBpp%d", 1 << dstBpp_);
+				} else if (md == 5) {	// 頻度順 clut で減色.
                     //int a = (opts_.alpMin >= 0) ? opts_.alpMin : 4;
                     DecreaseColorHst<>(p, (UINT32_T*)pix_, w_, h_, clut_, colNum, alpNum);
                     if (varbose_) {
                         printf("->decreaseCol%d", dstBpp_);
                     }
 				} else {            // 256色より多いので要減色.
+					if (md < 0)
+						md = 3;
                     memset(clut_, 0, sizeof clut_);
                     // メディアンカットな減色.
                     DecreaseColorMC     rcmc;
@@ -1336,11 +1378,11 @@ bool ConvOne::saveImage() {
 			unsigned clutSize = 256;
 			uint8_t* pix2     = NULL;
 			// モノラル化済みの場合
-			if (mono_ || FixedClut256<>::isGrey((uint32_t const*)pix_, w_, h_)) {
+			if (mono_ || GrayClut<>::isGrey((uint32_t const*)pix_, w_, h_)) {
 				if (varbose_) printf("->auto-mono");
 				pix2 = new unsigned char[w_ * h_ + 16];
-				FixedClut256<>::getFixedGreyClut(clut_, 256, 8);
-				FixedClut256<>::fromGreyToBpp8(pix2, (uint32_t const*)pix_, w_, h_);
+				GrayClut<>::getFixedGreyClut(clut_, 256, 8);
+				GrayClut<>::fromGreyToBpp8(pix2, (uint32_t const*)pix_, w_, h_);
 				mono_ = true;
 			} else {	// 色数が 256以下なら clut画に変換
 				pix2 = DecreaseColorIfWithin256<>::convToNewArray((uint32_t*)pix_, w_, h_, clut_, clutSize, false, 0xFFFFFFFF);
@@ -1360,7 +1402,7 @@ bool ConvOne::saveImage() {
 				pixWb_   = w_;
 			}
 		} else if (dstFmt == BM_FMT_JPG) {
-			if (FixedClut256<>::isGrey((uint32_t*)pix_, w_, h_))
+			if (GrayClut<>::isGrey((uint32_t*)pix_, w_, h_))
 				mono_ = true;
 		}
 	}

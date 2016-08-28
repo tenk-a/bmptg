@@ -26,18 +26,6 @@ public:
     static bool decreaseColor(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h
                     , const unsigned* pClut, unsigned clutSize, unsigned idx=0, int alp1=0, int alp2=0);
 
-	/// グレイ画像か?
-	static bool isGrey(const unsigned* pSrc, unsigned w, unsigned h);
-
-	/// グレイに近い画像か?
-	static bool isNearGrey(const unsigned* pSrc, unsigned w, unsigned h, int threshold=12);
-
-	/// グレイ(モノクロ)パレットの作成. 必ず256色分のメモリを用意のこと. bpp=3,4,6,8
-    static void getFixedGreyClut(unsigned *clut, unsigned clutSize, unsigned clutBpp);
-
-	/// 入力がグレイ画像前提で 8bit画像化
-	static bool fromGreyToBpp8(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h);
-
 public:
     /// g1r1b1 デジタル8色. (古い日本のパソコンのパレット番号に合わせたもの)
     static const unsigned* clutGRB111() {
@@ -253,98 +241,5 @@ bool FixedClut256<A>::decreaseColor(unsigned char* pDst, const unsigned* pSrc, u
     return true;
 }
 
-
-/// グレイ画像か?
-template<class A>
-bool FixedClut256<A>::isGrey(const unsigned* pSrc, unsigned w, unsigned h)
-{
-	unsigned a = ARGB_A(pSrc[0]);
-	for (unsigned j = 0; j < w * h; ++j) {
-		unsigned c = pSrc[j];
-		unsigned r = ARGB_R(c);
-		if (r != ARGB_G(c) || r != ARGB_B(c) || a != ARGB_A(c))
-			return false;
-	}
-    return true;
-}
-
-
-/// グレイ画像に近いか?
-template<class A>
-bool FixedClut256<A>::isNearGrey(const unsigned* pSrc, unsigned w, unsigned h, int threshold)
-{
-	size_t	wh     = w * h;
-	size_t  comp   = 0;
-	size_t  near1  = 0;
-	size_t  near2  = 0;
-	size_t  ufar   = 0;
-	size_t  vfar   = 0;
-	int		a      = ARGB_A(pSrc[0]);
-	for (size_t j = 0; j < wh; ++j) {
-		unsigned c = pSrc[j];
-		int		 r = ARGB_R(c);
-		int      g = ARGB_G(c);
-		int      b = ARGB_B(c);
-		//int	 y = ( 58661*g +  29891*r + 11448*b) * (2048>>5) / ( 255 * (100000>>5) );
-		int		 u = (-33126*g -  16874*r + 50000*b) * (1024>>5) / ( 255 * (100000>>5) ); // + 512;
-		int		 v = (-41869*g +  50000*r -  8131*b) * (1024>>5) / ( 255 * (100000>>5) ); // + 512;
-		int au = abs(u);
-		int av = abs(v);
-		if (au == 0 && av == 0) {
-			++comp;
-		} else if (au <= 64 && av <= 64) {
-			++near1;
-		} else if (au <= 128 && av <= 128) {
-			++near2;
-		} else {
-			if (au > 128)
-				++ufar;
-			if (av > 128)
-				++vfar;
-		}
-	}
- #if 0
-	printf(" @chk comp:%%%5.2f", double(comp)*100/wh);
-	printf(" n1:%%%5.2f", double(near1)*100/wh);
-	printf(" n2:%%%5.2f", double(near2)*100/wh);
-	printf(" uf=%%%5.2f(%6d)", double(ufar)*100/wh, ufar);
-	printf(" vf=%%%5.2f(%6d)", double(vfar)*100/wh, vfar);
- #endif
-	return (100 * comp / wh >= 80) /* && (1000 * near2 / wh == 0)*/ && (100000 * ufar / wh == 0) && (100000 * vfar / wh == 0);
-}
-
-
-/** グレイ(モノクロ)パレットの作成.
- * bpp : 3,4,6,8
- */
-template<class A>
-void FixedClut256<A>::getFixedGreyClut(unsigned *clut, unsigned clutSize, unsigned bpp)
-{
-    assert(clutSize > 0 && bpp > 0 && bpp <= 8);
-    if (clutSize > 256)
-        clutSize = 256;
-	unsigned size = 1 << bpp;
-	if (size > clutSize)
-		size   = clutSize;
-	int maxVal = size - 1;
-	unsigned i;
-	for (i = 0; i < size; ++i) {
-		unsigned c = 255 * i / maxVal;
-		clut[i] = (0xFF<<24)|(c << 16)|(c << 8)|c;
-	}
-	for (; i < clutSize; ++i) {
-		clut[i] = 0;
-	}
-}
-
-
-/// モノクロの32ビット色画を前提に8ビット色画に変換.
-template<class A>
-bool FixedClut256<A>::fromGreyToBpp8(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h)
-{
-    for (unsigned j = 0; j < w * h; ++j)
-		pDst[j] = (uint8_t)pSrc[j];
-    return true;
-}
 
 #endif

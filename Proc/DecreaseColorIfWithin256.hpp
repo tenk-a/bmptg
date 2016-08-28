@@ -1,11 +1,11 @@
 /**
- *  @file   DecreaseColorIfWithin256.h
+ *  @file   DecreaseColorIfWithin256.hpp
  *  @brief  32ビット色画の色数が256色(指定色数)に収まるなら、256色画に変換.
  *  @author Masashi KITAMURA
  */
 
-#ifndef DECREASECOLORIFWITHIN256_H
-#define DECREASECOLORIFWITHIN256_H
+#ifndef DECREASECOLORIFWITHIN256_HPP
+#define DECREASECOLORIFWITHIN256_HPP
 
 #pragma once
 
