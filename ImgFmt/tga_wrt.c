@@ -54,7 +54,7 @@ typedef	unsigned       uint32_t;
 #define	POKEW(a,b)		(*(uint16_t *)(a) = (b))
 #define	POKED(a,b)		(*(uint32_t *)(a) = (b))
 
-#if defined _M_IX86	 || defined _X86_ 	// X86 は、アライメントを気にする必要がないので直接アクセス
+#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__	// X86 は、アライメントを気にする必要がないので直接アクセス
  // DM-C v8.41での-j0のバグ対策で, マクロ内にマクロを書かないように修正.
  #define POKEiW(a,b)	(*(uint16_t *)(a) = (b))
 #else

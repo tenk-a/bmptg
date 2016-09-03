@@ -37,7 +37,7 @@ typedef	unsigned       uint32_t;
 /* バイト単位のアドレスから値を取り出すメモリアクセス用マクロ */
 #define	PEEKB(a)		(*(const uint8_t *)(a))
 
-#if defined _M_IX86	 || defined _X86_ 	// X86 は、アライメントを気にする必要がないので直接アクセス
+#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__	// X86 は、アライメントを気にする必要がないので直接アクセス
 #define	PEEKiW(a)		(*(const uint16_t *)(a))
 #define	PEEKiD(a)		(*(const uint32_t *)(a))
 #define	POKEiD(a,b)		(*(uint32_t *)(a) = (b))
@@ -68,7 +68,7 @@ typedef	unsigned       uint32_t;
 /* 出力のための書きこみ処理(エンディアン対策)								*/
 
 
-#if defined _M_IX86	 || defined _X86_ 	// X86 は、アライメントを気にする必要がないので直接アクセス
+#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__	// X86 は、アライメントを気にする必要がないので直接アクセス
 // 汎用ではなく、このファイルのみで有効なマクロ。
 // 引数 a は必ずuint8_t*型変数へのポインタであること!
 // mput_b3()の c は副作用のない値であること！

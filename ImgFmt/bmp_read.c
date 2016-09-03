@@ -39,7 +39,7 @@ typedef	unsigned		uint32_t;
 #define	BBBB(a,b,c,d)	((((uint8_t)(a))<<24)+(((uint8_t)(b))<<16)+(((uint8_t)(c))<<8)+((uint8_t)(d)))
 #define	PEEKB(a)		(*(const uint8_t *)(a))
 
-#if defined _M_IX86	 || defined _X86_ 	// X86 は、アライメントを気にする必要がないので直接アクセス
+#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__	// X86 は、アライメントを気にする必要がないので直接アクセス
 #define	PEEKiW(a)		(*(const uint16_t *)(a))
 #define	PEEKiD(a)		(*(const uint32_t *)(a))
 #else

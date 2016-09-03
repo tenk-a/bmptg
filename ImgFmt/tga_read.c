@@ -58,7 +58,7 @@ typedef	unsigned       uint32_t;
 /* バイト単位のアドレスから値を取り出すメモリアクセス用マクロ */
 #define	PEEKB(a)		(*(const unsigned char  *)(a))
 
-#if defined _M_IX86	 || defined _X86_ 	// X86 は、アライメントを気にする必要がないので直接アクセス
+#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__	// X86 は、アライメントを気にする必要がないので直接アクセス
 #define	PEEKiW(a)		(*(const unsigned short *)(a))
 #define	PEEKiD(a)		(*(const unsigned long  *)(a))
 #else
