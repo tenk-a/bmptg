@@ -1,18 +1,18 @@
 /**
- *  @file   pix32_resizeBicubic.c
- *  @brief  バイキュービック法で拡大縮小.
+ *  @file   pix32_resizeBilinearAlpha.c
+ *  @brief  alphaチャンネルのみをバイリニア法で拡大縮小. rgbは先に出力されていること前提
  *  @author Masashi KITAMURA
  */
 
-#include "pix32_resizeBicubic.h"
+#include "pix32_resizeBilinear.h"
 #include "pix32_resizeAveragingI.h"
 #include "pix32.h"
 #include "def.h"
-#include "pix32_resizeBilinear.h"
+
 
 #define USE_SUM_I64
 #ifdef USE_SUM_I64
-typedef int64_t			sum_t;
+typedef uint64_t		sum_t;
 #define DBL_TO_SUM(x)	(sum_t)((x) * 4096.0)
 #else
 typedef double			sum_t;
@@ -20,49 +20,43 @@ typedef double			sum_t;
 #endif
 
 
-//#define CALC_WEI(d)   (((d) < 1.f) ? (1.5*(d)*(d)*(d)-2.5*(d)*(d)+1.0) : (-0.5*(d)*(d)*(d)+2.5*(d)*(d)-4.0*(d)+2.0))    // a=-0.5
-//#define CALC_WEI(d)	(((d) < 1.f) ? ((d)*(d)*(d) - 2.0*(d)*(d) + 1.0) : (-(d)*(d)*(d) + 5.0*(d)*(d) - 8.0*(d) + 4.0))  // a=-1
-#define CALC_WEI(d)		(((d) < 1.f) ? (((d) - 2.0)*(d)*(d) + 1.0) : (((-(d) + 5.0)*(d) - 8.0)*(d) + 4.0))  // a=-1
+// bilinear
+#define CALC_WEI(d) 	(((d) <= 0.0) ? 1.0 : ((d) >= 1.0) ? 0.0 : 1.0 - (d))
 
 
-static void pix32_resizeBicubicSub(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH);
-static void pix32_resizeBicubicReduc(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH);
+static void pix32_resizeBilinearAlphaSub(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH);
+static void pix32_resizeBilinearAlphaReduc(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH);
 
-/** 拡大縮小
+
+/** αチャンネルのみ拡大縮小
  */
-int  pix32_resizeBicubic(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH, int hasAlpha)
+int  pix32_resizeBilinearAlpha(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH)
 {
     if (!dst || !src || !srcW || !srcH || !dstW || !dstH) {
-        assert(0 && "ERROR pix32_resizeBicubic bad param.\n");
+        assert(0 && "ERROR pix32_resizeBilinear bad param.\n");
         return 0;
     }
 
     if (dstW == srcW && dstH == srcH) {
-        memcpy(dst, src, dstW*srcH*sizeof(*dst));                       // 同じサイズならメモリコピーですます
         return 1;
     }
 
     if ((srcW % dstW) == 0 && (srcH % dstH) == 0) {
-        pix32_resizeAveragingI(dst, dstW, dstH, src, srcW, srcH);       // 整数割りですむ場合は、それ専用の処理にして、滲みを減らす
         return 1;
     }
-	if (dstW >= srcW && dstH >= srcH) {
-    	pix32_resizeBicubicSub(dst, dstW, dstH, src, srcW, srcH);
-	} else {
-		pix32_resizeBicubicReduc(dst, dstW, dstH, src, srcW, srcH);
-	}
-	if (hasAlpha) {
-		pix32_resizeBilinearAlpha(dst, dstW, dstH, src, srcW, srcH);
-	}
+	if (dstW >= srcW && dstH >= srcH)
+    	pix32_resizeBilinearAlphaSub(dst, dstW, dstH, src, srcW, srcH);
+	else
+		pix32_resizeBilinearAlphaReduc(dst, dstW, dstH, src, srcW, srcH);
     return 1;
 }
 
 
-/** Bicubic 拡大のみ
+/** Bilinear 拡大のみ
  */
-static void  pix32_resizeBicubicSub(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH)
+static void  pix32_resizeBilinearAlphaSub(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH)
 {
-	double const R = 1.5;
+	double const R = 0.5;
 	double   rscaleX, rscaleY;
 	uint32_t dstX   , dstY;
 	int      scaleType;
@@ -81,10 +75,7 @@ static void  pix32_resizeBicubicSub(unsigned* dst, unsigned dstW, unsigned dstH,
 			int    y1 = (int)(y0 - R);
 			int    y2 = (int)(y0 + R);
 			int    x, y;
-			sum_t  r, g, b;
-		  #ifdef USE_ALPHA
 			sum_t  a;
-		  #endif
 			sum_t  wei_total;
 
 			if (x1 < 0)
@@ -96,10 +87,7 @@ static void  pix32_resizeBicubicSub(unsigned* dst, unsigned dstW, unsigned dstH,
 			if (y2 >= (int)srcH)
 				y2 = srcH - 1;
 
-			r = 0, g = 0, b = 0;
-	      #if USE_ALPHA
 			a = 0;
-		  #endif
 			wei_total = 0;
 			if (scaleType == 0) {	// (rscaleX != 1.0 && rscaleY != 1.0)
 				for (y = y1; y <= y2; ++y) {
@@ -112,12 +100,7 @@ static void  pix32_resizeBicubicSub(unsigned* dst, unsigned dstW, unsigned dstH,
 		          		sum_t    wei  = DBL_TO_SUM(weiX * weiY);
 
 				        wei_total += wei;
-				        r += PIX32_GET_R(c) * wei;
-				        g += PIX32_GET_G(c) * wei;
-				        b += PIX32_GET_B(c) * wei;
-				      #if USE_ALPHA
 				        a += PIX32_GET_A(c) * wei;
-				      #endif
 				    }
 				}
 			} else if (scaleType == 1) { // (rscaleX != 1.0 && rscaleY == 1.0)
@@ -128,12 +111,7 @@ static void  pix32_resizeBicubicSub(unsigned* dst, unsigned dstW, unsigned dstH,
 			        sum_t    wei  = DBL_TO_SUM( CALC_WEI(lenX) );
 
 			        wei_total += wei;
-			        r += PIX32_GET_R(c) * wei;
-			        g += PIX32_GET_G(c) * wei;
-			        b += PIX32_GET_B(c) * wei;
-			      #if USE_ALPHA
 			        a += PIX32_GET_A(c) * wei;
-			      #endif
 			    }
 			} else {	// (scaleType == 2)	// (rscaleX == 1.0 && rscaleY != 1.0)
 				int x = (int)dstX; //x0;
@@ -143,48 +121,33 @@ static void  pix32_resizeBicubicSub(unsigned* dst, unsigned dstW, unsigned dstH,
 			        sum_t    wei  = DBL_TO_SUM( CALC_WEI(lenY) );
 
 			        wei_total += wei;
-			        r += PIX32_GET_R(c) * wei;
-			        g += PIX32_GET_G(c) * wei;
-			        b += PIX32_GET_B(c) * wei;
-			      #if USE_ALPHA
 			        a += PIX32_GET_A(c) * wei;
-			      #endif
 				}
 			}
 
-			r /= wei_total;
-			g /= wei_total;
-			b /= wei_total;
-	      #if USE_ALPHA
 			a /= wei_total;
-		  #endif
 
 			{
 			 #if defined(USE_SUM_I64) && defined(CPU64)
-				sum_t		ir, ig, ib, ia;
+				sum_t		ia;
 			 #else
-				uint32_t	ir, ig, ib, ia;
+				uint32_t	ia;
 			 #endif
-				ir = r; if (ir < 0) ir = 0; else if (ir > 255) ir = 255;
-				ig = g; if (ig < 0) ig = 0; else if (ig > 255) ig = 255;
-				ib = b; if (ib < 0) ib = 0; else if (ib > 255) ib = 255;
-		      #if USE_ALPHA
-				ia = a; if (ia < 0) ia = 0; else if (ia > 255) ia = 255;
-			  #else
-				ia = 255;
-			  #endif
-				dst[dstY*dstW + dstX] = PIX32_ARGB(ia,ir,ig,ib);
+				int         c;
+				ia = a; if (ia > 255) ia = 255;
+				c = dst[dstY*dstW + dstX];
+				dst[dstY*dstW + dstX] = (ia << 24) | (c & 0xFFFFFF);
 			}
 		}
 	}
 }
 
 
-/** Bicubic 拡大縮小
+/** Bilinear 拡大縮小
  */
-static void  pix32_resizeBicubicReduc(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH)
+static void  pix32_resizeBilinearAlphaReduc(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH)
 {
-	double const R = 1.5;
+	double const R = 0.5;
 	double   rscaleX, rscaleY;
 	double	 mrscaleX, mrscaleY;
 	double   mw, mh;
@@ -205,10 +168,7 @@ static void  pix32_resizeBicubicReduc(unsigned* dst, unsigned dstW, unsigned dst
 
 	for (dstY = 0; dstY < dstH; ++dstY) {
 		for (dstX = 0; dstX < dstW; ++dstX) {
-			sum_t r = 0, g = 0, b = 0;
-		 #ifdef USE_ALPHA
 			sum_t a = 0;
-		 #endif
 			sum_t wei_total = 0;
 			for (my = dstY*mh; my < (dstY+1)*mh; ++my) {
 				for (mx = dstX*mw; mx < (dstX+1)*mw; ++mx) {
@@ -240,12 +200,7 @@ static void  pix32_resizeBicubicReduc(unsigned* dst, unsigned dstW, unsigned dst
 				          		sum_t    wei  = DBL_TO_SUM( weiX * weiY );
 
 						        wei_total += wei;
-						        r += PIX32_GET_R(c) * wei;
-						        g += PIX32_GET_G(c) * wei;
-						        b += PIX32_GET_B(c) * wei;
-						      #if USE_ALPHA
 						        a += PIX32_GET_A(c) * wei;
-						      #endif
 						    }
 						}
 					} else if (scaleType == 1) { // (rscaleX != 1.0 && rscaleY == 1.0)
@@ -256,12 +211,7 @@ static void  pix32_resizeBicubicReduc(unsigned* dst, unsigned dstW, unsigned dst
 					        sum_t    wei  = DBL_TO_SUM( CALC_WEI(lenX) );
 
 					        wei_total += wei;
-					        r += PIX32_GET_R(c) * wei;
-					        g += PIX32_GET_G(c) * wei;
-					        b += PIX32_GET_B(c) * wei;
-					      #if USE_ALPHA
 					        a += PIX32_GET_A(c) * wei;
-					      #endif
 					    }
 					} else {	// (scaleType == 2)	// (rscaleX == 1.0 && rscaleY != 1.0)
 						int x = (int)mx; //x0;
@@ -271,39 +221,24 @@ static void  pix32_resizeBicubicReduc(unsigned* dst, unsigned dstW, unsigned dst
 					        sum_t    wei  = DBL_TO_SUM( CALC_WEI(lenY) );
 
 					        wei_total += wei;
-					        r += PIX32_GET_R(c) * wei;
-					        g += PIX32_GET_G(c) * wei;
-					        b += PIX32_GET_B(c) * wei;
-					      #if USE_ALPHA
 					        a += PIX32_GET_A(c) * wei;
-					      #endif
 						}
 					}
 				}
 			}
 
-			r /= wei_total;
-			g /= wei_total;
-			b /= wei_total;
-	      #if USE_ALPHA
 			a /= wei_total;
-		  #endif
 
 			{
 			 #if defined(USE_SUM_I64) && defined(CPU64)
-				sum_t		ir, ig, ib, ia;
+				sum_t		ia;
 			 #else
-				uint32_t	ir, ig, ib, ia;
+				uint32_t	ia;
 			 #endif
-				ir = r; if (ir < 0) ir = 0; else if (ir > 255) ir = 255;
-				ig = g; if (ig < 0) ig = 0; else if (ig > 255) ig = 255;
-				ib = b; if (ib < 0) ib = 0; else if (ib > 255) ib = 255;
-		      #if USE_ALPHA
-				ia = a; if (ia < 0) ia = 0; else if (ia > 255) ia = 255;
-			  #else
-				ia = 255;
-			  #endif
-				dst[dstY*dstW + dstX] = PIX32_ARGB(ia,ir,ig,ib);
+				int         c;
+				ia = a; if (ia > 255) ia = 255;
+				c = dst[dstY*dstW + dstX];
+				dst[dstY*dstW + dstX] = (ia << 24) | (c & 0xFFFFFF);
 			}
 		}
 	}

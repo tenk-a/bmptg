@@ -5,6 +5,18 @@ set CMN_OPTS=:png -s%SRCDIR% -b8 -if
 
 if not exist %DSTDIR% mkdir %DSTDIR%
 
+set TGTDIR=%DSTDIR%\col2
+if not exist %TGTDIR% mkdir %TGTDIR%
+%BmpTgExe% %CMN_OPTS% :bmp -d%TGTDIR% *.png *.jpg -if -b1
+
+set TGTDIR=%DSTDIR%\col4
+if not exist %TGTDIR% mkdir %TGTDIR%
+%BmpTgExe% %CMN_OPTS% :bmp -d%TGTDIR% *.png *.jpg -if -b2
+
+set TGTDIR=%DSTDIR%\col16mcyuv
+if not exist %TGTDIR% mkdir %TGTDIR%
+%BmpTgExe% %CMN_OPTS% :bmp -d%TGTDIR% *.png *.jpg -if -b4
+
 set TGTDIR=%DSTDIR%\fix256jp
 if not exist %TGTDIR% mkdir %TGTDIR%
 %BmpTgExe% %CMN_OPTS% -d%TGTDIR% *.png *.jpg -cp1

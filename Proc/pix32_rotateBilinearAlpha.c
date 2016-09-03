@@ -1,5 +1,5 @@
 /**
- *  @file   pix32_rotateBilinear.c
+ *  @file   pix32_rotateBilinearAlpha.c
  *  @brief  ‰ñ“](•âŠ®‚ÍƒoƒCƒŠƒjƒA–@)
  *  @author Masashi KITAMURA
  */
@@ -23,26 +23,26 @@ typedef double			sum_t;
 #define CALC_WEI(d) 	(((d) <= 0.0) ? 1.0 : ((d) >= 1.0) ? 0.0 : 1.0 - (d))
 
 
-static int  pix32_rotateBilinearSub(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol);
+static int  pix32_rotateBilinearAlphaSub(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol);
 
 
 /** ‰ñ“]
  */
-int  pix32_rotateBilinear(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol)
+int  pix32_rotateBilinearAlpha(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol)
 {
     if (!dst || !src || !srcW || !srcH) {
-        assert(0 && "ERROR pix32_rotateBilinear bad param.\n");
+        assert(0 && "ERROR pix32_rotateBilinearAlpha bad param.\n");
         return 0;
     }
 
 	rot  = fmod(rot, 360.0);
 
-	return pix32_rotateBilinearSub(dst, src, srcW, srcH, rot, dcol);
+	return pix32_rotateBilinearAlphaSub(dst, src, srcW, srcH, rot, dcol);
 }
 
 /** ‰ñ“]
  */
-static int  pix32_rotateBilinearSub(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol)
+static int  pix32_rotateBilinearAlphaSub(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol)
 {
 	uint32_t	dstX, dstY;
 	double const N   = 0.5;
@@ -51,24 +51,21 @@ static int  pix32_rotateBilinearSub(pix32_rotate_dst_t* dst, const unsigned *src
 	double		cosR = cos(rad);
 	uint32_t 	dstW = (uint32_t)(fabs(srcW * cosR) + fabs(srcH * sinR) + 0.5);
 	uint32_t	dstH = (uint32_t)(fabs(srcW * sinR) + fabs(srcH * cosR) + 0.5);
-	uint32_t*	dstP = (uint32_t*)malloc(dstW * dstH * sizeof(uint32_t));
+	uint32_t*	dstP = dst->mallocMem;
 	double		dstCX = dstW / 2.0;
 	double		dstCY = dstH / 2.0;
 	double		srcCX = srcW / 2.0;
 	double		srcCY = srcH / 2.0;
 
-	if (!dstP) {
+	if (!dstP || dstW != dst->w || dstH != dst->h) {
+		assert(dstP && dstW == dst->w && dstH == dst->h);
 		return 0;
 	}
-
-	dst->mallocMem	= dstP;
-	dst->w   		= dstW;
-	dst->h   		= dstH;
 
 	for (dstY = 0; dstY < dstH; ++dstY) {
 		for (dstX = 0; dstX < dstW; ++dstX) {
 			int    x, y;
-			sum_t  r, g, b, a;
+			sum_t  a;
 			sum_t  wei_total;
 	    	double tx = (dstX + 0.5 - dstCX);
 	    	double ty = (dstY + 0.5 - dstCY);
@@ -88,7 +85,7 @@ static int  pix32_rotateBilinearSub(pix32_rotate_dst_t* dst, const unsigned *src
 				continue;
 			}
 
-			r = 0, g = 0, b = 0, a = 0;
+			a = 0;
 			wei_total = 0;
 			for (y = y1; y <= y2; ++y) {
 				for (x = x1; x <= x2; ++x) {
@@ -100,31 +97,24 @@ static int  pix32_rotateBilinearSub(pix32_rotate_dst_t* dst, const unsigned *src
 	          		sum_t    wei  = DBL_TO_SUM(weiX * weiY);
 
 			        wei_total += wei;
-			        r += PIX32_GET_R(c) * wei;
-			        g += PIX32_GET_G(c) * wei;
-			        b += PIX32_GET_B(c) * wei;
 			        a += PIX32_GET_A(c) * wei;
 			    }
 			}
 
 			if (wei_total) {
-				r /= wei_total;
-				g /= wei_total;
-				b /= wei_total;
 				a /= wei_total;
 			}
 
 			{
 			 #if defined(USE_SUM_I64) && defined(CPU64)
-				sum_t		ir, ig, ib, ia;
+				sum_t		ia;
 			 #else
-				uint32_t	ir, ig, ib, ia;
+				uint32_t	ia;
 			 #endif
-				ir = r; if (ir > 255) ir = 255;
-				ig = g; if (ig > 255) ig = 255;
-				ib = b; if (ib > 255) ib = 255;
+				uint32_t	c;
 				ia = a; if (ia > 255) ia = 255;
-				dstP[dstY*dstW + dstX] = PIX32_ARGB(ia,ir,ig,ib);
+				c = dstP[dstY*dstW + dstX];
+				dstP[dstY*dstW + dstX] = (ia << 24) | (c & 0xFFFFFF);
 			}
 		}
 	}

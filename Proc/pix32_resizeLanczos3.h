@@ -12,7 +12,7 @@ extern "C" {
 
 /** Šg‘åk¬
  */
-int pix32_resizeLanczos3(unsigned *dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH);
+int pix32_resizeLanczos3(unsigned *dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH, int hasAlpha);
 
 #ifdef __cplusplus
 }

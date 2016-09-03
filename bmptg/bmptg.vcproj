@@ -21,8 +21,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)/exe_$(ConfigurationName)"
-			IntermediateDirectory="$(Temp)/bmptg_obj/$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)exe_$(ConfigurationName)_$(PlatformName)"
+			IntermediateDirectory="$(SolutionDir)obj/$(ConfigurationName)_$(PlatformName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -109,7 +109,7 @@
 		<Configuration
 			Name="Debug|x64"
 			OutputDirectory="$(SolutionDir)exe_$(ConfigurationName)_$(PlatformName)"
-			IntermediateDirectory="$(Temp)\bmptg_obj\$(ConfigurationName)_$(PlatformName)"
+			IntermediateDirectory="$(SolutionDir)obj/$(ConfigurationName)_$(PlatformName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -196,8 +196,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)/exe_$(ConfigurationName)"
-			IntermediateDirectory="$(Temp)/bmptg_obj/$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)exe_$(ConfigurationName)_$(PlatformName)"
+			IntermediateDirectory="$(SolutionDir)obj/$(ConfigurationName)_$(PlatformName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -288,7 +288,7 @@
 		<Configuration
 			Name="Release|x64"
 			OutputDirectory="$(SolutionDir)exe_$(ConfigurationName)_$(PlatformName)"
-			IntermediateDirectory="$(Temp)\bmptg_obj\$(ConfigurationName)_$(PlatformName)"
+			IntermediateDirectory="$(SolutionDir)obj/$(ConfigurationName)_$(PlatformName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -558,6 +558,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Proc\pix32_resizeBilinearAlpha.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\Proc\pix32_resizeLanczos3.c"
 				>
 			</File>
@@ -591,6 +595,10 @@
 			</File>
 			<File
 				RelativePath="..\Proc\pix32_rotateBilinear.c"
+				>
+			</File>
+			<File
+				RelativePath="..\Proc\pix32_rotateBilinearAlpha.c"
 				>
 			</File>
 			<File

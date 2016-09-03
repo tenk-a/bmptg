@@ -13,7 +13,7 @@ extern "C" {
 
 /** Šg‘åk¬
  */
-int pix32_resizeBicubic(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH);
+int pix32_resizeBicubic(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH, int hasAlpha);
 
 #ifdef __cplusplus
 }

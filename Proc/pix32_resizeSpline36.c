@@ -8,6 +8,7 @@
  */
 
 #include "pix32_resizeSpline36.h"
+#include "pix32_resizeBilinear.h"
 #include "pix32_resizeAveragingI.h"
 #include "pix32.h"
 #include "def.h"
@@ -39,7 +40,7 @@ static void pix32_resizeSpline36Reduc(unsigned* dst, unsigned dstW, unsigned dst
 
 /** Šg‘åk¬
  */
-int  pix32_resizeSpline36(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH)
+int  pix32_resizeSpline36(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH, int hasAlpha)
 {
     if (!dst || !src || !srcW || !srcH || !dstW || !dstH) {
         assert(0 && "ERROR pix32_resizeSpline36 bad param.\n");
@@ -59,9 +60,14 @@ int  pix32_resizeSpline36(unsigned *dst, unsigned dstW, unsigned dstH, const uns
     	pix32_resizeSpline36Sub(dst, dstW, dstH, src, srcW, srcH);
 	else								// Šg‘åk¬
 		pix32_resizeSpline36Reduc(dst, dstW, dstH, src, srcW, srcH);
+
+	if (hasAlpha)	// ƒ¿ƒ`ƒƒƒ“ƒlƒ‹•”•ª‚ÍƒoƒCƒŠƒjƒA‚Åˆ—
+		pix32_resizeBilinearAlpha(dst, dstW, dstH, src, srcW, srcH);
+
     return 1;
 }
 
+#define NO_ALP
 
 /** spline-36 Šg‘å‚Ì‚İ
  */
@@ -87,7 +93,10 @@ static void  pix32_resizeSpline36Sub(unsigned* dst, unsigned dstW, unsigned dstH
 			int    y1 = (int)(y0 - N);
 			int    y2 = (int)(y0 + N);
 			int    x, y;
-			sum_t  r, g, b, a;
+			sum_t  r, g, b;
+		  #ifdef USE_ALPHA
+			sum_t  a;
+		  #endif
 			sum_t  wei_total;
 
 			if (x1 < 0)
@@ -99,7 +108,10 @@ static void  pix32_resizeSpline36Sub(unsigned* dst, unsigned dstW, unsigned dstH
 			if (y2 >= (int)srcH)
 				y2 = srcH - 1;
 
-			r = 0, g = 0, b = 0, a = 0;
+			r = 0, g = 0, b = 0;
+	      #if USE_ALPHA
+			a = 0;
+		  #endif
 			wei_total = 0;
 			if (scaleType == 0) {	// (rscaleX != 1.0 && rscaleY != 1.0)
 				for (y = y1; y <= y2; ++y) {
@@ -121,7 +133,9 @@ static void  pix32_resizeSpline36Sub(unsigned* dst, unsigned dstW, unsigned dstH
 				        r += PIX32_GET_R(c) * wei;
 				        g += PIX32_GET_G(c) * wei;
 				        b += PIX32_GET_B(c) * wei;
+				      #if USE_ALPHA
 				        a += PIX32_GET_A(c) * wei;
+				      #endif
 				    }
 				}
 			} else if (scaleType == 1) { // (rscaleX != 1.0 && rscaleY == 1.0)
@@ -135,7 +149,9 @@ static void  pix32_resizeSpline36Sub(unsigned* dst, unsigned dstW, unsigned dstH
 			        r += PIX32_GET_R(c) * wei;
 			        g += PIX32_GET_G(c) * wei;
 			        b += PIX32_GET_B(c) * wei;
+			      #if USE_ALPHA
 			        a += PIX32_GET_A(c) * wei;
+			      #endif
 			    }
 			} else {	// (scaleType == 2)	// (rscaleX == 1.0 && rscaleY != 1.0)
 				int x = (int)dstX; //x0;
@@ -148,14 +164,18 @@ static void  pix32_resizeSpline36Sub(unsigned* dst, unsigned dstW, unsigned dstH
 			        r += PIX32_GET_R(c) * wei;
 			        g += PIX32_GET_G(c) * wei;
 			        b += PIX32_GET_B(c) * wei;
+			      #if USE_ALPHA
 			        a += PIX32_GET_A(c) * wei;
+			      #endif
 				}
 			}
 
 			r /= wei_total;
 			g /= wei_total;
 			b /= wei_total;
+	      #if USE_ALPHA
 			a /= wei_total;
+	      #endif
 
 			{
 			 #if defined(USE_SUM_I64) && defined(CPU64)
@@ -166,7 +186,11 @@ static void  pix32_resizeSpline36Sub(unsigned* dst, unsigned dstW, unsigned dstH
 				ir = r; if (ir < 0) ir = 0; else if (ir > 255) ir = 255;
 				ig = g; if (ig < 0) ig = 0; else if (ig > 255) ig = 255;
 				ib = b; if (ib < 0) ib = 0; else if (ib > 255) ib = 255;
+		      #if USE_ALPHA
 				ia = a; if (ia < 0) ia = 0; else if (ia > 255) ia = 255;
+			  #else
+				ia = 255;
+			  #endif
 				dst[dstY*dstW + dstX] = PIX32_ARGB(ia,ir,ig,ib);
 			}
 		}
@@ -199,7 +223,10 @@ static void  pix32_resizeSpline36Reduc(unsigned* dst, unsigned dstW, unsigned ds
 
 	for (dstY = 0; dstY < dstH; ++dstY) {
 		for (dstX = 0; dstX < dstW; ++dstX) {
-			sum_t r = 0, g = 0, b = 0, a = 0;
+			sum_t r = 0, g = 0, b = 0;
+		  #ifdef USE_ALPHA
+			sum_t a = 0;
+		  #endif
 			sum_t wei_total = 0;
 			for (my = dstY*mh; my < (dstY+1)*mh; ++my) {
 				for (mx = dstX*mw; mx < (dstX+1)*mw; ++mx) {
@@ -234,7 +261,9 @@ static void  pix32_resizeSpline36Reduc(unsigned* dst, unsigned dstW, unsigned ds
 						        r += PIX32_GET_R(c) * wei;
 						        g += PIX32_GET_G(c) * wei;
 						        b += PIX32_GET_B(c) * wei;
+						      #if USE_ALPHA
 						        a += PIX32_GET_A(c) * wei;
+						      #endif
 						    }
 						}
 					} else if (scaleType == 1) { // (rscaleX != 1.0 && rscaleY == 1.0)
@@ -248,7 +277,9 @@ static void  pix32_resizeSpline36Reduc(unsigned* dst, unsigned dstW, unsigned ds
 					        r += PIX32_GET_R(c) * wei;
 					        g += PIX32_GET_G(c) * wei;
 					        b += PIX32_GET_B(c) * wei;
+					      #if USE_ALPHA
 					        a += PIX32_GET_A(c) * wei;
+					      #endif
 					    }
 					} else {	// (scaleType == 2)	// (rscaleX == 1.0 && rscaleY != 1.0)
 						int x = (int)mx; //x0;
@@ -261,7 +292,9 @@ static void  pix32_resizeSpline36Reduc(unsigned* dst, unsigned dstW, unsigned ds
 					        r += PIX32_GET_R(c) * wei;
 					        g += PIX32_GET_G(c) * wei;
 					        b += PIX32_GET_B(c) * wei;
+					      #if USE_ALPHA
 					        a += PIX32_GET_A(c) * wei;
+					      #endif
 						}
 					}
 				}
@@ -270,7 +303,9 @@ static void  pix32_resizeSpline36Reduc(unsigned* dst, unsigned dstW, unsigned ds
 			r /= wei_total;
 			g /= wei_total;
 			b /= wei_total;
+	      #if USE_ALPHA
 			a /= wei_total;
+	      #endif
 
 			{
 			 #if defined(USE_SUM_I64) && defined(CPU64)
@@ -281,7 +316,11 @@ static void  pix32_resizeSpline36Reduc(unsigned* dst, unsigned dstW, unsigned ds
 				ir = r; if (ir < 0) ir = 0; else if (ir > 255) ir = 255;
 				ig = g; if (ig < 0) ig = 0; else if (ig > 255) ig = 255;
 				ib = b; if (ib < 0) ib = 0; else if (ib > 255) ib = 255;
+		      #if USE_ALPHA
 				ia = a; if (ia < 0) ia = 0; else if (ia > 255) ia = 255;
+			  #else
+				ia = 255;
+			  #endif
 				dst[dstY*dstW + dstX] = PIX32_ARGB(ia,ir,ig,ib);
 			}
 		}

@@ -8,6 +8,7 @@
  */
 
 #include "pix32_resizeLanczos3.h"
+#include "pix32_resizeBilinear.h"
 #include "pix32_resizeAveragingI.h"
 #include "pix32.h"
 #include "def.h"
@@ -17,7 +18,7 @@ void pix32_resizeLanczos3Sub(unsigned* dst, unsigned dstW, unsigned dstH, unsign
 
 /** 拡大縮小
  */
-int pix32_resizeLanczos3(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH)
+int pix32_resizeLanczos3(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH, int hasAlpha)
 {
     if (!dst || !src || !srcW || !srcH || !dstW || !dstH) {
         assert(0 && "ERROR pix32_resizeLanczos3 bad param.\n");
@@ -35,6 +36,10 @@ int pix32_resizeLanczos3(unsigned *dst, unsigned dstW, unsigned dstH, const unsi
     }
 
     pix32_resizeLanczos3Sub(dst, dstW, dstH, src, srcW, srcH);
+
+	if (hasAlpha) {	// αチャンネル部分はバイリニアで処理
+    	pix32_resizeBilinearAlpha(dst, dstW, dstH, src, srcW, srcH);
+	}
     return 1;
 }
 
@@ -89,7 +94,10 @@ void pix32_resizeLanczos3Sub(unsigned* dst, unsigned dstW, unsigned dstH, unsign
 			int    y1 = (int)((y0 - N) / scaleY2);
 			int    y2 = (int)((y0 + N) / scaleY2);
 			int    x, y;
-			double r, g, b, a;
+			double r, g, b;
+		  #ifdef USE_ALPHA
+			double a;
+		  #endif
 			double wei_total;
 
 			if (x1 < 0)
@@ -101,7 +109,10 @@ void pix32_resizeLanczos3Sub(unsigned* dst, unsigned dstW, unsigned dstH, unsign
 			if (y2 >= (int)srcH)
 				y2 = srcH - 1;
 
-			r = 0.0, g = 0.0, b = 0.0, a = 0.0;
+			r = 0.0, g = 0.0, b = 0.0;
+		 #ifdef USE_ALPHA
+			a = 0.0;
+		 #endif
 			wei_total = 0.0;
 			if (scaleType == 0) {	// (scaleX != 1.0 && scaleY != 1.0)
 				for (y = y1; y <= y2; ++y) {
@@ -117,7 +128,9 @@ void pix32_resizeLanczos3Sub(unsigned* dst, unsigned dstW, unsigned dstH, unsign
 				        r += PIX32_GET_R(c) * wei;
 				        g += PIX32_GET_G(c) * wei;
 				        b += PIX32_GET_B(c) * wei;
+					 #ifdef USE_ALPHA
 				        a += PIX32_GET_A(c) * wei;
+				     #endif
 				    }
 				}
 			} else if (scaleType == 1) { // (scaleX != 1.0 && scaleY == 1.0)
@@ -131,7 +144,9 @@ void pix32_resizeLanczos3Sub(unsigned* dst, unsigned dstW, unsigned dstH, unsign
 			        r += PIX32_GET_R(c) * wei;
 			        g += PIX32_GET_G(c) * wei;
 			        b += PIX32_GET_B(c) * wei;
+				 #ifdef USE_ALPHA
 			        a += PIX32_GET_A(c) * wei;
+			     #endif
 			    }
 			} else {	// (scaleType == 2)	// (scaleX == 1.0 && scaleY != 1.0)
 				int x = (int)dstX; //x0;
@@ -144,21 +159,29 @@ void pix32_resizeLanczos3Sub(unsigned* dst, unsigned dstW, unsigned dstH, unsign
 			        r += PIX32_GET_R(c) * wei;
 			        g += PIX32_GET_G(c) * wei;
 			        b += PIX32_GET_B(c) * wei;
+				 #ifdef USE_ALPHA
 			        a += PIX32_GET_A(c) * wei;
+			     #endif
 				}
 			}
 
 			r /= wei_total;
 			g /= wei_total;
 			b /= wei_total;
+		 #ifdef USE_ALPHA
 			a /= wei_total;
+	     #endif
 
 			{
 				int ir, ig, ib, ia;
 				ir = (int)r; if (ir < 0) ir = 0; else if (ir > 255) ir = 255;
 				ig = (int)g; if (ig < 0) ig = 0; else if (ig > 255) ig = 255;
 				ib = (int)b; if (ib < 0) ib = 0; else if (ib > 255) ib = 255;
+			 #ifdef USE_ALPHA
 				ia = (int)a; if (ia < 0) ia = 0; else if (ia > 255) ia = 255;
+			 #else
+			 	ia = 255;
+			 #endif
 				dst[dstY*dstW + dstX] = PIX32_ARGB(ia,ir,ig,ib);
 			}
 		}

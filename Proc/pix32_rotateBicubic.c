@@ -28,16 +28,22 @@ static int  pix32_rotateBicubicSub(pix32_rotate_dst_t* dst, const unsigned *src,
 
 /** 回転
  */
-int  pix32_rotateBicubic(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol)
+int  pix32_rotateBicubic(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol, int hasAlpha)
 {
     if (!dst || !src || !srcW || !srcH) {
-        assert(0 && "ERROR pix32_resizeBicubic bad param.\n");
+        assert(0 && "ERROR pix32_rotateBicubic bad param.\n");
         return 0;
     }
 
 	rot  = fmod(rot, 360.0);
 
-	return pix32_rotateBicubicSub(dst, src, srcW, srcH, rot, dcol);
+	if (pix32_rotateBicubicSub(dst, src, srcW, srcH, rot, dcol) == 0)
+		return 0;
+
+	if (hasAlpha)	// αチャンネル部分はバイリニアで処理
+		pix32_rotateBilinearAlpha(dst, src, srcW, srcH, rot, dcol);
+
+	return 1;
 }
 
 /** 回転
@@ -68,7 +74,10 @@ static int  pix32_rotateBicubicSub(pix32_rotate_dst_t* dst, const unsigned *src,
 	for (dstY = 0; dstY < dstH; ++dstY) {
 		for (dstX = 0; dstX < dstW; ++dstX) {
 			int    x, y;
-			sum_t  r, g, b, a;
+			sum_t  r, g, b;
+		  #ifdef USE_ALPHA
+			sum_t  a;
+		  #endif
 			sum_t  wei_total;
 	    	double tx = (dstX + 0.5 - dstCX);
 	    	double ty = (dstY + 0.5 - dstCY);
@@ -88,7 +97,10 @@ static int  pix32_rotateBicubicSub(pix32_rotate_dst_t* dst, const unsigned *src,
 				continue;
 			}
 
-			r = 0, g = 0, b = 0, a = 0;
+			r = 0, g = 0, b = 0;
+		  #ifdef USE_ALPHA
+			a = 0;
+		  #endif
 			wei_total = 0;
 			for (y = y1; y <= y2; ++y) {
 				for (x = x1; x <= x2; ++x) {
@@ -103,7 +115,9 @@ static int  pix32_rotateBicubicSub(pix32_rotate_dst_t* dst, const unsigned *src,
 			        r += PIX32_GET_R(c) * wei;
 			        g += PIX32_GET_G(c) * wei;
 			        b += PIX32_GET_B(c) * wei;
+				  #ifdef USE_ALPHA
 			        a += PIX32_GET_A(c) * wei;
+				  #endif
 			    }
 			}
 
@@ -111,7 +125,9 @@ static int  pix32_rotateBicubicSub(pix32_rotate_dst_t* dst, const unsigned *src,
 				r /= wei_total;
 				g /= wei_total;
 				b /= wei_total;
+			 #ifdef USE_ALPHA
 				a /= wei_total;
+			 #endif
 			}
 
 			{
@@ -123,7 +139,11 @@ static int  pix32_rotateBicubicSub(pix32_rotate_dst_t* dst, const unsigned *src,
 				ir = r; if (ir < 0) ir = 0; else if (ir > 255) ir = 255;
 				ig = g; if (ig < 0) ig = 0; else if (ig > 255) ig = 255;
 				ib = b; if (ib < 0) ib = 0; else if (ib > 255) ib = 255;
+			 #ifdef USE_ALPHA
 				ia = a; if (ia < 0) ia = 0; else if (ia > 255) ia = 255;
+			 #else
+				ia = 255;
+			 #endif
 				dstP[dstY*dstW + dstX] = PIX32_ARGB(ia,ir,ig,ib);
 			}
 		}

@@ -345,7 +345,7 @@ bool ConvOne::imageLoad() {
     freeE(src_);
     if (c == 0) {
         if (varbose_) printf("\n");
-        printf("%s : ‰æ‘œ“Ç‚İ‚±‚İ‚É¸”s\n", srcName_);
+        printf("%s : ‰æ‘œ“Ç‚İ‚İ‚É¸”s\n", srcName_);
         freeE(pix_);
         return 0;
     }
@@ -715,7 +715,7 @@ void ConvOne::rotateImage() {
 	}
 
 	pix32_rotate_dst_t dst = {0};
-	if (pix32_rotate(&dst, (UINT32_T const*)pix_, w_, h_, -rotR, (UINT32_T)colKey, opts_.rszType) == 0 || !dst.mallocMem) {
+	if (pix32_rotate(&dst, (UINT32_T const*)pix_, w_, h_, -rotR, (UINT32_T)colKey, pixBpp_ > 24, opts_.rszType) == 0 || !dst.mallocMem) {
 		printf("\n'not enough memory!'\n");
 		return;
 	} 
@@ -929,7 +929,7 @@ void ConvOne::resizeImage1st() {
             if (pixBpp_ == 8)
                 pix8_resize(pix2, rszW, rszH, pix_, w_, h_);    //x printf("CLUT•t‰æ‘œ‚Ì‚Ü‚Ü‚Å‚ÍŠgk‚Å‚«‚È‚¢\n");
             else
-                pix32_resize((UINT32_T*)pix2, rszW, rszH, (UINT32_T*)pix_, w_, h_, opts_.rszType);
+                pix32_resize((UINT32_T*)pix2, rszW, rszH, (UINT32_T*)pix_, w_, h_, opts_.rszType, pixBpp_ > 24);
             w_ = rszW, h_ = rszH;
             freeE(pix_);
             pix_ = pix2;
@@ -1039,7 +1039,7 @@ void ConvOne::resizeImage2nd() {
             if (pixBpp_ == 8)
                 printf("CLUT•t‰æ‘œ‚Ì‚Ü‚Ü‚Å‚ÍŠgk‚Å‚«‚È‚¢(-if‚Å‘½F‰»‚Å‚«‚Ü‚·)\n");
             else
-                pix32_resize((UINT32_T*)pix2, rszW, rszH, (UINT32_T*)pix_, w_, h_, opts_.rszType /*, opts_.rszK[c]*/);
+                pix32_resize((UINT32_T*)pix2, rszW, rszH, (UINT32_T*)pix_, w_, h_, opts_.rszType, pixBpp_ > 24);
             w_ = rszW;
             h_ = rszH;
             freeE(pix_);
@@ -1378,7 +1378,7 @@ bool ConvOne::saveImage() {
 			unsigned clutSize = 256;
 			uint8_t* pix2     = NULL;
 			// ƒ‚ƒmƒ‰ƒ‹‰»Ï‚İ‚Ìê‡
-			if (mono_ || GrayClut<>::isGrey((uint32_t const*)pix_, w_, h_)) {
+			if (/*mono_ ||*/ GrayClut<>::isGrey((uint32_t const*)pix_, w_, h_)) {
 				if (varbose_) printf("->auto-mono");
 				pix2 = new unsigned char[w_ * h_ + 16];
 				GrayClut<>::getFixedGreyClut(clut_, 256, 8);

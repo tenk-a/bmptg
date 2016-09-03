@@ -21,9 +21,11 @@ extern "C" {
 #endif
 
 int  pix32_rotateBilinear(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol);
-int  pix32_rotateBicubic(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol);
-int  pix32_rotateSpline36(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol);
+int  pix32_rotateBicubic(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol, int hasAlpha);
+int  pix32_rotateSpline36(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol, int hasAlpha);
 
+/// すでに回転済みの画像のαチャンネルだけバイリニアで設定し直すためのルーチン
+int  pix32_rotateBilinearAlpha(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol);
 #if defined __cplusplus
 }
 #endif
@@ -38,14 +40,14 @@ int  pix32_rotateSpline36(pix32_rotate_dst_t* dst, const unsigned *src, unsigned
  * @param dcol  範囲外の隙間が出来た時に埋める色
  * @param type  変換の種類: 0,1=バイリニア 2=バイキュービック 3,4=Spline36
  */
-inline int  pix32_rotate(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol, int type)
+inline int  pix32_rotate(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol, int hasAlpha, int type)
 {
 	switch (type) {
 	case 0:
 	case 1:	return pix32_rotateBilinear(dst, src, srcW, srcH, rot, dcol);
-	case 2: return pix32_rotateBicubic (dst, src, srcW, srcH, rot, dcol);
+	case 2: return pix32_rotateBicubic (dst, src, srcW, srcH, rot, dcol, hasAlpha);
 	case 3:
-	case 4: return pix32_rotateSpline36(dst, src, srcW, srcH, rot, dcol);
+	case 4: return pix32_rotateSpline36(dst, src, srcW, srcH, rot, dcol, hasAlpha);
 	default: assert(0);
 	}
 	return 0;

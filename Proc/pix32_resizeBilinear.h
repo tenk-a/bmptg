@@ -15,6 +15,8 @@ extern "C" {
  */
 int  pix32_resizeBilinear(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH);
 
+int  pix32_resizeBilinearAlpha(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH);
+
 #ifdef __cplusplus
 }
 #endif
