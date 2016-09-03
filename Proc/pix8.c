@@ -277,12 +277,12 @@ void pix8_resize(uint8_t *pix2, unsigned rszW, unsigned rszH, const uint8_t *pix
 }
 
 
-/// src画像中に bpp の範囲外になる番号があるかチェック. あれば負数を返す.
+/// src画像中に bpp の範囲外になる番号があるかチェック. あれば正数を返す.
 int pix8_hasPixOutOfIdx(uint8_t const* src, int w, int h, int idxMax) {
 	unsigned wh = w * h;
 	unsigned i;
 	for (i = 0; i < wh; ++i) {
-		if (src[i] >= idxMax)
+		if (src[i] > idxMax)
 			return 1;
 	}
 	return 0;
