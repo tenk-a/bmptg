@@ -32,7 +32,7 @@ public:
     void        release();
 
     /// メモリ上のpngデータを設定. ポインタを保持するだけなのでread()を終える前にbinDataを破壊しないこと.
-    bool        setData(const void* binData, unsigned binDataSize);
+    bool        setData(const void* binData, unsigned binDataSize) throw();
 
     unsigned    bpp()        const { return bpp_; }         ///< ビット/ピクセル. 24のみ.
     unsigned    width()      const { return width_; }       ///< 横幅.
@@ -51,7 +51,7 @@ public:
     unsigned    clutSize()   const { return clutSize_; }
     unsigned    getClut(unsigned* clut, unsigned clutSize=0);
 
-    unsigned    imageByte()  const;                         ///< 必要な、展開バイト数を返す.
+    unsigned    imageByte()  const;                         ///< 展開に必要なバイト数を返す.
     bool        read(void* img);
 
     void*       read(unsigned widAlgn=1, unsigned dir=0);

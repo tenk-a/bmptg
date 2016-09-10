@@ -44,12 +44,13 @@ unsigned char* PngEncoder::write(unsigned& rSz, const void* src, unsigned w, uns
 }
 
 
-/// pix に24ビット色画像を展開する. サイズは0だとデフォルトのまま. dirは0が左上から1なら左下から.
+/// pix に画像を展開する. サイズは0だとデフォルトのまま. dirは0が左上から1なら左下から.
 unsigned    PngEncoder::write(unsigned char* dst, unsigned dstSz, const void* src, unsigned width, unsigned height, unsigned bpp, const unsigned* clut, unsigned widByt, unsigned dir)
 {
     assert(bpp == 1 || bpp == 2 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32);
     unsigned        clutSize  = (bpp <= 8) ? 1 << bpp : 0;
     bool            alpFlag   = (clut && clutSize) ? haveAlpha(clut, 1, clutSize) : 0;
+
     png_structp     png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     if (png_ptr == NULL)
         return 0;
@@ -74,7 +75,7 @@ unsigned    PngEncoder::write(unsigned char* dst, unsigned dstSz, const void* sr
     png_set_write_fn(png_ptr, (void *)this, (png_rw_ptr)raw_write_fn, (png_flush_ptr)raw_IO_flush_function);
 
     png_set_bgr(png_ptr);
-  #if 1
+
     int typ = (bpp == 24) ? PNG_COLOR_TYPE_RGB : PNG_COLOR_TYPE_RGB_ALPHA;
     if (bpp <= 8) {
         if (clut) {
@@ -99,11 +100,9 @@ unsigned    PngEncoder::write(unsigned char* dst, unsigned dstSz, const void* sr
             typ = PNG_COLOR_TYPE_GRAY;
         }
     }
-    bpp = (bpp <= 8) ? bpp : 8;
-    png_set_IHDR(png_ptr, info_ptr, width, height, bpp, typ, PNG_INTERLACE_NONE, NULL, NULL);
-  #else
-    png_set_IHDR(png_ptr, info_ptr, width, height, 8, PNG_COLOR_TYPE_RGB_ALPHA, PNG_INTERLACE_NONE, NULL, NULL);
-  #endif
+    int pngbpp = (bpp <= 8) ? bpp : 8;
+    png_set_IHDR(png_ptr, info_ptr, width, height, pngbpp, typ, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+
     png_write_info(png_ptr, info_ptr);
 
     png_bytepp  lines = (png_bytepp)png_malloc(png_ptr, height*sizeof(png_bytep));  //x new png_bytep[height];

@@ -95,7 +95,7 @@ bool PngDecoder::isSupported(const void *binData) {
 
 
 /// メモリ上のpngデータを設定. ポインタを保持するだけなのでread()を終える前にbinDataを破壊しないこと.
-bool    PngDecoder::setData(const void* binData, unsigned binDataSize)
+bool    PngDecoder::setData(const void* binData, unsigned binDataSize) throw()
 {
     if (isSupported(binData) == false)
         return false;
@@ -243,10 +243,14 @@ unsigned PngDecoder::getClut(unsigned* clut, unsigned clutSize)
                     int                 n = 0;
                     png_bytep           p = 0;
                     png_get_tRNS(png_ptr_, info_ptr_, &p, &n, NULL);
-                    for (unsigned i = 0; i < plttN && i < unsigned(n) && p != 0; ++i) {
+                    unsigned i;
+                    for (i = 0; i < plttN && i < unsigned(n) && p != 0; ++i) {
                         int a = *p++;
                         clut[i] = ARGB(a,0,0,0) | (clut[i] & 0xFFFFFF);
                     }
+                    for (; i < plttN; ++i) {
+                        clut[i] = ARGB(0xFF,0,0,0) | (clut[i] & 0xFFFFFF);
+					}
                 }
             }
           #if 1 // 必要なし?というか間違い?
@@ -305,60 +309,53 @@ bool    PngDecoder::read(void* pix)
     if (bigEndian_ == false)    // pngのデフォルトはビッグエンディアンなので、リトルエンディアン時はswapで.
         png_set_packswap(png_ptr_);
 
-    if (toClutBpp8_)
+    if (toClutBpp8_) {
         png_set_packing(png_ptr_);
-    if (color_type_ == PNG_COLOR_TYPE_GRAY && toClutBpp8_)
-         png_set_expand_gray_1_2_4_to_8(png_ptr_);
+    	if (color_type_ == PNG_COLOR_TYPE_GRAY)
+        	png_set_expand_gray_1_2_4_to_8(png_ptr_);
+	}
 
     /* Expand paletted colors into true RGB triplets */
     if (color_type_ == PNG_COLOR_TYPE_PALETTE && toTrueColor_)
         png_set_palette_to_rgb(png_ptr_);
 
-    if (png_get_valid(png_ptr_, info_ptr_, PNG_INFO_tRNS) && (toTrueColor_ || bpp_ >= 24))
-        png_set_tRNS_to_alpha(png_ptr_);
+	if (toTrueColor_ || bpp_ >= 24) {
+	    if (png_get_valid(png_ptr_, info_ptr_, PNG_INFO_tRNS)) {
+        	png_set_tRNS_to_alpha(png_ptr_);
+		//} else if (!(color_type_ & PNG_COLOR_MASK_ALPHA)) {		// 強制32bpp化する場合...現状呼び元で32bpp化してるので無し
+		//	png_set_add_alpha(png_ptr_, 0xff, PNG_FILLER_AFTER);
+		}
+	}
 
     if (stripAlpha_)
         png_set_strip_alpha(png_ptr_);
-
-
  #if 0
-    png_color_16    my_background;
-    memset(&my_background, 0, sizeof my_background);
-    png_color_16*   image_background;
-    if (png_get_bKGD(png_ptr_, info_ptr_, &image_background))
-        png_set_background(png_ptr_, image_background, PNG_BACKGROUND_GAMMA_FILE, 1, 1.0);
-    else
-        png_set_background(png_ptr_, &my_background, PNG_BACKGROUND_GAMMA_SCREEN, 0, 1.0);
-
-  #if 1
-    double screen_gamma = 2.2;
-  #else
-    if ( /* We have a user-defined screen gamma value */ ) {
-        screen_gamma = user - defined screen_gamma;
-    }
-    else if ((gamma_str = getenv("SCREEN_GAMMA")) != NULL) {
-        screen_gamma = atof(gamma_str);
-    } else {
-        screen_gamma = 2.2;                     /* A good guess for a PC monitors in a dimly lit room */
-        screen_gamma = 1.7 or 1.0;              /* A good guess for Mac systems */
-    }
-  #endif
-
-    int         intent;
-
-    if (png_get_sRGB(png_ptr_, info_ptr_, &intent))
+	if( (color_type_ & PNG_COLOR_MASK_ALPHA) || png_get_valid( png_ptr_, info_ptr_, PNG_INFO_tRNS ) ) {
+	    png_color_16*   image_background = NULL;
+	    if (png_get_bKGD(png_ptr_, info_ptr_, &image_background)) {
+	        png_set_background(png_ptr_, image_background, PNG_BACKGROUND_GAMMA_FILE, 1, 1.0);
+		} else {
+		    static png_color_16    my_background = { 0 };
+	        png_set_background(png_ptr_, &my_background, PNG_BACKGROUND_GAMMA_SCREEN, 0, 1.0);
+		}
+	}
+ #endif
+ #if 1
+    double   screen_gamma = 2.2;                     /* A good guess for a PC monitors in a dimly lit room */
+    //double screen_gamma = 1.7 or 1.0;              /* A good guess for Mac systems */
+    int		 intent = 0;
+    if (png_get_sRGB(png_ptr_, info_ptr_, &intent)) {
         png_set_gamma(png_ptr_, screen_gamma, 0.45455);
-    else {
-        double      image_gamma;
-
+	} else {
+        double      image_gamma = 0.0;
         if (png_get_gAMA( png_ptr_, info_ptr_,   &image_gamma))
             png_set_gamma(png_ptr_, screen_gamma, image_gamma);
         else
             png_set_gamma(png_ptr_, screen_gamma, 0.45455);
     }
-
+ #endif
+ #if 0
     //x png_set_invert_mono(png_ptr_);
-
     png_set_swap_alpha(png_ptr_);
     png_set_swap(png_ptr_);
     png_set_filler(png_ptr_, 0xff, PNG_FILLER_AFTER);
