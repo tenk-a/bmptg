@@ -148,16 +148,17 @@ int ConvOne::main() {
     resizeCanvas(1);                    // 画像サイズの切り抜き変更
     changeSrcBpp();                     // 入力のbpp_に色を修正。
     reverseImage();                     // 上下左右反転
-    rotR90(opts_.rotR90);               // 右90°
+    rotR90(opts_.rotR90);               // 左右90°
 	rotateImage();						// 任意角回転
     setDstBpp();                        // 出力bppを設定.
-	checkSrcDstBpp();					// clut画同士の変換で、出力bppより色番号が多い時、ソース側をフルカラー化(減色するの前提)
+	checkSrcDstBpp();					// clut画同士の変換で出力bppより色番号が多い時にソース側をフルカラー化(減色するの前提)
 
 	convNukiBlack();                    // 抜き色が色(0,0,0)固定のハード向けに、真黒を(0,0,m)に、抜きドットを(0,0,0)に変換.
     resizeImage1st();                   // 縦横拡縮サイズ変更   // 初回
     filter();                           // フィルタ (ぼかし)
     resizeImage2nd();                   // 縦横拡縮サイズ変更   2回目
     aptRect();                          // 抜き色|αで範囲を求めてサイズ変更
+	patternDither();					// パターンディザを施す
     alphaBlendByColor();                // 指定色とαをブレンドし、αを0 or 255 にする
 	
 	toMono();                           // モノクロ化
@@ -1066,7 +1067,10 @@ void ConvOne::aptRect() {
         pixWb_ = WID2BYT(w_, pixBpp_);
         //* srcW_, srcH_ どうする?
     }
+}
 
+/// パターンディザを施す
+void ConvOne::patternDither() {
     if (opts_.ditBpp && pixBpp_ == 32) {    // ディザを施す
         int dbpp,ditBpp = opts_.ditBpp;
         if (ditBpp <= 0) {              // デフォルトの色のビット数を出力に合わせて選ぶ
@@ -1363,6 +1367,8 @@ void ConvOne::changeMaskImage() {
 
 /// 出力ファイルイメージを生成
 bool ConvOne::saveImage() {
+	bool     rc   = true;
+	uint8_t* pix2 = NULL;
     // 出力準備
     // 減色の色数のためにdstBpp_を流用して値が範囲外の場合があるので、強引に辻褄合わせ
     dstBpp_ = bm_chkDstBpp(opts_.dstFmt, dstBpp_);
@@ -1376,11 +1382,10 @@ bool ConvOne::saveImage() {
 			#endif
 		)) {
 			unsigned clutSize = 256;
-			uint8_t* pix2     = NULL;
 			// モノラル化済みの場合
 			if (/*mono_ ||*/ GrayClut<>::isGrey((uint32_t const*)pix_, w_, h_)) {
 				if (varbose_) printf("->auto-mono");
-				pix2 = new unsigned char[w_ * h_ + 16];
+				pix2 = new uint8_t[w_ * h_ + 16];
 				GrayClut<>::getFixedGreyClut(clut_, 256, 8);
 				GrayClut<>::fromGreyToBpp8(pix2, (uint32_t const*)pix_, w_, h_);
 				mono_ = true;
@@ -1394,7 +1399,7 @@ bool ConvOne::saveImage() {
 				}
 			}
 			if (pix2) {	// 変換成功時
-				delete[] pix_;
+				freeE(pix_);
 				dstBpp_  = (clutSize <= 16 && dstFmt != BM_FMT_TGA) ? 4 : 8;
 				pix_ 	 = pix2;
 				pixBpp_  = 8;
@@ -1420,7 +1425,8 @@ bool ConvOne::saveImage() {
         if (varbose_) printf("\n");
         printf("%s 出力のためのメモリを確保できません\n", dstName_);
         term();
-        return 0;
+		rc = false;
+		goto RET;
     }
 
     // 出力画像を生成
@@ -1437,19 +1443,33 @@ bool ConvOne::saveImage() {
 			printf("->JpgQ=%2d", ((bo_->mono && bo_->quality_grey >= 0) ? bo_->quality_grey : bo_->quality));
 		}
         bo_->clutNum = dstColN_;
+		bo_->nukiCo  = -1;
+		bo_->nukiCoI = -1;
+		if (!opts_.colKeyNA) {
+			if (dstBpp_ <= 8 && nukiClut_ >= 0 && nukiClut_ < (1 << dstBpp_)) {
+				bo_->nukiCoI = nukiClut_;
+			} else if (dstBpp_ > 8 && opts_.colKey != -1) {
+				bo_->nukiCo  = opts_.colKey & 0xFFFFFF;
+			}
+		}
         sz_   = bm_write(dstFmt, dst_, w_, h_, dstBpp_, pix_, pixWb_, pixBpp_, clut_, dir_flgs, bo_);
         if (sz_ <= 0) {
             if (varbose_) printf("\n");
             //x printf("%s を %s に変換中にエラーがありました\n", srcName_, opts_.dstExt);
             printf("%s を 変換中にエラーがありました\n", srcName_);
             term();
-            return 0;
+			rc = false;
+			goto RET;
         }
     }
 
-    free(pix_);
+ RET:
+	if (pix2 && pix_ == pix2)
+		delete[] pix2;
+	else
+	    free(pix_);
     pix_ = NULL;
-    return 1;
+    return rc;
 }
 
 

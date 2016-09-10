@@ -174,6 +174,7 @@ private:
     void filter();
     void resizeImage2nd();
     void aptRect();
+    void patternDither();
     void alphaBlendByColor();
     void setDstBpp();
 	void checkSrcDstBpp();
