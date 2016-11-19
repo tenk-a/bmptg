@@ -197,6 +197,12 @@
     <ClCompile Include="..\Proc\pix32_rotateSpline36.c">
       <Filter>Proc</Filter>
     </ClCompile>
+    <ClCompile Include="..\Proc\pix32_resizeBilinearAlpha.cpp">
+      <Filter>Proc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Proc\pix32_rotateBilinearAlpha.c">
+      <Filter>Proc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BmImgLoad.h">

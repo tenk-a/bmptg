@@ -34,10 +34,12 @@ BMPTG_SRCS=\
 	$(PROC_DIR)pix32_resizeBilinear.c	\
 	$(PROC_DIR)pix32_resizeSpline36.c	\
 	$(PROC_DIR)pix32_resizeLanczos3.c	\
+	$(PROC_DIR)pix32_resizeBilinearAlpha.c	\
 	$(PROC_DIR)pix32_resizeNearestNeighbor.c	\
 	$(PROC_DIR)pix32_rotateBilinear.c	\
 	$(PROC_DIR)pix32_rotateBicubic.c	\
 	$(PROC_DIR)pix32_rotateSpline36.c	\
+	$(PROC_DIR)pix32_rotateBilinearAlpha.c	\
 	$(MISC_DIR)StrExpr.c			\
 	$(MISC_DIR)subr.c 			\
 	$(IMGFMT_DIR)beta.c  			\

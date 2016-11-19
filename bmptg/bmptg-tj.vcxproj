@@ -346,11 +346,13 @@
     <ClCompile Include="..\Proc\pix32_resizeAveragingI.c" />
     <ClCompile Include="..\Proc\pix32_resizeBicubic.c" />
     <ClCompile Include="..\Proc\pix32_resizeBilinear.c" />
+    <ClCompile Include="..\Proc\pix32_resizeBilinearAlpha.cpp" />
     <ClCompile Include="..\Proc\pix32_resizeLanczos3.c" />
     <ClCompile Include="..\Proc\pix32_resizeNearestNeighbor.c" />
     <ClCompile Include="..\Proc\pix32_resizeSpline36.c" />
     <ClCompile Include="..\Proc\pix32_rotateBicubic.c" />
     <ClCompile Include="..\Proc\pix32_rotateBilinear.c" />
+    <ClCompile Include="..\Proc\pix32_rotateBilinearAlpha.c" />
     <ClCompile Include="..\Proc\pix32_rotateSpline36.c" />
     <ClCompile Include="..\Proc\pix8.c" />
     <ClCompile Include="BmImgLoad.cpp" />
