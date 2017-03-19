@@ -1,4 +1,6 @@
 @echo off
+setlocal
+
 set BLD_TYPE=
 set BLD_SRC_NAME=
 set BLD_DST_NAME=
@@ -31,12 +33,59 @@ if "%BLD_TYPE%"=="" (
 call clean_turbojpeg.bat
 
 cd turbojpeg
+
 CMake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=%BLD_TYPE%
+
+call :ReplaceMDtoMT
+
 nmake turbojpeg-static
 copy %BLD_SRC_NAME% %BLD_DST_NAME%
 cd ..
 
+goto END
+
+
+:ReplaceMTtoMD
+for /R %%i in (CMakeCache.txt) do (
+  if exist %%i call :Rep1MTtoMD %%i
+)
+exit /b
+:Rep1MTtoMD
+set TgtReplFile=%1
+set BakReplFile=%1.bak
+if exist %BakReplFile% del %BakReplFile%
+move %TgtReplFile% %BakReplFile%
+type nul >%TgtReplFile%
+for /f "delims=" %%A in (%BakReplFile%) do (
+    set line=%%A
+    call :Rep1SubMTtoMD
+)
+exit /b
+:Rep1SubMTtoMD
+echo %line:/MT=/MD%>>%TgtReplFile%
+exit /b
+
+
+:ReplaceMDtoMT
+for /R %%i in (CMakeCache.txt) do (
+  if exist %%i call :Rep1MDtoMT %%i
+)
+exit /b
+:Rep1MDtoMT
+set TgtReplFile=%1
+set BakReplFile=%1.bak
+if exist %BakReplFile% del %BakReplFile%
+move %TgtReplFile% %BakReplFile%
+type nul >%TgtReplFile%
+for /f "delims=" %%A in (%BakReplFile%) do (
+    set line=%%A
+    call :Rep1SubMDtoMT
+)
+exit /b
+:Rep1SubMDtoMT
+echo %line:/MD=/MT%>>%TgtReplFile%
+exit /b
+
+
 :END
-set BLD_TYPE=
-set BLD_SRC_NAME=
-set BLD_DST_NAME=
+endlocal
