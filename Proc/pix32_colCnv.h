@@ -503,9 +503,9 @@ inline void pix32_argbScale(unsigned *pix, unsigned w, unsigned h, double argb[4
         int         dg = (unsigned char)(d >>  8);
         int         db = (unsigned char)(d);
         da = (int)(da * argb[0]);   if (da > 255) da = 255; else if (da < 0) da = 0;
-        dr = (int)(dr * argb[1]);   if (dr > 255) dr = 255; else if (dr < 0) da = 0;
-        dg = (int)(dg * argb[2]);   if (dg > 255) dg = 255; else if (dg < 0) da = 0;
-        db = (int)(db * argb[3]);   if (db > 255) db = 255; else if (db < 0) da = 0;
+        dr = (int)(dr * argb[1]);   if (dr > 255) dr = 255; else if (dr < 0) dr = 0;
+        dg = (int)(dg * argb[2]);   if (dg > 255) dg = 255; else if (dg < 0) dg = 0;
+        db = (int)(db * argb[3]);   if (db > 255) db = 255; else if (db < 0) db = 0;
         d  = (da << 24) | (dr << 16) | (dg << 8) | db;
         *px++ = d;
     }

@@ -1,5 +1,9 @@
 bmptgC³—š—ğ
 
+v2.38	2016-11
+Ebicubic,spline36,lanczos3‚ÌŠg‘å‚Å‚àƒ¿ƒ`ƒƒƒ“ƒlƒ‹‚É‚Â‚¢‚Ä‚Íbilinear‚Å•âŠ®‚·‚é‚æ‚¤‚É•ÏX
+E-csƒoƒOC³
+
 v2.37	2016-08
 EŠgkŠÖŒW: lanczos-3,spline36,NearestNeighborŠgk’Ç‰Á. bilinear,bicubic “à•”‚Å‚Ìyuv~‚ßrgb‚Åˆ—.
             bilinear‚Ì0.5ƒsƒNƒZƒ‹‚¸‚êC³.

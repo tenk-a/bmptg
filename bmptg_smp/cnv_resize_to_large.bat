@@ -10,9 +10,9 @@ set XRP=xrp600
 set TGTDIR=%DSTDIR%\%XRP%
 if not exist %TGTDIR% mkdir %TGTDIR%
 
-%BmpTgExe% %CMN_OPTS% *.jpg *.png -%XRP% -d%TGTDIR%\tmp -xre
-abx -s -y -x %TGTDIR%\tmp\*.png =move $f %TGTDIR%\$x_e2.png
-goto :EOF
+rem %BmpTgExe% %CMN_OPTS% *.jpg *.png -%XRP% -d%TGTDIR%\tmp -xre
+rem abx -s -y -x %TGTDIR%\tmp\*.png =move $f %TGTDIR%\$x_e2.png
+rem goto :EOF
 
 %BmpTgExe% %CMN_OPTS% *.jpg *.png -%XRP% -d%TGTDIR%\tmp -xrn
 abx -s -y -x %TGTDIR%\tmp\*.png =move $f %TGTDIR%\$x_a.png

@@ -54,25 +54,25 @@ if not exist %TGTDIR% mkdir %TGTDIR%
 %BmpTgExe% %CMN_OPTS% -d%TGTDIR% *.png *.jpg  -xd12:3 -cp2
 
 
-set TGTDIR=%DSTDIR%\fix256rgb_7x6x6m4
-if not exist %TGTDIR% mkdir %TGTDIR%
-%BmpTgExe% %CMN_OPTS% -d%TGTDIR% *.png *.jpg -cp7
+rem set TGTDIR=%DSTDIR%\fix256rgb_7x6x6m4
+rem if not exist %TGTDIR% mkdir %TGTDIR%
+rem %BmpTgExe% %CMN_OPTS% -d%TGTDIR% *.png *.jpg -cp7
 
-set TGTDIR=%DSTDIR%\fix256rgb_7x6x6m4-xd09-2x2
-if not exist %TGTDIR% mkdir %TGTDIR%
-%BmpTgExe% %CMN_OPTS% -d%TGTDIR% *.png *.jpg -xd9:1 -cp7
+rem set TGTDIR=%DSTDIR%\fix256rgb_7x6x6m4-xd09-2x2
+rem if not exist %TGTDIR% mkdir %TGTDIR%
+rem %BmpTgExe% %CMN_OPTS% -d%TGTDIR% *.png *.jpg -xd9:1 -cp7
 
-set TGTDIR=%DSTDIR%\fix256rgb_7x6x6m4-xd09-4x4
-if not exist %TGTDIR% mkdir %TGTDIR%
-%BmpTgExe% %CMN_OPTS% -d%TGTDIR% *.png *.jpg -xd9:2 -cp7
+rem set TGTDIR=%DSTDIR%\fix256rgb_7x6x6m4-xd09-4x4
+rem if not exist %TGTDIR% mkdir %TGTDIR%
+rem %BmpTgExe% %CMN_OPTS% -d%TGTDIR% *.png *.jpg -xd9:2 -cp7
 
-set TGTDIR=%DSTDIR%\fix256rgb_7x6x6m4-xd09-8x8
-if not exist %TGTDIR% mkdir %TGTDIR%
-%BmpTgExe% %CMN_OPTS% -d%TGTDIR% *.png *.jpg -xd9:3 -cp7
+rem set TGTDIR=%DSTDIR%\fix256rgb_7x6x6m4-xd09-8x8
+rem if not exist %TGTDIR% mkdir %TGTDIR%
+rem %BmpTgExe% %CMN_OPTS% -d%TGTDIR% *.png *.jpg -xd9:3 -cp7
 
-set TGTDIR=%DSTDIR%\fix256rgb_7x6x6m4-xd12-8x8
-if not exist %TGTDIR% mkdir %TGTDIR%
-%BmpTgExe% %CMN_OPTS% -d%TGTDIR% *.png *.jpg -xd9:3 -cp7
+rem set TGTDIR=%DSTDIR%\fix256rgb_7x6x6m4-xd12-8x8
+rem if not exist %TGTDIR% mkdir %TGTDIR%
+rem %BmpTgExe% %CMN_OPTS% -d%TGTDIR% *.png *.jpg -xd9:3 -cp7
 
 set TGTDIR=%DSTDIR%\fix256rgb_6x6x6c40
 if not exist %TGTDIR% mkdir %TGTDIR%
