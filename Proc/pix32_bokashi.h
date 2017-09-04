@@ -166,6 +166,160 @@ inline void pix32_bokashi1(unsigned *dst, const unsigned *src, int w, int h)
 
 
 
+/** α 0..254 のピクセル付近だけぼかし変換
+ */
+inline void pix32_bokashiAlpNot255(unsigned *dst, const unsigned *src, int w, int h)
+{
+    unsigned y;
+
+    // 上辺と下辺はそのままコピー(手抜き)
+    memcpy(dst, src, w*sizeof(unsigned));
+    memcpy(&dst[(h-1)*w], &src[(h-1)*w], w*sizeof(unsigned));
+
+    for (y = 1; y < h-1U; ++y) {
+        unsigned        x;
+        unsigned        *pd  = dst + (y*w);
+        const unsigned  *ps  = src + (y*w);
+
+        *pd++ = *ps++;          // 左辺はそのまま(手抜き)
+
+        for (x = 1; x < w-1U; ++x) {
+            //x enum { K0 =  4, K1 =  2, K2 =  1 };     // total=16
+            //x enum { K0 = 12, K1 =  8, K2 =  5 };     // total=64
+            //x enum { K0 = 44, K1 = 32, K2 = 21 };     // total=256
+            enum     { K0 = 40, K1 = 32, K2 = 25 };     // total=256
+            //x enum { KTOTAL = K0 + K1*4 + K2*4 };
+            unsigned    k  = K0;
+            unsigned    c  = ps[0];
+            unsigned    aa = PIX32_GET_A(c);
+          #if 0
+            if (aa == 0) {
+                pd[0] = 0;
+                ++ps;
+                ++pd;
+                continue;
+            }
+          #endif
+            unsigned    a = aa        * K0;
+            unsigned    r = PIX32_GET_R(c) * K0;
+            unsigned    g = PIX32_GET_G(c) * K0;
+            unsigned    b = PIX32_GET_B(c) * K0;
+            unsigned    af=1;
+
+            c = ps[-1];
+            aa = PIX32_GET_A(c);
+            if (aa) {
+                af &= (aa == 0xff);
+                a += aa        * K1;
+                r += PIX32_GET_R(c) * K1;
+                g += PIX32_GET_G(c) * K1;
+                b += PIX32_GET_B(c) * K1;
+                k += K1;
+            }
+
+            c = ps[1];
+            aa = PIX32_GET_A(c);
+            if (aa) {
+                af &= (aa == 0xff);
+                a += aa        * K1;
+                r += PIX32_GET_R(c) * K1;
+                g += PIX32_GET_G(c) * K1;
+                b += PIX32_GET_B(c) * K1;
+                k += K1;
+            }
+
+            c = ps[-w];
+            aa = PIX32_GET_A(c);
+            if (aa) {
+                af &= (aa == 0xff);
+                a += aa        * K1;
+                r += PIX32_GET_R(c) * K1;
+                g += PIX32_GET_G(c) * K1;
+                b += PIX32_GET_B(c) * K1;
+                k += K1;
+            }
+
+            c = ps[w];
+            aa = PIX32_GET_A(c);
+            if (aa) {
+                af &= (aa == 0xff);
+                a += aa        * K1;
+                r += PIX32_GET_R(c) * K1;
+                g += PIX32_GET_G(c) * K1;
+                b += PIX32_GET_B(c) * K1;
+                k += K1;
+            }
+
+            c = ps[-w-1];
+            aa = PIX32_GET_A(c);
+            if (aa) {
+                af &= (aa == 0xff);
+                a += aa        * K2;
+                r += PIX32_GET_R(c) * K2;
+                g += PIX32_GET_G(c) * K2;
+                b += PIX32_GET_B(c) * K2;
+                k += K2;
+            }
+
+            c = ps[-w+1];
+            aa = PIX32_GET_A(c);
+            if (aa) {
+                af &= (aa == 0xff);
+                a += aa        * K2;
+                r += PIX32_GET_R(c) * K2;
+                g += PIX32_GET_G(c) * K2;
+                b += PIX32_GET_B(c) * K2;
+                k += K2;
+            }
+
+            c = ps[ w-1];
+            aa = PIX32_GET_A(c);
+            if (aa) {
+                af &= (aa == 0xff);
+                a += aa        * K2;
+                r += PIX32_GET_R(c) * K2;
+                g += PIX32_GET_G(c) * K2;
+                b += PIX32_GET_B(c) * K2;
+                k += K2;
+            }
+
+            c = ps[ w+1];
+            aa = PIX32_GET_A(c);
+            if (aa) {
+                af &= (aa == 0xff);
+                a += aa        * K2;
+                r += PIX32_GET_R(c) * K2;
+                g += PIX32_GET_G(c) * K2;
+                b += PIX32_GET_B(c) * K2;
+                k += K2;
+            }
+
+            if (af == 0) {
+                a /= k;         //x a/= KTOTAL;
+                r /= k;         //x r/= KTOTAL;
+                g /= k;         //x g/= KTOTAL;
+                b /= k;         //x b/= KTOTAL;
+
+                if (ps[0] == 0) {
+                    if (PIX32_ARGB(0,r,g,b) == 0) {
+                        a = 0;
+                    }
+                }
+                c = PIX32_ARGB(a, r, g, b);
+            } else {
+                c = ps[0];
+            }
+            *pd = c;
+            ++pd;
+            ++ps;
+        }
+        *pd++ = *ps++;          // 右辺はそのまま(手抜き)
+    }
+}
+
+
+
+
 
 
 /**バストアップなどで、縁をαでぼかした画像を生成する. 簡易処理

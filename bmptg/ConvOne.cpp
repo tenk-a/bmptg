@@ -1018,6 +1018,19 @@ void ConvOne::filter() {
                     pix_ = pix2;
                 }
             }
+        } else if (opts_.filterType == 4) { // alp 0..254 のピクセル付近をぼかす(255はぼかさない)
+            if (opts_.bokashiCnt) {
+                int i;
+                if (varbose_) printf("->bokashi4[%d]", opts_.bokashiCnt);
+                for (i = 0; i < opts_.bokashiCnt; ++i) {
+                    UINT8_T *pix2 = (UINT8_T*)callocE(1, w_*h_*4);
+                    //pix32_bokashi1((UINT32_T*)pix2, (UINT32_T*)pix_, w_, h_);
+                    pix32_bokashiAlpNot255((UINT32_T*)pix2, (UINT32_T*)pix_, w_, h_);
+                    freeE( pix_ );
+                    pix_ = pix2;
+                }
+            }
+
         }
     }
 }

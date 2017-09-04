@@ -997,7 +997,7 @@ int Opts::scan(const char *a)
 
         case 'F':   //-xf   ƒtƒBƒ‹ƒ^
             o->filterType = strToI(p, 10);
-            if (o->filterType == 1 || o->filterType == 2 || o->filterType == 3) {
+            if (o->filterType == 1 || o->filterType == 2 || o->filterType == 3 || o->filterType == 4) {
                 o->bokashiCnt = 1;
                 if (*p != 0) {
                     ++p;
