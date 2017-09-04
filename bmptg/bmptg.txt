@@ -1,4 +1,4 @@
-bmptg v2.38
+bmptg v2.39
 
 
 各種加工変換が可能な、bmp,tga,jpg,png 画像ファイル相互変換ツール
@@ -137,6 +137,9 @@ usage> bmptg [-opts] file(s)
   -ag[RATE:OFS] ピクセルRGBよりモノクロ値を求めそれをαとする.
                  RATE,OFSがあれば色の変換 (r,g,b)*RATE+OFS を先に行う
 
+  -ad           抜き色と非抜き色の堺のαをぼかす簡易処理(仮BU作成向)
+                (v2.38以前は -ca -xca で機能だったのを分離)
+  -az           α=0ならRGBも0にする
 
  [clut関係]
   -cpc[FILE]    clut内容をcのテーブルとしてテキスト出力.

@@ -15,6 +15,8 @@
 
 #ifdef USE_JPG_TURBO
 #include "turbojpeg/jpeglib.h"
+#elif defined USE_MOZJPEG
+#include "mozjpeg/jpeglib.h"
 #else
 extern "C" {
 #include "jpeg/jpeglib.h"

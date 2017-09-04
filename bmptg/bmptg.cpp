@@ -26,8 +26,8 @@
  *  2015-03     v2.35 バイキュービック拡縮追加.こちらをデフォルトに.
  *  2015-10     v2.36 -cgc -cem -xvc -xvr -xjl -xqg 追加. 出力bpp指定無しでモノクロ化した場合はなるべく256色画像で出力.
  *  2016-08     v2.37 lanczos-3,spline36,NearestNeighbor拡縮追加. bilinear,bicubic 内部でのyuv止めrgbで処理. bilinearの0.5ピクセルずれ修正.
- *					  -xvにu|m|d|eオプション追加. -xv系2度指定可能に. -xl廃止. -xi[R] 任意角回転追加.
- *  2016-08		v2.38 モノクロ画減色を改善. 1bpp画,2bpp画出力専用の減色を追加. 拡縮回転でのαの補完はバイリニアのみに.
+ *                    -xvにu|m|d|eオプション追加. -xv系2度指定可能に. -xl廃止. -xi[R] 任意角回転追加.
+ *  2016-08     v2.38 モノクロ画減色を改善. 1bpp画,2bpp画出力専用の減色を追加. 拡縮回転でのαの補完はバイリニアのみに.
  *                    clut画で入力bpp>出力bpp時に出力bppに収まらないピクセルがあれば一旦フルカラー化.
  */
 
@@ -50,7 +50,7 @@ char *g_appName;
 
 void usage(void)
 {
-    printf("usage> %s [-opts] file(s)   // v2.38 " __DATE__ "  by tenk*\n", g_appName);
+    printf("usage> %s [-opts] file(s)   // v2.39 " __DATE__ "  by tenk*\n", g_appName);
     printf(
        "  bmp tga jpg png 等画像を相互に変換.\n"
        "  α値は有効で00:透明～0xFF:不透明. α無画は0xFFとして抜色はα=0として処理.\n"
@@ -102,7 +102,7 @@ void usage(void)
        "  -cgc[R|G|B|A] R,G,B,A いずれかのチャンネルを用いてモノクロ化.\n"
        "  -cf[C]        抜色を C (省略時000000)に.\n"
        "  (-ca[C]       -cf拡張で抜色周辺αぼかし. 実験物)\n"
-	   "  -cfn[C]       -cfにほぼ同じだが α=0にしない(-vvでの埋め色)\n"
+       "  -cfn[C]       -cfにほぼ同じだが α=0にしない(-vvでの埋め色)\n"
        "  -an           入力画α値を無視(α無扱い).\n"
        "  -ao           αチャンネルをmask画像化したファイルを出力.\n"
        "  -ai[FILE]     FILEをαチャンネルに読み込む\n"
@@ -112,6 +112,9 @@ void usage(void)
        "  -ac[C:C2]     ピクセルと色Cをαブレンドしα=0 or 0xFF. C2指定はα=0時のRGB値.\n"
        "  -ag[RATE:OFS] ピクセルRGBよりモノクロ値を求めそれをαとする.\n"
        "                 RATE,OFSがあれば色の変換 (r,g,b)*RATE+OFS を先に行う\n"
+       "  -ad           抜き色と非抜き色の堺のαをぼかす簡易処理(仮BU作成向)\n"
+       "                (v2.38以前は -ca -xca で機能だったのを分離)\n"
+       "  -az           α=0ならRGBも0にする\n"
        "\n"
        " [clut関係]\n"
        "  -cpc[FILE]    clut内容をc用テキスト出力.\n"
@@ -125,7 +128,7 @@ void usage(void)
        "                  L=1～4.0:Y,U,V,Aの選択で、Y値をL倍して行う(デフォルト1.2)\n"
        "  -cn[N]        減色時に1<<bpp未満の色数にしたい場合に指定\n"
        "\n"
-	   "  -ap           α付clutで出力. これか抜色指定(-ap)がないとα無clutになる\n"
+       "  -ap           α付clutで出力. これか抜色指定(-ap)がないとα無clutになる\n"
        "  -ap[N]        N:減色時α数. N>=2は強制的に-cp3メディアンカット(yuv)になる\n"
        "  -ci[I]        clut画の抜色番号をIに.\n"
        "  -cc[I:C]      clut の i(0～255)番を色 C に置換. Iが違えば複数指定有効\n"
@@ -139,7 +142,7 @@ void usage(void)
        "  -xrb          拡大にバイリニア法を用いる.\n"
        "  -xre          拡大にspline36を用いる.\n"
        "  -xrl          拡縮にlanczos-3を用いる.\n"
-	   "  -xrn          拡縮にニアレストネイバー法を用いる.\n"
+       "  -xrn          拡縮にニアレストネイバー法を用いる.\n"
        "  -xn           不透明範囲のみにする.\n"
       #ifdef MY_H
        "                -mc[N:M]指定時はNxMチップ単位で狭める.\n"
@@ -147,11 +150,11 @@ void usage(void)
        "  -xv[W:H:X:Y:w:h:x:y]  元画像の(x,y)のw*hをW*H画の(X,Y)にロードした画像にする.\n"
        "                        W,Hは 0なら画像サイズ.\n"
        "                -xv+10:+5 のように+で記述すれば画像サイズに対する増分になる.\n"
-	   "  -xvc[W:H:X:Y:w:h:x:y] センタリング版-xv. X:Y,x:yはセンタリング後オフセット\n"
-	   "  -xvr[W:H:X:Y:w:h:x:y] 右(下)寄版-xv. X:Y,x:yは右寄後のオフセット\n"
-	   "  -xve[W:H:X:Y:w:h:x:y] ファイル名の最後が数字で奇数なら-xv,偶数なら-xvr\n"
-	   "  -xv?u[…],-xv?m[…],-xv?d[…] -xv の縦基準位置指定\n"
-	   "                ?はl|c|rの横指定, u|m|r は縦 上寄|中央寄|下寄 指定\n"
+       "  -xvc[W:H:X:Y:w:h:x:y] センタリング版-xv. X:Y,x:yはセンタリング後オフセット\n"
+       "  -xvr[W:H:X:Y:w:h:x:y] 右(下)寄版-xv. X:Y,x:yは右寄後のオフセット\n"
+       "  -xve[W:H:X:Y:w:h:x:y] ファイル名の最後が数字で奇数なら-xv,偶数なら-xvr\n"
+       "  -xv?u[…],-xv?m[…],-xv?d[…] -xv の縦基準位置指定\n"
+       "                ?はl|c|rの横指定, u|m|r は縦 上寄|中央寄|下寄 指定\n"
        //"  -xl[M:N]      -xv+M:+N:M:N に同じ\n"
       #ifdef MY_H
        "\n"
@@ -180,9 +183,9 @@ void usage(void)
        "  -xi[R]        右R°回転.\n"
        "  -xb           ピクセル値のビット反転(2値画での反転を想定).\n"
        "  -xg[N]        α<=Nの点を(0,0,0)に、出力bppで(0,0,0)になる点を近似の別色に.\n"
-       "  -xca          左上(0,0)の色を抜き色として4隅からα=0の色でペイント.\n"
+       "  -xca[N]       左上(0,0)の色を抜き色として4隅からα=0の色でペイント. N=1-256適応範囲\n"
        "                (バストアップ仮絵作成を想定)\n"
-	   "  -cgn[R|G|B|A] モノクロ画像ぽければ -cg|-cgc の動作(実験中)\n"
+       "  -cgn[R|G|B|A] モノクロ画像ぽければ -cg|-cgc の動作(実験中)\n"
        "  -xf[..]       ぼかしフィルタ処理.\n"
        "   -xf1:N                     ぼかし[3x3:4/2/1]をN回.\n"
        "   (-xf2:N:LeapARGB           実験:-xf1拡張でぼかし画像と通常画を合成)\n"
@@ -264,6 +267,9 @@ int Opts::scan(const char *a)
                 ++p;
                 o->nukiumeRgb = strToUI(p, 16);
             }
+        } else if (c == 'D') {  // -ad
+            o->alpBokasi = (*p != '-');
+
         } else if (c == 'G') {  // -ag
             o->monoToAlp = (*p != '-');
             if (*p == 0) {
@@ -301,6 +307,9 @@ int Opts::scan(const char *a)
         } else if (c == 'I') {  // -ai
             o->alphaPlaneFileName = strdup(p);
             o->fullColFlg         = 1;
+        } else if (c == 'Z') {  // -az
+            o->clearColIfAlp0 = (*p != '-');
+
       #if 0 //旧版
         } else if (c == 'I') {
             if (*p == 0)
@@ -347,14 +356,14 @@ int Opts::scan(const char *a)
             break;
 
         case 'F':   //-cf
-			if (toupper(*p) == 'N') {
-				++p;
-	            o->colKey   = strToUI(p, 16);
-				o->colKeyNA = 1;
-			} else {
-	            o->colKey = strToUI(p, 16);
-			}
-			break;
+            if (toupper(*p) == 'N') {
+                ++p;
+                o->colKey   = strToUI(p, 16);
+                o->colKeyNA = 1;
+            } else {
+                o->colKey = strToUI(p, 16);
+            }
+            break;
 
         case 'A':   //-ca
             o->colKey = strToUI(p, 16);
@@ -366,21 +375,21 @@ int Opts::scan(const char *a)
             break;
 
         case 'E':   //-ce
-        	if (toupper(*p) == 'M') {	// -cem
-            	o->colChSquare = *(p+1) != '-';
-			}
+            if (toupper(*p) == 'M') {   // -cem
+                o->colChSquare = *(p+1) != '-';
+            }
             break;
 
         case 'G':   //-cg
-			o->mono = (*p != '-');
-			if (toupper(*p) == 'C') {	// -cgc
-				int t = toupper(*(unsigned char*)(p+1));
-				o->monoChRGB = (t == 'B') + (t == 'G')*2 + (t == 'R')*3 + (t == 'A')*4;
-			} else if (toupper(*p) == 'N') {	// -cgn
-				int t = toupper(*(unsigned char*)(p+1));
-				o->mono      = 0;
-				o->monoNear  = 1;
-				o->monoChRGB = (t == 'B') + (t == 'G')*2 + (t == 'R')*3 + (t == 'A')*4;
+            o->mono = (*p != '-');
+            if (toupper(*p) == 'C') {   // -cgc
+                int t = toupper(*(unsigned char*)(p+1));
+                o->monoChRGB = (t == 'B') + (t == 'G')*2 + (t == 'R')*3 + (t == 'A')*4;
+            } else if (toupper(*p) == 'N') {    // -cgn
+                int t = toupper(*(unsigned char*)(p+1));
+                o->mono      = 0;
+                o->monoNear  = 1;
+                o->monoChRGB = (t == 'B') + (t == 'G')*2 + (t == 'R')*3 + (t == 'A')*4;
             }
             break;
 
@@ -537,7 +546,7 @@ int Opts::scan(const char *a)
             o->dstFmt    = BM_FMT_BETA;
             this->dstExt = "bin";
       #ifdef MY_H
-		} else if (MY_opt_fmtCheck(p, o, &this->dstExt)) {
+        } else if (MY_opt_fmtCheck(p, o, &this->dstExt)) {
       #endif
         } else {
             goto OPT_ERR;
@@ -680,7 +689,7 @@ int Opts::scan(const char *a)
         fname_delLastDirSep(this->srcDir);
         break;
 
-    case 'T':	// -t
+    case 'T':   // -t
         o->toneType = 0;
         if (*p == 0) {
             o->tone = 50;
@@ -696,11 +705,11 @@ int Opts::scan(const char *a)
         }
         break;
 
-    case 'U':	// -u
+    case 'U':   // -u
         this->updateFlg = (*p == '-') ? 0 : 1;
         break;
 
-    case 'V':	// -v
+    case 'V':   // -v
         o->verbose = (*p == '-') ? 0 : 1;
         break;
 
@@ -710,7 +719,7 @@ int Opts::scan(const char *a)
         switch (c) {
         case 'D':   //-xd
             o->fullColFlg      = 1;
-            if (*p == 'A' || *p == 'a') {	// -xda
+            if (*p == 'A' || *p == 'a') {   // -xda
                 o->ditAlpFlg = 1;
                 p++;
             }
@@ -793,13 +802,13 @@ int Opts::scan(const char *a)
             }
             break;
 
-        case 'Q':	// -xq
-			if (toupper(*p) == 'G') {	// -xqg
-				++p;
-	            o->quality_grey = strToI(p, 10);
-			} else {
-	            o->quality = strToI(p, 10);
-			}
+        case 'Q':   // -xq
+            if (toupper(*p) == 'G') {   // -xqg
+                ++p;
+                o->quality_grey = strToI(p, 10);
+            } else {
+                o->quality = strToI(p, 10);
+            }
             break;
 
         case 'X':   //-xx
@@ -812,14 +821,14 @@ int Opts::scan(const char *a)
 
         case 'J':   //-xj
             o->rotR90 = 1;
-			if (toupper(*p) == 'L') {
-				o->rotR90 = -1;
-			}
-			break;
+            if (toupper(*p) == 'L') {
+                o->rotR90 = -1;
+            }
+            break;
 
         case 'I':   //-xi
             o->rotR = strtod(p, (char**)&p);
-			break;
+            break;
 
         case 'N':   //-xn
             o->nukiRctFlg = 1;
@@ -835,153 +844,153 @@ int Opts::scan(const char *a)
             break;
 
         case 'V':   //-xv
-			if (*p) {
-				if (o->vvIdx >= 2)
-					goto OPT_ERR;
-				ConvOne_Opts::vv_t*	ov = &o->vv[o->vvIdx++];
-				ov->flg = 1;
-				ov->lcr = 0;
-				ov->umd = -1;
-				ov->lcr_ex = 0;
-				for (;;) {
-					int c2 = toupper(*p);
-					if (c2 == 'C') {		// -xvc
-						ov->lcr = 1;
-						++p;
-					} else if (c2 == 'R') {	// -xvr
-						ov->lcr = 2;
-						++p;
-					} else if (c2 == 'L') {	// -xvl
-						ov->lcr = 0;
-						++p;
-					} else if (c2 == 'U') {	// -xvu
-						ov->umd = 0;
-						++p;
-					} else if (c2 == 'M') {	// -xvm
-						ov->umd = 1;
-						++p;
-					} else if (c2 == 'D') {	// -xvd
-						ov->umd = 2;
-						++p;
-					} else if (c2 == 'E') {	// -xve
-						ov->lcr_ex = 1;
-						if (ov->umd < 0)
-							ov->umd = 1;	// umd未設定なら縦中央寄
-						++p;
-					} else {
-						break;
-					}
-				}
-				if (ov->umd < 0)
-					ov->umd = ov->lcr;
-				// W
-				ov->w = 0;
-				ov->h = 0;
-				ov->x = 0;
-				ov->y = 0;
-				ov->sw= 0;
-				ov->sh= 0;
-				ov->sx= 0;
-				ov->sy= 0;
-				if (*p != ':' && *p != ',') {
-					ov->wf = 0;
-					if (*p == '+') {
-						ov->wf = 1;
-						p++;
-					}
-					ov->w = strToI(p, 10);
-				}
-				if (*p == 0)
-					break;
-				p++;
-				// H
-				if (*p != ':' && *p != ',') {
-					ov->hf = 0;
-					if (*p == '+') {
-						ov->hf = 1;
-						p++;
-					}
-					ov->h = strToI(p, 10);
-				}
-				if (*p == 0)
-					break;
-				p++;
-				// X
-				if (*p != ':' && *p != ',') {
-					ov->xf = 0;
-					//if (*p == '+') {
-					//    ov->xf = 1;
-					//    p++;
-					//}
-					ov->x = strToI(p, 10);
-				}
-				if (*p == 0)
-					break;
-				p++;
-				// Y
-				if (*p != ':' && *p != ',') {
-					ov->yf = 0;
-					//if (*p == '+') {
-					//    ov->yf = 1;
-					//    p++;
-					//}
-					ov->y = strToI(p, 10);
-				}
-				if (*p == 0)
-					break;
-				p++;
-				// w
-				if (*p != ':' && *p != ',') {
-					ov->sw = strToI(p, 10);
-				}
-				if (*p == 0)
-					break;
-				p++;
-				// h
-				if (*p != ':' && *p != ',') {
-					ov->sh = strToI(p, 10);
-				}
-				if (*p == 0)
-					break;
-				p++;
-				// x
-				if (*p != ':' && *p != ',') {
-					ov->sx = strToI(p, 10);
-				}
-				if (*p == 0)
-					break;
-				p++;
-				// y
-				if (*p != ':' && *p != ',') {
-					ov->sy = strToI(p, 10);
-				}
-			} else {
+            if (*p) {
+                if (o->vvIdx >= 2)
+                    goto OPT_ERR;
+                ConvOne_Opts::vv_t* ov = &o->vv[o->vvIdx++];
+                ov->flg = 1;
+                ov->lcr = 0;
+                ov->umd = -1;
+                ov->lcr_ex = 0;
+                for (;;) {
+                    int c2 = toupper(*p);
+                    if (c2 == 'C') {        // -xvc
+                        ov->lcr = 1;
+                        ++p;
+                    } else if (c2 == 'R') { // -xvr
+                        ov->lcr = 2;
+                        ++p;
+                    } else if (c2 == 'L') { // -xvl
+                        ov->lcr = 0;
+                        ++p;
+                    } else if (c2 == 'U') { // -xvu
+                        ov->umd = 0;
+                        ++p;
+                    } else if (c2 == 'M') { // -xvm
+                        ov->umd = 1;
+                        ++p;
+                    } else if (c2 == 'D') { // -xvd
+                        ov->umd = 2;
+                        ++p;
+                    } else if (c2 == 'E') { // -xve
+                        ov->lcr_ex = 1;
+                        if (ov->umd < 0)
+                            ov->umd = 1;    // umd未設定なら縦中央寄
+                        ++p;
+                    } else {
+                        break;
+                    }
+                }
+                if (ov->umd < 0)
+                    ov->umd = ov->lcr;
+                // W
+                ov->w = 0;
+                ov->h = 0;
+                ov->x = 0;
+                ov->y = 0;
+                ov->sw= 0;
+                ov->sh= 0;
+                ov->sx= 0;
+                ov->sy= 0;
+                if (*p != ':' && *p != ',') {
+                    ov->wf = 0;
+                    if (*p == '+') {
+                        ov->wf = 1;
+                        p++;
+                    }
+                    ov->w = strToI(p, 10);
+                }
+                if (*p == 0)
+                    break;
+                p++;
+                // H
+                if (*p != ':' && *p != ',') {
+                    ov->hf = 0;
+                    if (*p == '+') {
+                        ov->hf = 1;
+                        p++;
+                    }
+                    ov->h = strToI(p, 10);
+                }
+                if (*p == 0)
+                    break;
+                p++;
+                // X
+                if (*p != ':' && *p != ',') {
+                    ov->xf = 0;
+                    //if (*p == '+') {
+                    //    ov->xf = 1;
+                    //    p++;
+                    //}
+                    ov->x = strToI(p, 10);
+                }
+                if (*p == 0)
+                    break;
+                p++;
+                // Y
+                if (*p != ':' && *p != ',') {
+                    ov->yf = 0;
+                    //if (*p == '+') {
+                    //    ov->yf = 1;
+                    //    p++;
+                    //}
+                    ov->y = strToI(p, 10);
+                }
+                if (*p == 0)
+                    break;
+                p++;
+                // w
+                if (*p != ':' && *p != ',') {
+                    ov->sw = strToI(p, 10);
+                }
+                if (*p == 0)
+                    break;
+                p++;
+                // h
+                if (*p != ':' && *p != ',') {
+                    ov->sh = strToI(p, 10);
+                }
+                if (*p == 0)
+                    break;
+                p++;
+                // x
+                if (*p != ':' && *p != ',') {
+                    ov->sx = strToI(p, 10);
+                }
+                if (*p == 0)
+                    break;
+                p++;
+                // y
+                if (*p != ':' && *p != ',') {
+                    ov->sy = strToI(p, 10);
+                }
+            } else {
                 goto OPT_ERR;
-			}
+            }
             break;
-	  #if 0	// とうに現行の-xvソースと矛盾してバグってるので削除
+      #if 0 // とうに現行の-xvソースと矛盾してバグってるので削除
         case 'L':   //-xl
-			if (*p) {
-				if (o->vvIdx >= 2)
-					goto OPT_ERR;
-				ConvOne_Opts::vv_t*	ov = &o->vv[o->vvIdx++];
-				ov->flg = 1;
-				// W
-				if (*p != ':' && *p != ',') {
-					ov->wf = 1;
-					ov->x  = ov->w = strToI(p, 10);
-				}
-				// H
-				if (*p != 0) {
-					ov->hf = 1;
-					++p;
-					ov->y  = ov->h = strToI(p, 10);
-				}
-			} else {
+            if (*p) {
+                if (o->vvIdx >= 2)
+                    goto OPT_ERR;
+                ConvOne_Opts::vv_t* ov = &o->vv[o->vvIdx++];
+                ov->flg = 1;
+                // W
+                if (*p != ':' && *p != ',') {
+                    ov->wf = 1;
+                    ov->x  = ov->w = strToI(p, 10);
+                }
+                // H
+                if (*p != 0) {
+                    ov->hf = 1;
+                    ++p;
+                    ov->y  = ov->h = strToI(p, 10);
+                }
+            } else {
                 goto OPT_ERR;
-			}
+            }
             break;
-	  #endif
+      #endif
         case 'B':   //-xb
             o->bitCom = (*p == '-') ? 0 : 1;
             break;
@@ -1014,7 +1023,10 @@ int Opts::scan(const char *a)
 
         case 'C':   // -xca
             if (*p == 'a' || *p == 'A') {
-                o->genAlpEx = 1;
+                ++p;
+                o->genAlpEx = 8;
+                if (*p < 0x80 && isdigit(*p))
+                    o->genAlpEx = strToUI(p, 10);
             } else {
                 goto OPT_ERR;
             }

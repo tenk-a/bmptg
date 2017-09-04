@@ -175,6 +175,7 @@ inline void pix32_alpBokasi(unsigned *pix, unsigned wid, unsigned hei, int dmy_s
     int  w = (int)wid;
     int  h = (int)hei;
     int  n,x,y,c,m,a,aa,k,kk;
+    int  qr;
     #undef  A
     #undef  P
     #undef  R
@@ -183,13 +184,16 @@ inline void pix32_alpBokasi(unsigned *pix, unsigned wid, unsigned hei, int dmy_s
     #define P(x,y)          pix[(y)*w + (x)]
     #define R(x,y)          (((x) >= 0 && (y) >= 0 && (x) < w && (y) < h))
     #define K(c)            ((PIX32_GET_G(c) * 9 + PIX32_GET_R(c) * 5 + PIX32_GET_B(c) * 2)>>4)
-    #define A(x,y)          (R(x,y) && PIX32_GET_A(P(x,y)) != 0)
-    #define DK(x,y,kk,k)    {if (A(x,y)) {int c_ = P(x,y); kk += K(c_) - k;}}
+    #define A(x,y)          ((qr = R(x,y)) == 0 || (qr && PIX32_GET_A(P(x,y))))
+    //#define DK(x,y,kk,k)  {if (A(x,y)) {int c_ = P(x,y); kk += K(c_) - k;}}
+    #define DK(x,y,kk,k)    {if (R(x,y) && PIX32_GET_A(P(x,y))) {int c_ = P(x,y); kk += K(c_) - k;}}
     (void)dmy_sikii;
 
     // α=0,c=0のピクセルに隣接する画像のα値を調整
-    for (y = 0; y < h; y++) {
-        for (x = 0; x < w; x++) {
+    //for (y = 0; y < h; ++y) {
+    for (y = 1; y < h-1; ++y) {
+        //for (x = 0; x < w; ++x) {
+        for (x = 1; x < w-1; ++x) {
             n = y*w+x;
             c = pix[n];
             k = K(c);

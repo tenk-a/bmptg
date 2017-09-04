@@ -144,26 +144,28 @@ int ConvOne::main() {
     setClutNukiCol();                   // 256色で抜き色がユーザー指定されていない場合、clut_のα=0のものを抜き色として採用する。
     reflectColKey();                    // 抜き色(カラーキー) を反映する
     easyPaintRoundAlpha();              // 左上(0,0)のピクセルを抜き色として、画像の4隅から抜き色のαを塗りつぶす
+    clearColorIfAlpha0();               // a=0ならrgbも0クリア
+    alphaBokashi();                     // BUを前提にαをぼかす
     resizeCanvas(0);                    // 画像サイズの切り抜き変更
     resizeCanvas(1);                    // 画像サイズの切り抜き変更
     changeSrcBpp();                     // 入力のbpp_に色を修正。
     reverseImage();                     // 上下左右反転
     rotR90(opts_.rotR90);               // 左右90°
-	rotateImage();						// 任意角回転
+    rotateImage();                      // 任意角回転
     setDstBpp();                        // 出力bppを設定.
-	checkSrcDstBpp();					// clut画同士の変換で出力bppより色番号が多い時にソース側をフルカラー化(減色するの前提)
+    checkSrcDstBpp();                   // clut画同士の変換で出力bppより色番号が多い時にソース側をフルカラー化(減色するの前提)
 
-	convNukiBlack();                    // 抜き色が色(0,0,0)固定のハード向けに、真黒を(0,0,m)に、抜きドットを(0,0,0)に変換.
+    convNukiBlack();                    // 抜き色が色(0,0,0)固定のハード向けに、真黒を(0,0,m)に、抜きドットを(0,0,0)に変換.
     resizeImage1st();                   // 縦横拡縮サイズ変更   // 初回
     filter();                           // フィルタ (ぼかし)
     resizeImage2nd();                   // 縦横拡縮サイズ変更   2回目
     aptRect();                          // 抜き色|αで範囲を求めてサイズ変更
-	patternDither();					// パターンディザを施す
+    patternDither();                    // パターンディザを施す
     alphaBlendByColor();                // 指定色とαをブレンドし、αを0 or 255 にする
-	
-	toMono();                           // モノクロ化
+    
+    toMono();                           // モノクロ化
     mulCol();                           // 各ピクセルに色を乗ずる
-    colChSquare();						// ARGB各々を二乗する
+    colChSquare();                      // ARGB各々を二乗する
     changeTone();                       // 抜き色以外の色のトーンを opts_.tone％に変換
 
     decreaseColor();                    // 多色で出力がclut_付きなら、安易減色を行う
@@ -206,8 +208,8 @@ void ConvOne::init(const char *srcName, const char *dstName) {
     dstBpp_     = opts_.bpp;
     encMode_    = opts_.encMode;
     varbose_    = opts_.verbose != 0;
-	fullColFlg_ = opts_.fullColFlg != 0;
-	mono_       = false;
+    fullColFlg_ = opts_.fullColFlg != 0;
+    mono_       = false;
 
     // 画像ロードセーブのオプション要素の設定
     bo_         = &bopt_;
@@ -280,7 +282,7 @@ bool ConvOne::imageLoad() {
     if (varbose_) {
         printf("[%d:%d*%d]",bpp_,w_,h_);
       #ifdef MY_H
-		MY_imageLoad_log(srcFmt_);
+        MY_imageLoad_log(srcFmt_);
       #endif
     }
     // 出力名が無けりゃ、たぶんただの情報表示だ。
@@ -303,16 +305,16 @@ bool ConvOne::imageLoad() {
 
     pixBpp_ = (bpp_ <= 8) ? 8 : 32; // clut_ 付き画は一旦 256色画に、多色画は 32bit色画にする
 
-	//
-	fullColFlg_ = opts_.fullColFlg || opts_.dstFmt == BM_FMT_JPG || (opts_.bpp == 0 && (opts_.rszN || opts_.bokashiCnt));
+    //
+    fullColFlg_ = opts_.fullColFlg || opts_.dstFmt == BM_FMT_JPG || (opts_.bpp == 0 && (opts_.rszN || opts_.bokashiCnt));
   #ifdef MY_H
-	fullColFlg_ = fullColFlg_ || MY_IMAGELOAD_EX_FULLCOLFLG(opts_.dstFmt);
+    fullColFlg_ = fullColFlg_ || MY_IMAGELOAD_EX_FULLCOLFLG(opts_.dstFmt);
   #endif
-	if (fullColFlg_)
+    if (fullColFlg_)
         pixBpp_     = 32;
 
   #ifdef MY_H
-	MY_imageLoad_MyFmtSetting();
+    MY_imageLoad_MyFmtSetting();
   #endif
 
     pixH_  = h_;
@@ -466,31 +468,31 @@ void ConvOne::revAlpha() {
 void ConvOne::setClutNukiCol() {
     if (pixBpp_ == 8) {
         nukiClut_ = opts_.nukiClut;
-        if (nukiClut_ == -1 && opts_.colKey != -1) {	// clut-indexでなく抜き色指定があったばあい、それを探してみる
-			int idx = 256;
-			unsigned colKey = opts_.colKey;
-			unsigned mask   = (colKey <= 0xFFFFFF) ? 0xFFFFFF : 0xFFFFFFFF;
-			while (--idx >= 0) {
-				if ((clut_[idx] & mask) == colKey) {
-					nukiClut_ = idx;
-					break;
-				}
-			}
-		}
+        if (nukiClut_ == -1 && opts_.colKey != -1) {    // clut-indexでなく抜き色指定があったばあい、それを探してみる
+            int idx = 256;
+            unsigned colKey = opts_.colKey;
+            unsigned mask   = (colKey <= 0xFFFFFF) ? 0xFFFFFF : 0xFFFFFFFF;
+            while (--idx >= 0) {
+                if ((clut_[idx] & mask) == colKey) {
+                    nukiClut_ = idx;
+                    break;
+                }
+            }
+        }
         if (nukiClut_ == -1) {
-			if (ARGB_A(clut_[0]) == 0) {
-				nukiClut_ = 0;
-			} else if (ARGB_A(clut_[255]) == 0) {
-				nukiClut_ = 255;
-			} else {
-				for (unsigned i = 1; i < 255; ++i) {
-					UINT32_T  c = clut_[i];
-					if (ARGB_A(c) == 0) {
-						nukiClut_ = i;
-						break;
-					}
-				}
-			}
+            if (ARGB_A(clut_[0]) == 0) {
+                nukiClut_ = 0;
+            } else if (ARGB_A(clut_[255]) == 0) {
+                nukiClut_ = 255;
+            } else {
+                for (unsigned i = 1; i < 255; ++i) {
+                    UINT32_T  c = clut_[i];
+                    if (ARGB_A(c) == 0) {
+                        nukiClut_ = i;
+                        break;
+                    }
+                }
+            }
         }
         // 抜き色指定があれば、その色のαを 0にする
         if (nukiClut_ >= 0 && nukiClut_ <= 255 && opts_.colKeyNA == 0) {
@@ -502,8 +504,8 @@ void ConvOne::setClutNukiCol() {
 
 /// 抜き色(カラーキー) を反映する
 void ConvOne::reflectColKey() {
-	if (opts_.colKeyNA)
-		return;
+    if (opts_.colKeyNA)
+        return;
     int colKey    = opts_.colKey;
     int alpBokasi = opts_.alpBokasi;
     if (colKey != -1) {
@@ -511,9 +513,6 @@ void ConvOne::reflectColKey() {
             pix32_clearAlphaOfColKey(clut_, 1, 256, colKey);
         } else {
             pix32_clearAlphaOfColKey((UINT32_T*)pix_, w_, h_, colKey);
-            if (alpBokasi) {
-                pix32_alpBokasi((UINT32_T*)pix_, w_, h_, 255);      // 透明、不透明の境目のαをぼかす
-            }
         }
     }
 }
@@ -532,96 +531,114 @@ void ConvOne::easyPaintRoundAlpha() {
             pix[i] |= 0xff000000;
 
         // 左上の点の色が続く範囲を四隅ともしらべ、ARGB(0,0,0,0) で埋める.
-        Pix32_Paint(pix, (unsigned)w_, (unsigned)h_, 0x00000000, -1, -1, 0xFFF8F8F8);
+        int dif = abs(opts_.genAlpEx - 1);
+            if (dif > 255)
+                dif = 255;
+        Pix32_Paint(pix, (unsigned)w_, (unsigned)h_, 0x00000000, -1, -1, dif /*, 0xFFF8F8F8*/);
+    }
+}
 
-        // αをちょっとぼかす
-        pix32_alpBokasi(pix, int(w_), int(h_), 0);
+void ConvOne::clearColorIfAlpha0() {
+    int clearColIfAlp0 = opts_.clearColIfAlp0;
+    if (clearColIfAlp0) {
+        if (pixBpp_ == 8)
+            pix32_clearColorIfAlpha0(clut_, 256, 1);
+        else
+            pix32_clearColorIfAlpha0((UINT32_T*)pix_, w_, h_);
+    }
+}
+
+/// 抜き色(カラーキー) を反映する
+void ConvOne::alphaBokashi() {
+    int alpBokasi = opts_.alpBokasi;
+    if (alpBokasi != 0 && pixBpp_ == 32) {
+        pix32_alpBokasi((UINT32_T*)pix_, w_, h_, 0/*255*/);      // 透明、不透明の境目のαをぼかす
     }
 }
 
 
 /// 画像サイズの切り抜き変更
 void ConvOne::resizeCanvas(int n) {
-	if (n >= opts_.vvIdx)
-		return;
-	ConvOne_Opts::vv_t*	opts_vv = &opts_.vv[n];
+    if (n >= opts_.vvIdx)
+        return;
+    ConvOne_Opts::vv_t* opts_vv = &opts_.vv[n];
     if (opts_.vv[n].flg) {     // 指定サイズの画像領域に、pix_を矩形転送する
         int vv_w = (opts_vv->w || opts_vv->wf) ? opts_vv->w : w_;
         int vv_h = (opts_vv->h || opts_vv->hf) ? opts_vv->h : h_;
-		if (vv_w < 0 || opts_vv->wf)
-			vv_w = w_ + vv_w;
-		if (vv_h < 0 || opts_vv->hf)
-			vv_h = h_ + vv_h;
+        if (vv_w < 0 || opts_vv->wf)
+            vv_w = w_ + vv_w;
+        if (vv_h < 0 || opts_vv->hf)
+            vv_h = h_ + vv_h;
 
-		int vv_sw = opts_vv->sw;
-		int vv_sh = opts_vv->sh;
-		if (vv_sw <= 0)
-			vv_sw = w_ + vv_sw;
-		if (vv_sh <= 0)
-			vv_sh = h_ + vv_sh;
+        int vv_sw = opts_vv->sw;
+        int vv_sh = opts_vv->sh;
+        if (vv_sw <= 0)
+            vv_sw = w_ + vv_sw;
+        if (vv_sh <= 0)
+            vv_sh = h_ + vv_sh;
 
-		int vv_x  = opts_vv->x;
-		int vv_y  = opts_vv->y;
-		int vv_sx = opts_vv->sx;
-		int vv_sy = opts_vv->sy;
+        int vv_x  = opts_vv->x;
+        int vv_y  = opts_vv->y;
+        int vv_sx = opts_vv->sx;
+        int vv_sy = opts_vv->sy;
 
-		int vv_lcr = opts_vv->lcr;
-		if (opts_vv->lcr_ex) {	// ファイル名本体の最後の一文字が数字の時、偶数奇数で左詰め・右詰めを切り替える処理
-			char const* e = fname_getExt(srcName_);
-			if (srcName_ <= e - 2) {
-				int c = e[-2];
-				if (c == '0' || c == '2' || c == '4' || c == '6' || c == '8') {
-					vv_lcr = 2;
-				} else if (c == '1' || c == '3' || c == '5' || c == '7' || c == '9') {
-					vv_lcr = 0;
-				}
-			}
-		}
+        int vv_lcr = opts_vv->lcr;
+        if (opts_vv->lcr_ex) {  // ファイル名本体の最後の一文字が数字の時、偶数奇数で左詰め・右詰めを切り替える処理
+            char const* e = fname_getExt(srcName_);
+            if (srcName_ <= e - 2) {
+                int c = e[-2];
+                if (c == '0' || c == '2' || c == '4' || c == '6' || c == '8') {
+                    vv_lcr = 2;
+                } else if (c == '1' || c == '3' || c == '5' || c == '7' || c == '9') {
+                    vv_lcr = 0;
+                }
+            }
+        }
 
-		if (vv_lcr == 1) {				// 中央寄せ
-			vv_x  += (vv_w - vv_sw) / 2;
-			vv_sx += (w_   - vv_sw) / 2;
-		} else if (vv_lcr == 2) {		// 右寄せ
-			vv_x  += (vv_w - vv_sw);
-			vv_sx += (w_   - vv_sw);
-		}
-		if (opts_vv->umd == 1) {		// 縦中央寄せ
-			vv_y  += (vv_h - vv_sh) / 2;
-			vv_sy += (h_   - vv_sh) / 2;
-		} else if (opts_vv->umd == 2) {	// 下寄せ
-			vv_y  += (vv_h - vv_sh);
-			vv_sy += (h_   - vv_sh);
-		}
-		if (vv_x < 0) {
-			vv_sw -= -vv_x;
-			vv_sx += -vv_x;
-			vv_x   = 0;
-		}
-		if (vv_y < 0) {
-			vv_sh -= -vv_y;
-			vv_sy += -vv_y;
-			vv_y = 0;
-		}
+        if (vv_lcr == 1) {              // 中央寄せ
+            vv_x  += (vv_w - vv_sw) / 2;
+            vv_sx += (w_   - vv_sw) / 2;
+        } else if (vv_lcr == 2) {       // 右寄せ
+            vv_x  += (vv_w - vv_sw);
+            vv_sx += (w_   - vv_sw);
+        }
+        if (opts_vv->umd == 1) {        // 縦中央寄せ
+            vv_y  += (vv_h - vv_sh) / 2;
+            vv_sy += (h_   - vv_sh) / 2;
+        } else if (opts_vv->umd == 2) { // 下寄せ
+            vv_y  += (vv_h - vv_sh);
+            vv_sy += (h_   - vv_sh);
+        }
+        if (vv_x < 0) {
+            vv_sw -= -vv_x;
+            vv_sx += -vv_x;
+            vv_x   = 0;
+        }
+        if (vv_y < 0) {
+            vv_sh -= -vv_y;
+            vv_sy += -vv_y;
+            vv_y = 0;
+        }
         if (pixBpp_ == 8) {
             gen_newSizePix8 (&pix_, &w_, &h_, vv_sw, vv_sh, vv_sx, vv_sy
                             , nukiClut_, vv_w, vv_h, vv_x, vv_y);
         } else {
-			int colKey = opts_.colKey;
-			if (opts_.colKeyNA) {
-				if (colKey <= 0xFFFFFF)
-					colKey = 0xFF000000 | colKey;
-			} else {
-				if (colKey == -1) {
-					colKey = 0;
-				}
-			}
+            int colKey = opts_.colKey;
+            if (opts_.colKeyNA) {
+                if (colKey <= 0xFFFFFF)
+                    colKey = 0xFF000000 | colKey;
+            } else {
+                if (colKey == -1) {
+                    colKey = 0;
+                }
+            }
             gen_newSizePix32(&pix_, &w_, &h_, vv_sw, vv_sh, vv_sx, vv_sy
                             , colKey , vv_w, vv_h, vv_x, vv_y);
         }
         if (varbose_) {
-			printf("->(%d,%d %d*%d)(%d,%d)[%d*%d]",vv_sx,vv_sy,vv_sw,vv_sh,vv_x,vv_y,w_,h_);
-			//printf("->[%d*%d]",w_,h_);
-		}
+            printf("->(%d,%d %d*%d)(%d,%d)[%d*%d]",vv_sx,vv_sy,vv_sw,vv_sh,vv_x,vv_y,w_,h_);
+            //printf("->[%d*%d]",w_,h_);
+        }
         pixWb_ = WID2BYT(w_, pixBpp_);
         srcW_  = w_;
         srcH_  = h_;
@@ -651,13 +668,13 @@ void ConvOne::changeSrcBpp() {
 
 /// 上下左右反転
 void ConvOne::reverseImage() {
-	int dir = opts_.dir;
- #if 1	// ???? atode
-	if (opts_.rotR90 < 0) {
-		dir ^= 3;
-	}
+    int dir = opts_.dir;
+ #if 1  // ???? atode
+    if (opts_.rotR90 < 0) {
+        dir ^= 3;
+    }
  #endif
-	if (dir) {            // 反転処理
+    if (dir) {            // 反転処理
         if (varbose_) printf("->rev%s%s", (dir&1)?"X":"", (dir&2)?"Y":"");
         if (pixBpp_ == 8)  pix_revXY((UINT8_T*)pix_, w_, h_, dir);
         else               pix_revXY((UINT32_T*)pix_, w_, h_, dir);
@@ -668,7 +685,7 @@ void ConvOne::reverseImage() {
 /// 右90°回転.
 void ConvOne::rotR90(int type) {
     if (type) {
-		if (varbose_) printf("->rot%c90", type < 0 ? 'L' : 'R');
+        if (varbose_) printf("->rot%c90", type < 0 ? 'L' : 'R');
         UINT8_T* p = (UINT8_T*)callocE( 1, pixWb_ * h_ );
         if (pixBpp_ == 8)  pix_rotR90((UINT8_T*)p, (const UINT8_T*)pix_, w_, h_);
         else               pix_rotR90((UINT32_T*)p, (const UINT32_T*)pix_, w_, h_);
@@ -682,78 +699,78 @@ void ConvOne::rotR90(int type) {
 
 /// 右R°回転.
 void ConvOne::rotateImage() {
-	double rotR = opts_.rotR;
-	rotR = fmod(rotR + 360.0, 360.0);
-	if (rotR == 0.0)
-		return;
-	if (rotR == 90) {
-		rotR90(1);
-		return;
-	} else if (rotR == 180) {
+    double rotR = opts_.rotR;
+    rotR = fmod(rotR + 360.0, 360.0);
+    if (rotR == 0.0)
+        return;
+    if (rotR == 90) {
+        rotR90(1);
+        return;
+    } else if (rotR == 180) {
         if (varbose_) printf("->rot180");
         if (pixBpp_ == 8)  pix_revXY((UINT8_T*)pix_, w_, h_, 3);
         else               pix_revXY((UINT32_T*)pix_, w_, h_, 3);
-		return;
-	} else if (rotR == 270) {
-		rotR90(-1);
-		return;
-	}
-	if (pixBpp_ != 32) {
-		printf("->(not rot(%5.1f))", rotR);
-		return;
-	}
+        return;
+    } else if (rotR == 270) {
+        rotR90(-1);
+        return;
+    }
+    if (pixBpp_ != 32) {
+        printf("->(not rot(%5.1f))", rotR);
+        return;
+    }
 
-	if (varbose_) printf("->rot(%5.1f)", rotR);
+    if (varbose_) printf("->rot(%5.1f)", rotR);
 
-	int colKey = opts_.colKey;
-	if (opts_.colKeyNA) {
-		if (colKey <= 0xFFFFFF)
-			colKey = 0xFF000000 | colKey;
-	} else {
-		if (colKey == -1) {
-			colKey = 0;
-		}
-	}
+    int colKey = opts_.colKey;
+    if (opts_.colKeyNA) {
+        if (colKey <= 0xFFFFFF)
+            colKey = 0xFF000000 | colKey;
+    } else {
+        if (colKey == -1) {
+            colKey = 0;
+        }
+    }
 
-	pix32_rotate_dst_t dst = {0};
-	if (pix32_rotate(&dst, (UINT32_T const*)pix_, w_, h_, -rotR, (UINT32_T)colKey, pixBpp_ > 24, opts_.rszType) == 0 || !dst.mallocMem) {
-		printf("\n'not enough memory!'\n");
-		return;
-	} 
-	freeE(pix_);
-	pix_   = (UINT8_T*)dst.mallocMem;
-	w_     = dst.w;
-	h_     = dst.h;
+    pix32_rotate_dst_t dst = {0};
+    if (pix32_rotate(&dst, (UINT32_T const*)pix_, w_, h_, -rotR, (UINT32_T)colKey, pixBpp_ > 24, opts_.rszType) == 0 || !dst.mallocMem) {
+        printf("\n'not enough memory!'\n");
+        return;
+    } 
+    freeE(pix_);
+    pix_   = (UINT8_T*)dst.mallocMem;
+    w_     = dst.w;
+    h_     = dst.h;
     pixWb_ = WID2BYT(w_, pixBpp_);
 }
 
 
 /// モノクロ化する
 void ConvOne::toMono() {
-	//bo_->mono = opts_.mono;
-	if (opts_.monoNear) {		// グレイに近い色なら、モノクロ扱いにする
-		if ((pixBpp_ == 8 && GrayClut<>::isNearGrey(clut_, 1, 256))
-			|| GrayClut<>::isNearGrey((UINT32_T*)pix_, w_, h_)
-		){
-			mono_ = true;
-		}
-	}
+    //bo_->mono = opts_.mono;
+    if (opts_.monoNear) {       // グレイに近い色なら、モノクロ扱いにする
+        if ((pixBpp_ == 8 && GrayClut<>::isNearGrey(clut_, 1, 256))
+            || GrayClut<>::isNearGrey((UINT32_T*)pix_, w_, h_)
+        ){
+            mono_ = true;
+        }
+    }
     if (opts_.mono || mono_) {
-		mono_ = true;
-		int monoCh = opts_.monoChRGB;
-		if (monoCh == 0) {	// 通常のモノクロ化
-	        if (varbose_) printf("->mono");
-	        if (pixBpp_ == 8) pix32_toMono(clut_, 1, 256);
-	        else              pix32_toMono((UINT32_T*)pix_, w_, h_);
-		} else {			// 指定(RGBA)チャンネルを用いてモノクロ化
-			--monoCh;
-	        if (varbose_) {
-				static char const s_monoCh[4] = {'B','G','R','A'};
-				printf("->monoCh%c", s_monoCh[monoCh]);
-			}
-	        if (pixBpp_ == 8) pix32_chARGBtoMono(clut_, 1, 256, monoCh);
-	        else              pix32_chARGBtoMono((UINT32_T*)pix_, w_, h_, monoCh);
-		}
+        mono_ = true;
+        int monoCh = opts_.monoChRGB;
+        if (monoCh == 0) {  // 通常のモノクロ化
+            if (varbose_) printf("->mono");
+            if (pixBpp_ == 8) pix32_toMono(clut_, 1, 256);
+            else              pix32_toMono((UINT32_T*)pix_, w_, h_);
+        } else {            // 指定(RGBA)チャンネルを用いてモノクロ化
+            --monoCh;
+            if (varbose_) {
+                static char const s_monoCh[4] = {'B','G','R','A'};
+                printf("->monoCh%c", s_monoCh[monoCh]);
+            }
+            if (pixBpp_ == 8) pix32_chARGBtoMono(clut_, 1, 256, monoCh);
+            else              pix32_chARGBtoMono((UINT32_T*)pix_, w_, h_, monoCh);
+        }
     }
 }
 
@@ -764,7 +781,7 @@ void ConvOne::mulCol() {
         if (varbose_) printf("->colMul[%x]", opts_.colMul);
         if (pixBpp_ == 8) pix32_colMul(clut_, 1, 256, opts_.colMul);
         else              pix32_colMul((UINT32_T*)pix_, w_, h_, opts_.colMul);
-		mono_ = false;
+        mono_ = false;
     }
     if (opts_.pixScale[0] != 1.0 || opts_.pixScale[1] != 1.0 || opts_.pixScale[2] != 1.0 || opts_.pixScale[3] != 1.0) {
         if (opts_.pixScaleType == 0) {
@@ -776,18 +793,18 @@ void ConvOne::mulCol() {
             if (pixBpp_ == 8) pix32_ayuvScale(clut_, 1, 256, opts_.pixScale);
             else              pix32_ayuvScale((UINT32_T*)pix_, w_, h_, opts_.pixScale);
         }
-		mono_ = false;
+        mono_ = false;
     }
 }
 
 
 /// RGBA各チャンネルを二乗する
 void ConvOne::colChSquare() {
-    if (opts_.colChSquare) {	// RGBA各チャンネルを二乗する
+    if (opts_.colChSquare) {    // RGBA各チャンネルを二乗する
         if (varbose_) printf("->colChSquare");
         if (pixBpp_ == 8) pix32_colChSquare(clut_, 1, 256);
         else              pix32_colChSquare((UINT32_T*)pix_, w_, h_);
-		mono_ = false;
+        mono_ = false;
     }
 }
 
@@ -803,7 +820,7 @@ void ConvOne::changeTone() {
             if (varbose_) printf("->toneY[%d]", opts_.tone);
             if (pixBpp_ == 8) pix32_changeTone(clut_, 1, 256, opts_.tone / 100.0);
             else              pix32_changeTone((UINT32_T*)pix_, w_, h_, opts_.tone / 100.0);
-			mono_ = false;
+            mono_ = false;
         }
     }
 }
@@ -859,17 +876,17 @@ void ConvOne::setDstBpp()
  */
 void ConvOne::checkSrcDstBpp()
 {
-	if (dstBpp_ >= pixBpp_ || dstBpp_ > 8 || pixBpp_ != 8)
-		return;
-	if (pix8_hasPixOutOfIdx(pix_, w_, h_, (1 << dstBpp_) - 1)) {
-		uint32_t* pix2 = (uint32_t*)callocE(1, w_ * h_ * sizeof(uint32_t));
-		int       wb   = WID2BYT(w_, 32);
+    if (dstBpp_ >= pixBpp_ || dstBpp_ > 8 || pixBpp_ != 8)
+        return;
+    if (pix8_hasPixOutOfIdx(pix_, w_, h_, (1 << dstBpp_) - 1)) {
+        uint32_t* pix2 = (uint32_t*)callocE(1, w_ * h_ * sizeof(uint32_t));
+        int       wb   = WID2BYT(w_, 32);
         beta_conv(pix2, wb, h_, 32,  pix_, pixWb_, pixBpp_, clut_, 0, 0, 0);
         freeE(pix_);
         pix_    = (uint8_t*)pix2;
         pixWb_  = wb;
         pixBpp_ = 32;
-	}
+    }
 }
 
 
@@ -1074,7 +1091,7 @@ void ConvOne::patternDither() {
     if (opts_.ditBpp && pixBpp_ == 32) {    // ディザを施す
         int dbpp,ditBpp = opts_.ditBpp;
         if (ditBpp <= 0) {              // デフォルトの色のビット数を出力に合わせて選ぶ
-            if (opts_.isFixedClut()) {	// jp or win 固定clutの場合
+            if (opts_.isFixedClut()) {  // jp or win 固定clutの場合
                 ditBpp  = (dstBpp_ <   3) ? 15
                         : (dstBpp_ <=  6) ?  6
                         : (dstBpp_ <=  8) ? 15
@@ -1128,58 +1145,58 @@ void ConvOne::decreaseColor() {
             case 1: // 日本の80年代パソコン由来の 16色,256色(G3R3B2)固定パレット.
             case 2: // Winシステムパレット
             case 7: // お試しパレット
-				if (varbose_)
+                if (varbose_)
                     printf("->DftlClt%c%d", (md>1)?'W':'J', dstBpp_);
-				--md;
-				if (md >= 6) md = md - 6 + 2;
+                --md;
+                if (md >= 6) md = md - 6 + 2;
                 FixedClut256<>::getFixedClut256(clut_, 256, dstBpp_, md);
                 //if (alpNum)
                 //  clut_[0] &= 0xFFFFFF;
                 FixedClut256<>::decreaseColor(p, (UINT32_T*)pix_, w_, h_, clut_, colNum);
                 break;
 
-			default:	// 範囲外ならとりあえず、メディアンカット(yuv)へ.
+            default:    // 範囲外ならとりあえず、メディアンカット(yuv)へ.
             //case 0:
-				md = -1;
-				// 続く
+                md = -1;
+                // 続く
             case 3: // メディアンカット(yuv)
             case 4: // メディアンカット(rgb)
             case 5: // 頻度順 clut
-				if (alpFlg == 0 && alpNum < 0 && colNum >= (1 << dstBpp_) && (mono_ || GrayClut<>::isGrey((UINT32_T*)pix_, w_, h_))) {
-					// モノクロ画像専用の減色
-					if (dstBpp_ > 4 && colNum >= 256) {
-						GrayClut<>::getFixedGreyClut(clut_, 256, 8);
-						GrayClut<>::fromGreyToBpp8(p, (UINT32_T*)pix_, w_, h_);
-					} else if (dstBpp_ >= 3) {
-						GrayClut<>::fromGreyToBpp4Clut(p, (UINT32_T*)pix_, w_, h_, clut_);
-					} else if (dstBpp_ >= 2) {
-						GrayClut<>::fromGreyToBpp2Clut(p, (UINT32_T*)pix_, w_, h_, clut_);
-					} else {
-						GrayClut<>::fromGreyToBpp1Clut(p, (UINT32_T*)pix_, w_, h_, clut_);
-					}
-					if (varbose_)
+                if (alpFlg == 0 && alpNum < 0 && colNum >= (1 << dstBpp_) && (mono_ || GrayClut<>::isGrey((UINT32_T*)pix_, w_, h_))) {
+                    // モノクロ画像専用の減色
+                    if (dstBpp_ > 4 && colNum >= 256) {
+                        GrayClut<>::getFixedGreyClut(clut_, 256, 8);
+                        GrayClut<>::fromGreyToBpp8(p, (UINT32_T*)pix_, w_, h_);
+                    } else if (dstBpp_ >= 3) {
+                        GrayClut<>::fromGreyToBpp4Clut(p, (UINT32_T*)pix_, w_, h_, clut_);
+                    } else if (dstBpp_ >= 2) {
+                        GrayClut<>::fromGreyToBpp2Clut(p, (UINT32_T*)pix_, w_, h_, clut_);
+                    } else {
+                        GrayClut<>::fromGreyToBpp1Clut(p, (UINT32_T*)pix_, w_, h_, clut_);
+                    }
+                    if (varbose_)
                     printf("->cltGry%d", 1 << dstBpp_);
-				} else if (DecreaseColorIfWithin256<>::conv(p, (UINT32_T*)pix_, w_, h_, clut_, colNum, alpFlg)) {
-	                // 32ビット色画が、もとよりclutNum色以内なら、そのまま変換.
+                } else if (DecreaseColorIfWithin256<>::conv(p, (UINT32_T*)pix_, w_, h_, clut_, colNum, alpFlg)) {
+                    // 32ビット色画が、もとよりclutNum色以内なら、そのまま変換.
                     if (varbose_)
                         printf("->clt%d", dstBpp_);
                 } else if ((dstBpp_ == 1 || dstBpp_ == 2) && colNum >= (1<<dstBpp_)) {
-					// 1bit色,2bit色専用の減色処理
-					if (dstBpp_ == 1)
-						DecreaseColorLowBpp<>::convPix32ToBpp1(p, (UINT32_T*)pix_, w_, h_, clut_);
-					else
-						DecreaseColorLowBpp<>::convPix32ToBpp2(p, (UINT32_T*)pix_, w_, h_, clut_);
-					if (varbose_)
-	                    printf("->cltBpp%d", 1 << dstBpp_);
-				} else if (md == 5) {	// 頻度順 clut で減色.
+                    // 1bit色,2bit色専用の減色処理
+                    if (dstBpp_ == 1)
+                        DecreaseColorLowBpp<>::convPix32ToBpp1(p, (UINT32_T*)pix_, w_, h_, clut_);
+                    else
+                        DecreaseColorLowBpp<>::convPix32ToBpp2(p, (UINT32_T*)pix_, w_, h_, clut_);
+                    if (varbose_)
+                        printf("->cltBpp%d", 1 << dstBpp_);
+                } else if (md == 5) {   // 頻度順 clut で減色.
                     //int a = (opts_.alpMin >= 0) ? opts_.alpMin : 4;
                     DecreaseColorHst<>(p, (UINT32_T*)pix_, w_, h_, clut_, colNum, alpNum);
                     if (varbose_) {
                         printf("->decreaseCol%d", dstBpp_);
                     }
-				} else {            // 256色より多いので要減色.
-					if (md < 0)
-						md = 3;
+                } else {            // 256色より多いので要減色.
+                    if (md < 0)
+                        md = 3;
                     memset(clut_, 0, sizeof clut_);
                     // メディアンカットな減色.
                     DecreaseColorMC     rcmc;
@@ -1289,7 +1306,7 @@ void ConvOne::decreaseColor() {
 void ConvOne::changeChipAndMap() {
     if (opts_.mapMode && bo_->celW && bo_->celH) {      // マップ化
         int     celNum;
-        int     styl  = opts_.celStyl | (opts_.mapNoCmp << 1) | (opts_.mapEx256x256<<3);	// 1bit|2bit|1bit
+        int     styl  = opts_.celStyl | (opts_.mapNoCmp << 1) | (opts_.mapEx256x256<<3);    // 1bit|2bit|1bit
         int     f     = 1;
       #ifdef MY_H
         f     |= MY_CHANGE_CHP_AND_MAP_APPEND_FLAG(opts_.dstFmt);
@@ -1367,52 +1384,52 @@ void ConvOne::changeMaskImage() {
 
 /// 出力ファイルイメージを生成
 bool ConvOne::saveImage() {
-	bool     rc   = true;
-	uint8_t* pix2 = NULL;
+    bool     rc   = true;
+    uint8_t* pix2 = NULL;
     // 出力準備
     // 減色の色数のためにdstBpp_を流用して値が範囲外の場合があるので、強引に辻褄合わせ
     dstBpp_ = bm_chkDstBpp(opts_.dstFmt, dstBpp_);
 
-	// 出力BPP指定ない場合、24bit画なら可能ならclut画にする(サイズ縮小のため. 32bit画(alpha付)のclut画フォーマットは微妙なので回避.
-	int dstFmt = opts_.dstFmt;
-	if (opts_.bpp == 0 && pixBpp_ == 32) {
-		if (dstBpp_ == 24 && (dstFmt == BM_FMT_PNG || dstFmt == BM_FMT_TGA || dstFmt == BM_FMT_BMP
-			#ifdef MY_H
-							|| MY_IS_AUTO_BPP8_FMT(dstFmt)
-			#endif
-		)) {
-			unsigned clutSize = 256;
-			// モノラル化済みの場合
-			if (/*mono_ ||*/ GrayClut<>::isGrey((uint32_t const*)pix_, w_, h_)) {
-				if (varbose_) printf("->auto-mono");
-				pix2 = new uint8_t[w_ * h_ + 16];
-				GrayClut<>::getFixedGreyClut(clut_, 256, 8);
-				GrayClut<>::fromGreyToBpp8(pix2, (uint32_t const*)pix_, w_, h_);
-				mono_ = true;
-			} else {	// 色数が 256以下なら clut画に変換
-				pix2 = DecreaseColorIfWithin256<>::convToNewArray((uint32_t*)pix_, w_, h_, clut_, clutSize, false, 0xFFFFFFFF);
-				if (pix2 && varbose_) {
-					if (clutSize <= 16)
-						printf("->auto-16");
-					else
-						printf("->auto-256");
-				}
-			}
-			if (pix2) {	// 変換成功時
-				freeE(pix_);
-				dstBpp_  = (clutSize <= 16 && dstFmt != BM_FMT_TGA) ? 4 : 8;
-				pix_ 	 = pix2;
-				pixBpp_  = 8;
-				dstColN_ = 1 << dstBpp_;
-				pixWb_   = w_;
-			}
-		} else if (dstFmt == BM_FMT_JPG) {
-			if (GrayClut<>::isGrey((uint32_t*)pix_, w_, h_))
-				mono_ = true;
-		}
-	}
+    // 出力BPP指定ない場合、24bit画なら可能ならclut画にする(サイズ縮小のため. 32bit画(alpha付)のclut画フォーマットは微妙なので回避.
+    int dstFmt = opts_.dstFmt;
+    if (opts_.bpp == 0 && pixBpp_ == 32) {
+        if (dstBpp_ == 24 && (dstFmt == BM_FMT_PNG || dstFmt == BM_FMT_TGA || dstFmt == BM_FMT_BMP
+            #ifdef MY_H
+                            || MY_IS_AUTO_BPP8_FMT(dstFmt)
+            #endif
+        )) {
+            unsigned clutSize = 256;
+            // モノラル化済みの場合
+            if (/*mono_ ||*/ GrayClut<>::isGrey((uint32_t const*)pix_, w_, h_)) {
+                if (varbose_) printf("->auto-mono");
+                pix2 = new uint8_t[w_ * h_ + 16];
+                GrayClut<>::getFixedGreyClut(clut_, 256, 8);
+                GrayClut<>::fromGreyToBpp8(pix2, (uint32_t const*)pix_, w_, h_);
+                mono_ = true;
+            } else {    // 色数が 256以下なら clut画に変換
+                pix2 = DecreaseColorIfWithin256<>::convToNewArray((uint32_t*)pix_, w_, h_, clut_, clutSize, false, 0xFFFFFFFF);
+                if (pix2 && varbose_) {
+                    if (clutSize <= 16)
+                        printf("->auto-16");
+                    else
+                        printf("->auto-256");
+                }
+            }
+            if (pix2) { // 変換成功時
+                freeE(pix_);
+                dstBpp_  = (clutSize <= 16 && dstFmt != BM_FMT_TGA) ? 4 : 8;
+                pix_     = pix2;
+                pixBpp_  = 8;
+                dstColN_ = 1 << dstBpp_;
+                pixWb_   = w_;
+            }
+        } else if (dstFmt == BM_FMT_JPG) {
+            if (GrayClut<>::isGrey((uint32_t*)pix_, w_, h_))
+                mono_ = true;
+        }
+    }
 
-	bo_->mono = mono_;
+    bo_->mono = mono_;
 
     if (opts_.clutTxtName && dstBpp_ <= 8) {
         clutTxtSave(opts_.clutTxtName, dstName_, clut_, dstColN_);
@@ -1425,8 +1442,8 @@ bool ConvOne::saveImage() {
         if (varbose_) printf("\n");
         printf("%s 出力のためのメモリを確保できません\n", dstName_);
         term();
-		rc = false;
-		goto RET;
+        rc = false;
+        goto RET;
     }
 
     // 出力画像を生成
@@ -1436,38 +1453,38 @@ bool ConvOne::saveImage() {
             clutAlpFlg = pix32_isUseAlpha(clut_, 1<<dstBpp_, 1);
         }
         int dir_flgs = 0;
-		dir_flgs    |= opts_.encMode    << BM_FLAG_EX_ENC_SH;												// 特別の圧縮をするか
-        dir_flgs    |= clutAlpFlg       << BM_FLAG_CLUT_ALP_SH;												// alpha付clutにするか
-        dir_flgs    |= (opts_.colKeyNA == 0 && (opts_.colKey >= 0 || nukiClut_ >= 0)) << BM_FLAG_COLKEY_SH;	// 抜き色があるか
-		if (dstFmt == BM_FMT_JPG) {
-			printf("->JpgQ=%2d", ((bo_->mono && bo_->quality_grey >= 0) ? bo_->quality_grey : bo_->quality));
-		}
+        dir_flgs    |= opts_.encMode    << BM_FLAG_EX_ENC_SH;                                               // 特別の圧縮をするか
+        dir_flgs    |= clutAlpFlg       << BM_FLAG_CLUT_ALP_SH;                                             // alpha付clutにするか
+        dir_flgs    |= (opts_.colKeyNA == 0 && (opts_.colKey >= 0 || nukiClut_ >= 0)) << BM_FLAG_COLKEY_SH; // 抜き色があるか
+        if (dstFmt == BM_FMT_JPG) {
+            printf("->JpgQ=%2d", ((bo_->mono && bo_->quality_grey >= 0) ? bo_->quality_grey : bo_->quality));
+        }
         bo_->clutNum = dstColN_;
-		bo_->nukiCo  = -1;
-		bo_->nukiCoI = -1;
-		if (!opts_.colKeyNA) {
-			if (dstBpp_ <= 8 && nukiClut_ >= 0 && nukiClut_ < (1 << dstBpp_)) {
-				bo_->nukiCoI = nukiClut_;
-			} else if (dstBpp_ > 8 && opts_.colKey != -1) {
-				bo_->nukiCo  = opts_.colKey & 0xFFFFFF;
-			}
-		}
+        bo_->nukiCo  = -1;
+        bo_->nukiCoI = -1;
+        if (!opts_.colKeyNA) {
+            if (dstBpp_ <= 8 && nukiClut_ >= 0 && nukiClut_ < (1 << dstBpp_)) {
+                bo_->nukiCoI = nukiClut_;
+            } else if (dstBpp_ > 8 && opts_.colKey != -1) {
+                bo_->nukiCo  = opts_.colKey & 0xFFFFFF;
+            }
+        }
         sz_   = bm_write(dstFmt, dst_, w_, h_, dstBpp_, pix_, pixWb_, pixBpp_, clut_, dir_flgs, bo_);
         if (sz_ <= 0) {
             if (varbose_) printf("\n");
             //x printf("%s を %s に変換中にエラーがありました\n", srcName_, opts_.dstExt);
             printf("%s を 変換中にエラーがありました\n", srcName_);
             term();
-			rc = false;
-			goto RET;
+            rc = false;
+            goto RET;
         }
     }
 
  RET:
-	if (pix2 && pix_ == pix2)
-		delete[] pix2;
-	else
-	    free(pix_);
+    if (pix2 && pix_ == pix2)
+        delete[] pix2;
+    else
+        free(pix_);
     pix_ = NULL;
     return rc;
 }
@@ -1547,7 +1564,7 @@ void ConvOne::saveMapFile(const char *name, const char *ext, UINT8_T *map, int m
             memcpy(m, map, mapSz);
             memcpy(m+mapSz, pix, pixSz);
           #ifdef MY_H
-			MY_saveMapFile_subr();
+            MY_saveMapFile_subr();
           #endif
             fwriteE(m, 1, mapSz+pixSz, fp);
             freeE(m);

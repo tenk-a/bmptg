@@ -28,7 +28,8 @@ public:
     int         alpModeI;
     int         alpModeO;
     int         colKey;
-	int			colKeyNA;
+    int         colKeyNA;
+    int         clearColIfAlp0;
     int         alpBokasi;
     int         nukiClut;
     int         nukiRctFlg;
@@ -43,18 +44,18 @@ public:
     int         ditAlpFlg;
     int         dir;
     int         rotR90;
-    double		rotR;
-	struct vv_t {
-		int     flg;
-		int     lcr;		// 0=left 1=center 2=right
-		int		umd;		// 0=up   1=mid    2=down
-		int		lcr_ex;		// 0=通常 1=ファイル名本体の最後の一時が奇数なら左詰め(l)偶数なら右詰め(r)にする
-		int     w , h , x , y;
-		int     wf, hf, xf, yf;
-		int     sw, sh, sx, sy;
-	};
-	vv_t		vv[2];
-	int			vvIdx;
+    double      rotR;
+    struct vv_t {
+        int     flg;
+        int     lcr;        // 0=left 1=center 2=right
+        int     umd;        // 0=up   1=mid    2=down
+        int     lcr_ex;     // 0=通常 1=ファイル名本体の最後の一時が奇数なら左詰め(l)偶数なら右詰め(r)にする
+        int     w , h , x , y;
+        int     wf, hf, xf, yf;
+        int     sw, sh, sx, sy;
+    };
+    vv_t        vv[2];
+    int         vvIdx;
     int         mapMode;
     int         mapTexW;
     int         mapTexH;
@@ -72,13 +73,13 @@ public:
     int         clutBpp;
     int         saveInfFile;
     int         mono;
-    int			monoNear;			// ほぼグレイならグレイとみなす
-    int			monoChRGB;
+    int         monoNear;           // ほぼグレイならグレイとみなす
+    int         monoChRGB;
     int         monoToAlp;
     double      monoToAlp_rate;
     int         monoToAlp_ofs;
     int         colMul;
-    int			colChSquare;
+    int         colChSquare;
     double      pixScale[4];
     int         pixScaleType;
     int         colrot;
@@ -86,7 +87,7 @@ public:
     int         binW,binH,binBpp, binEndian;
     int         lvlY, lvlUV;
     int         quality;
-    int			quality_grey;
+    int         quality_grey;
     int         rszN;       //リサイズ回数
     int         rszK[2];    //拡縮時に用いる係数 1..
     double      rszXpar[2];
@@ -127,7 +128,7 @@ public:
     // ~ConvOne_Opts() {}
 
     void readFixedClut(const char* fname);
-	bool isFixedClut() const { return decreaseColorMode == 1 || decreaseColorMode == 2 || decreaseColorMode >= 7; }
+    bool isFixedClut() const { return decreaseColorMode == 1 || decreaseColorMode == 2 || decreaseColorMode >= 7; }
 };
 
 
@@ -160,6 +161,8 @@ private:
     void setClutNukiCol();
     void reflectColKey();
     void easyPaintRoundAlpha();
+    void clearColorIfAlpha0();
+    void alphaBokashi();
     void resizeCanvas(int n);
     void changeSrcBpp();
     void reverseImage();
@@ -177,7 +180,7 @@ private:
     void patternDither();
     void alphaBlendByColor();
     void setDstBpp();
-	void checkSrcDstBpp();
+    void checkSrcDstBpp();
     void decreaseColor();
     void changeChipAndMap();
     void reverseOutputAlpha();
@@ -199,8 +202,8 @@ private:
     bm_opt_t*       bo_;
 
     bool            varbose_;
-	bool			fullColFlg_;
-	bool			mono_;
+    bool            fullColFlg_;
+    bool            mono_;
     int             sz_;
     int             w_;
     int             h_;

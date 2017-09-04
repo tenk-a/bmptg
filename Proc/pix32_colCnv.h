@@ -259,6 +259,21 @@ inline void pix32_clearAlphaOfColKey(unsigned* pix, unsigned w, unsigned h, unsi
     }
 }
 
+/** α=0のRGBを0クリア
+ */
+inline void pix32_clearColorIfAlpha0(unsigned *pix, unsigned w, unsigned h)
+{
+    unsigned    *px = (unsigned*)pix;
+    unsigned    n;
+
+    assert(pix != 0 && w != 0 && h != 0);
+    for (n = 0; n < w * h; ++n) {
+        unsigned c = *px;
+        if ((c >> 24) == 0)
+            c = 0;
+        *px++ = c;
+    }
+}
 
 
 /** 入力のαを反転する必要があるとき
@@ -376,11 +391,11 @@ inline void pix32_chARGBtoMono(unsigned *pix, unsigned w, unsigned h, int ch)
 {
     unsigned*   px = (unsigned*)pix;
     unsigned    n;
-	unsigned	sh;
+    unsigned    sh;
 
     assert(0 <= ch && ch < 4);
     assert(pix != 0 && w != 0 && h != 0);
-	sh = ch * 8;
+    sh = ch * 8;
     for (n = 0; n < w * h; ++n) {
         unsigned c = (unsigned char)(*px >> sh);
         *px++ = PIX32_ARGB(0xff,c,c,c);
@@ -432,11 +447,11 @@ inline void pix32_colChSquare(unsigned *pix, unsigned w, unsigned h)
         unsigned r = (unsigned char)(c >> 16);
         unsigned g = (unsigned char)(c >>  8);
         unsigned b = (unsigned char)(c);
-		a 		= a * a / 0xff;
-		r		= r * r / 0xff;
-		g		= g * g / 0xff;
-		b		= b * b / 0xff;
-        *px++	= PIX32_ARGB(a,r,g,b);
+        a       = a * a / 0xff;
+        r       = r * r / 0xff;
+        g       = g * g / 0xff;
+        b       = b * b / 0xff;
+        *px++   = PIX32_ARGB(a,r,g,b);
     }
 }
 
@@ -449,17 +464,17 @@ inline void pix32_changeRgbTone(unsigned *pix, unsigned w, unsigned h, double ra
     unsigned n;
     for (n = 0; n < size; ++n) {
         unsigned c  = pix[n];
-        int		 r  = (int)(PIX32_GET_R(c) * ratio);
-        int		 g  = (int)(PIX32_GET_G(c) * ratio);
-        int		 b  = (int)(PIX32_GET_B(c) * ratio);
-		unsigned a  = PIX32_GET_A(c);
-		if (a) {
-			r		= PIX32_CLAMP(r, 0, 255);
-			g		= PIX32_CLAMP(g, 0, 255);
-			b		= PIX32_CLAMP(b, 0, 255);
-			pix[n]  = PIX32_ARGB(a,r,g,b);
-		}
-	}
+        int      r  = (int)(PIX32_GET_R(c) * ratio);
+        int      g  = (int)(PIX32_GET_G(c) * ratio);
+        int      b  = (int)(PIX32_GET_B(c) * ratio);
+        unsigned a  = PIX32_GET_A(c);
+        if (a) {
+            r       = PIX32_CLAMP(r, 0, 255);
+            g       = PIX32_CLAMP(g, 0, 255);
+            b       = PIX32_CLAMP(b, 0, 255);
+            pix[n]  = PIX32_ARGB(a,r,g,b);
+        }
+    }
 }
 
 
@@ -471,19 +486,19 @@ inline void pix32_changeTone(unsigned *pix, unsigned w, unsigned h, double ratio
     unsigned n;
     for (n = 0; n < size; ++n) {
         unsigned c  = pix[n];
-        int		 r  = PIX32_GET_R(c);
-        int		 g  = PIX32_GET_G(c);
-        int		 b  = PIX32_GET_B(c);
-		unsigned a  = PIX32_GET_A(c);
-		if (a) {
-			double	 y  = PIX32_RGB_TO_KYUV_Y(r, g, b);
-			double	 u  = PIX32_RGB_TO_KYUV_U(r, g, b);
-			double	 v  = PIX32_RGB_TO_KYUV_V(r, g, b);
-			y *= ratio;
-			y = PIX32_CLAMP(y, 0, PIX32_KYUV_MUL_K*255);
-			PIX32_RGB_FROM_KYUV(pix[n], y, u, v, a, double);
-		}
-	}
+        int      r  = PIX32_GET_R(c);
+        int      g  = PIX32_GET_G(c);
+        int      b  = PIX32_GET_B(c);
+        unsigned a  = PIX32_GET_A(c);
+        if (a) {
+            double   y  = PIX32_RGB_TO_KYUV_Y(r, g, b);
+            double   u  = PIX32_RGB_TO_KYUV_U(r, g, b);
+            double   v  = PIX32_RGB_TO_KYUV_V(r, g, b);
+            y *= ratio;
+            y = PIX32_CLAMP(y, 0, PIX32_KYUV_MUL_K*255);
+            PIX32_RGB_FROM_KYUV(pix[n], y, u, v, a, double);
+        }
+    }
 }
 
 
@@ -522,22 +537,22 @@ inline void pix32_ayuvScale(unsigned *pix, unsigned w, unsigned h, double ratio[
     assert(pix != 0 && w != 0 && h != 0);
     for (n = 0; n < size; ++n) {
         unsigned c  = pix[n];
-        int		 r  = PIX32_GET_R(c);
-        int		 g  = PIX32_GET_G(c);
-        int		 b  = PIX32_GET_B(c);
-		int		 a  = (int)(PIX32_GET_A(c) * ratio[0]);
-		double	 y  = PIX32_RGB_TO_KYUV_Y(r, g, b);
-		double	 u  = PIX32_RGB_TO_KYUV_U(r, g, b);
-		double	 v  = PIX32_RGB_TO_KYUV_V(r, g, b);
-		y *= ratio[1];
-		u *= ratio[2];
-		v *= ratio[3];
-		a = PIX32_CLAMP(a, 0, 255);
-		y = PIX32_CLAMP(y, 0, PIX32_KYUV_MUL_K*255);
-		u = PIX32_CLAMP(u, 0, PIX32_KYUV_MUL_K*255);
-		v = PIX32_CLAMP(v, 0, PIX32_KYUV_MUL_K*255);
-		PIX32_RGB_FROM_KYUV(pix[n], y, u, v, a, double);
-	}
+        int      r  = PIX32_GET_R(c);
+        int      g  = PIX32_GET_G(c);
+        int      b  = PIX32_GET_B(c);
+        int      a  = (int)(PIX32_GET_A(c) * ratio[0]);
+        double   y  = PIX32_RGB_TO_KYUV_Y(r, g, b);
+        double   u  = PIX32_RGB_TO_KYUV_U(r, g, b);
+        double   v  = PIX32_RGB_TO_KYUV_V(r, g, b);
+        y *= ratio[1];
+        u *= ratio[2];
+        v *= ratio[3];
+        a = PIX32_CLAMP(a, 0, 255);
+        y = PIX32_CLAMP(y, 0, PIX32_KYUV_MUL_K*255);
+        u = PIX32_CLAMP(u, 0, PIX32_KYUV_MUL_K*255);
+        v = PIX32_CLAMP(v, 0, PIX32_KYUV_MUL_K*255);
+        PIX32_RGB_FROM_KYUV(pix[n], y, u, v, a, double);
+    }
 }
 
 
