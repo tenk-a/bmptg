@@ -163,7 +163,7 @@ unsigned*  bm_load32(const void *bm_data, unsigned sz, int *w_p, int *h_p, int* 
     unsigned*  buf = (unsigned*)calloc(1, 4 * wb * h);
     if (buf == NULL)
         return NULL;
-    if (bm_read(bm_data, sz, buf, wb, h, 32, NULL, 0) == 0) {
+    if (bm_read(bm_data, sz, buf, WID2BYT(w, 32), h, 32, NULL, 0) == 0) {
         free(buf);
         return NULL;
     }
