@@ -71,7 +71,8 @@ int  bm_write(int fmt, void *bm_data, int w, int h, int bpp, const void *src, in
             for (unsigned i = 0; i < (unsigned)w*h; ++i) {
                 tmp[i] = tmp[i*3];
             }
-			int quality = (o->quality_grey >= 0) ? o->quality_grey : o->quality;
+			int quality = (o->quality >= 0) ? o->quality : 80;
+			quality = (o->quality_grey >= 0) ? o->quality_grey : o->quality;
             n = JpgEncoder().write((uint8_t*)bm_data, w*h, tmp, w, h, quality, w, 0, 1);
 			freeE(tmp);
 		} else {
@@ -83,7 +84,8 @@ int  bm_write(int fmt, void *bm_data, int w, int h, int bpp, const void *src, in
                 tmp[i*3+0]      = tmp[i*3+2];
                 tmp[i*3+2]      = c;
             }
-            n = JpgEncoder().write((uint8_t*)bm_data, wb*h, tmp, w, h, o->quality, wb, 0);
+			int quality = (o->quality >= 0) ? o->quality : 80;
+            n = JpgEncoder().write((uint8_t*)bm_data, wb*h, tmp, w, h, quality, wb, 0);
 			freeE(tmp);
         }
         break;

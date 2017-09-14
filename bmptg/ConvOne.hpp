@@ -102,6 +102,7 @@ public:
     int         kizu;
     int         filterType;
     int         bokashiCnt;
+    int         bokashiAlpSikii;
     unsigned    bokashiMergeRateRGB;    // R,G,B 別にレートを指定できるようにカラー指定にする
     unsigned    bokashiMaskGenCol1;     // ぼかし合成でのマスクαを生成するための色値1
     unsigned    bokashiMaskGenCol2;     // ぼかし合成でのマスクαを生成するための色値1

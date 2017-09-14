@@ -166,9 +166,9 @@ inline void pix32_bokashi1(unsigned *dst, const unsigned *src, int w, int h)
 
 
 
-/** α 0..254 のピクセル付近だけぼかし変換
+/** α 0..thre のピクセル付近だけぼかし変換
  */
-inline void pix32_bokashiAlpNot255(unsigned *dst, const unsigned *src, int w, int h)
+inline void pix32_bokashiAlpLtEqThreshold(unsigned *dst, const unsigned *src, int w, int h, int thre)
 {
     unsigned y;
 
@@ -209,7 +209,7 @@ inline void pix32_bokashiAlpNot255(unsigned *dst, const unsigned *src, int w, in
             c = ps[-1];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa == 0xff);
+                af &= (aa > thre);
                 a += aa        * K1;
                 r += PIX32_GET_R(c) * K1;
                 g += PIX32_GET_G(c) * K1;
@@ -220,7 +220,7 @@ inline void pix32_bokashiAlpNot255(unsigned *dst, const unsigned *src, int w, in
             c = ps[1];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa == 0xff);
+                af &= (aa > thre);
                 a += aa        * K1;
                 r += PIX32_GET_R(c) * K1;
                 g += PIX32_GET_G(c) * K1;
@@ -231,7 +231,7 @@ inline void pix32_bokashiAlpNot255(unsigned *dst, const unsigned *src, int w, in
             c = ps[-w];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa == 0xff);
+                af &= (aa > thre);
                 a += aa        * K1;
                 r += PIX32_GET_R(c) * K1;
                 g += PIX32_GET_G(c) * K1;
@@ -242,7 +242,7 @@ inline void pix32_bokashiAlpNot255(unsigned *dst, const unsigned *src, int w, in
             c = ps[w];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa == 0xff);
+                af &= (aa > thre);
                 a += aa        * K1;
                 r += PIX32_GET_R(c) * K1;
                 g += PIX32_GET_G(c) * K1;
@@ -253,7 +253,7 @@ inline void pix32_bokashiAlpNot255(unsigned *dst, const unsigned *src, int w, in
             c = ps[-w-1];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa == 0xff);
+                af &= (aa > thre);
                 a += aa        * K2;
                 r += PIX32_GET_R(c) * K2;
                 g += PIX32_GET_G(c) * K2;
@@ -264,7 +264,7 @@ inline void pix32_bokashiAlpNot255(unsigned *dst, const unsigned *src, int w, in
             c = ps[-w+1];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa == 0xff);
+                af &= (aa > thre);
                 a += aa        * K2;
                 r += PIX32_GET_R(c) * K2;
                 g += PIX32_GET_G(c) * K2;
@@ -275,7 +275,7 @@ inline void pix32_bokashiAlpNot255(unsigned *dst, const unsigned *src, int w, in
             c = ps[ w-1];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa == 0xff);
+                af &= (aa > thre);
                 a += aa        * K2;
                 r += PIX32_GET_R(c) * K2;
                 g += PIX32_GET_G(c) * K2;
@@ -286,7 +286,7 @@ inline void pix32_bokashiAlpNot255(unsigned *dst, const unsigned *src, int w, in
             c = ps[ w+1];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa == 0xff);
+                af &= (aa > thre);
                 a += aa        * K2;
                 r += PIX32_GET_R(c) * K2;
                 g += PIX32_GET_G(c) * K2;
@@ -378,8 +378,8 @@ inline void pix32_alpBokasi(unsigned *pix, unsigned wid, unsigned hei, int dmy_s
                     //aa = aa * aa / 255;
                     aa = a * aa / 255;
                     //aa = aa * aa / 255;
-                    if (aa < 8)
-                        aa = 8;
+                    //if (aa < 8)
+                    //    aa = 8;
                     //printf("@(%d,%d)=%x  %x,%x,%x\n",x,y,aa, a,m,kk);
                     pix[n] = ((aa << 24) | (c&0xFFFFFF));
                 }

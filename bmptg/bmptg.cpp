@@ -2,33 +2,8 @@
  *  @file   bmptg.cpp
  *  @brief  画像コンバータ
  *  @author Masashi Kitamura
- *  @date   2000-??-??
+ *  @date   2000-2017
  *  @note
- *  2000        v1.00 自作のbmp2tga,tga2bmp 関係を統合したツールに.
- *  2001-01-30  tgaの16bit色のαの扱いがポカしてたのを(0x80でなく0xFFに)修正.
- *  2001-03     ディザ処理改. clut画への減色機能強化.
- *  2001-04     bmp-rle関係
- *  2001-07     v2.00 拡縮をバイリニアサンプリングを用いた方法に変更。
- *  2003-11     MY4 追加
- *  2004        (なんかバグとりしたような... あとソースの記述スタイルを修正)
- *  2005-09     cel&mapでのメモリー破壊バグの修正
- *  2005-??     ぼかし関係の追加
- *  2005-11     -xca 四隅を抜き色でペイントしてαプレーンを生成
- *  2006        conv_one()のスパゲッティ状態は辛過ぎるのでc++でclassに書直す.
- *  2007        v2.10 書き忘れてたオプションをusageに記述.また１ページ制限をやめる.
- *  2007-05     v2.20 メディアンカット法の減色をサポート( α付減色がそこそこまともに)
- *  2007-05     v2.21 aNiMな8ビット色減色モードを追加.
- *  2007-06     v2.30 jpg対応.
- *  2007-06     v2.31 png対応.
- *  2007-07     v2.32 減色関係修正, 右回転.
- *  200?-??     v2.33 -xv で元画像の(x,y)を指定可能に.
- *  2015-??     v2.34 バイリニア減色修正
- *  2015-03     v2.35 バイキュービック拡縮追加.こちらをデフォルトに.
- *  2015-10     v2.36 -cgc -cem -xvc -xvr -xjl -xqg 追加. 出力bpp指定無しでモノクロ化した場合はなるべく256色画像で出力.
- *  2016-08     v2.37 lanczos-3,spline36,NearestNeighbor拡縮追加. bilinear,bicubic 内部でのyuv止めrgbで処理. bilinearの0.5ピクセルずれ修正.
- *                    -xvにu|m|d|eオプション追加. -xv系2度指定可能に. -xl廃止. -xi[R] 任意角回転追加.
- *  2016-08     v2.38 モノクロ画減色を改善. 1bpp画,2bpp画出力専用の減色を追加. 拡縮回転でのαの補完はバイリニアのみに.
- *                    clut画で入力bpp>出力bpp時に出力bppに収まらないピクセルがあれば一旦フルカラー化.
  */
 
 
@@ -45,12 +20,15 @@
 #define MY_USAGE_2
 #endif
 
+#define TOUPPER(c)      (((unsigned)(c) < 0x80) ? toupper(c) : (c))
+
 char *g_appName;
 
 
 void usage(void)
 {
-    printf("usage> %s [-opts] file(s)   // v2.39 " __DATE__ "  by tenk*\n", g_appName);
+    printf("https://github.com/tenk-a/bmptg/\n"
+           "usage> %s [-opts] file(s)   // v2.39 " __DATE__ "  by tenk*\n", g_appName);
     printf(
        "  bmp tga jpg png 等画像を相互に変換.\n"
        "  α値は有効で00:透明～0xFF:不透明. α無画は0xFFとして抜色はα=0として処理.\n"
@@ -183,13 +161,16 @@ void usage(void)
        "  -xi[R]        右R°回転.\n"
        "  -xb           ピクセル値のビット反転(2値画での反転を想定).\n"
        "  -xg[N]        α<=Nの点を(0,0,0)に、出力bppで(0,0,0)になる点を近似の別色に.\n"
-       "  -xca[N]       左上(0,0)の色を抜き色として4隅からα=0の色でペイント. N=1-256適応範囲\n"
-       "                (バストアップ仮絵作成を想定)\n"
+       "  -xca[N]       左上(0,0)の色を抜き色として4隅からα=0の色でペイント.\n"
+       "                N=1-256適応範囲. (バストアップ仮絵作成を想定)\n"
        "  -cgn[R|G|B|A] モノクロ画像ぽければ -cg|-cgc の動作(実験中)\n"
+       "  -xfa[A:N]     α<=A のピクセルをぼかす. N:回数\n"
        "  -xf[..]       ぼかしフィルタ処理.\n"
        "   -xf1:N                     ぼかし[3x3:4/2/1]をN回.\n"
        "   (-xf2:N:LeapARGB           実験:-xf1拡張でぼかし画像と通常画を合成)\n"
        "   (-xf2:N:LeapARGB:RGB1:RGB2 実験:さらに2色から生成したマスクも反映)\n"
+       //"   -xf4:N                     α<255のピクセルをぼかす\n"
+       "\n"
         MY_USAGE_2
        "\n"
     );
@@ -252,10 +233,10 @@ int Opts::scan(const char *a)
     if (*p == '-')
         p++;
     c = *p++;
-    c = toupper(c);
+    c = TOUPPER(c);
     switch (c) {
     case 'A':
-        c = *p++, c = toupper(c);
+        c = *p++, c = TOUPPER(c);
         if (c == 'N') {         // -an
             o->alpNon = 1;
         } else if (c == 'O') {  // -ao
@@ -268,7 +249,12 @@ int Opts::scan(const char *a)
                 o->nukiumeRgb = strToUI(p, 16);
             }
         } else if (c == 'D') {  // -ad
-            o->alpBokasi = (*p != '-');
+            o->alpBokasi = (*p == '\0') ? 128 : (*p == '-') ? -1 : strToUI(p,0);
+            if (o->alpBokasi < -1)
+                o->alpBokasi = -1;
+            else if (o->alpBokasi > 255)
+                o->alpBokasi = 255;
+            ++o->alpBokasi;
 
         } else if (c == 'G') {  // -ag
             o->monoToAlp = (*p != '-');
@@ -349,14 +335,14 @@ int Opts::scan(const char *a)
         break;
 
     case 'C':
-        c = *p++, c = toupper(c);
+        c = *p++, c = TOUPPER(c);
         switch (c) {
         case 'O':   //-co
             o->clutOfs = strToUI(p, 0);
             break;
 
         case 'F':   //-cf
-            if (toupper(*p) == 'N') {
+            if (TOUPPER(*p) == 'N') {
                 ++p;
                 o->colKey   = strToUI(p, 16);
                 o->colKeyNA = 1;
@@ -375,18 +361,18 @@ int Opts::scan(const char *a)
             break;
 
         case 'E':   //-ce
-            if (toupper(*p) == 'M') {   // -cem
+            if (TOUPPER(*p) == 'M') {   // -cem
                 o->colChSquare = *(p+1) != '-';
             }
             break;
 
         case 'G':   //-cg
             o->mono = (*p != '-');
-            if (toupper(*p) == 'C') {   // -cgc
-                int t = toupper(*(unsigned char*)(p+1));
+            if (TOUPPER(*p) == 'C') {   // -cgc
+                int t = TOUPPER(*(unsigned char*)(p+1));
                 o->monoChRGB = (t == 'B') + (t == 'G')*2 + (t == 'R')*3 + (t == 'A')*4;
-            } else if (toupper(*p) == 'N') {    // -cgn
-                int t = toupper(*(unsigned char*)(p+1));
+            } else if (TOUPPER(*p) == 'N') {    // -cgn
+                int t = TOUPPER(*(unsigned char*)(p+1));
                 o->mono      = 0;
                 o->monoNear  = 1;
                 o->monoChRGB = (t == 'B') + (t == 'G')*2 + (t == 'R')*3 + (t == 'A')*4;
@@ -431,7 +417,7 @@ int Opts::scan(const char *a)
             break;
 
         case 'I':   //-ci
-            if (toupper(*p) == 'S') {   // -cis
+            if (TOUPPER(*p) == 'S') {   // -cis
                 ++p;
                 o->clutIndShft = strToUI(p, 0);
                 o->clutOfs     = o->clutIndShft;
@@ -441,9 +427,9 @@ int Opts::scan(const char *a)
             break;
 
         case 'P':   //-cp
-            if (toupper(*p) == 'C') {   //-cpc
+            if (TOUPPER(*p) == 'C') {   //-cpc
                 o->clutTxtName = strdupE(p+1);
-            } else if (toupper(*p) == 'f') {    // -cpf 外部パレットファイルを用いて減色
+            } else if (TOUPPER(*p) == 'f') {    // -cpf 外部パレットファイルを用いて減色
                 o->readFixedClut(p+1);
                 o->decreaseColorMode = 6;
                 o->fullColFlg        = 1;
@@ -501,7 +487,7 @@ int Opts::scan(const char *a)
         break;
 
     case 'E':
-        c = *p++, c = toupper(c);
+        c = *p++, c = TOUPPER(c);
         if (c == 'D') {
             this->dstExt = strdupE(p);
             o->exDstExt = strdupE(p);
@@ -554,7 +540,7 @@ int Opts::scan(const char *a)
         break;
 
     case 'H':
-        c = *p++, c = toupper(c);
+        c = *p++, c = TOUPPER(c);
         if (c == 0) {
             usage();
       #ifdef MY_H
@@ -571,7 +557,7 @@ int Opts::scan(const char *a)
         break;
 
     case 'I':
-        c = *p++, c = toupper(c);
+        c = *p++, c = TOUPPER(c);
         if (c == 'F') {                 //-if
             o->fullColFlg = (*p != '-');
         } else if (c == 'B') {          //-ib
@@ -608,7 +594,7 @@ int Opts::scan(const char *a)
         break;
 
     case 'M':
-        c = *p++, c = toupper(c);
+        c = *p++, c = TOUPPER(c);
         if (c == 'C') { //-mc
             o->celSzW = strToI(p,0);
             if (o->celSzW <= 0)
@@ -650,7 +636,7 @@ int Opts::scan(const char *a)
         } else if (c == 'I') {      //-mi
             o->saveInfFile = 1;
       #if 0
-        } else if (c == 'O' && toupper(p[0]) == 'j' && toupper(p[1]) == 'i') {  //-moji
+        } else if (c == 'O' && TOUPPER(p[0]) == 'j' && TOUPPER(p[1]) == 'i') {  //-moji
             p += 2;
             o->fntX = strToI(p, 10);
             if (*p) {
@@ -693,7 +679,7 @@ int Opts::scan(const char *a)
         o->toneType = 0;
         if (*p == 0) {
             o->tone = 50;
-        } else if (toupper(*p) == 'T') {    // -tt
+        } else if (TOUPPER(*p) == 'T') {    // -tt
             o->toneType = 1;
             o->tone     = 50;
             if (p[1]) {
@@ -715,7 +701,7 @@ int Opts::scan(const char *a)
 
     case 'X':
         c = *p++;
-        c = toupper(c);
+        c = TOUPPER(c);
         switch (c) {
         case 'D':   //-xd
             o->fullColFlg      = 1;
@@ -758,7 +744,7 @@ int Opts::scan(const char *a)
             {
                 if (o->rszN > 2)
                     err_abortMsg("-xrsまたは-xrp が3つ以上指定されている\n");
-                c = *p++, c = toupper(c);
+                c = *p++, c = TOUPPER(c);
                 o->rszK[o->rszN] = 0;
                 if (c == 'P') {         //-xrp
                     o->rszXpar[o->rszN] = strExprD(p,&p, 0);
@@ -803,7 +789,7 @@ int Opts::scan(const char *a)
             break;
 
         case 'Q':   // -xq
-            if (toupper(*p) == 'G') {   // -xqg
+            if (TOUPPER(*p) == 'G') {   // -xqg
                 ++p;
                 o->quality_grey = strToI(p, 10);
             } else {
@@ -821,7 +807,7 @@ int Opts::scan(const char *a)
 
         case 'J':   //-xj
             o->rotR90 = 1;
-            if (toupper(*p) == 'L') {
+            if (TOUPPER(*p) == 'L') {
                 o->rotR90 = -1;
             }
             break;
@@ -853,7 +839,7 @@ int Opts::scan(const char *a)
                 ov->umd = -1;
                 ov->lcr_ex = 0;
                 for (;;) {
-                    int c2 = toupper(*p);
+                    int c2 = TOUPPER(*p);
                     if (c2 == 'C') {        // -xvc
                         ov->lcr = 1;
                         ++p;
@@ -996,24 +982,44 @@ int Opts::scan(const char *a)
             break;
 
         case 'F':   //-xf   フィルタ
-            o->filterType = strToI(p, 10);
-            if (o->filterType == 1 || o->filterType == 2 || o->filterType == 3 || o->filterType == 4) {
+            if (TOUPPER(*p) == 'A') {   // -xfa閾値:回数
+                o->filterType = 4;
                 o->bokashiCnt = 1;
+                o->bokashiAlpSikii = 254;
                 if (*p != 0) {
                     ++p;
-                    o->bokashiCnt = strToI(p, 10);
-                    if (*p != 0) {  // -xf2 -xf3 用
-                        //o->bokashiMergeRate = strToI(p+1, 10) / 100.0;
+                    o->bokashiAlpSikii = (*p == '\0') ? 254 : (*p == '-') ? -1 : strToUI(p,0);
+                    if (o->bokashiAlpSikii < -1)
+                        o->bokashiAlpSikii = -1;
+                    else if (o->bokashiAlpSikii > 255)
+                        o->bokashiAlpSikii = 255;
+                    ++o->bokashiAlpSikii;
+                    if (*p != 0) {
                         ++p;
-                        o->bokashiMergeRateRGB = strToUI(p, 16);
-                        o->bokashiMaskGenCol1  = 0x000000;
-                        o->bokashiMaskGenCol2  = 0xffffff;
-                        if (*p != 0) {  // xf3 用
+                        o->bokashiCnt = strToI(p, 10);
+                    }
+                }
+            } else {    // -xf
+                o->filterType = strToI(p, 10);
+                if (o->filterType == 1 || o->filterType == 2 || o->filterType == 3 || o->filterType == 4) {
+                    o->bokashiCnt = 1;
+                    o->bokashiAlpSikii = 254;
+                    if (*p != 0) {
+                        ++p;
+                        o->bokashiCnt = strToI(p, 10);
+                        if (*p != 0) {  // -xf2 -xf3 用
+                            //o->bokashiMergeRate = strToI(p+1, 10) / 100.0;
                             ++p;
-                            o->bokashiMaskGenCol1 = strToUI(p, 16);
-                            if (*p != 0) {
+                            o->bokashiMergeRateRGB = strToUI(p, 16);
+                            o->bokashiMaskGenCol1  = 0x000000;
+                            o->bokashiMaskGenCol2  = 0xffffff;
+                            if (*p != 0) {  // xf3 用
                                 ++p;
-                                o->bokashiMaskGenCol2 = strToUI(p, 16);
+                                o->bokashiMaskGenCol1 = strToUI(p, 16);
+                                if (*p != 0) {
+                                    ++p;
+                                    o->bokashiMaskGenCol2 = strToUI(p, 16);
+                                }
                             }
                         }
                     }

@@ -9,6 +9,7 @@ set TGTNAME=bmptg-moz%1
 if not exist ..\ImgFmt\libpng\pnglibconf.h copy ..\ImgFmt\libpng\scripts\pnglibconf.h.prebuilt ..\ImgFmt\libpng\pnglibconf.h
 
 mingw32-make -f bmptg-moz.mak COMPILER=cl
+copy /b %TGTNAME%.exe bmptg.exe
 
 set ADD_CFLAGS=
 set ADD_SRCS=

@@ -58,7 +58,7 @@ ConvOne_Opts::ConvOne_Opts() {
     this->clutBpp   = 24;
     this->dstFmt    = BM_FMT_TGA;
 
-    this->quality   = 80;
+    this->quality   = -1;
     this->quality_grey = -1;
 
     this->alpMin    = 0x00;         // 半透明範囲min
@@ -507,7 +507,7 @@ void ConvOne::reflectColKey() {
     if (opts_.colKeyNA)
         return;
     int colKey    = opts_.colKey;
-    int alpBokasi = opts_.alpBokasi;
+    //int alpBokasi = opts_.alpBokasi;
     if (colKey != -1) {
         if (pixBpp_ == 8) {
             pix32_clearAlphaOfColKey(clut_, 1, 256, colKey);
@@ -551,8 +551,8 @@ void ConvOne::clearColorIfAlpha0() {
 /// 抜き色(カラーキー) を反映する
 void ConvOne::alphaBokashi() {
     int alpBokasi = opts_.alpBokasi;
-    if (alpBokasi != 0 && pixBpp_ == 32) {
-        pix32_alpBokasi((UINT32_T*)pix_, w_, h_, 0/*255*/);      // 透明、不透明の境目のαをぼかす
+    if (alpBokasi > 0 && pixBpp_ == 32) {
+        pix32_alpBokasi((UINT32_T*)pix_, w_, h_, alpBokasi);      // 透明・不透明の境目のαをぼかす
     }
 }
 
@@ -1021,11 +1021,11 @@ void ConvOne::filter() {
         } else if (opts_.filterType == 4) { // alp 0..254 のピクセル付近をぼかす(255はぼかさない)
             if (opts_.bokashiCnt) {
                 int i;
-                if (varbose_) printf("->bokashi4[%d]", opts_.bokashiCnt);
+                if (varbose_) printf("->bokashi(a<=%d)[%d]", opts_.bokashiAlpSikii, opts_.bokashiCnt);
                 for (i = 0; i < opts_.bokashiCnt; ++i) {
                     UINT8_T *pix2 = (UINT8_T*)callocE(1, w_*h_*4);
                     //pix32_bokashi1((UINT32_T*)pix2, (UINT32_T*)pix_, w_, h_);
-                    pix32_bokashiAlpNot255((UINT32_T*)pix2, (UINT32_T*)pix_, w_, h_);
+                    pix32_bokashiAlpLtEqThreshold((UINT32_T*)pix2, (UINT32_T*)pix_, w_, h_, opts_.bokashiAlpSikii-1);
                     freeE( pix_ );
                     pix_ = pix2;
                 }
