@@ -13,7 +13,6 @@ tst
 test
 obj_*
 *.obj
-*.exe
 *.pbk
 *.ilk
 *.sdf
@@ -24,7 +23,6 @@ Release
 Release_*
 CMakeFiles
 CMakeCache.txt
-*.spi
 *.lib
 ImgFmt/zlib
 ImgFmt/libpng
