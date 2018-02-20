@@ -172,3 +172,28 @@ unsigned*  bm_load32(const void *bm_data, unsigned sz, int *w_p, int *h_p, int* 
     *bpp_p = bpp;
     return buf;
 }
+
+
+
+int  bm_getClut(const void *bm_data, void *clut0, int num)
+{
+    int bpp     = 0;
+    int clutNum = 0;
+    int w       = 0;
+    int h       = 0;
+	int fmt = bm_getHdr(bm_data, -1, &w, &h, &bpp, &clutNum);
+	if (fmt == 0 || clutNum == 0)
+		return 0;
+	memset(clut0, 0, sizeof(uint32_t) * num);
+	if (clutNum > num)
+		clutNum = num;
+	unsigned wb  = WID2BYT(w, bpp);
+    unsigned*  buf = (unsigned*)calloc(1, 2 * wb * h);
+    if (buf == NULL)
+        return 0;
+    if (bm_read(bm_data, (unsigned)-1, buf, wb, h, bpp, clut0, 0) == 0) {
+        fmt = 0;
+    }
+    free(buf);
+	return clutNum;
+}

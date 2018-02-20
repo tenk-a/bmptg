@@ -203,6 +203,8 @@ private:
     static double   strExprD(const char *p, const char ** a_p, int* a_err);
     static int      strToI (const char* &p, int base) { return (int)strtol(p, (char**)&p, base); }
     static unsigned strToUI(const char* &p, int base) { return (unsigned)strtoul(p, (char**)&p, base); }
+
+	void			readClutBin(char const* name, int clutbpp);
 };
 
 
@@ -402,7 +404,11 @@ int Opts::scan(const char *a)
             break;
 
         case 'N':   //-cn
-            o->colNum = strToUI(p,0);
+			if (*p == 'x' || *p == 'X') {	// -cnx
+	            o->colNum = 0x7fffffff;
+			} else {
+	            o->colNum = strToUI(p,0);
+	        }
             break;
 
         case 'C':   //-cc
@@ -425,6 +431,20 @@ int Opts::scan(const char *a)
                 o->nukiClut    = strToUI(p, 0);
             }
             break;
+
+		case 'L':	//-cl
+			if (toupper(*p) == 'B') {	//-clb
+				++p;
+				int cbpp = strToUI(p, 0);
+				if (cbpp != 24 && cbpp != 32) {
+					goto OPT_ERR;
+				}
+				if (*p != '\0') {
+					++p;
+					readClutBin(p, cbpp);
+				}
+			}
+			break;
 
         case 'P':   //-cp
             if (TOUPPER(*p) == 'C') {   //-cpc
@@ -1085,6 +1105,38 @@ double Opts::strExprD(const char *p, const char ** a_p, int* a_err)
 
 
 
+void Opts::readClutBin(char const* fname, int clutbpp)
+{
+    ConvOne_Opts*   o = convOne_opts;
+    int sz = 0;
+    unsigned* src = (unsigned*)fil_loadE(fname, 0, 0, &sz);
+    if (sz == 0)
+        return;
+
+	int w=0, h=0, bpp=0, clutNum=0;
+	int	fmt = bm_getHdr(src, sz, &w, &h, &bpp, &clutNum);
+	if (fmt > 0 && clutNum > 0) {
+		if (clutNum > 256)
+			clutNum = 256;
+		int n = bm_getClut(src, o->clutChg, clutNum);
+	    for (unsigned i = 0; i < n; ++i)
+			o->clutChgFlg[i] = 1;
+	 #ifdef MY_H
+		MY_readClutBinSub(src, fmt);
+	 #endif
+	} else {
+	    unsigned n = sz / 4;
+	    if (n > 256)
+	    	n = 256;
+	    for (unsigned i = 0; i < n; ++i) {
+			o->clutChgFlg[i] = 1;
+			o->clutChg[i] = src[i];
+		}
+	}
+	free(src);
+}
+
+
 /* ------------------------------------------------------------------------ */
 
 /// レスポンスファイルの入力
@@ -1126,8 +1178,8 @@ int main(int argc, char *argv[])
     if (argc < 2)
         usage();
 
-    ConvOne convOne;
-    Opts    opts(convOne.opts());
+    static ConvOne convOne;
+    static Opts    opts(convOne.opts());
 
     /* コマンドライン解析 */
     for (int i = 1; i < argc; i++) {

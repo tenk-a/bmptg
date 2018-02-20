@@ -68,8 +68,6 @@ public:
     int         mapEx256x256;
     int         clutAlpFlg;
     int         clutAlpNum;
-    int         clutChgFlg[256];
-    int         clutChg[256];
     int         clutBpp;
     int         saveInfFile;
     int         mono;
@@ -121,8 +119,10 @@ public:
     int         startX;
     int         startY;
 
-    enum {CLUT_NUM = 16 * 1024};
+    enum {CLUT_NUM = 64 * 1024};
     unsigned    fixedClut_[CLUT_NUM];
+    int         clutChgFlg[CLUT_NUM];
+    int         clutChg[CLUT_NUM];
 
 public:
     ConvOne_Opts();
@@ -196,7 +196,7 @@ private:
     void clutTxtSave(const char *clutTxtName, const char *dstName, unsigned *clut, int dstColN);
 
 private:
-    //enum {CLUT_NUM = 16 * 1024};
+    //enum {CLUT_NUM = 64 * 1024};
     enum {CLUT_NUM = ConvOne_Opts::CLUT_NUM};
     const char*     dstName_;
     const char*     srcName_;

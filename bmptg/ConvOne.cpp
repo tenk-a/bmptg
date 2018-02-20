@@ -57,6 +57,7 @@ ConvOne_Opts::ConvOne_Opts() {
     this->verbose   = 1;
     this->clutBpp   = 24;
     this->dstFmt    = BM_FMT_TGA;
+	this->colNum	= 0; //0x7fffffff;
 
     this->quality   = -1;
     this->quality_grey = -1;
@@ -250,6 +251,11 @@ bool ConvOne::readFile() {
         printf("%s をオープンできません。\n", srcName_);
         return 0;
     }
+	if (sz_ == 0) {
+        if (varbose_) printf("\n");
+        printf("%s は 0byteです。\n", srcName_);
+		return 0;
+	}
     dat_ = src_;
     if (bytSkp && sz_ > bytSkp) {   // 先頭 バイトをスキップするとき
         dat_ += bytSkp;
@@ -418,17 +424,20 @@ void ConvOne::changeClut() {
     const int*  clutChgFlg  = opts_.clutChgFlg;
     const int*  clutChg     = opts_.clutChg;
     if (bpp_ <= 8) {
-        for (int n = 0; n < 256; n++) {
+		unsigned clutNum = colNum_ > 256 ? colNum_ : 256;	// CLUT_NUM
+		if (clutNum > CLUT_NUM)
+			clutNum = CLUT_NUM;
+        for (int n = 0; n < clutNum; n++) {
             if (clutChgFlg[n])
                 clut_[n] = clutChg[n];
         }
         if (clutOfs > 0) {
-            UINT32_T    clutTmp[256];
-            memset(clutTmp, 0, 4*256);
-            for (int n = 0; n < 256; n++) {
-                clutTmp[n] = clut_[(UINT8_T)(clutOfs+n)];
+            UINT32_T    clutTmp[CLUT_NUM];
+            memset(clutTmp, 0, 4*clutNum);
+            for (int n = 0; n < clutNum; n++) {
+                clutTmp[n] = clut_[(clutOfs+n) % clutNum];
             }
-            memcpy(clut_, clutTmp, 4*256);
+            memcpy(clut_, clutTmp, 4*clutNum);
         }
     }
 }
@@ -1436,9 +1445,11 @@ bool ConvOne::saveImage() {
                 dstColN_ = 1 << dstBpp_;
                 pixWb_   = w_;
             }
-        } else if (dstFmt == BM_FMT_JPG) {
+        } else if (dstFmt == BM_FMT_JPG || dstFmt == BM_FMT_PNG) {
             if (GrayClut<>::isGrey((uint32_t*)pix_, w_, h_))
                 mono_ = true;
+			//else if (dstFmt == BM_FMT_PNG && GrayClut<>::isGreyRGB((uint32_t*)pix_, w_, h_))
+            //  mono_ = true;
         }
     }
 

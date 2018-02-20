@@ -47,7 +47,7 @@ unsigned char* PngEncoder::write(unsigned& rSz, const void* src, unsigned w, uns
 /// pix に画像を展開する. サイズは0だとデフォルトのまま. dirは0が左上から1なら左下から.
 unsigned    PngEncoder::write(unsigned char* dst, unsigned dstSz, const void* src, unsigned width, unsigned height, unsigned bpp, const unsigned* clut, unsigned widByt, unsigned dir)
 {
-    assert(bpp == 1 || bpp == 2 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32);
+    assert(bpp == 1 || bpp == 2 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32 || bpp == 13);
     unsigned        clutSize  = (bpp <= 8) ? 1 << bpp : 0;
     bool            alpFlag   = (clut && clutSize) ? haveAlpha(clut, 1, clutSize) : 0;
 
@@ -99,6 +99,9 @@ unsigned    PngEncoder::write(unsigned char* dst, unsigned dstSz, const void* sr
         } else {
             typ = PNG_COLOR_TYPE_GRAY;
         }
+    } else if (bpp == 13) {
+		typ  = PNG_COLOR_TYPE_GRAY_ALPHA;
+		bpp  = 16;
     }
     int pngbpp = (bpp <= 8) ? bpp : 8;
     png_set_IHDR(png_ptr, info_ptr, width, height, pngbpp, typ, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);

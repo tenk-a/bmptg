@@ -91,7 +91,7 @@
 // stdint は未だに vc は未サポートで不便なので、最低限の型を定義.
 // (boostやSDLを使うほうが無難かも)
 
-#if (defined _MSC_VER) || (defined __BORLANDC__ && __BORLANDC__ <= 0x0551)
+#if (defined _MSC_VER && _MSC_VER < 1600) || (defined __BORLANDC__ && __BORLANDC__ <= 0x0551)
 typedef __int8              int8_t;
 typedef unsigned __int8     uint8_t;
 typedef __int16             int16_t;

@@ -177,6 +177,7 @@ enum {
 	BPPIDX_04,
 	BPPIDX_08,
 	BPPIDX_12,
+	BPPIDX_13,	// gray:8 + alpha:8
 	BPPIDX_15,
 	BPPIDX_16,
 	BPPIDX_24,
@@ -191,6 +192,7 @@ static inline int beta_bpp2idx(int bpp) {
 	      : (bpp <=  4) ?  BPPIDX_04
 	      : (bpp <=  8) ?  BPPIDX_08
 	      : (bpp <= 12) ?  BPPIDX_12
+	      : (bpp <= 13) ?  BPPIDX_13
 	      : (bpp <= 15) ?  BPPIDX_15
 	      : (bpp <= 16) ?  BPPIDX_16
 	      : (bpp <= 24) ?  BPPIDX_24
@@ -422,6 +424,48 @@ static uint32_t beta_getIdx_bpp12i(const uint8_t *s, int x) {
 	return beta_getIdx_sub(r,g,b);
 }
 
+
+static uint32_t beta_getRgb_bpp13m(const uint8_t *s, int x) {
+	uint8_t a,g;
+	int     c;
+	s += x * 2;
+	c = PEEKmW(s);
+	a = (uint8_t)(c >> 8);
+	g = (uint8_t)c;
+	return ARGB(a,g,g,g);
+}
+
+static uint32_t beta_getRgb_bpp13i(const uint8_t *s, int x) {
+	uint8_t a,g;
+	int     c;
+	s += x * 2;
+	c = PEEKiW(s);
+	a = (uint8_t)(c >> 8);
+	g = (uint8_t)c;
+	return ARGB(a,g,g,g);
+}
+
+static uint32_t beta_getIdx_bpp13m(const uint8_t *s, int x) {
+	uint8_t a,g;
+	int     c;
+	s += x * 2;
+	c = PEEKmW(s);
+	a = (uint8_t)(c >> 8);
+	g = (uint8_t)c;
+	return g;
+}
+
+static uint32_t beta_getIdx_bpp13i(const uint8_t *s, int x) {
+	uint8_t a,g;
+	int     c;
+	s += x * 2;
+	c = PEEKiW(s);
+	a = (uint8_t)(c >> 8);
+	g = (uint8_t)c;
+	return g;
+}
+
+
 static uint32_t beta_getRgb_bpp15m(const uint8_t *s, int x) {
 	uint8_t a,r,g,b;
 	int     c;
@@ -639,6 +683,7 @@ static beta_getPix_t const s_beta_getPix_tbl[2][2][BPPIDX_NUM] = {
 			beta_getIdx_bpp04i,
 			beta_getIdx_bpp08im,
 			beta_getIdx_bpp12i,
+			beta_getIdx_bpp13i,
 			beta_getIdx_bpp15i,
 			beta_getIdx_bpp16i,
 			beta_getIdx_bpp24i,
@@ -649,6 +694,7 @@ static beta_getPix_t const s_beta_getPix_tbl[2][2][BPPIDX_NUM] = {
 			beta_getIdx_bpp04m,
 			beta_getIdx_bpp08im,
 			beta_getIdx_bpp12m,
+			beta_getIdx_bpp13m,
 			beta_getIdx_bpp15m,
 			beta_getIdx_bpp16m,
 			beta_getIdx_bpp24m,
@@ -661,6 +707,7 @@ static beta_getPix_t const s_beta_getPix_tbl[2][2][BPPIDX_NUM] = {
 			beta_getRgb_bpp04i,
 			beta_getRgb_bpp08im,
 			beta_getRgb_bpp12i,
+			beta_getRgb_bpp13i,
 			beta_getRgb_bpp15i,
 			beta_getRgb_bpp16i,
 			beta_getRgb_bpp24i,
@@ -671,6 +718,7 @@ static beta_getPix_t const s_beta_getPix_tbl[2][2][BPPIDX_NUM] = {
 			beta_getRgb_bpp04m,
 			beta_getRgb_bpp08im,
 			beta_getRgb_bpp12m,
+			beta_getRgb_bpp13m,
 			beta_getRgb_bpp15m,
 			beta_getRgb_bpp16m,
 			beta_getRgb_bpp24m,
@@ -798,6 +846,31 @@ static void beta_putPix_bpp12i(uint8_t *d, int x, int c) {
 }
 
 
+static void beta_putPix_bpp13m(uint8_t *d, int x, int c) {
+	int     a;
+	uint8_t g;
+	//r = (uint8_t)(c >> 16);
+	g = (uint8_t)(c >>  8);
+	//b = (uint8_t)(c >>  0);
+	a = ((uint32_t)c >> 24);
+	c = (a << 8) | g;
+	d += x*2;
+	POKEmW(d, c);
+}
+
+static void beta_putPix_bpp13i(uint8_t *d, int x, int c) {
+	int     a;
+	uint8_t g;
+	//r = (uint8_t)(c >> 16);
+	g = (uint8_t)(c >>  8);
+	//b = (uint8_t)(c >>  0);
+	a = ((uint32_t)c >> 24);
+	c = (a << 8) | g;
+	d += x*2;
+	POKEiW(d, c);
+}
+
+
 static void beta_putPix_bpp15m(uint8_t *d, int x, int c) {
 	int     a;
 	uint8_t r,g,b;
@@ -913,6 +986,7 @@ static beta_putPix_t const s_beta_putPix_tbl[2][BPPIDX_NUM] = {
 		beta_putPix_bpp04i,
 		beta_putPix_bpp08im,
 		beta_putPix_bpp12i,
+		beta_putPix_bpp13i,
 		beta_putPix_bpp15i,
 		beta_putPix_bpp16i,
 		beta_putPix_bpp24i,
@@ -923,6 +997,7 @@ static beta_putPix_t const s_beta_putPix_tbl[2][BPPIDX_NUM] = {
 		beta_putPix_bpp04m,
 		beta_putPix_bpp08im,
 		beta_putPix_bpp12m,
+		beta_putPix_bpp13m,
 		beta_putPix_bpp15m,
 		beta_putPix_bpp16m,
 		beta_putPix_bpp24m,

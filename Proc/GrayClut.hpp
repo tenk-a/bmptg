@@ -20,6 +20,7 @@ class GrayClut {
 public:
 	/// グレイ画像か?
 	static bool isGrey(const unsigned* pSrc, unsigned w, unsigned h);
+	static bool isGreyRGB(const unsigned* pSrc, unsigned w, unsigned h);
 
 	/// グレイに近い画像か?
 	static bool isNearGrey(const unsigned* pSrc, unsigned w, unsigned h, int threshold=12);
@@ -58,6 +59,18 @@ bool GrayClut<A>::isGrey(const unsigned* pSrc, unsigned w, unsigned h)
     return true;
 }
 
+/// RGB部分がグレイ画像か?
+template<class A>
+bool GrayClut<A>::isGreyRGB(const unsigned* pSrc, unsigned w, unsigned h)
+{
+	for (unsigned j = 0; j < w * h; ++j) {
+		unsigned c = pSrc[j];
+		unsigned r = ARGB_R(c);
+		if (r != ARGB_G(c) || r != ARGB_B(c))
+			return false;
+	}
+    return true;
+}
 
 /// グレイ画像に近いか?
 template<class A>

@@ -18,6 +18,7 @@
 #include "bmp_wrt.h"
 #include "tga_wrt.h"
 #include "pix32_colCnv.h"
+#include "GrayClut.hpp"
 #if defined USE_JPG
 #include "JpgEncoder.hpp"
 #endif
@@ -95,6 +96,9 @@ int  bm_write(int fmt, void *bm_data, int w, int h, int bpp, const void *src, in
     case BM_FMT_PNG:
         {
 			bpp = (bpp <= 1) ? 1 : (bpp <= 4) ? 4 : (bpp <= 8) ? 8 : (bpp == 15) ? 32 : (bpp == 24) ? 24 : 32;
+			if (bpp == 32 && (dir_flags & BM_FLAG_EX_ENC) && GrayClut<>::isGreyRGB((uint32_t*)src, w, h)) {	// alpha + grey 
+				bpp = 13;	// a:8/g:8
+			}
             int         byteOdr = 0; //(bpp < 8);
 			unsigned    wb      = WID2BYT(w, bpp);
             unsigned    dataSz  = wb * h + 0x10;
