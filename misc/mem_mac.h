@@ -19,13 +19,13 @@
 #define BB(a,b) 		((((uint8_t)(a))<<8)|(uint8_t)(b))
 
 /// 16bit数二つを上下につなげて32ビット数にする
-#define WW(a,b) 		((((uint16_t)(a))<<16)|(uint16_t)(b))
+#define WW(a,b) 		(((uint32_t)((uint16_t)(a))<<16)|(uint16_t)(b))
 
 /// 32bit数二つを上下につなげて64ビット数にする
 #define LL(a,b)			((((uint64_t)(a))<<32)|(uint32_t)(b))
 
 /// 8bit数4つを上位から順につなげて32ビット数にする
-#define BBBB(a,b,c,d)	((((uint8_t)(a))<<24)|(((uint8_t)(b))<<16)|(((uint8_t)(c))<<8)|((uint8_t)(d)))
+#define BBBB(a,b,c,d)	(((uint32_t)((uint8_t)(a))<<24)|(((uint8_t)(b))<<16)|(((uint8_t)(c))<<8)|((uint8_t)(d)))
 
 #ifdef BIG_ENDIAN
 #define CC(a,b)			BB(a,b)			///< 2バイト文字列をint16として扱った場合の、定数比較用マクロ
@@ -43,7 +43,6 @@
 #define GHHB(a) 		((uint8_t)(((uint32_t)(a))>>24))	///< aを int32型として下4バイト目の値を取得
 #define GLW(a)			((uint16_t)(a))						///< int32型としての a の下16ビットの値を取得
 #define GHW(a)			((uint16_t)(((uint32_t)(a))>>16))	///< int32型としての a の上16ビットの値を取得
-
 
 
 //-------------------------------------------------------------
