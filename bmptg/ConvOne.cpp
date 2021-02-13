@@ -57,7 +57,7 @@ ConvOne_Opts::ConvOne_Opts() {
     this->verbose   = 1;
     this->clutBpp   = 24;
     this->dstFmt    = BM_FMT_TGA;
-	this->colNum	= 0; //0x7fffffff;
+    this->colNum    = 0; //0x7fffffff;
 
     this->quality   = -1;
     this->quality_grey = -1;
@@ -163,7 +163,7 @@ int ConvOne::main() {
     aptRect();                          // 抜き色|αで範囲を求めてサイズ変更
     patternDither();                    // パターンディザを施す
     alphaBlendByColor();                // 指定色とαをブレンドし、αを0 or 255 にする
-    
+
     toMono();                           // モノクロ化
     mulCol();                           // 各ピクセルに色を乗ずる
     colChSquare();                      // ARGB各々を二乗する
@@ -251,11 +251,11 @@ bool ConvOne::readFile() {
         printf("%s をオープンできません。\n", srcName_);
         return 0;
     }
-	if (sz_ == 0) {
+    if (sz_ == 0) {
         if (varbose_) printf("\n");
         printf("%s は 0byteです。\n", srcName_);
-		return 0;
-	}
+        return 0;
+    }
     dat_ = src_;
     if (bytSkp && sz_ > bytSkp) {   // 先頭 バイトをスキップするとき
         dat_ += bytSkp;
@@ -424,9 +424,9 @@ void ConvOne::changeClut() {
     const int*  clutChgFlg  = opts_.clutChgFlg;
     const int*  clutChg     = opts_.clutChg;
     if (bpp_ <= 8) {
-		unsigned clutNum = colNum_ > 256 ? colNum_ : 256;	// CLUT_NUM
-		if (clutNum > CLUT_NUM)
-			clutNum = CLUT_NUM;
+        unsigned clutNum = colNum_ > 256 ? colNum_ : 256;   // CLUT_NUM
+        if (clutNum > CLUT_NUM)
+            clutNum = CLUT_NUM;
         for (int n = 0; n < clutNum; n++) {
             if (clutChgFlg[n])
                 clut_[n] = clutChg[n];
@@ -745,7 +745,7 @@ void ConvOne::rotateImage() {
     if (pix32_rotate(&dst, (UINT32_T const*)pix_, w_, h_, -rotR, (UINT32_T)colKey, pixBpp_ > 24, opts_.rszType) == 0 || !dst.mallocMem) {
         printf("\n'not enough memory!'\n");
         return;
-    } 
+    }
     freeE(pix_);
     pix_   = (UINT8_T*)dst.mallocMem;
     w_     = dst.w;
@@ -1156,25 +1156,51 @@ void ConvOne::decreaseColor() {
         int     alpNum   = opts_.clutAlpNum;
         bool    alpFlg   = opts_.clutAlpFlg != 0;
         int     md       = opts_.decreaseColorMode;
+        int     decrType = opts_.decreaseColorMode2;
         int     colNum   = opts_.colNum;
-
         memset(clut_, 0, sizeof clut_);
         if (colNum < 2 || colNum > clutSize)
             colNum = clutSize;
 
         if (opts_.alpBitForBpp8 == 0) {
             switch (md) {
-            case 1: // 日本の80年代パソコン由来の 16色,256色(G3R3B2)固定パレット.
-            case 2: // Winシステムパレット
-            case 7: // お試しパレット
+            case 1: //0 日本の80年代パソコン由来の 16色,256色(G3R3B2)固定パレット.
+            case 2: //1 固定 Winシステムパレット
+            case 7: //2 固定 xterm256.
+            case 8: //3 固定 b5r5b5c40.
+            case 9: //4 お試しパレット
+            case 10: //5 お試しパレット
                 if (varbose_)
                     printf("->DftlClt%c%d", (md>1)?'W':'J', dstBpp_);
+                if (md >= 7) md = md - 7 + 3;
                 --md;
-                if (md >= 6) md = md - 6 + 2;
                 FixedClut256<>::getFixedClut256(clut_, 256, dstBpp_, md);
                 //if (alpNum)
                 //  clut_[0] &= 0xFFFFFF;
-                FixedClut256<>::decreaseColor(p, (UINT32_T*)pix_, w_, h_, clut_, colNum);
+
+                if (dstBpp_ == 3 && md == 2) {
+                    FixedClut256<>::decreaseColorRGB111(p, (UINT32_T*)pix_, w_, h_);
+                    break;
+                } else {
+                    unsigned  idx  = 0;
+                    if (dstBpp_ == 7) {         // 128色のとき.
+                        idx = 1;                // 先頭の抜き色スキップ.
+                        colNum = 5 * 5 * 5;     // 各5階調.
+                    } else if (md == 2) {       // xterm256     システム16色をスキップ.
+                        if (colNum == 216) {    // 6*6*6 各6階調.
+                            idx = 16;
+                        } else {
+                            idx = 1;            // (0,0,0)は２つあるので先頭のを抜き色扱いにしておく.
+                            if (colNum == 256)
+                                --colNum;
+                        }
+                    } else if (md == 3) {   // b5r5b5c40    先頭に抜き色１色あるのを飛ばす.
+                        if (colNum == 216) {    // 6*6*6 各6階調.
+                            idx = 1;
+                        }
+                    }
+                    FixedClut256<>::decreaseColor(p, (UINT32_T*)pix_, w_, h_, clut_, colNum+idx, idx, 0, 0, decrType);
+                }
                 break;
 
             default:    // 範囲外ならとりあえず、メディアンカット(yuv)へ.
@@ -1448,7 +1474,7 @@ bool ConvOne::saveImage() {
         } else if (dstFmt == BM_FMT_JPG || dstFmt == BM_FMT_PNG) {
             if (GrayClut<>::isGrey((uint32_t*)pix_, w_, h_))
                 mono_ = true;
-			//else if (dstFmt == BM_FMT_PNG && GrayClut<>::isGreyRGB((uint32_t*)pix_, w_, h_))
+            //else if (dstFmt == BM_FMT_PNG && GrayClut<>::isGreyRGB((uint32_t*)pix_, w_, h_))
             //  mono_ = true;
         }
     }

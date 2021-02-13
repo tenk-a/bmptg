@@ -84,6 +84,9 @@ int main()
     }
     if (err == 0)
         printf("ok!\n");
+
+    //unsigned __int64  yuv = rgb2yuv(0xffffff);
+    //printf("rgb ffffff -> yuv %012llx\n", yuv);
     return 0;
 }
 

@@ -95,6 +95,7 @@ public:
     int         rszType;
 
     int         decreaseColorMode;
+    int         decreaseColorMode2;
     double      decreaseColorParam[4];
     int         bitCom;
     int         kizu;

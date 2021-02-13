@@ -4,6 +4,7 @@ sav
 *.sav
 tmp
 *.tmp
+*.t
 bmptg_smp/src_*
 bmptg_smp/dst_*
 bmptg_smp/tst_*
@@ -15,6 +16,10 @@ obj_*
 *.obj
 *.pbk
 *.ilk
+*.suo
+*.ncb
+*.user
+*.pdb
 *.sdf
 *.opensdf
 Debug
@@ -29,3 +34,6 @@ ImgFmt/libpng
 ImgFmt/jpeg
 ImgFmt/turbojpeg
 ImgFmt/mozjpeg
+*.exe
+Job/
+set_old_vc.bat

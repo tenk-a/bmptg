@@ -2,7 +2,7 @@
  *  @file   bmptg.cpp
  *  @brief  画像コンバータ
  *  @author Masashi Kitamura
- *  @date   2000-2017
+ *  @date   2000-2021
  *  @note
  */
 
@@ -28,7 +28,7 @@ char *g_appName;
 void usage(void)
 {
     printf("https://github.com/tenk-a/bmptg/\n"
-           "usage> %s [-opts] file(s)   // v2.39 " __DATE__ "  by tenk*\n", g_appName);
+           "usage> %s [-opts] file(s)   // v2.40 " __DATE__ "  by tenk*\n", g_appName);
     printf(
        "  bmp tga jpg png 等画像を相互に変換.\n"
        "  α値は有効で00:透明～0xFF:不透明. α無画は0xFFとして抜色はα=0として処理.\n"
@@ -96,6 +96,7 @@ void usage(void)
        "\n"
        " [clut関係]\n"
        "  -cpc[FILE]    clut内容をc用テキスト出力.\n"
+       "  -cpf[FILE]    減色で用いる固定clut.\n"
        "  -cp[N]        固定clut設定or減色アルゴリズム指定.\n"
        "                1:jp固定clut             2:winシステムclut.\n"
        "                3:メディアンカット(yuv)  4:メディアンカット(rgb)\n"
@@ -204,7 +205,7 @@ private:
     static int      strToI (const char* &p, int base) { return (int)strtol(p, (char**)&p, base); }
     static unsigned strToUI(const char* &p, int base) { return (unsigned)strtoul(p, (char**)&p, base); }
 
-	void			readClutBin(char const* name, int clutbpp);
+    void            readClutBin(char const* name, int clutbpp);
 };
 
 
@@ -404,11 +405,11 @@ int Opts::scan(const char *a)
             break;
 
         case 'N':   //-cn
-			if (*p == 'x' || *p == 'X') {	// -cnx
-	            o->colNum = 0x7fffffff;
-			} else {
-	            o->colNum = strToUI(p,0);
-	        }
+            if (*p == 'x' || *p == 'X') {   // -cnx
+                o->colNum = 0x7fffffff;
+            } else {
+                o->colNum = strToUI(p,0);
+            }
             break;
 
         case 'C':   //-cc
@@ -432,27 +433,30 @@ int Opts::scan(const char *a)
             }
             break;
 
-		case 'L':	//-cl
-			if (toupper(*p) == 'B') {	//-clb
-				++p;
-				int cbpp = strToUI(p, 0);
-				if (cbpp != 24 && cbpp != 32) {
-					goto OPT_ERR;
-				}
-				if (*p != '\0') {
-					++p;
-					readClutBin(p, cbpp);
-				}
-			}
-			break;
+        case 'L':   //-cl
+            if (toupper(*p) == 'B') {   //-clb
+                ++p;
+                int cbpp = strToUI(p, 0);
+                if (cbpp != 24 && cbpp != 32) {
+                    goto OPT_ERR;
+                }
+                if (*p != '\0') {
+                    ++p;
+                    readClutBin(p, cbpp);
+                }
+            }
+            break;
 
         case 'P':   //-cp
             if (TOUPPER(*p) == 'C') {   //-cpc
                 o->clutTxtName = strdupE(p+1);
-            } else if (TOUPPER(*p) == 'f') {    // -cpf 外部パレットファイルを用いて減色
+            } else if (TOUPPER(*p) == 'F') {    // -cpf 外部パレットファイルを用いて減色
                 o->readFixedClut(p+1);
                 o->decreaseColorMode = 6;
                 o->fullColFlg        = 1;
+            } else if (TOUPPER(*p) == 'M') {    // -cpm
+				++p;
+                o->decreaseColorMode2 = strToUI(p,0);
             } else {
                 o->fullColFlg      = 1;
                 //x o->dfltClutCg = (*p == 0) ? 1 : strToUI(p, 0);
@@ -1113,27 +1117,27 @@ void Opts::readClutBin(char const* fname, int clutbpp)
     if (sz == 0)
         return;
 
-	int w=0, h=0, bpp=0, clutNum=0;
-	int	fmt = bm_getHdr(src, sz, &w, &h, &bpp, &clutNum);
-	if (fmt > 0 && clutNum > 0) {
-		if (clutNum > 256)
-			clutNum = 256;
-		int n = bm_getClut(src, o->clutChg, clutNum);
-	    for (unsigned i = 0; i < n; ++i)
-			o->clutChgFlg[i] = 1;
-	 #ifdef MY_H
-		MY_readClutBinSub(src, fmt);
-	 #endif
-	} else {
-	    unsigned n = sz / 4;
-	    if (n > 256)
-	    	n = 256;
-	    for (unsigned i = 0; i < n; ++i) {
-			o->clutChgFlg[i] = 1;
-			o->clutChg[i] = src[i];
-		}
-	}
-	free(src);
+    int w=0, h=0, bpp=0, clutNum=0;
+    int fmt = bm_getHdr(src, sz, &w, &h, &bpp, &clutNum);
+    if (fmt > 0 && clutNum > 0) {
+        if (clutNum > 256)
+            clutNum = 256;
+        int n = bm_getClut(src, o->clutChg, clutNum);
+        for (unsigned i = 0; i < n; ++i)
+            o->clutChgFlg[i] = 1;
+     #ifdef MY_H
+        MY_readClutBinSub(src, fmt);
+     #endif
+    } else {
+        unsigned n = sz / 4;
+        if (n > 256)
+            n = 256;
+        for (unsigned i = 0; i < n; ++i) {
+            o->clutChgFlg[i] = 1;
+            o->clutChg[i] = src[i];
+        }
+    }
+    free(src);
 }
 
 
