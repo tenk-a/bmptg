@@ -7,11 +7,9 @@ rem set CMN_OPTS=:png -s%SRCDIR% -b8 -if -cpm2
 if not exist %DSTDIR% mkdir %DSTDIR%
 
 
-call :CONV col008jp           -b3 -cp1
-call :CONV col008jp-xd06x8    -b3 -cp1 -xd6:3
-call :CONV col008jp-xd09x8    -b3 -cp1 -xd9:3
-rem call :CONV col008jp-xd12x8    -b3 -cp1 -xd12:3
-
+call :CONV col008jp-m2        -b3 -cp1        -cpm2
+call :CONV col008jp-xd06x8-m2 -b3 -cp2 -xd6:3 -cpm2
+call :CONV col008jp-xd09x8-m2 -b3 -cp1 -xd9:3 -cpm2
 goto :END
 
 call :CONV col002             -b1

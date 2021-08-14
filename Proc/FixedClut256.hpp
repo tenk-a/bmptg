@@ -27,7 +27,7 @@ public:
                     , const unsigned* pClut, unsigned clutSize, unsigned idx=0, int alp1=0, int alp2=0, int type=0);
 
     /// 8色への減色.
-    static bool decreaseColorRGB111(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h);
+    static bool decreaseColorRGB111(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, bool type=false);
 
 public:
     /// g1r1b1 デジタル8色. (古い日本のパソコンのパレット番号に合わせたもの)
@@ -668,7 +668,7 @@ bool FixedClut256<A>::decreaseColor(unsigned char* pDst, const unsigned* pSrc, u
 
 /// 32ビット色画を8色画に変換.
 template<class A>
-bool FixedClut256<A>::decreaseColorRGB111(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h)
+bool FixedClut256<A>::decreaseColorRGB111(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, bool clutType)
 {
     assert(w > 0 && h > 0);
     size_t wh = w * h;
@@ -726,6 +726,10 @@ bool FixedClut256<A>::decreaseColorRGB111(unsigned char* pDst, const unsigned* p
     bi = bd;
  #endif
 
+    unsigned bm = 1, rm = 2, gm = 4;
+    if (clutType) {
+        rm = 1, gm = 2, bm = 4;
+    }
     for (unsigned j = 0; j < wh; ++j) {
         unsigned ii = 0;
         unsigned c  = pSrc[j];
@@ -735,13 +739,13 @@ bool FixedClut256<A>::decreaseColorRGB111(unsigned char* pDst, const unsigned* p
         int      b  = (unsigned char)(c);
         unsigned tc = 0;
         if (g >= gi) {
-            tc |= 0x4;
+            tc |= gm;
         }
         if (r >= ri) {
-            tc |= 0x2;
+            tc |= rm;
         }
         if (b >= bi) {
-            tc |= 0x1;
+            tc |= bm;
         }
         pDst[j] = tc;
     }

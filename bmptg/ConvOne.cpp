@@ -1178,9 +1178,8 @@ void ConvOne::decreaseColor() {
                 //if (alpNum)
                 //  clut_[0] &= 0xFFFFFF;
 
-                if (dstBpp_ == 3 && md == 2) {
-                    FixedClut256<>::decreaseColorRGB111(p, (UINT32_T*)pix_, w_, h_);
-                    break;
+                if (dstBpp_ == 3 && decrType == 2) {
+                    FixedClut256<>::decreaseColorRGB111(p, (UINT32_T*)pix_, w_, h_, (md == 1));
                 } else {
                     unsigned  idx  = 0;
                     if (dstBpp_ == 7) {         // 128êFÇÃÇ∆Ç´.
