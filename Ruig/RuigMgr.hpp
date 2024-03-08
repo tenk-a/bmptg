@@ -69,7 +69,7 @@ private:
     struct NearSameLinksCmp;
 
     void defaultConstruct();
-    void init(uint8_t const* src, unsigned srcW, unsigned srcH);
+    bool init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned bpp);
 
     void convValueLinks(FactorVals& factorVals);
     void genNearSameLinks(RuigFactors& nearSameLinks);
