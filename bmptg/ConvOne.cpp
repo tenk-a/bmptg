@@ -15,6 +15,7 @@
 #include "beta.h"
 #include "mem_mac.h"
 #include "PaternDither.hpp"
+#include "ErrorDiffusion1b.hpp"
 #include "DecreaseColorMC.hpp"
 #include "DecreaseColorHst.hpp"
 #include "DecreaseColorIfWithin256.hpp"
@@ -1111,6 +1112,10 @@ void ConvOne::aptRect() {
 /// パターンディザを施す
 void ConvOne::patternDither() {
     if (opts_.ditBpp && pixBpp_ == 32) {    // ディザを施す
+		if (opts_.ditTyp == 0x8000) {
+			errorDiffusion1b();
+			return;
+		}
         int dbpp,ditBpp = opts_.ditBpp;
         if (ditBpp <= 0) {              // デフォルトの色のビット数を出力に合わせて選ぶ
             if (opts_.isFixedClut()) {  // jp or win 固定clutの場合
@@ -1136,6 +1141,11 @@ void ConvOne::patternDither() {
     }
 }
 
+/// 誤差拡散.
+void ConvOne::errorDiffusion1b() {
+	ErrorDiffusion1b ed;
+	ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_);
+}
 
 /// 指定色とαをブレンドし、αを0 or 255 にする
 void ConvOne::alphaBlendByColor() {

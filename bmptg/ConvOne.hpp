@@ -180,6 +180,7 @@ private:
     void resizeImage2nd();
     void aptRect();
     void patternDither();
+	void errorDiffusion1b();
     void alphaBlendByColor();
     void setDstBpp();
     void checkSrcDstBpp();

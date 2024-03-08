@@ -1,6 +1,6 @@
 if "%BmpTgExe%"=="" set BmpTgExe=..\bmptg\exe_Release_x64\bmptg.exe
-set SRCDIR=src_img
-set DSTDIR=dst_recol
+set SRCDIR=src_img\640
+set DSTDIR=dst_recol.640
 set CMN_OPTS=:png -s%SRCDIR% -b8 -if -cpm0
 rem set CMN_OPTS=:png -s%SRCDIR% -b8 -if -cpm2
 
@@ -10,7 +10,8 @@ if not exist %DSTDIR% mkdir %DSTDIR%
 call :CONV col008jp-m2        -b3 -cp1        -cpm2
 call :CONV col008jp-xd06x8-m2 -b3 -cp2 -xd6:3 -cpm2
 call :CONV col008jp-xd09x8-m2 -b3 -cp1 -xd9:3 -cpm2
-goto :END
+
+call :CONV col008jp-xde       -b3 -cp1 -xde
 
 call :CONV col002             -b1
 call :CONV col004             -b2

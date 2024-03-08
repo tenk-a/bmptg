@@ -733,6 +733,11 @@ int Opts::scan(const char *a)
                 o->ditAlpFlg = 1;
                 p++;
             }
+            if (*p == 'E' || *p == 'e') {	// -xde Œë·ŠgŽU.
+				o->ditBpp = 1;
+				o->ditTyp = 0x8000;
+				break;
+			}
             o->ditBpp = strToI(p,0);
             if (o->ditBpp <= 0)
                 o->ditBpp = -1;
