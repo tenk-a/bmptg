@@ -1143,8 +1143,48 @@ void ConvOne::patternDither() {
 
 /// 誤差拡散.
 void ConvOne::errorDiffusion1b() {
+	// RGBを何階調にするか.
+	unsigned const tonesTbl[][3] = {
+		{  2,  2,  2, },	// 0 : 3bit r1g1b1
+		{  4,  4,  4, },	// 1 : 6bit r2g2b2
+		{  5,  5,  5, },	// 2 : 8bit costom clut
+		{  6,  6,  6, },	// 3 : 8bit win/xterm fix clut
+		{  8,  8,  4, },	// 4 : 8bit r3g3b2
+		{  8,  8,  8, },	// 5 : 9bit r3g3b3
+		{ 16, 16, 16, },	// 6 : 12bit r4g4b4
+		{ 32, 32, 32, },	// 7 : 15bit r5g5b5
+		{ 32, 64, 32, },	// 8 : 16bit r5g6b5
+		{ 64, 64, 64, },	// 9 : 18bit r6g6b6
+	};
+	int type;
+	if (mono_) {
+	   	type = (dstBpp_ <=  1) ? 0
+    		 : (dstBpp_ <=  2) ? 1
+    		 : (dstBpp_ <=  3) ? 5
+    		 : (dstBpp_ <=  4) ? 6
+    		 : (dstBpp_ <=  5) ? 7
+    		 :                   9;
+	} else {
+	   	type = (dstBpp_ <=  5) ? 0
+    		 : (dstBpp_ <=  6) ? 1
+    		 : (dstBpp_ <=  8) ? 4
+    		 : (dstBpp_ <= 11) ? 5
+    		 : (dstBpp_ <= 12) ? 6
+    		 : (dstBpp_ <= 15) ? 7
+    		 :                   8;
+	}
+	if (type == 4) {
+		switch (opts_.decreaseColorMode) {
+		//case DCM_FIX_JP:		type = 4; break;
+		case DCM_FIX_WIN:		type = 3; break;
+		case DCM_FIX_XTERM: 	type = 3; break;
+		case DCM_FIX_G5R5B5C40:	type = 2; break;
+		default: break;
+		}
+	}
+	unsigned const* tones = tonesTbl[type];
 	ErrorDiffusion1b ed;
-	ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_);
+	ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, tones);
 }
 
 /// 指定色とαをブレンドし、αを0 or 255 にする
@@ -1165,7 +1205,7 @@ void ConvOne::decreaseColor() {
         int     clutSize = 1 << dstBpp_;
         int     alpNum   = opts_.clutAlpNum;
         bool    alpFlg   = opts_.clutAlpFlg != 0;
-        int     md       = opts_.decreaseColorMode;
+        int     dcm      = int(opts_.decreaseColorMode);
         int     decrType = opts_.decreaseColorMode2;
         int     colNum   = opts_.colNum;
         memset(clut_, 0, sizeof clut_);
@@ -1173,52 +1213,57 @@ void ConvOne::decreaseColor() {
             colNum = clutSize;
 
         if (opts_.alpBitForBpp8 == 0) {
-            switch (md) {
-            case 1: //0 日本の80年代パソコン由来の 16色,256色(G3R3B2)固定パレット.
-            case 2: //1 固定 Winシステムパレット
-            case 7: //2 固定 xterm256.
-            case 8: //3 固定 b5r5b5c40.
-            case 9: //4 お試しパレット
-            case 10: //5 お試しパレット
-                if (varbose_)
-                    printf("->DftlClt%c%d", (md>1)?'W':'J', dstBpp_);
-                if (md >= 7) md = md - 7 + 3;
-                --md;
-                FixedClut256<>::getFixedClut256(clut_, 256, dstBpp_, md);
-                //if (alpNum)
-                //  clut_[0] &= 0xFFFFFF;
+            switch (dcm) {
+            case DCM_FIX_JP: 		//0 日本の80年代パソコン由来の 16色,256色(G3R3B2)固定パレット.
+            case DCM_FIX_WIN: 		//1 固定 Winシステムパレット
+            case DCM_FIX_XTERM: 	//2 固定 xterm256.
+            case DCM_FIX_G5R5B5C40: //3 固定 b5r5b5c40.
+            case DCM_FIX_OTAMESHI1: //4 お試しパレットO
+            case DCM_FIX_OTAMESHI2: //5 お試しパレットP
+				{
+					int md = int(dcm);
+	                if (md >= 7) md = md - 7 + 3;
+	                --md;
+	                if (varbose_) {
+						static char const tbl[] = "JWXVOP";
+	                    printf("->DftlClt%c%d", tbl[md], dstBpp_);
+	                }
+	                FixedClut256<>::getFixedClut256(clut_, 256, dstBpp_, md);
+	                //if (alpNum)
+	                //  clut_[0] &= 0xFFFFFF;
 
-                if (dstBpp_ == 3 && decrType == 2) {
-                    FixedClut256<>::decreaseColorRGB111(p, (UINT32_T*)pix_, w_, h_, (md == 1));
-                } else {
-                    unsigned  idx  = 0;
-                    if (dstBpp_ == 7) {         // 128色のとき.
-                        idx = 1;                // 先頭の抜き色スキップ.
-                        colNum = 5 * 5 * 5;     // 各5階調.
-                    } else if (md == 2) {       // xterm256     システム16色をスキップ.
-                        if (colNum == 216) {    // 6*6*6 各6階調.
-                            idx = 16;
-                        } else {
-                            idx = 1;            // (0,0,0)は２つあるので先頭のを抜き色扱いにしておく.
-                            if (colNum == 256)
-                                --colNum;
-                        }
-                    } else if (md == 3) {   // b5r5b5c40    先頭に抜き色１色あるのを飛ばす.
-                        if (colNum == 216) {    // 6*6*6 各6階調.
-                            idx = 1;
-                        }
-                    }
-                    FixedClut256<>::decreaseColor(p, (UINT32_T*)pix_, w_, h_, clut_, colNum+idx, idx, 0, 0, decrType);
-                }
+	                if (dstBpp_ == 3 && decrType == 2) {
+	                    FixedClut256<>::decreaseColorRGB111(p, (UINT32_T*)pix_, w_, h_, (md == 1));
+	                } else {
+	                    unsigned  idx  = 0;
+	                    if (dstBpp_ == 7) {         // 128色のとき.
+	                        idx = 1;                // 先頭の抜き色スキップ.
+	                        colNum = 5 * 5 * 5;     // 各5階調.
+	                    } else if (md == 2) {       // xterm256     システム16色をスキップ.
+	                        if (colNum == 216) {    // 6*6*6 各6階調.
+	                            idx = 16;
+	                        } else {
+	                            idx = 1;            // (0,0,0)は２つあるので先頭のを抜き色扱いにしておく.
+	                            if (colNum == 256)
+	                                --colNum;
+	                        }
+	                    } else if (md == 3) {   // b5r5b5c40    先頭に抜き色１色あるのを飛ばす.
+	                        if (colNum == 216) {    // 6*6*6 各6階調.
+	                            idx = 1;
+	                        }
+	                    }
+	                    FixedClut256<>::decreaseColor(p, (UINT32_T*)pix_, w_, h_, clut_, colNum+idx, idx, 0, 0, decrType);
+	                }
+				}
                 break;
 
             default:    // 範囲外ならとりあえず、メディアンカット(yuv)へ.
             //case 0:
-                md = -1;
+                dcm = DCM_UNKOWN;
                 // 続く
-            case 3: // メディアンカット(yuv)
-            case 4: // メディアンカット(rgb)
-            case 5: // 頻度順 clut
+            case DCM_MC_YUV: // メディアンカット(yuv)
+            case DCM_MC_RGB: // メディアンカット(rgb)
+            case DCM_HIST: 	 // 頻度順 clut
                 if (alpFlg == 0 && alpNum < 0 && colNum >= (1 << dstBpp_) && (mono_ || GrayClut<>::isGrey((UINT32_T*)pix_, w_, h_))) {
                     // モノクロ画像専用の減色
                     if (dstBpp_ > 4 && colNum >= 256) {
@@ -1245,19 +1290,19 @@ void ConvOne::decreaseColor() {
                         DecreaseColorLowBpp<>::convPix32ToBpp2(p, (UINT32_T*)pix_, w_, h_, clut_);
                     if (varbose_)
                         printf("->cltBpp%d", 1 << dstBpp_);
-                } else if (md == 5) {   // 頻度順 clut で減色.
+                } else if (dcm == DCM_HIST) {   // 頻度順 clut で減色.
                     //int a = (opts_.alpMin >= 0) ? opts_.alpMin : 4;
                     DecreaseColorHst<>(p, (UINT32_T*)pix_, w_, h_, clut_, colNum, alpNum);
                     if (varbose_) {
                         printf("->decreaseCol%d", dstBpp_);
                     }
                 } else {            // 256色より多いので要減色.
-                    if (md < 0)
-                        md = 3;
+                    if (dcm == DCM_UNKOWN)
+                        dcm = DCM_MC_YUV;
                     memset(clut_, 0, sizeof clut_);
                     // メディアンカットな減色.
                     DecreaseColorMC     rcmc;
-                    rcmc.setModeRGB(md == 4);               // rgbかyuvかの設定
+                    rcmc.setModeRGB(dcm == DCM_MC_RGB);      // rgbかyuvかの設定
                     if (opts_.decreaseColorParam[0] >= 0) { // 暫定的なぱらめーた設定
                         rcmc.setCalcMidParam(
                             (int  )(opts_.decreaseColorParam[0]),
@@ -1272,11 +1317,11 @@ void ConvOne::decreaseColor() {
                     rcmc.conv(p, (UINT32_T*)pix_, w_, h_, clut_, colNum);
 
                     if (varbose_)
-                        printf("->decreaseColMC%s%d", (md == 3) ?"yuv":"rgb", dstBpp_);
+                        printf("->decreaseColMC%s%d", (dcm == DCM_MC_YUV) ?"yuv":"rgb", dstBpp_);
                 }
                 break;
 
-            case 6:
+            case DCM_FIX_FILE:
                 if (varbose_) {
                     printf("->fixedClut%d", dstBpp_);
                 }
@@ -1311,7 +1356,7 @@ void ConvOne::decreaseColor() {
 
             } else {            // colNum色より多いので要減色.
                 memset(clut_, 0, sizeof clut_);
-                if (md == 5) {
+                if (dcm == DCM_HIST) {
                     if (varbose_)
                         printf("->decreaseColA%d", dstBpp_);
                     DecreaseColorHst<>(p, (UINT32_T*)pix_, w_, h_, clut_, colNum);
@@ -1320,7 +1365,7 @@ void ConvOne::decreaseColor() {
                         printf("->decreaseCol_A%dI%d", opts_.alpBitForBpp8, idxBit);
                     // メディアンカットな減色.
                     DecreaseColorMC     rcmc;
-                    rcmc.setModeRGB(0/*md == 4*/);          // rgbかyuvかの設定
+                    rcmc.setModeRGB(0/*dcm == 4*/);          // rgbかyuvかの設定
                     if (opts_.decreaseColorParam[0] >= 0) { // 暫定的なぱらめーた設定
                         rcmc.setCalcMidParam(
                             (int  )(opts_.decreaseColorParam[0]),

@@ -332,7 +332,7 @@ int Opts::scan(const char *a)
                 o->fullColFlg      = 1;
                 o->bpp             = 8;
                 o->alpBitForBpp8   = c;
-                o->decreaseColorMode = 3;       // とりあえずyuvなメディアンカット法で減色することにする
+                o->decreaseColorMode = DCM_MC_YUV;	// とりあえずyuvなメディアンカット法で減色することにする
             }
         }
         break;
@@ -452,7 +452,7 @@ int Opts::scan(const char *a)
                 o->clutTxtName = strdupE(p+1);
             } else if (TOUPPER(*p) == 'F') {    // -cpf 外部パレットファイルを用いて減色
                 o->readFixedClut(p+1);
-                o->decreaseColorMode = 6;
+                o->decreaseColorMode = DCM_FIX_FILE;
                 o->fullColFlg        = 1;
             } else if (TOUPPER(*p) == 'M') {    // -cpm
 				++p;
@@ -460,7 +460,7 @@ int Opts::scan(const char *a)
             } else {
                 o->fullColFlg      = 1;
                 //x o->dfltClutCg = (*p == 0) ? 1 : strToUI(p, 0);
-                o->decreaseColorMode = (*p == 0) ? 1 : strToUI(p,0);
+                o->decreaseColorMode = Dcm_t((*p == 0) ? 1 : strToUI(p,0));
                 if (*p) {
                     o->decreaseColorParam[0] = strExprD(p+1,&p,0);
                     if (*p) {
@@ -729,15 +729,15 @@ int Opts::scan(const char *a)
         switch (c) {
         case 'D':   //-xd
             o->fullColFlg      = 1;
-            if (*p == 'A' || *p == 'a') {   // -xda
-                o->ditAlpFlg = 1;
-                p++;
-            }
             if (*p == 'E' || *p == 'e') {	// -xde 誤差拡散.
 				o->ditBpp = 1;
 				o->ditTyp = 0x8000;
 				break;
 			}
+            if (*p == 'A' || *p == 'a') {   // -xda
+                o->ditAlpFlg = 1;
+                p++;
+            }
             o->ditBpp = strToI(p,0);
             if (o->ditBpp <= 0)
                 o->ditBpp = -1;

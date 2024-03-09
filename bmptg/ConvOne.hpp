@@ -15,6 +15,20 @@
 #include "BmImgLoad.h"
 #include "BmImgSave.h"
 
+// Decrease Color Mode
+enum Dcm_t {
+	DCM_UNKOWN      = 0,
+	DCM_FIX_JP		= 1,	// 日本の80年代パソコン由来の 16色,256色(G3R3B2)固定パレット.
+	DCM_FIX_WIN 	= 2,	// 固定 Winシステムパレット
+	DCM_MC_YUV  	= 3,	// メディアンカット(yuv)
+	DCM_MC_RGB  	= 4,	// メディアンカット(rgb)
+	DCM_HIST    	= 5,	// 頻度順 clut
+	DCM_FIX_FILE    = 6,	// 固定外部 clut ファイル
+	DCM_FIX_XTERM	= 7,	// 固定 xterm256.
+	DCM_FIX_G5R5B5C40= 8,	// 固定 b5r5b5c40.
+	DCM_FIX_OTAMESHI1= 9,	// お試し clut
+	DCM_FIX_OTAMESHI2= 10,	// お試し clut
+};
 
 struct ConvOne_Opts {
 public:
@@ -94,7 +108,7 @@ public:
     int         rszYsz[2];
     int         rszType;
 
-    int         decreaseColorMode;
+    Dcm_t       decreaseColorMode;
     int         decreaseColorMode2;
     double      decreaseColorParam[4];
     int         bitCom;
@@ -130,8 +144,11 @@ public:
     // ~ConvOne_Opts() {}
 
     void readFixedClut(const char* fname);
-    bool isFixedClut() const { return decreaseColorMode == 1 || decreaseColorMode == 2 || decreaseColorMode >= 7; }
+    bool isFixedClut() const {
+		return decreaseColorMode == DCM_FIX_JP || decreaseColorMode == DCM_FIX_WIN || decreaseColorMode >= DCM_FIX_XTERM;
+	}
 };
+
 
 
 
