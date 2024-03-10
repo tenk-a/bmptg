@@ -728,26 +728,31 @@ int Opts::scan(const char *a)
         c = TOUPPER(c);
         switch (c) {
         case 'D':   //-xd
-            o->fullColFlg      = 1;
-            if (*p == 'E' || *p == 'e') {	// -xde Œë·ŠgŽU.
-				o->ditBpp = 1;
-				o->ditTyp = 0x8000;
-				break;
+			{
+				o->fullColFlg      = 1;
+				o->ditTyp = 0;
+				bool errDif = false;
+				if (*p == 'E' || *p == 'e') {	// -xde Œë·ŠgŽU.
+					errDif = true;
+					p++;
+				}
+				if (*p == 'A' || *p == 'a') {   // -xda
+					o->ditAlpFlg = 1;
+					p++;
+				}
+				o->ditBpp = strToI(p,0);
+				if (o->ditBpp <= 0)
+					o->ditBpp = -1;
+				else if (o->ditBpp >= 24)
+					err_abortMsg("-xd[%d] ‚¾‚ÆƒfƒBƒU‚ðs‚¦‚Ü‚¹‚ñ\n");
+				o->ditTyp = errDif ? 0 : 2;
+				if (*p) {
+					p++;
+					o->ditTyp = strToI(p,0);
+				}
+				if (errDif)
+					o->ditTyp |= 0x8000;
 			}
-            if (*p == 'A' || *p == 'a') {   // -xda
-                o->ditAlpFlg = 1;
-                p++;
-            }
-            o->ditBpp = strToI(p,0);
-            if (o->ditBpp <= 0)
-                o->ditBpp = -1;
-            else if (o->ditBpp >= 24)
-                err_abortMsg("-xd[%d] ‚¾‚ÆƒfƒBƒU‚ðs‚¦‚Ü‚¹‚ñ\n");
-            o->ditTyp = 2;
-            if (*p) {
-                p++;
-                o->ditTyp = strToI(p,0);
-            }
             break;
 
         case 'E':   //-xe

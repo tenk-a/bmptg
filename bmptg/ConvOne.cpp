@@ -1112,7 +1112,7 @@ void ConvOne::aptRect() {
 /// パターンディザを施す
 void ConvOne::patternDither() {
     if (opts_.ditBpp && pixBpp_ == 32) {    // ディザを施す
-		if (opts_.ditTyp == 0x8000) {
+		if (opts_.ditTyp & 0x8000) {
 			errorDiffusion1b();
 			return;
 		}
@@ -1146,45 +1146,52 @@ void ConvOne::errorDiffusion1b() {
 	// RGBを何階調にするか.
 	unsigned const tonesTbl[][3] = {
 		{  2,  2,  2, },	// 0 : 3bit r1g1b1
-		{  4,  4,  4, },	// 1 : 6bit r2g2b2
-		{  5,  5,  5, },	// 2 : 8bit costom clut
-		{  6,  6,  6, },	// 3 : 8bit win/xterm fix clut
-		{  8,  8,  4, },	// 4 : 8bit r3g3b2
-		{  8,  8,  8, },	// 5 : 9bit r3g3b3
-		{ 16, 16, 16, },	// 6 : 12bit r4g4b4
-		{ 32, 32, 32, },	// 7 : 15bit r5g5b5
-		{ 32, 64, 32, },	// 8 : 16bit r5g6b5
-		{ 64, 64, 64, },	// 9 : 18bit r6g6b6
+		{  3,  3,  3, },    // 1 : 4bit clut
+		{  4,  4,  4, },	// 2 : 6bit r2g2b2
+		{  5,  5,  5, },	// 3 : 8bit costom clut
+		{  6,  6,  6, },	// 4 : 8bit win/xterm fix clut
+		{  8,  8,  4, },	// 5 : 8bit r3g3b2
+		{  8,  8,  8, },	// 6 : 9bit r3g3b3
+		{ 16, 16, 16, },	// 7 : 12bit r4g4b4
+		{ 32, 32, 32, },	// 8 : 15bit r5g5b5
+		{ 32, 64, 32, },	// 9 : 16bit r5g6b5
+		{ 64, 64, 64, },	//10 : 18bit r6g6b6
+		{  7,  9,  4, },	//11 : 8bit win clut
 	};
 	int type;
 	if (mono_) {
 	   	type = (dstBpp_ <=  1) ? 0
-    		 : (dstBpp_ <=  2) ? 1
-    		 : (dstBpp_ <=  3) ? 5
-    		 : (dstBpp_ <=  4) ? 6
-    		 : (dstBpp_ <=  5) ? 7
-    		 :                   9;
+    		 : (dstBpp_ <=  2) ? 2
+    		 : (dstBpp_ <=  3) ? 6
+    		 : (dstBpp_ <=  4) ? 7
+    		 : (dstBpp_ <=  5) ? 8
+    		 :                  10;
 	} else {
 	   	type = (dstBpp_ <=  5) ? 0
-    		 : (dstBpp_ <=  6) ? 1
-    		 : (dstBpp_ <=  8) ? 4
-    		 : (dstBpp_ <= 11) ? 5
-    		 : (dstBpp_ <= 12) ? 6
-    		 : (dstBpp_ <= 15) ? 7
-    		 :                   8;
+    		 : (dstBpp_ <=  6) ? 2
+    		 : (dstBpp_ <=  8) ? 5
+    		 : (dstBpp_ <= 11) ? 6
+    		 : (dstBpp_ <= 12) ? 7
+    		 : (dstBpp_ <= 15) ? 8
+    		 :                   9;
 	}
+ #if 0 //お試し失敗.
+	if (dstBpp_ == 4 && opts_.decreaseColorMode == DCM_FIX_JP) {
+		type = 1;
+	}
+ #endif
 	if (type == 4) {
 		switch (opts_.decreaseColorMode) {
-		//case DCM_FIX_JP:		type = 4; break;
-		case DCM_FIX_WIN:		type = 3; break;
-		case DCM_FIX_XTERM: 	type = 3; break;
-		case DCM_FIX_G5R5B5C40:	type = 2; break;
+		//case DCM_FIX_JP:		type = 5; break;
+		case DCM_FIX_WIN:		type =11; break;
+		case DCM_FIX_XTERM: 	type = 4; break;
+		case DCM_FIX_G5R5B5C40:	type = 3; break;
 		default: break;
 		}
 	}
 	unsigned const* tones = tonesTbl[type];
 	ErrorDiffusion1b ed;
-	ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, tones);
+	ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, opts_.ditTyp & 3, tones);
 }
 
 /// 指定色とαをブレンドし、αを0 or 255 にする

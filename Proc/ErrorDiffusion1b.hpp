@@ -27,8 +27,7 @@ class ErrorDiffusion1b {
 
 	struct ToneTbl {
 		unsigned num_;
-		unsigned tbl_num_;
-		int      tbl_[64*2 + 4];
+		int      tbl_[64 + 4];
 	public:
 		void init(unsigned n) {
 			memset((void*)this, 0, sizeof *this);
@@ -37,17 +36,15 @@ class ErrorDiffusion1b {
 			num_ = n;
 			unsigned d = 0xffff / (n-1);
 			for (unsigned i = 0; i < n - 1; ++i)
-				tbl_[i * 2] = i * d;
-			tbl_[(n-1) * 2] = 0xffff;
-			tbl_num_ = 2 * n - 1;
-			for (unsigned i = 0; i < n - 1; ++i)
-				tbl_[i*2+1] = (tbl_[i * 2] + tbl_[(i+1)*2]) / 2;
+				tbl_[i] = i * d;
+			tbl_[n-1] = 0xffff;
+			tbl_[n]   = 0xffff;
 		}
 
-		unsigned toTone(int val, int& lum, int& dif) const {
-			unsigned	bgn, end;
+		unsigned toTone(int val, int dt, int& lum, int& dif) const {
+			unsigned	bgn=0, end;
 			unsigned	low = 0;
-			unsigned    hi  = tbl_num_;
+			unsigned    hi  = num_;
 			while (low < hi) {
 				bgn = low;
 				end = hi;
@@ -60,8 +57,12 @@ class ErrorDiffusion1b {
 					low = mid + 1;
 				}
 			}
-		 	unsigned no   = unsigned(bgn + 1) / 2;
-			lum = tbl_[no * 2];
+			int fst = tbl_[bgn];
+			int lst = tbl_[bgn+1];
+			int len = lst - fst;
+			int thr = fst + (len * dt >> 8);
+			int cur = bgn + (val >= thr);
+			lum = tbl_[cur];
 			dif = val - lum;
 			return bgn;
 		}
@@ -71,11 +72,21 @@ public:
 	ErrorDiffusion1b() : buf_(NULL) {}
 	~ErrorDiffusion1b() { free(buf_); }
 
+	struct Opt {
+		unsigned char	type;	// 0=ディザ無 1=2x2 2=4x4 3=8x8.
+		bool	 		alpha;	// 1:αプレーンもディザする 0:しない.
+		bool			errDif;	// 誤差拡散 1:する 0:しない.
+		bool     		edRev;	// 誤差拡散で偶数列反転 1:する. 0:しない.
+		bool     		ditRev;	// AGとRBとでマトリクスを逆に 1:する 0:しない.
+		//Opt() : type(0), alpha(false), ditRev(false), edRev(false) {}
+	};
+
 	bool conv(
 			unsigned*		dst,		///< 出力バッファ
 			const unsigned*	src,		///< 入力バッファ
 			unsigned		w,			///< 横幅
 			unsigned		h,			///< 縦幅
+			unsigned		ditTyp,
 			const unsigned*	tones		///< 階調数. tones[3]
 			//int 			flgs
 	) {
@@ -105,7 +116,31 @@ public:
 			}
 		}
 
+	 #if 1 //defined(OTAMESHI_DIT)
+		ditTyp = clamp(ditTyp, 0, 2);
+		static const signed char dmPtn[3][4][4] = {
+			//パターンディザ無し
+			{
+				{ 128, 128, 128, 128,},
+				{ 128, 128, 128, 128,},
+				{ 128, 128, 128, 128,},
+				{ 128, 128, 128, 128,},
+			}, {	//Bayer 2x2 
+				{ 0*64+32, 2*64+32, 0*64+32, 2*64+32,},
+				{ 3*64+32, 1*64+32, 3*64+32, 1*64+32,},
+				{ 0*64+32, 2*64+32, 0*64+32, 2*64+32,},
+				{ 3*64+32, 1*64+32, 3*64+32, 1*64+32,},
+			}, {	//Bayer 4x4
+				{  0*16+8, 8*16+8,  2*16+8, 10*16+8,},
+				{ 12*16+8, 4*16+8, 14*16+8,  6*16+8,},
+				{  3*16+8,11*16+8,  1*16+8,  9*16+8,},
+				{ 15*16+8, 7*16+8, 13*16+8,  5*16+8,},
+			},
+		};
+	 #endif
+
 		for (unsigned i = 0; i < 3; ++i) {
+			ToneTbl& toneTbl = toneTbl_[i];
 			for (unsigned y = 0; y < h; ++y) {
 				int  add = 1;
 				int  xb  = 0;
@@ -120,7 +155,10 @@ public:
 					dif_t   lum  = pli.lum;
 					dif_t   dif  = pli.dif;
 					dif_t   dl   = lum + dif;
-					toneTbl_[i].toTone(lum + dif, lum, dl);
+				 #if 1 //defined(OTAMESHI_DIT)
+					int 	dt = dmPtn[ditTyp][y & 3][x & 3];
+				 #endif
+					toneTbl.toTone(dl, dt, lum, dl);
 					pli.dst = lum >> 8;
 				 #if 0
 				 #elif 1	// Floyd-Steinberg
@@ -174,19 +212,6 @@ public:
 					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1, y+1, dl * 12 / 64);
 
 					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0, y+2, dl *  2 / 64);
-				 #elif 1	// my2 sippai
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+0, dl * 17 / 64);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+2*add, y+0, dl *  2 / 64);
-
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-2, y+1, dl *  1 / 64);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-1, y+1, dl * 11 / 64);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0, y+1, dl * 17 / 64);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1, y+1, dl * 11 / 64);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+2, y+1, dl *  1 / 64);
-
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-1, y+2, dl *  1 / 64);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0, y+2, dl *  2 / 64);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1, y+2, dl *  1 / 64);
 				 #endif
 				}
 			}

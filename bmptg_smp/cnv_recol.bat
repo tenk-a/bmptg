@@ -12,6 +12,18 @@ call :CONV col008jp-xd06x8-m2 -b3 -cp2 -xd6:3 -cpm2
 call :CONV col008jp-xd09x8-m2 -b3 -cp1 -xd9:3 -cpm2
 
 call :CONV col008jp-xde       -b3 -cp1 -xde
+call :CONV col256jp-xde       -b8 -cp1 -xde
+call :CONV col016win-xde      -b4 -cp2 -xde
+call :CONV col256win-xde      -b8 -cp2 -xde
+call :CONV col256xterm-xde    -b8 -cp7 -xde
+call :CONV col064sp-xde       -b8 -cp8 -xde
+
+call :CONV col002mono-xde     -cg -b1 -xde
+call :CONV col004mono-xde     -cg -b2 -xde
+call :CONV col008mono-xde     -cg -b3 -xde
+call :CONV col016mono-xde     -cg -b4 -xde
+call :CONV col032mono-xde     -cg -b5 -xde
+call :CONV col064mono-xde     -cg -b6 -xde
 
 call :CONV col002             -b1
 call :CONV col004             -b2

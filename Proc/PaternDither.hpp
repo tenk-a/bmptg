@@ -13,6 +13,9 @@
 
 class PaternDither {
 public:
+	PaternDither() {}
+	~PaternDither() {}
+
 	/** 画像にパターン・ディザを施す。パターンはBayerのみ.
 	 * @param flgs	フラグ
 	 *	 		- bit1,0: 0=ディザ無 1=2x2 2=4x4 3=8x8
