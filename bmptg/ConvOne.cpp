@@ -162,10 +162,10 @@ int ConvOne::main() {
     filter();                           // フィルタ (ぼかし)
     resizeImage2nd();                   // 縦横拡縮サイズ変更   2回目
     aptRect();                          // 抜き色|αで範囲を求めてサイズ変更
-    patternDither();                    // パターンディザを施す
+    toMono();                           // モノクロ化
+    patternDither();                    // 誤差拡散・パターンディザを施す
     alphaBlendByColor();                // 指定色とαをブレンドし、αを0 or 255 にする
 
-    toMono();                           // モノクロ化
     mulCol();                           // 各ピクセルに色を乗ずる
     colChSquare();                      // ARGB各々を二乗する
     changeTone();                       // 抜き色以外の色のトーンを opts_.tone％に変換
@@ -1118,7 +1118,14 @@ void ConvOne::patternDither() {
 		}
         int dbpp,ditBpp = opts_.ditBpp;
         if (ditBpp <= 0) {              // デフォルトの色のビット数を出力に合わせて選ぶ
-            if (opts_.isFixedClut()) {  // jp or win 固定clutの場合
+			if (mono_) {
+                ditBpp  = (dstBpp_ <=  8) ? dstBpp_*3
+                        : (dstBpp_ <  12) ? 3*3
+                        : (dstBpp_ <= 12) ? 4*3
+                        : (dstBpp_ <= 15) ? 5*3
+                        : (dstBpp_ <= 18) ? 6*3
+                        :                   8*3;
+			} else if (opts_.isFixedClut()) {  // jp or win 固定clutの場合
                 ditBpp  = (dstBpp_ <   3) ? 15
                         : (dstBpp_ <=  6) ?  6
                         : (dstBpp_ <=  8) ? 15
@@ -1158,40 +1165,45 @@ void ConvOne::errorDiffusion1b() {
 		{ 64, 64, 64, },	//10 : 18bit r6g6b6
 		{  7,  9,  4, },	//11 : 8bit win clut
 	};
-	int type;
+    bool noErrDif = (opts_.ditTyp & 0x1000) != 0;
+	int ditType  = opts_.ditTyp & 3;
+	int toneType;
 	if (mono_) {
-	   	type = (dstBpp_ <=  1) ? 0
-    		 : (dstBpp_ <=  2) ? 2
-    		 : (dstBpp_ <=  3) ? 6
-    		 : (dstBpp_ <=  4) ? 7
-    		 : (dstBpp_ <=  5) ? 8
-    		 :                  10;
+	   	toneType = (dstBpp_ <=  1) ? 0
+	    		 : (dstBpp_ <=  2) ? 2
+	    		 : (dstBpp_ <=  3) ? 6
+	    		 : (dstBpp_ <=  4) ? 7
+	    		 : (dstBpp_ <=  5) ? 8
+	    		 :                  10;
+	    ditType |= 0x100;
 	} else {
-	   	type = (dstBpp_ <=  5) ? 0
-    		 : (dstBpp_ <=  6) ? 2
-    		 : (dstBpp_ <=  8) ? 5
-    		 : (dstBpp_ <= 11) ? 6
-    		 : (dstBpp_ <= 12) ? 7
-    		 : (dstBpp_ <= 15) ? 8
-    		 :                   9;
+	   	toneType = (dstBpp_ <=  5) ? 0
+	    		 : (dstBpp_ <=  6) ? 2
+	    		 : (dstBpp_ <=  8) ? 5
+	    		 : (dstBpp_ <= 11) ? 6
+	    		 : (dstBpp_ <= 12) ? 7
+	    		 : (dstBpp_ <= 15) ? 8
+	    		 :                   9;
 	}
  #if 0 //お試し失敗.
 	if (dstBpp_ == 4 && opts_.decreaseColorMode == DCM_FIX_JP) {
-		type = 1;
+		toneType = 1;
 	}
  #endif
-	if (type == 4) {
+	if (toneType == 5) {
 		switch (opts_.decreaseColorMode) {
-		//case DCM_FIX_JP:		type = 5; break;
-		case DCM_FIX_WIN:		type =11; break;
-		case DCM_FIX_XTERM: 	type = 4; break;
-		case DCM_FIX_G5R5B5C40:	type = 3; break;
+		//case DCM_FIX_JP:		toneType = 5; break;
+		case DCM_FIX_WIN:		toneType =11; break;
+		case DCM_FIX_XTERM: 	toneType = 4; ditType |= 0x10; break;
+		case DCM_FIX_G5R5B5C40:	toneType = 3; break;
 		default: break;
 		}
 	}
-	unsigned const* tones = tonesTbl[type];
+	if (noErrDif)
+		ditType |= 0x1000;
+	unsigned const* tones = tonesTbl[toneType];
 	ErrorDiffusion1b ed;
-	ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, opts_.ditTyp & 3, tones);
+	ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, tones);
 }
 
 /// 指定色とαをブレンドし、αを0 or 255 にする

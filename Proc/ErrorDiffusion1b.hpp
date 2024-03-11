@@ -29,42 +29,46 @@ class ErrorDiffusion1b {
 		unsigned num_;
 		int      tbl_[64 + 4];
 	public:
-		void init(unsigned n) {
+		void init(unsigned n, bool xterm) {
 			memset((void*)this, 0, sizeof *this);
 			if (n <  2) n = 2;
 			if (n > 64) n = 64;
 			num_ = n;
-			unsigned d = 0xffff / (n-1);
-			for (unsigned i = 0; i < n - 1; ++i)
-				tbl_[i] = i * d;
+			if (xterm && n == 6) {
+				static const int xtbl[6] = { 0x0000,0x5f5f,0x8787,0xafaf,0xd7d7,0xffff, };
+				for (unsigned i = 0; i < 6; ++i)
+					tbl_[i] = xtbl[i];
+			} else {
+				unsigned d = 0xffff / (n-1);
+				for (unsigned i = 0; i < n - 1; ++i)
+					tbl_[i] = i * d;
+			}
 			tbl_[n-1] = 0xffff;
 			tbl_[n]   = 0xffff;
 		}
 
-		unsigned toTone(int val, int dt, int& lum, int& dif) const {
-			unsigned	bgn=0, end;
+		unsigned toLumDif(int val, int dt, int& lum, int& dif) const {
+			unsigned	cur = 0;
 			unsigned	low = 0;
 			unsigned    hi  = num_;
 			while (low < hi) {
-				bgn = low;
-				end = hi;
-				unsigned mid = (low + hi - 1) / 2;
-				if (val <= tbl_[mid]) {
+				cur = low;
+				//unsigned mid = (low + hi - 1) / 2;
+				unsigned mid = (low + hi) / 2;
+				if (val < tbl_[mid]) {
 					hi = mid;
 				} else { //if (tbl[mid] < key)
-					bgn = low;
-					end = hi;
 					low = mid + 1;
 				}
 			}
-			int fst = tbl_[bgn];
-			int lst = tbl_[bgn+1];
+			int fst = tbl_[cur];
+			int lst = tbl_[cur+1];
 			int len = lst - fst;
 			int thr = fst + (len * dt >> 8);
-			int cur = bgn + (val >= thr);
+			cur += (val >= thr);
 			lum = tbl_[cur];
 			dif = val - lum;
-			return bgn;
+			return cur;
 		}
 	};
 
@@ -74,7 +78,7 @@ public:
 
 	struct Opt {
 		unsigned char	type;	// 0=ディザ無 1=2x2 2=4x4 3=8x8.
-		bool	 		alpha;	// 1:αプレーンもディザする 0:しない.
+		bool			mono;
 		bool			errDif;	// 誤差拡散 1:する 0:しない.
 		bool     		edRev;	// 誤差拡散で偶数列反転 1:する. 0:しない.
 		bool     		ditRev;	// AGとRBとでマトリクスを逆に 1:する 0:しない.
@@ -96,9 +100,11 @@ public:
 		if (buf == NULL)
 			return false;
 		memset(buf, 0, w * h * sizeof(Pix));
-
+		bool errDif = (ditTyp & 0x1000) == 0;	// noErrDif フラグが立っていなければ誤差拡散する.
+		bool mono   = (ditTyp & 0x100) != 0;
+		bool xterm  = (ditTyp & 0x10) != 0;
 		for (unsigned i = 0; i < 3; ++i)
-			toneTbl_[i].init(tones[i]);
+			toneTbl_[i].init(tones[i], xterm);
 
 		for (unsigned y = 0; y < h; ++y) {
 			for (unsigned x = 0; x < w; ++x) {
@@ -117,19 +123,27 @@ public:
 		}
 
 	 #if 1 //defined(OTAMESHI_DIT)
+		ditTyp &= 3;
 		ditTyp = clamp(ditTyp, 0, 2);
-		static const signed char dmPtn[3][4][4] = {
+		static const short dmPtn[3][4][4] = {
 			//パターンディザ無し
 			{
 				{ 128, 128, 128, 128,},
 				{ 128, 128, 128, 128,},
 				{ 128, 128, 128, 128,},
 				{ 128, 128, 128, 128,},
-			}, {	//Bayer 2x2 
+			}, {	//Bayer 2x2
+			 #if 0
+				{ 2*64+32, 0*64+32, 2*64+32, 0*64+32, },	// 5 1
+				{ 1*64+32, 3*64+32, 1*64+32, 3*64+32, },	// 3 7
+				{ 2*64+32, 0*64+32, 2*64+32, 0*64+32, },	//
+				{ 1*64+32, 3*64+32, 1*64+32, 3*64+32, },	//
+			 #else
+				{ 0*64+32, 2*64+32, 0*64+32, 2*64+32,},	// 1 5
+				{ 3*64+32, 1*64+32, 3*64+32, 1*64+32,},	// 7 3
 				{ 0*64+32, 2*64+32, 0*64+32, 2*64+32,},
 				{ 3*64+32, 1*64+32, 3*64+32, 1*64+32,},
-				{ 0*64+32, 2*64+32, 0*64+32, 2*64+32,},
-				{ 3*64+32, 1*64+32, 3*64+32, 1*64+32,},
+			 #endif
 			}, {	//Bayer 4x4
 				{  0*16+8, 8*16+8,  2*16+8, 10*16+8,},
 				{ 12*16+8, 4*16+8, 14*16+8,  6*16+8,},
@@ -139,87 +153,103 @@ public:
 		};
 	 #endif
 
-		for (unsigned i = 0; i < 3; ++i) {
+		unsigned plane = mono ? 1 : 3;
+		for (unsigned i = 0; i < plane; ++i) {
 			ToneTbl& toneTbl = toneTbl_[i];
 			for (unsigned y = 0; y < h; ++y) {
 				int  add = 1;
 				int  xb  = 0;
 				int  xe  = w;
-				if ((y & 1) ^ (i & 1)) {
+				//bool rev = ((y & 1) ^ (i & 1));
+				bool rev = (y & 1);
+				if (rev) {
 					add = -1;
 					xb  = w - 1;
 					xe  = -1;
 				}
 				for (int x = xb; x != xe; x += add) {
-					Plane&  pli  = buf[y * w + x].pl[i];
-					dif_t   lum  = pli.lum;
-					dif_t   dif  = pli.dif;
-					dif_t   dl   = lum + dif;
+					if (x == 200) {
+						static int s_i = 0;
+						++s_i;
+					}
+					Plane&  pli = buf[y * w + x].pl[i];
+					dif_t   lum = pli.lum;
+					dif_t   dif = pli.dif;
 				 #if 1 //defined(OTAMESHI_DIT)
-					int 	dt = dmPtn[ditTyp][y & 3][x & 3];
+					int 	dt	= dmPtn[ditTyp][y & 3][x & 3];
 				 #endif
-					toneTbl.toTone(dl, dt, lum, dl);
+					toneTbl.toLumDif(lum + dif, dt, lum, dif);
 					pli.dst = lum >> 8;
-				 #if 0
-				 #elif 1	// Floyd-Steinberg
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+0, dl * 7 / 16);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-1*add, y+1, dl * 3 / 16);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0    , y+1, dl * 5 / 16);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+1, dl * 1 / 16);
-				 #elif 0	// my3: Floyd-Steinberg mod. ref. http://www.st.nanzan-u.ac.jp/info/gr-thesis/2014/11se309.pdf
-					unsigned idx = clamp((f ? -dl : dl) >> 13, 0, 7);
-					static const int ktbl[8][4] = {
-						{ 256 - 3*28 - 5*28 - 1*28, 3*28, 5*28, 1*28 },
-						//{ 256 - 3*26 - 5*26 - 1*26, 3*26, 5*26, 1*26 },
-						{ 256 - 3*24 - 5*24 - 1*24, 3*24, 5*24, 1*24 },
-						{ 256 - 3*20 - 5*20 - 1*20, 3*20, 5*20, 1*20 },
-						{ 256 - 3*16 - 5*16 - 1*16, 3*16, 5*16, 1*16 },
-						{ 256 - 3*12 - 5*12 - 1*12, 3*12, 5*12, 1*12 },
-						{ 256 - 3* 8 - 5* 8 - 1* 8, 3* 8, 5* 8, 1* 8 },
-						{ 256 - 3* 4 - 5* 4 - 1* 4, 3* 4, 5* 4, 1* 4 },
-						//{ 256 - 3* 2 - 5* 2 - 1* 2, 3* 2, 5* 0, 1* 2 },
-						{ 256 - 3* 0 - 5* 0 - 1* 0, 3* 0, 5* 0, 1* 0 },
-					};
-					int const* k = ktbl[idx];
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+0, k[0] * dl >> 8);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-1*add, y+1, k[1] * dl >> 8);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0    , y+1, k[2] * dl >> 8);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+1, k[3] * dl >> 8);
-				 #elif 1	// see. http://www.st.nanzan-u.ac.jp/info/gr-thesis/2014/11se309.pdf
-					unsigned idx = clamp((f ? -dl : dl) >> (5+8), 0, 7);
-					//unsigned idx = clamp((f ? -dl : dl) >> (4+8), 0, 7);
-					static const int ktbl[8][4] = {
-						{  9, 21, 35, 7 },	// [0]
-						{ 18, 18, 30, 6 },	// [1]
-						{ 27, 15, 25, 5 },	// [2]
-						{ 36, 12, 20, 4 },	// [3]
-						{ 45,  9, 15, 3 },	// [4]
-						{ 54,  6, 10, 2 },	// [5]
-						{ 63,  3,  5, 1 },	// [6]
-						{ 72,  0,  0, 0 },	// [7]
-					};
-					int const* k = ktbl[idx];
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+0, dl * k[0] / 72);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-1*add, y+1, dl * k[1] / 72);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0    , y+1, dl * k[2] / 72);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+1, dl * k[3] / 72);
-				 #elif 1	// my1
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+0, dl * 18 / 64);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+2*add, y+0, dl *  2 / 64);
+					if (errDif) {
+					 #if 0
+					 #elif 1	// Floyd-Steinberg
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+0, dif * 7 / 16);
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-1*add, y+1, dif * 3 / 16);
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0    , y+1, dif * 5 / 16);
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+1, dif * 1 / 16);
+					 #elif 0	// my3: Floyd-Steinberg mod. ref. http://www.st.nanzan-u.ac.jp/info/gr-thesis/2014/11se309.pdf
+						unsigned idx = clamp((f ? -dif : dif) >> 13, 0, 7);
+						static const int ktbl[8][4] = {
+							{ 256 - 3*28 - 5*28 - 1*28, 3*28, 5*28, 1*28 },
+							//{ 256 - 3*26 - 5*26 - 1*26, 3*26, 5*26, 1*26 },
+							{ 256 - 3*24 - 5*24 - 1*24, 3*24, 5*24, 1*24 },
+							{ 256 - 3*20 - 5*20 - 1*20, 3*20, 5*20, 1*20 },
+							{ 256 - 3*16 - 5*16 - 1*16, 3*16, 5*16, 1*16 },
+							{ 256 - 3*12 - 5*12 - 1*12, 3*12, 5*12, 1*12 },
+							{ 256 - 3* 8 - 5* 8 - 1* 8, 3* 8, 5* 8, 1* 8 },
+							{ 256 - 3* 4 - 5* 4 - 1* 4, 3* 4, 5* 4, 1* 4 },
+							//{ 256 - 3* 2 - 5* 2 - 1* 2, 3* 2, 5* 0, 1* 2 },
+							{ 256 - 3* 0 - 5* 0 - 1* 0, 3* 0, 5* 0, 1* 0 },
+						};
+						int const* k = ktbl[idx];
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+0, k[0] * dif >> 8);
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-1*add, y+1, k[1] * dif >> 8);
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0    , y+1, k[2] * dif >> 8);
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+1, k[3] * dif >> 8);
+					 #elif 1	// see. http://www.st.nanzan-u.ac.jp/info/gr-thesis/2014/11se309.pdf
+						unsigned idx = clamp((f ? -dif : dif) >> (5+8), 0, 7);
+						//unsigned idx = clamp((f ? -dif : dif) >> (4+8), 0, 7);
+						static const int ktbl[8][4] = {
+							{  9, 21, 35, 7 },	// [0]
+							{ 18, 18, 30, 6 },	// [1]
+							{ 27, 15, 25, 5 },	// [2]
+							{ 36, 12, 20, 4 },	// [3]
+							{ 45,  9, 15, 3 },	// [4]
+							{ 54,  6, 10, 2 },	// [5]
+							{ 63,  3,  5, 1 },	// [6]
+							{ 72,  0,  0, 0 },	// [7]
+						};
+						int const* k = ktbl[idx];
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+0, dif * k[0] / 72);
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-1*add, y+1, dif * k[1] / 72);
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0    , y+1, dif * k[2] / 72);
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+1, dif * k[3] / 72);
+					 #elif 1	// my1
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+0, dif * 18 / 64);
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+2*add, y+0, dif *  2 / 64);
 
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-1, y+1, dl * 12 / 64);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0, y+1, dl * 18 / 64);
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1, y+1, dl * 12 / 64);
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-1, y+1, dif * 12 / 64);
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0, y+1, dif * 18 / 64);
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1, y+1, dif * 12 / 64);
 
-					ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0, y+2, dl *  2 / 64);
-				 #endif
+						ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0, y+2, dif *  2 / 64);
+					 #endif
+					}
 				}
 			}
 		}
 		for (unsigned y = 0; y < h; ++y) {
 			for (int x = 0; unsigned(x) < w; ++x) {
 				Plane* pl = buf[y * w + x].pl;
-				dst[y * w + x] = argb(pl[0].sub, pl[R].dst, pl[G].dst, pl[B].dst);
+				unsigned char r, g, b;
+				r = pl[R].dst;
+				if (!mono) {
+					g = pl[G].dst;
+					b = pl[B].dst;
+				} else {
+					b = g = r;
+				}
+				dst[y * w + x] = argb(pl[0].sub, r, g, b);
 			}
 		}
 		return true;
