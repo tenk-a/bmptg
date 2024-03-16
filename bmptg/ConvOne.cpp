@@ -1112,11 +1112,7 @@ void ConvOne::aptRect() {
 /// パターンディザを施す
 void ConvOne::patternDither() {
     if (opts_.ditBpp && pixBpp_ == 32) {    // ディザを施す
-		if (opts_.ditTyp & 0x8000) {
-			errorDiffusion1b();
-			return;
-		}
-        int dbpp,ditBpp = opts_.ditBpp;
+        int ditBpp = opts_.ditBpp;
         if (ditBpp <= 0) {              // デフォルトの色のビット数を出力に合わせて選ぶ
 			if (mono_) {
                 ditBpp  = (dstBpp_ <=  8) ? dstBpp_*3
@@ -1141,31 +1137,37 @@ void ConvOne::patternDither() {
                         :                   15;
             }
         }
-        dbpp = (8 < dstBpp_ && dstBpp_ < ditBpp) ? dstBpp_ : ditBpp;
+        int dbpp = (8 < dstBpp_ && dstBpp_ < ditBpp) ? dstBpp_ : ditBpp;
+		if (opts_.ditTyp & 0xC000) {
+			errorDiffusion1b(dbpp);
+		} else {
         if (varbose_) printf("->dit%d:0x%x", dbpp,opts_.ditTyp);
-        PaternDither    paternDither;
-        paternDither.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, dbpp, opts_.ditTyp | (opts_.ditAlpFlg << 8));
+			PaternDither    paternDither;
+		    paternDither.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, dbpp, opts_.ditTyp | (opts_.ditAlpFlg << 8));
+		}
     }
 }
 
 /// 誤差拡散.
-void ConvOne::errorDiffusion1b() {
+void ConvOne::errorDiffusion1b(int dpp) {
 	// RGBを何階調にするか.
 	unsigned const tonesTbl[][3] = {
-		{  2,  2,  2, },	// 0 : 3bit r1g1b1
-		{  3,  3,  3, },    // 1 : 4bit clut
-		{  4,  4,  4, },	// 2 : 6bit r2g2b2
-		{  5,  5,  5, },	// 3 : 8bit costom clut
-		{  6,  6,  6, },	// 4 : 8bit win/xterm fix clut
-		{  8,  8,  4, },	// 5 : 8bit r3g3b2
-		{  8,  8,  8, },	// 6 : 9bit r3g3b3
-		{ 16, 16, 16, },	// 7 : 12bit r4g4b4
-		{ 32, 32, 32, },	// 8 : 15bit r5g5b5
-		{ 32, 64, 32, },	// 9 : 16bit r5g6b5
-		{ 64, 64, 64, },	//10 : 18bit r6g6b6
-		{  7,  9,  4, },	//11 : 8bit win clut
+		// r   g   b
+		{  2,  2,  2, },	// 0 :  3bit r1g1b1     8色.
+		{  3,  3,  3, },    // 1 :  4bit           27色.
+		{  4,  4,  4, },	// 2 :  6bit r2g2b2    64色.
+		{  5,  5,  5, },	// 3 :  7bit          125色.
+		{  6,  6,  6, },	// 4 :  8bit          216色. sp,(xterm)
+		{  8,  8,  4, },	// 5 :  8bit r3g3b2   256色.
+		{  8,  8,  8, },	// 6 :  9bit r3g3b3   512色.
+		{ 16, 16, 16, },	// 7 : 12bit r4g4b4  4096色.
+		{ 32, 32, 32, },	// 8 : 15bit r5g5b5 32768色.
+		{ 32, 64, 32, },	// 9 : 16bit r5g6b5 65536色.
+		{ 64, 64, 64, },	//10 : 18bit r6g6b6 262144色.
+		{  7,  9,  4, },	//11 :  8bit         252色. win clut
 	};
-    bool noErrDif = (opts_.ditTyp & 0x1000) != 0;
+    bool noErrDif = (opts_.ditTyp & 0x8000) == 0;
+//noErrDif = true;
 	int ditType  = opts_.ditTyp & 3;
 	int toneType;
 	if (mono_) {
@@ -1179,23 +1181,19 @@ void ConvOne::errorDiffusion1b() {
 	} else {
 	   	toneType = (dstBpp_ <=  5) ? 0
 	    		 : (dstBpp_ <=  6) ? 2
+	    		 : (dstBpp_ <=  7) ? 3
 	    		 : (dstBpp_ <=  8) ? 5
 	    		 : (dstBpp_ <= 11) ? 6
 	    		 : (dstBpp_ <= 12) ? 7
 	    		 : (dstBpp_ <= 15) ? 8
 	    		 :                   9;
 	}
- #if 0 //お試し失敗.
-	if (dstBpp_ == 4 && opts_.decreaseColorMode == DCM_FIX_JP) {
-		toneType = 1;
-	}
- #endif
 	if (toneType == 5) {
 		switch (opts_.decreaseColorMode) {
 		//case DCM_FIX_JP:		toneType = 5; break;
 		case DCM_FIX_WIN:		toneType =11; break;
 		case DCM_FIX_XTERM: 	toneType = 4; ditType |= 0x10; break;
-		case DCM_FIX_G5R5B5C40:	toneType = 3; break;
+		case DCM_FIX_G6R6B6C40:	toneType = 4; break;
 		default: break;
 		}
 	}
@@ -1203,7 +1201,7 @@ void ConvOne::errorDiffusion1b() {
 		ditType |= 0x1000;
 	unsigned const* tones = tonesTbl[toneType];
 	ErrorDiffusion1b ed;
-	ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, tones);
+	ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, tones, dpp);
 }
 
 /// 指定色とαをブレンドし、αを0 or 255 にする
@@ -1236,9 +1234,9 @@ void ConvOne::decreaseColor() {
             case DCM_FIX_JP: 		//0 日本の80年代パソコン由来の 16色,256色(G3R3B2)固定パレット.
             case DCM_FIX_WIN: 		//1 固定 Winシステムパレット
             case DCM_FIX_XTERM: 	//2 固定 xterm256.
-            case DCM_FIX_G5R5B5C40: //3 固定 b5r5b5c40.
-            case DCM_FIX_OTAMESHI1: //4 お試しパレットO
-            case DCM_FIX_OTAMESHI2: //5 お試しパレットP
+            case DCM_FIX_G6R6B6C40: //3 固定 rgb 6*6*6+40.
+            //case DCM_FIX_OTAMESHI1: //4 お試しパレットO
+            //case DCM_FIX_OTAMESHI2: //5 お試しパレットP
 				{
 					int md = int(dcm);
 	                if (md >= 7) md = md - 7 + 3;

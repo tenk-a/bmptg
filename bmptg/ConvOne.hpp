@@ -25,9 +25,10 @@ enum Dcm_t {
 	DCM_HIST    	= 5,	// 頻度順 clut
 	DCM_FIX_FILE    = 6,	// 固定外部 clut ファイル
 	DCM_FIX_XTERM	= 7,	// 固定 xterm256.
-	DCM_FIX_G5R5B5C40= 8,	// 固定 b5r5b5c40.
-	DCM_FIX_OTAMESHI1= 9,	// お試し clut
-	DCM_FIX_OTAMESHI2= 10,	// お試し clut
+	DCM_FIX_G6R6B6C40= 8,	// 固定 rgb 6*6*6+40.
+	//DCM_FIX_OTAMESHI1= 9,	// お試し clut
+	//DCM_FIX_OTAMESHI2= 10,	// お試し clut
+	DCM_FIX_MAX,
 };
 
 struct ConvOne_Opts {
@@ -197,7 +198,7 @@ private:
     void resizeImage2nd();
     void aptRect();
     void patternDither();
-	void errorDiffusion1b();
+	void errorDiffusion1b(int dpp);
     void alphaBlendByColor();
     void setDstBpp();
     void checkSrcDstBpp();

@@ -510,12 +510,12 @@ int Opts::scan(const char *a)
         }
         break;
 
-    case 'E':
+    case 'E':	// -e
         c = *p++, c = TOUPPER(c);
-        if (c == 'D') {
+        if (c == 'D') {	// -ed
             this->dstExt = strdupE(p);
             o->exDstExt = strdupE(p);
-        } else if (c == 'S') {
+        } else if (c == 'S') {	// -es
             this->srcExt = strdupE(p);
         } else {
             goto OPT_ERR;
@@ -730,14 +730,17 @@ int Opts::scan(const char *a)
         case 'D':   //-xd
 			{
 				o->fullColFlg      = 1;
-				o->ditTyp = 0;
-				bool errDif = false;
-				if (*p == 'E' || *p == 'e') {	// -xde Œë·ŠgŽU.
-					errDif = true;
-					p++;
-				}
 				if (*p == 'A' || *p == 'a') {   // -xda
 					o->ditAlpFlg = 1;
+					p++;
+				}
+				unsigned errDif = 0;
+				if (*p == 'E' || *p == 'e') {	// -xde Œë·ŠgŽU.
+					errDif |= 0x8000;
+					p++;
+				}
+				if (*p == 'P' || *p == 'p') {	// -xdc Œë·ŠgŽUˆ—‘¤‚Ìƒpƒ^[ƒ“ƒfƒBƒU‚ðŽg‚¤.
+					errDif |= 0x4000;
 					p++;
 				}
 				o->ditBpp = strToI(p,0);
@@ -745,13 +748,13 @@ int Opts::scan(const char *a)
 					o->ditBpp = -1;
 				else if (o->ditBpp >= 24)
 					err_abortMsg("-xd[%d] ‚¾‚ÆƒfƒBƒU‚ðs‚¦‚Ü‚¹‚ñ\n");
-				o->ditTyp = errDif ? 0 : 2;
+				o->ditTyp = errDif ? 0 /*none*/ : 2 /* 2x2 */;
 				if (*p) {
 					p++;
 					o->ditTyp = strToI(p,0);
 				}
 				if (errDif)
-					o->ditTyp |= 0x8000;
+					o->ditTyp |= errDif;
 			}
             break;
 
