@@ -1,0 +1,8 @@
+bmptg, ruig ビルド.
+  gen_*.bat で、cmake生成。
+生成されたフォルダに移り、
+mk_rel.bat mk_dbg.bat で実行ファイル生成.
+
+Win 64bit環境前提.
+CMakeFiles.txt で jpeg関係をx64前提のフォルダにしているので
+32bit(x86)版を生成するには修正が必要.
