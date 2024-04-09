@@ -157,7 +157,7 @@ add_executable(${PROJECT_NAME}
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-	${SRC_DIR}/src
+	${SRC_DIR}/bmptg
 	${SRC_DIR}/ImgFmt
 	${SRC_DIR}/proc
 	${SRC_DIR}/misc

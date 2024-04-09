@@ -13,9 +13,11 @@ MISC_DIR=../misc/
 PROC_DIR=../Proc/
 endif
 
-JPG_DIR=$(IMGFMT_DIR)turbojpeg/
-PNG_DIR=$(IMGFMT_DIR)libpng/
-ZLIB_DIR=$(IMGFMT_DIR)zlib/
+THIRDPARTY_DIR=../../thirdparty/
+
+JPG_DIR=$(THIRDPARTY_DIR)libjpeg-turbo/
+PNG_DIR=$(THIRDPARTY_DIR)libpng/
+ZLIB_DIR=$(THIRDPARTY_DIR)zlib/
 
 LIBS	=
 BMPTG_SRCS=\
@@ -92,7 +94,7 @@ ZLIBSRCS=\
 #-----------------------------------------------------------------------------
 
 ifeq ($(COMPILER), gcc)		# GNU C/C++
-CFLAGS	=	-O3 -Wall -DUSE_JPG -DUSE_PNG -I"$(ZLIB_DIR)" -I"$(MISC_DIR)" -I"$(PROC_DIR)" -I"$(IMGFMT_DIR)" $(ADD_CFLAGS)
+CFLAGS	=	-O3 -Wall -DUSE_JPG -DUSE_PNG -I"$(THIRDPARTY_DIR)" -I"$(ZLIB_DIR)" -I"$(MISC_DIR)" -I"$(PROC_DIR)" -I"$(IMGFMT_DIR)" $(ADD_CFLAGS)
 C_OPT_O =	-o 
 CC	=	gcc -c
 LINK	=	g++
@@ -104,7 +106,7 @@ SRCS	= $(BMPTG_SRCS) $(JPGSRCS) $(PNGSRCS) $(ZLIBSRCS)
 else
 ifeq ($(COMPILER), bcc)		# Borland C/C++
 #CFLAGS	=	-Ox -v $(ADD_CFLAGS)
-CFLAGS	=	-O2 -Oc -Oi -OS -Ov -x- -pr -DUSE_JPG -DUSE_PNG -I"$(ZLIB_DIR)" -I"$(MISC_DIR)" -I"$(PROC_DIR)" -I"$(IMGFMT_DIR)" $(ADD_CFLAGS)
+CFLAGS	=	-O2 -Oc -Oi -OS -Ov -x- -pr -DUSE_JPG -DUSE_PNG -I"$(THIRDPARTY_DIR)" -I"$(ZLIB_DIR)" -I"$(MISC_DIR)" -I"$(PROC_DIR)" -I"$(IMGFMT_DIR)" $(ADD_CFLAGS)
 C_OPT_O =	-o
 CC	=	bcc32 -c
 LINK	=	bcc32
@@ -115,7 +117,7 @@ SRCS	= $(subst /,\, $(BMPTG_SRCS) $(JPGSRCS) $(PNGSRCS) $(ZLIBSRCS))
 
 else
 ifeq ($(COMPILER), dmc)		# Digital Mars C/C++
-CFLAGS	=	-w -o -Bj -j0 -DUSE_JPG -DUSE_PNG -I"$(ZLIB_DIR)" -I"$(MISC_DIR)" -I"$(PROC_DIR)" -I"$(IMGFMT_DIR)" $(ADD_CFLAGS)
+CFLAGS	=	-w -o -Bj -j0 -DUSE_JPG -DUSE_PNG -I"$(THIRDPARTY_DIR)" -I"$(ZLIB_DIR)" -I"$(MISC_DIR)" -I"$(PROC_DIR)" -I"$(IMGFMT_DIR)" $(ADD_CFLAGS)
 C_OPT_O =	-o
 CC	=	dmc -c
 LINK	=	dmc
@@ -126,7 +128,7 @@ SRCS	= $(subst /,\, $(BMPTG_SRCS) $(JPGSRCS) $(PNGSRCS) $(ZLIBSRCS))
 
 else
 ifeq ($(COMPILER), wat)		# Watcom-C/C++
-CFLAGS	=	-ot -w3 -k2000000 -DUSE_JPG -DUSE_PNG -I"$(STLP_INC_DIR)" -I"$(ZLIB_DIR)" -I"$(IMGFMT_DIR)" -I"$(MISC_DIR)" -I"$(PROC_DIR)" $(ADD_CFLAGS)
+CFLAGS	=	-ot -w3 -k2000000 -DUSE_JPG -DUSE_PNG -I"$(STLP_INC_DIR)" -I"$(THIRDPARTY_DIR)" -I"$(ZLIB_DIR)" -I"$(IMGFMT_DIR)" -I"$(MISC_DIR)" -I"$(PROC_DIR)" $(ADD_CFLAGS)
 C_OPT_O =	-fo
 CC	=	wcl386 -c
 LINK	=	wcl386
@@ -137,7 +139,7 @@ SRCS	= $(subst /,\, $(BMPTG_SRCS) $(JPGSRCS) $(PNGSRCS) $(ZLIBSRCS))
 
 else		# Visual-C/C++
 CFLAGS	=	-DUSE_JPG -DUSE_JPG_TURBO -DUSE_PNG -EHsc -nologo -W4 -D_CRT_SECURE_NO_WARNINGS \
-		 -I"$(ZLIB_DIR)" -I"$(MISC_DIR)" -I"$(PROC_DIR)" -I"$(IMGFMT_DIR)" $(ADD_CFLAGS) \
+		 -I"$(THIRDPARTY_DIR)" -I"$(ZLIB_DIR)" -I"$(MISC_DIR)" -I"$(PROC_DIR)" -I"$(IMGFMT_DIR)" $(ADD_CFLAGS) \
 		 -wd4018 -wd4244 -wd4389 -wd4127 -wd4996 -wd4131 -wd4100
 C_OPT_O =	-Fo
 CC	=	cl -c

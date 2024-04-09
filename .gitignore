@@ -5,6 +5,7 @@ sav
 tmp
 *.tmp
 *.t
+build
 bmptg_smp/src_*
 bmptg_smp/dst_*
 bmptg_smp/tst_*
@@ -45,3 +46,4 @@ thirdparty/ccwrap
 MyEx*
 bld/bmptg
 bld/ruig
+zzz_*
