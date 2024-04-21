@@ -163,14 +163,15 @@ int ConvOne::main() {
     resizeImage2nd();                   // 縦横拡縮サイズ変更   2回目.
     aptRect();                          // 抜き色|αで範囲を求めてサイズ変更.
     toMono();                           // モノクロ化.
-    patternDither();                    // 誤差拡散・パターンディザを施す.
     alphaBlendByColor();                // 指定色とαをブレンドし、αを0 or 255 にする.
 
     mulCol();                           // 各ピクセルに色を乗ずる.
     colChSquare();                      // ARGB各々を二乗する.
     changeTone();                       // 抜き色以外の色のトーンを opts_.tone％に変換.
 
+    patternDither();                    // 誤差拡散・パターンディザを施す.
     decreaseColor();                    // 多色で出力がclut_付きなら、安易減色を行う.
+
     changeChipAndMap();                 // チップ(セル)＆マップ化.
     reverseOutputAlpha();               // 出力のαを反転する必要があるとき.
     changeMaskImage();                  // マスク画像生成のとき.
@@ -1111,7 +1112,7 @@ void ConvOne::aptRect() {
 
 /// パターンディザを施す.
 void ConvOne::patternDither() {
-    if (opts_.ditBpp && pixBpp_ == 32) {    // ディザを施す.
+    if ((opts_.ditBpp || opts_.ditTyp) && pixBpp_ == 32) {    // ディザを施す.
         int ditBpp = opts_.ditBpp;
         if (ditBpp <= 0) {              // デフォルトの色のビット数を出力に合わせて選ぶ.
             if (mono_) {
@@ -1202,6 +1203,36 @@ void ConvOne::errorDiffusion1b(int dpp) {
     unsigned const* tones = tonesTbl[toneType];
     ErrorDiffusion1b ed;
     ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, tones, dpp);
+
+    if (opts_.decreaseColorMode == DCM_FIX_JP && mono_ && dstBpp_ == 2) {
+        static const unsigned clut[] = { 0xFF000000, 0xFF0000ff, 0xFF00ffff, 0xFFffffff, };
+		enum { d = 255 / 4 };
+        UINT32_T* p = (UINT32_T*)pix_;
+		for (size_t y = 0; y < h_; ++y) {
+			for (size_t x = 0; x < w_; ++x) {
+				unsigned c = p[ y * w_ + x ];
+                c &= 0xff;
+				unsigned i = c / d;
+				//unsigned i = (c < d) ? 0 : (c < d*2) ? 1 : (c < d*3) ? 2 : 3;
+				if (i > 3) i = 3;
+			 #if 0
+                if (i == 1) {
+                    static int s_i = 0;
+                    ++s_i;
+                }
+                if (i == 2) {
+                    static int s_i = 0;
+                    ++s_i;
+                }
+                if (i == 3) {
+                    static int s_i = 0;
+                    ++s_i;
+                }
+             #endif
+				p[ y * w_ + x ] = clut[i];
+			}
+		}
+	}
 }
 
 /// 指定色とαをブレンドし、αを0 or 255 にする.

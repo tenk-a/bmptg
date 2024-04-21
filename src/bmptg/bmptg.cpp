@@ -739,7 +739,7 @@ int Opts::scan(const char *a)
                     errDif |= 0x8000;
                     p++;
                 }
-                if (*p == 'P' || *p == 'p') {   // -xdc 誤差拡散処理側のパターンディザを使う.
+                if (*p == 'P' || *p == 'p') {   // -xdp 誤差拡散処理側のパターンディザを使う.
                     errDif |= 0x4000;
                     p++;
                 }

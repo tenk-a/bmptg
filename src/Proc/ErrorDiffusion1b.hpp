@@ -48,18 +48,18 @@ class ErrorDiffusion1b {
         }
 
         unsigned toLumDif(int val, int dt, int& lum, int& dif) const {
-            unsigned    cur = 0;
             unsigned    low = 0;
             unsigned    hi  = num_;
+            unsigned    mid = 0;
             while (low < hi) {
-                cur = low;
-                unsigned mid = (low + hi) / 2;
+                mid = (low + hi) / 2;
                 if (val < tbl_[mid]) {
                     hi = mid;
-                } else { //if (tbl[mid] < key)
+                } else {
                     low = mid + 1;
                 }
             }
+            unsigned cur = mid;
             int fst = tbl_[cur];
             int lst = tbl_[cur+1];
             int len = lst - fst;
@@ -182,10 +182,6 @@ public:
                     xe  = -1;
                 }
                 for (int x = xb; x != xe; x += add) {
-                    if (x == 200) {
-                        static int s_i = 0;
-                        ++s_i;
-                    }
                     Plane&  pli = buf[y * w + x].pl[i];
                     dif_t   lum = pli.lum;
                     dif_t   dif = pli.dif;

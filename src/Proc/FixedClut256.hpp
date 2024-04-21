@@ -64,6 +64,20 @@ public:
         return win16;
     }
 
+    /// 
+    static const unsigned* clut2() {
+        static const unsigned clut[] = {
+            0xFF000000, 0xFFffffff,
+        };
+        return clut;
+    }
+    static const unsigned* clut4() {
+        static const unsigned clut[] = {
+            0xFF000000, 0xFF0000ff, 0xFF00ffff, 0xFFffffff,
+        };
+        return clut;
+    }
+
     /// 固定 GRB(各4階調) 64色. (g2r2b2)
     static const unsigned* clutGRB222() {
         static const unsigned grb222[] = {
@@ -532,7 +546,13 @@ void FixedClut256<A>::getFixedClut256(unsigned *clut, unsigned clutSize, unsigne
     unsigned        l;
     const unsigned* s;
     if (bpp < 6) {
-        if (bpp < 4) {
+        if (bpp <= 1) {
+            l = 2;
+            s = clut2();
+        } else if (bpp <= 2) {
+            l = 4;
+            s = clut4();
+        } else if (bpp < 4) {
             l = 8;
             s = typ ? clutBGR111() : clutGRB111();
         } else {
