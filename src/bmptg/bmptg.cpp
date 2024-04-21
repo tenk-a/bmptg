@@ -1182,8 +1182,7 @@ static void getResFile(char *name, slist_t **a_fnames, Opts& opts)
 }
 
 
-
-int main(int argc, char *argv[])
+static int Main(int argc, char *argv[])
 {
     char        inam[FIL_NMSZ];
     char        onam[FIL_NMSZ];
@@ -1268,4 +1267,22 @@ int main(int argc, char *argv[])
         }
     }
     return 0;
+}
+
+
+int main(int argc, char* argv[])
+{
+    int rc;
+ #if defined(_WIN32)
+    int savCP = GetConsoleOutputCP();
+    SetConsoleOutputCP(65001);
+ #endif
+ #if 0 //ndef NO_USE_EXARGV
+    ExArgv_conv(&argc, &argv);
+ #endif
+    rc = Main(argc, argv);
+ #if defined(_WIN32)
+    SetConsoleOutputCP(savCP);
+ #endif
+    return rc;
 }

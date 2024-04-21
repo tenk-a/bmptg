@@ -227,7 +227,7 @@ static inline int err_abortMsg(const char *fmt, ...) {
     va_start(args, fmt);
     int n = vsnprintf(buf, sizeof buf, fmt, args);
     va_end(args);
-    OutputDebugString(buf);
+    OutputDebugStringA(buf);
     return err_abort();
 }
 
@@ -239,7 +239,7 @@ static inline int err_printf(const char *fmt, ...) {
     va_start(args, fmt);
     int n = vsnprintf(buf, sizeof buf, fmt, args);
     va_end(args);
-    OutputDebugString(buf);
+    OutputDebugStringA(buf);
     return n;
 }
 
