@@ -26,7 +26,7 @@ libpng は
 フォルダにzip解凍、
   libpng/scripts/pnglibconf.h.prebuilt
 を
-  libpng/pnglibconf.h 
+  libpng/pnglibconf.h
 にコピーする.
 
 watcomc でコンパイルしたい場合は、コピーした
@@ -40,7 +40,7 @@ libpng/pnglibconf.h をテキストエディタで開け
   #endif
 に置換.
 
-libjpeg は 
+libjpeg は
   http://www.ijg.org/
 あたりから v9a のソース
   jpegsr9a.zip
@@ -50,8 +50,8 @@ libjpeg は
   jpeg/jconfig.vc
 を
   jpeg/jconfig.h
-にコピーする. 
-※とりあえずvc用. 
+にコピーする.
+※とりあえずvc用.
   バッチでコンパイルする場合はバッチ内でコンパイラに合わせたjconfig.*をコピー.
 
 
@@ -66,7 +66,7 @@ libファイルの作成は必要無し.
 asmファイル等面倒もあるので、こちらは 配布されてるモノの手順にしたがって
 lib 生成して利用することにする.
    http://sourceforge.net/projects/libjpeg-turbo/files/
-より v1.4.x 付近、surceforge の code の snapshot で trunk 
+より v1.4.x 付近、surceforge の code の snapshot で trunk
 (試したのはrev1537)のソースを入手.
    ImgFmt/turbojpeg/
 に解凍.
@@ -86,7 +86,7 @@ vs 2008 (及び それ以降) ならば bmptg.sln/vcproj でコンパイルできる(はず)
 
 また mingw32-make.exe をpath通した状態で、
 
-mk_vc.bat       vc7.1以降でのコンパイル用.
+mk_vc.bat		vc7.1以降でのコンパイル用.
 mk_mingw.bat	mingw gcc 用 (4.8.1でコンパイル確認)
 mk_dmc.bat	dmc用 (8.57でコンパイル確認)
 mk_wat.bat	open watcom 1.9用.
@@ -97,7 +97,7 @@ vc以外は、コンパイルを通してbmptgのヘルプ出して後は2,3ファイル変換した
 
 ※ libjpeg-turbo を用いる場合は
 vc環境 および mingw32-make , nasm へのpathを通しておいて
-  mk_vc_tj.bat  32 (あるいは 64)
+  mk_vc_tj.bat	32 (あるいは 64)
 で 生成.
 
 

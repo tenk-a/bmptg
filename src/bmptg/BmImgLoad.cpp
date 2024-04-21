@@ -40,7 +40,7 @@ int  bm_getHdr(const void *bm_data, unsigned sz, int *w_p, int *h_p, int *bpp_p,
             return BM_FMT_BMP;
   #ifdef MY_H
     } else if (MY_IS_PRE_MY_FMT(s)) {
-		int fmt = MY_bm_preGetHdr(s, sz, w_p, h_p,bpp_p, clutNum_p);
+        int fmt = MY_bm_preGetHdr(s, sz, w_p, h_p,bpp_p, clutNum_p);
         if (fmt)
             return fmt;
   #endif
@@ -64,9 +64,9 @@ int  bm_getHdr(const void *bm_data, unsigned sz, int *w_p, int *h_p, int *bpp_p,
   #endif
     } else {
       #ifdef MY_H
-		int fmt = MY_bm_getHdr(bm_data, sz, w_p, h_p, bpp_p, clutNum_p);
-		if (fmt)
-			return fmt;
+        int fmt = MY_bm_getHdr(bm_data, sz, w_p, h_p, bpp_p, clutNum_p);
+        if (fmt)
+            return fmt;
       #endif
         if (tga_getHdr(s, w_p, h_p,bpp_p, clutNum_p))
             return BM_FMT_TGA;
@@ -89,15 +89,15 @@ int  bm_read(const void *bm_data, unsigned dataSz, void *dst, int wb, int h, int
             JpgDecoder dec(bm_data, dataSz);
             uint8_t* s = (uint8_t*)dec.read();
             if (s) {
-				if (dec.bpp() == 8) {
-					memcpy(clut, dec.clut(), sizeof(unsigned)*256);
-				}
+                if (dec.bpp() == 8) {
+                    memcpy(clut, dec.clut(), sizeof(unsigned)*256);
+                }
                 n = beta_conv(dst, wb, h, bpp, s, dec.widthByte(), dec.bpp(), clut, dir, 0,0);
                 free(s);
                 if (bpp != 8) {
-                	unsigned w = BYT2WID(wb,32);
-                	pix32_swapARGB((unsigned*)dst, w, h, (PIX32_SWAPARGB)14);  // abgr -> argb
-				}
+                    unsigned w = BYT2WID(wb,32);
+                    pix32_swapARGB((unsigned*)dst, w, h, (PIX32_SWAPARGB)14);  // abgr -> argb
+                }
             }
         }
         break;
@@ -108,11 +108,11 @@ int  bm_read(const void *bm_data, unsigned dataSz, void *dst, int wb, int h, int
             PngDecoder dec(bm_data, dataSz);
             if (dec.clutSize())
                 dec.getClut((unsigned*)clut);
-			int byteOdr = 0;
-			if (dec.bpp() < 8) {
-				//byteOdr = 1;
+            int byteOdr = 0;
+            if (dec.bpp() < 8) {
+                //byteOdr = 1;
                 dec.setBigEndian();
-			}
+            }
             //if (bpp== 8)
             //  dec.toClutBpp8();
             //if (bpp == 32)    // αの有無でbppが24,32どちらになるかわかりにくいので、普通に展開後自前で行う.
@@ -132,9 +132,9 @@ int  bm_read(const void *bm_data, unsigned dataSz, void *dst, int wb, int h, int
   #endif
 
     default:
-	  #ifdef MY_H
-		n = MY_bm_read(bm_data, dataSz, dst, wb, h, bpp, clut, dir, fmt);
-	  #endif
+      #ifdef MY_H
+        n = MY_bm_read(bm_data, dataSz, dst, wb, h, bpp, clut, dir, fmt);
+      #endif
         break;
     }
 
@@ -181,13 +181,13 @@ int  bm_getClut(const void *bm_data, void *clut0, int num)
     int clutNum = 0;
     int w       = 0;
     int h       = 0;
-	int fmt = bm_getHdr(bm_data, -1, &w, &h, &bpp, &clutNum);
-	if (fmt == 0 || clutNum == 0)
-		return 0;
-	memset(clut0, 0, sizeof(uint32_t) * num);
-	if (clutNum > num)
-		clutNum = num;
-	unsigned wb  = WID2BYT(w, bpp);
+    int fmt = bm_getHdr(bm_data, -1, &w, &h, &bpp, &clutNum);
+    if (fmt == 0 || clutNum == 0)
+        return 0;
+    memset(clut0, 0, sizeof(uint32_t) * num);
+    if (clutNum > num)
+        clutNum = num;
+    unsigned wb  = WID2BYT(w, bpp);
     unsigned*  buf = (unsigned*)calloc(1, 2 * wb * h);
     if (buf == NULL)
         return 0;
@@ -195,5 +195,5 @@ int  bm_getClut(const void *bm_data, void *clut0, int num)
         fmt = 0;
     }
     free(buf);
-	return clutNum;
+    return clutNum;
 }

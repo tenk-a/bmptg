@@ -67,11 +67,11 @@ int gen_clmp(uint8_t **a_map, int *a_mapSz, int *a_celNum, uint8_t **a_pix, int 
         pix = genCelFuchiTex(pix, w, h, mw, mh, cw, ch);
         cw2 = cw + 2, ch2 = ch + 2;
         w2 = mw * cw2, h2 = mh * ch2;
-    } else if (w % cw || h % ch) {	// 端数があるならpixサイズ調整
+    } else if (w % cw || h % ch) {  // 端数があるならpixサイズ調整
         pix = resizePixBuf(pix, w, h, mw, mh, cw, ch);
-		cw2 = cw      , ch2 = ch;
+        cw2 = cw      , ch2 = ch;
         w2  = mw * cw2, h2  = mh * ch2;
-	}
+    }
 
     tw = texW / cw2;
     if (tw <= 0) {
@@ -238,20 +238,20 @@ static void genTexSp(pix_t *pix, int texW, int tw, int th, int cw, int ch, int c
 
 static pix_t *resizePixBuf(pix_t *src, int srcW, int srcH, int mw, int mh, int cw, int ch)
 {
-	int 	dstW = mw * cw;
-	int 	dstH = mh * ch;
-    pix_t*	dst  = (pix_t*)callocE(PIX_BYT, dstW * dstH+0x1000);
-	int		y;
+    int     dstW = mw * cw;
+    int     dstH = mh * ch;
+    pix_t*  dst  = (pix_t*)callocE(PIX_BYT, dstW * dstH+0x1000);
+    int     y;
 
     if (dbgExLog_getSw()) {
         printf("resizePixBuf(%p,  %d,%d,  %d,%d,  %d,%d)\n", src, srcW,srcH,mw,mh,cw,ch);
     }
 
-	for (y = 0; y < srcH; ++y)
-		memcpy(dst + y * dstW, src + y * srcW, srcW * PIX_BYT);
+    for (y = 0; y < srcH; ++y)
+        memcpy(dst + y * dstW, src + y * srcW, srcW * PIX_BYT);
 
-	free(src);
-	return dst;
+    free(src);
+    return dst;
 }
 
 

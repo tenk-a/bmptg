@@ -191,7 +191,7 @@ std::size_t HuffmanEncode<T,B>::encode(std::uint8_t* dst, std::size_t dstSize, T
     bitBuf_   = 0;
 
     if (src == NULL || srcSize == 0) {       // ソースがないか0なら終了
-        FKS_L_POKE64LE(dstp_, 0);    
+        FKS_L_POKE64LE(dstp_, 0);
         return HDRSZ;
     }
 

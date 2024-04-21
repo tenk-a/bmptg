@@ -11,9 +11,9 @@
 
 /// ‰æ‘œ‚ğ‰ñ“]‚µ‚½Œ‹‰Ê‚ÌV‹K‰æ‘œ‚Ìî•ñ
 typedef struct pix32_rotate_dst_t {
-	uint32_t*	mallocMem;			///< ‰æ‘œ. malloc‚³‚ê‚½ƒƒ‚ƒŠ
-	uint32_t	w;					///< ‰¡•
-	uint32_t	h;					///< c•
+    uint32_t*   mallocMem;          ///< ‰æ‘œ. malloc‚³‚ê‚½ƒƒ‚ƒŠ
+    uint32_t    w;                  ///< ‰¡•
+    uint32_t    h;                  ///< c•
 } pix32_rotate_dst_t;
 
 #if defined __cplusplus
@@ -42,15 +42,15 @@ int  pix32_rotateBilinearAlpha(pix32_rotate_dst_t* dst, const unsigned *src, uns
  */
 inline int  pix32_rotate(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol, int hasAlpha, int type)
 {
-	switch (type) {
-	case 0:
-	case 1:	return pix32_rotateBilinear(dst, src, srcW, srcH, rot, dcol);
-	case 2: return pix32_rotateBicubic (dst, src, srcW, srcH, rot, dcol, hasAlpha);
-	case 3:
-	case 4: return pix32_rotateSpline36(dst, src, srcW, srcH, rot, dcol, hasAlpha);
-	default: assert(0);
-	}
-	return 0;
+    switch (type) {
+    case 0:
+    case 1: return pix32_rotateBilinear(dst, src, srcW, srcH, rot, dcol);
+    case 2: return pix32_rotateBicubic (dst, src, srcW, srcH, rot, dcol, hasAlpha);
+    case 3:
+    case 4: return pix32_rotateSpline36(dst, src, srcW, srcH, rot, dcol, hasAlpha);
+    default: assert(0);
+    }
+    return 0;
 }
 
 #if 0

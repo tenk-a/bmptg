@@ -26,7 +26,7 @@ int  pix32_resizeNearestNeighbor(unsigned *dst, unsigned dstW, unsigned dstH, co
         return 1;
     }
 
-   	pix32_resizeNearestNeighborSub(dst, dstW, dstH, src, srcW, srcH);
+    pix32_resizeNearestNeighborSub(dst, dstW, dstH, src, srcW, srcH);
     return 1;
 }
 
@@ -35,18 +35,18 @@ int  pix32_resizeNearestNeighbor(unsigned *dst, unsigned dstW, unsigned dstH, co
  */
 static void  pix32_resizeNearestNeighborSub(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH)
 {
-	double   rscaleX, rscaleY;
-	uint32_t dstX   , dstY;
+    double   rscaleX, rscaleY;
+    uint32_t dstX   , dstY;
 
-	assert(dst && dstW && dstH && src && srcW && srcH);
-	rscaleX   = (double)srcW / dstW;
-	rscaleY   = (double)srcH / dstH;
+    assert(dst && dstW && dstH && src && srcW && srcH);
+    rscaleX   = (double)srcW / dstW;
+    rscaleY   = (double)srcH / dstH;
 
-	for (dstY = 0; dstY < dstH; ++dstY) {
-		for (dstX = 0; dstX < dstW; ++dstX) {
-	    	int x = (int)((dstX + 0.5) * rscaleX);
-	    	int y = (int)((dstY + 0.5) * rscaleY);
-			dst[dstY*dstW + dstX] = src[y * srcW + x];
-		}
-	}
+    for (dstY = 0; dstY < dstH; ++dstY) {
+        for (dstX = 0; dstX < dstW; ++dstX) {
+            int x = (int)((dstX + 0.5) * rscaleX);
+            int y = (int)((dstY + 0.5) * rscaleY);
+            dst[dstY*dstW + dstX] = src[y * srcW + x];
+        }
+    }
 }

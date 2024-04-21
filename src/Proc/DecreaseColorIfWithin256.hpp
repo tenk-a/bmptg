@@ -26,7 +26,7 @@ public:
 
     static bool conv(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, unsigned* pClut, unsigned clutSize, bool transf=false);
 
-	static unsigned char*  convToNewArray(const unsigned* pSrc, unsigned w, unsigned h, unsigned* pClut, unsigned& rClutSize, bool transf=false, uint32_t dfltCol=0);
+    static unsigned char*  convToNewArray(const unsigned* pSrc, unsigned w, unsigned h, unsigned* pClut, unsigned& rClutSize, bool transf=false, uint32_t dfltCol=0);
 
     static unsigned countColor(const unsigned* pSrc, unsigned w, unsigned h, unsigned* pClut, unsigned clutSize, bool transf=false);
 
@@ -139,25 +139,25 @@ unsigned char* DecreaseColorIfWithin256<DMY>::convToNewArray(const unsigned* pSr
     /// 実際の色数が、clutSize以内に収まるかをチェック.
     unsigned clut[256+1];       // 一個余分に確保.
     unsigned num = 0;
-	unsigned clutSize = rClutSize;
+    unsigned clutSize = rClutSize;
     if (clutSize > 256)
         clutSize = 256;
 
     num = countColor(pSrc, w, h, clut, clutSize, transf);
-	if (num > clutSize) {
-		rClutSize = 0;
+    if (num > clutSize) {
+        rClutSize = 0;
         return NULL;
-	}
+    }
 
-	unsigned char* pDst = new unsigned char[w * h+16];
+    unsigned char* pDst = new unsigned char[w * h+16];
 
-	// clut内に収まる色数だった場合.
+    // clut内に収まる色数だった場合.
     memcpy(pClut    , clut, num*sizeof(pClut[0]));
     if (num < clutSize)
         memset(pClut+num, dfltCol, (clutSize-num)*sizeof(pClut[0]));
     for (unsigned i = 0; i < w*h; ++i)
         pDst[i] = binary_find_tbl_n(&clut[0], num, pSrc[i]);
-	rClutSize = num;
+    rClutSize = num;
     return pDst;
 }
 

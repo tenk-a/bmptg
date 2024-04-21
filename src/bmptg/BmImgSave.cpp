@@ -65,18 +65,18 @@ int  bm_write(int fmt, void *bm_data, int w, int h, int bpp, const void *src, in
 
   #if defined USE_JPG
     case BM_FMT_JPG:
-		if (o->mono) {
+        if (o->mono) {
             unsigned    wb  = WID2BYT(w,24);
             uint8_t*    tmp = (uint8_t*)callocE(1, wb * h);
             n = beta_conv(tmp, wb, h, 24, src, srcWb, srcBpp, clut, dir_flags, 0,0);
             for (unsigned i = 0; i < (unsigned)w*h; ++i) {
                 tmp[i] = tmp[i*3];
             }
-			int quality = (o->quality >= 0) ? o->quality : 80;
-			quality = (o->quality_grey >= 0) ? o->quality_grey : o->quality;
+            int quality = (o->quality >= 0) ? o->quality : 80;
+            quality = (o->quality_grey >= 0) ? o->quality_grey : o->quality;
             n = JpgEncoder().write((uint8_t*)bm_data, w*h, tmp, w, h, quality, w, 0, 1);
-			freeE(tmp);
-		} else {
+            freeE(tmp);
+        } else {
             unsigned    wb  = WID2BYT(w,24);
             uint8_t*    tmp = (uint8_t*)callocE(1, wb * h);
             n = beta_conv(tmp, wb, h, 24, src, srcWb, srcBpp, clut, dir_flags, 0,0);
@@ -85,9 +85,9 @@ int  bm_write(int fmt, void *bm_data, int w, int h, int bpp, const void *src, in
                 tmp[i*3+0]      = tmp[i*3+2];
                 tmp[i*3+2]      = c;
             }
-			int quality = (o->quality >= 0) ? o->quality : 80;
+            int quality = (o->quality >= 0) ? o->quality : 80;
             n = JpgEncoder().write((uint8_t*)bm_data, wb*h, tmp, w, h, quality, wb, 0);
-			freeE(tmp);
+            freeE(tmp);
         }
         break;
   #endif
@@ -95,26 +95,26 @@ int  bm_write(int fmt, void *bm_data, int w, int h, int bpp, const void *src, in
   #if defined USE_PNG
     case BM_FMT_PNG:
         {
-			bpp = (bpp <= 1) ? 1 : (bpp <= 4) ? 4 : (bpp <= 8) ? 8 : (bpp == 15) ? 32 : (bpp == 24) ? 24 : 32;
-			if (bpp == 32 && (dir_flags & BM_FLAG_EX_ENC) && GrayClut<>::isGreyRGB((uint32_t*)src, w, h)) {	// alpha + grey 
-				bpp = 13;	// a:8/g:8
-			}
+            bpp = (bpp <= 1) ? 1 : (bpp <= 4) ? 4 : (bpp <= 8) ? 8 : (bpp == 15) ? 32 : (bpp == 24) ? 24 : 32;
+            if (bpp == 32 && (dir_flags & BM_FLAG_EX_ENC) && GrayClut<>::isGreyRGB((uint32_t*)src, w, h)) { // alpha + grey
+                bpp = 13;   // a:8/g:8
+            }
             int         byteOdr = 0; //(bpp < 8);
-			unsigned    wb      = WID2BYT(w, bpp);
+            unsigned    wb      = WID2BYT(w, bpp);
             unsigned    dataSz  = wb * h + 0x10;
             uint8_t*    tmp     = (uint8_t*)callocE(1, dataSz);
             n = beta_conv(tmp, wb, h, bpp, src, srcWb, srcBpp, clut, dir_flags, 0, byteOdr);
             dataSz = bm_encodeWorkSize(BM_FMT_PNG,w,h,bpp);
             n = PngEncoder().write((uint8_t*)bm_data, dataSz, tmp, w, h, bpp, (unsigned*)clut, wb, 0);
-			freeE(tmp);
+            freeE(tmp);
         }
         break;
   #endif
 
     default:
-	  #ifdef MY_H
-		n = MY_bm_write(fmt, bm_data, w, h, bpp, src, srcWb, srcBpp, clut, dir_flags, o);
-	  #endif
+      #ifdef MY_H
+        n = MY_bm_write(fmt, bm_data, w, h, bpp, src, srcWb, srcBpp, clut, dir_flags, o);
+      #endif
         break;
     }
     return n;
@@ -142,11 +142,11 @@ int bm_chkDstBpp(int fmt, int bpp)
     case BM_FMT_BMP: return bmp_chkDstBpp(bpp);
     case BM_FMT_TGA: return tga_chkDstBpp(bpp);
     default: ;
-	  #ifdef MY_H
-	  	bpp = MY_bm_chkDstBpp(bpp, fmt);
-	  #endif
+      #ifdef MY_H
+        bpp = MY_bm_chkDstBpp(bpp, fmt);
+      #endif
     }
-	return bpp;
+    return bpp;
 }
 
 
@@ -158,13 +158,13 @@ int bm_encodeWorkSize(int fmt, int w, int h, int bpp)
     case BM_FMT_JPG: return 2 * WID2BYT4(w,24) * h + 0x10000;
     case BM_FMT_PNG: return 3 * WID2BYT4(w,32) * h + 0x10000;
     default: ;
-	  #ifdef MY_H
-		{
-			int n = MY_bm_encodeWorkSize(fmt, w, h, bpp);
-			if (n)
-				return n;
-		}
-	  #endif
+      #ifdef MY_H
+        {
+            int n = MY_bm_encodeWorkSize(fmt, w, h, bpp);
+            if (n)
+                return n;
+        }
+      #endif
     }
     return w * h + WID2BYT4(w,bpp) * h +  sizeof(unsigned)*256+4096;
 }

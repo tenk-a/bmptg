@@ -126,12 +126,12 @@ unsigned JpgEncoder::write(
     info.image_width        = wid;
     info.image_height       = hei;
     if (mono) {
-	    info.input_components   = 1;
-	    info.in_color_space     = JCS_GRAYSCALE;
-	} else {
-	    info.input_components   = 3;
-	    info.in_color_space     = JCS_RGB;
-	}
+        info.input_components   = 1;
+        info.in_color_space     = JCS_GRAYSCALE;
+    } else {
+        info.input_components   = 3;
+        info.in_color_space     = JCS_RGB;
+    }
     jpeg_set_defaults(&info);
     jpeg_set_quality(&info, quality, TRUE /* limit to baseline-JPEG values */ );
     jpeg_start_compress(&info, TRUE);

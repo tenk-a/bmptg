@@ -24,7 +24,7 @@
  */
 int fks_fileTimeGet(char const* fname, fks_file_time_t* pCreat, fks_file_time_t* pLastAcs, fks_file_time_t* pLastWrt) {
     HANDLE h;
-	assert(fname);
+    assert(fname);
     h = CreateFileA(fname, GENERIC_READ , FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
     if (h != INVALID_HANDLE_VALUE) {
         int rc = GetFileTime(h, (FILETIME*)pCreat, (FILETIME*)pLastAcs, (FILETIME*)pLastWrt);
@@ -42,8 +42,8 @@ int fks_fileTimeSet(char const* fname, fks_file_time_t const* pCreat, fks_file_t
     assert(fname);
     h = CreateFile(fname, GENERIC_READ|GENERIC_WRITE, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
     if (h != INVALID_HANDLE_VALUE) {
-		int rc;
-		SetFilePointer(h, 0, 0, FILE_END);
+        int rc;
+        SetFilePointer(h, 0, 0, FILE_END);
         rc = SetFileTime(h, (FILETIME*)pCreat, (FILETIME*)pLastAcs, (FILETIME*)pLastWrt);
         CloseHandle(h);
         if (rc)
@@ -55,9 +55,9 @@ int fks_fileTimeSet(char const* fname, fks_file_time_t const* pCreat, fks_file_t
 /** 主にファイル時間操作と併用する向けに、現在時間を取得する
  */
 fks_file_time_t fks_fileTimeFromCurrentTime() {
-	fks_file_time_t t = 0;
-	GetSystemTimeAsFileTime((FILETIME*)&t);
-	return t;
+    fks_file_time_t t = 0;
+    GetSystemTimeAsFileTime((FILETIME*)&t);
+    return t;
 }
 
 #else   // linux(unix) //----------------------------------------------------
@@ -69,7 +69,7 @@ fks_file_time_t fks_fileTimeFromCurrentTime() {
 #include <sys/types.h>
 #include <sys/time.h>
 
-#define USEC_OF_1SEC			1000000
+#define USEC_OF_1SEC            1000000
 
 /** ファイルの時間の取得. 成功したら 0, 失態したら負を返す.
  */
@@ -90,40 +90,40 @@ int fks_fileTimeGet(char const* fname, fks_file_time_t* pCreat, fks_file_time_t*
  */
 int fks_fileTimeSet(char const* fname, fks_file_time_t const* pCreat, fks_file_time_t const* pLastAcs, fks_file_time_t const* pLastWrt) {
     struct timeval tv[2];
-	fks_file_time_t wkLastAcs, wkLastWrt;
+    fks_file_time_t wkLastAcs, wkLastWrt;
     assert(fname != 0);
-	if (pLastWrt) {
-		if (!pLastAcs) {
-			wkLastAcs = 0;
-			pLastAcs  = &wkLastAcs;
-			fks_fileTimeGet(fname, NULL, pLastAcs, NULL);
-		}	
-	} else if (pLastAcs) {
-		wkLastWrt = 0;
-		pLastWrt  = &wkLastWrt;
-		fks_fileTimeGet(fname, NULL, NULL, pLastWrt);
-	} else {
-		wkLastAcs = 0;
-		pLastAcs  = &wkLastAcs;
-		wkLastWrt = 0;
-		pLastWrt  = &wkLastWrt;
-		fks_fileTimeGet(fname, NULL, pLastAcs, pLastWrt);
-	}
+    if (pLastWrt) {
+        if (!pLastAcs) {
+            wkLastAcs = 0;
+            pLastAcs  = &wkLastAcs;
+            fks_fileTimeGet(fname, NULL, pLastAcs, NULL);
+        }
+    } else if (pLastAcs) {
+        wkLastWrt = 0;
+        pLastWrt  = &wkLastWrt;
+        fks_fileTimeGet(fname, NULL, NULL, pLastWrt);
+    } else {
+        wkLastAcs = 0;
+        pLastAcs  = &wkLastAcs;
+        wkLastWrt = 0;
+        pLastWrt  = &wkLastWrt;
+        fks_fileTimeGet(fname, NULL, pLastAcs, pLastWrt);
+    }
 
     tv[0].tv_sec  = *pLastAcs / USEC_OF_1SEC;
     tv[0].tv_usec = *pLastAcs % USEC_OF_1SEC;
     tv[1].tv_sec  = *pLastWrt / USEC_OF_1SEC;
     tv[1].tv_usec = *pLastWrt % USEC_OF_1SEC;
 
-	return utimes(fname, tv);
+    return utimes(fname, tv);
 }
 
 /** 主にファイル時間操作と併用する向けに、現在時間を取得する
  */
 fks_file_time_t fks_fileTimeFromCurrentTime() {
-	struct timeval t;
-	gettimeofday(&t, NULL);
-	return t.tv_sec * USEC_OF_1SEC + t.tv_usec;
+    struct timeval t;
+    gettimeofday(&t, NULL);
+    return t.tv_sec * USEC_OF_1SEC + t.tv_usec;
 }
 
 #endif  //  -------------------------------------------------------

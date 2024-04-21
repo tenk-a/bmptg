@@ -100,8 +100,8 @@ unsigned    PngEncoder::write(unsigned char* dst, unsigned dstSz, const void* sr
             typ = PNG_COLOR_TYPE_GRAY;
         }
     } else if (bpp == 13) {
-		typ  = PNG_COLOR_TYPE_GRAY_ALPHA;
-		bpp  = 16;
+        typ  = PNG_COLOR_TYPE_GRAY_ALPHA;
+        bpp  = 16;
     }
     int pngbpp = (bpp <= 8) ? bpp : 8;
     png_set_IHDR(png_ptr, info_ptr, width, height, pngbpp, typ, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);

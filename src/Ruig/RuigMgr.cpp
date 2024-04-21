@@ -1,6 +1,6 @@
 /**
- *	@file RuigMgr.cpp
- *	@brief	画像類似順並べ処理
+ *  @file RuigMgr.cpp
+ *  @brief  画像類似順並べ処理
  *  @author Masashi Kitamura (tenka@6809.net)
  */
 #include "RuigMgr.hpp"
@@ -153,9 +153,9 @@ RuigFactor::RuigFactor(NamedImgPtr imgPtr, uint32_t fsize)
  #endif
     fsize_ = fsize;
     BppCnvImg const& img = imgPtr->img();
-	if (init(img.image(), img.width(), img.height(), img.bpp()) == false) {
-		DBGPRINTF("%s : Too small %d*%d bpp=%d\n", name_.c_str(), img.width(), img.height(), img.bpp());
-	}
+    if (init(img.image(), img.width(), img.height(), img.bpp()) == false) {
+        DBGPRINTF("%s : Too small %d*%d bpp=%d\n", name_.c_str(), img.width(), img.height(), img.bpp());
+    }
     origWidth_  = imgPtr->width();
     origHeight_ = imgPtr->height();
 }
@@ -168,8 +168,8 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
     enum { SSZ = 4 };
     enum { MSZ = 8 };
     enum { LSZ = 16 };
-	if (srcW < LSZ || srcH < LSZ)
-		return 0;
+    if (srcW < LSZ || srcH < LSZ)
+        return 0;
     assert(src);
     assert(srcW >= LSZ);
     assert(srcH >= LSZ);
@@ -215,79 +215,79 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
     total_t     totalMidY = 0;
     total_t     totalMidU = 0;
     total_t     totalMidV = 0;
-	unsigned    xb = 0, xe = 0;
-	unsigned    yb = 0, ye = 0;
+    unsigned    xb = 0, xe = 0;
+    unsigned    yb = 0, ye = 0;
     enum { K = 64 };
-	if (bpp == 8) {
-		for (unsigned dy = 0; dy < LSZ; ++dy) {
-			unsigned h = hig[dy];
-			yb  = ye;
-			ye += h;
-			xb  = xe = 0;
-			for (unsigned dx = 0; dx < LSZ; ++dx) {
-				unsigned w = wid[dx];
-				xb  = xe;
-				xe += w;
-				total_t ti = 0, tu = 0, tv = 0;
-				for (unsigned y = 0; y < h; ++y) {
-					uint8_t const* s = src + ((yb + y) * srcW + xb);
-					for (unsigned x = 0; x < w; ++x) {
-						unsigned  c = *s++;
-						uint32_t    i = K * (38444U * c + 19589U * c +  7503U * c             ) >> 16;
-						//uint32_t    u = K * (-21709 * c + -11059 * c +  32768 * c +  32768*255) >> 16;
-						//uint32_t    v = K * (-27439 * c +  32768 * c +  -5329 * c +  32768*255) >> 16;
-						ti += i;
-						//tu += u;
-						//tv += v;
-					}
-				}
-				Pix3&    p  = pixL[dy][dx];
-				total_t  sz = K * 255 * uint64_t(w) * h;
-				p[0] = ti = PIX_MAX * ti / sz;
-				p[1] = 0; //tu = PIX_MAX * tu / sz;
-				p[2] = 0; //tv = PIX_MAX * tv / sz;
-				totalMidY += ti;
-				//totalMidU += tu;
-				//totalMidV += tv;
-			}
-		}
-	} else {
-		for (unsigned dy = 0; dy < LSZ; ++dy) {
-			unsigned h = hig[dy];
-			yb  = ye;
-			ye += h;
-			xb  = xe = 0;
-			for (unsigned dx = 0; dx < LSZ; ++dx) {
-				unsigned w = wid[dx];
-				xb  = xe;
-				xe += w;
-				total_t ti = 0, tu = 0, tv = 0;
-				for (unsigned y = 0; y < h; ++y) {
-					uint8_t const* s = src + ((yb + y) * srcW + xb) * 3;
-					for (unsigned x = 0; x < w; ++x) {
-						int r = s[0];
-						int g = s[1];
-						int b = s[2];
-						s += 3;
-						uint32_t    i = K * (38444U * g + 19589U * r +  7503U * b             ) >> 16;
-						uint32_t    u = K * (-21709 * g + -11059 * r +  32768 * b +  32768*255) >> 16;
-						uint32_t    v = K * (-27439 * g +  32768 * r +  -5329 * b +  32768*255) >> 16;
-						ti += i;
-						tu += u;
-						tv += v;
-					}
-				}
-				Pix3&    p  = pixL[dy][dx];
-				total_t  sz = K * 255 * uint64_t(w) * h;
-				p[0] = ti = PIX_MAX * ti / sz;
-				p[1] = tu = PIX_MAX * tu / sz;
-				p[2] = tv = PIX_MAX * tv / sz;
-				totalMidY += ti;
-				totalMidU += tu;
-				totalMidV += tv;
-			}
-		}
-	}
+    if (bpp == 8) {
+        for (unsigned dy = 0; dy < LSZ; ++dy) {
+            unsigned h = hig[dy];
+            yb  = ye;
+            ye += h;
+            xb  = xe = 0;
+            for (unsigned dx = 0; dx < LSZ; ++dx) {
+                unsigned w = wid[dx];
+                xb  = xe;
+                xe += w;
+                total_t ti = 0, tu = 0, tv = 0;
+                for (unsigned y = 0; y < h; ++y) {
+                    uint8_t const* s = src + ((yb + y) * srcW + xb);
+                    for (unsigned x = 0; x < w; ++x) {
+                        unsigned  c = *s++;
+                        uint32_t    i = K * (38444U * c + 19589U * c +  7503U * c             ) >> 16;
+                        //uint32_t    u = K * (-21709 * c + -11059 * c +  32768 * c +  32768*255) >> 16;
+                        //uint32_t    v = K * (-27439 * c +  32768 * c +  -5329 * c +  32768*255) >> 16;
+                        ti += i;
+                        //tu += u;
+                        //tv += v;
+                    }
+                }
+                Pix3&    p  = pixL[dy][dx];
+                total_t  sz = K * 255 * uint64_t(w) * h;
+                p[0] = ti = PIX_MAX * ti / sz;
+                p[1] = 0; //tu = PIX_MAX * tu / sz;
+                p[2] = 0; //tv = PIX_MAX * tv / sz;
+                totalMidY += ti;
+                //totalMidU += tu;
+                //totalMidV += tv;
+            }
+        }
+    } else {
+        for (unsigned dy = 0; dy < LSZ; ++dy) {
+            unsigned h = hig[dy];
+            yb  = ye;
+            ye += h;
+            xb  = xe = 0;
+            for (unsigned dx = 0; dx < LSZ; ++dx) {
+                unsigned w = wid[dx];
+                xb  = xe;
+                xe += w;
+                total_t ti = 0, tu = 0, tv = 0;
+                for (unsigned y = 0; y < h; ++y) {
+                    uint8_t const* s = src + ((yb + y) * srcW + xb) * 3;
+                    for (unsigned x = 0; x < w; ++x) {
+                        int r = s[0];
+                        int g = s[1];
+                        int b = s[2];
+                        s += 3;
+                        uint32_t    i = K * (38444U * g + 19589U * r +  7503U * b             ) >> 16;
+                        uint32_t    u = K * (-21709 * g + -11059 * r +  32768 * b +  32768*255) >> 16;
+                        uint32_t    v = K * (-27439 * g +  32768 * r +  -5329 * b +  32768*255) >> 16;
+                        ti += i;
+                        tu += u;
+                        tv += v;
+                    }
+                }
+                Pix3&    p  = pixL[dy][dx];
+                total_t  sz = K * 255 * uint64_t(w) * h;
+                p[0] = ti = PIX_MAX * ti / sz;
+                p[1] = tu = PIX_MAX * tu / sz;
+                p[2] = tv = PIX_MAX * tv / sz;
+                totalMidY += ti;
+                totalMidU += tu;
+                totalMidV += tv;
+            }
+        }
+    }
     pix_t midY = totalMidY / (LSZ * LSZ);
     pix_t midU = totalMidU / (LSZ * LSZ);
     pix_t midV = totalMidV / (LSZ * LSZ);
@@ -301,13 +301,13 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
     DBGPRINTF("\tmy=%u mu=%u mv=%u (%u %u %u)\n", thresholdY_, thresholdU_, thresholdV_, packKey_.thresholdY_, packKey_.thresholdU_, packKey_.thresholdV_);
 
 #if 1
-	for (unsigned y = 0; y < LSZ; ++y) {
-		for (unsigned x = 0; x < LSZ; ++x) {
-			DBGPRINTF( "%x,",pixL[y][x][0]>>6);
-		}
-		DBGPRINTF("\n");
-	}
-	DBGPRINTF("\n");
+    for (unsigned y = 0; y < LSZ; ++y) {
+        for (unsigned x = 0; x < LSZ; ++x) {
+            DBGPRINTF( "%x,",pixL[y][x][0]>>6);
+        }
+        DBGPRINTF("\n");
+    }
+    DBGPRINTF("\n");
 #endif
 
     // 16x16 を元に 8x8 縮小をつくり、類似チェック用bitパターンを作る
@@ -342,13 +342,13 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
         DBGPRINTF("\tptn8: %016llx %016llx %016llx\n", ptnY8x8_, ptnU8x8_, ptnV8x8_);
     }
 #if 1
-	for (unsigned y = 0; y < MSZ; ++y) {
-		for (unsigned x = 0; x < MSZ; ++x) {
-			DBGPRINTF( "%x,",pixM[y][x][0]>>4);
-		}
-		DBGPRINTF("\n");
-	}
-	DBGPRINTF("\n");
+    for (unsigned y = 0; y < MSZ; ++y) {
+        for (unsigned x = 0; x < MSZ; ++x) {
+            DBGPRINTF( "%x,",pixM[y][x][0]>>4);
+        }
+        DBGPRINTF("\n");
+    }
+    DBGPRINTF("\n");
 #endif
 
     // 8x8 を元に 4x4 縮小をつくり、類似チェック用bitパターンと 16階調パターンを作る.
@@ -463,7 +463,7 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
         ptnY8x8sub_ = ptnS;
         DBGPRINTF("\tsub8: %016llx\n", ptnS);
     }
-	return true;
+    return true;
 }
 
 /** デバッグ用のログ表示

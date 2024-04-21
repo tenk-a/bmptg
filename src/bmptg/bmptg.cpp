@@ -332,7 +332,7 @@ int Opts::scan(const char *a)
                 o->fullColFlg      = 1;
                 o->bpp             = 8;
                 o->alpBitForBpp8   = c;
-                o->decreaseColorMode = DCM_MC_YUV;	// とりあえずyuvなメディアンカット法で減色することにする
+                o->decreaseColorMode = DCM_MC_YUV;  // とりあえずyuvなメディアンカット法で減色することにする
             }
         }
         break;
@@ -455,7 +455,7 @@ int Opts::scan(const char *a)
                 o->decreaseColorMode = DCM_FIX_FILE;
                 o->fullColFlg        = 1;
             } else if (TOUPPER(*p) == 'M') {    // -cpm
-				++p;
+                ++p;
                 o->decreaseColorMode2 = strToUI(p,0);
             } else {
                 o->fullColFlg      = 1;
@@ -510,12 +510,12 @@ int Opts::scan(const char *a)
         }
         break;
 
-    case 'E':	// -e
+    case 'E':   // -e
         c = *p++, c = TOUPPER(c);
-        if (c == 'D') {	// -ed
+        if (c == 'D') { // -ed
             this->dstExt = strdupE(p);
             o->exDstExt = strdupE(p);
-        } else if (c == 'S') {	// -es
+        } else if (c == 'S') {  // -es
             this->srcExt = strdupE(p);
         } else {
             goto OPT_ERR;
@@ -728,34 +728,34 @@ int Opts::scan(const char *a)
         c = TOUPPER(c);
         switch (c) {
         case 'D':   //-xd
-			{
-				o->fullColFlg      = 1;
-				if (*p == 'A' || *p == 'a') {   // -xda
-					o->ditAlpFlg = 1;
-					p++;
-				}
-				unsigned errDif = 0;
-				if (*p == 'E' || *p == 'e') {	// -xde 誤差拡散.
-					errDif |= 0x8000;
-					p++;
-				}
-				if (*p == 'P' || *p == 'p') {	// -xdc 誤差拡散処理側のパターンディザを使う.
-					errDif |= 0x4000;
-					p++;
-				}
-				o->ditBpp = strToI(p,0);
-				if (o->ditBpp <= 0)
-					o->ditBpp = -1;
-				else if (o->ditBpp >= 24)
-					err_abortMsg("-xd[%d] だとディザを行えません\n");
-				o->ditTyp = errDif ? 0 /*none*/ : 2 /* 2x2 */;
-				if (*p) {
-					p++;
-					o->ditTyp = strToI(p,0);
-				}
-				if (errDif)
-					o->ditTyp |= errDif;
-			}
+            {
+                o->fullColFlg      = 1;
+                if (*p == 'A' || *p == 'a') {   // -xda
+                    o->ditAlpFlg = 1;
+                    p++;
+                }
+                unsigned errDif = 0;
+                if (*p == 'E' || *p == 'e') {   // -xde 誤差拡散.
+                    errDif |= 0x8000;
+                    p++;
+                }
+                if (*p == 'P' || *p == 'p') {   // -xdc 誤差拡散処理側のパターンディザを使う.
+                    errDif |= 0x4000;
+                    p++;
+                }
+                o->ditBpp = strToI(p,0);
+                if (o->ditBpp <= 0)
+                    o->ditBpp = -1;
+                else if (o->ditBpp >= 24)
+                    err_abortMsg("-xd[%d] だとディザを行えません\n");
+                o->ditTyp = errDif ? 0 /*none*/ : 2 /* 2x2 */;
+                if (*p) {
+                    p++;
+                    o->ditTyp = strToI(p,0);
+                }
+                if (errDif)
+                    o->ditTyp |= errDif;
+            }
             break;
 
         case 'E':   //-xe

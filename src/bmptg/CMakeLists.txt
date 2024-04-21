@@ -5,11 +5,11 @@ project(bmptg)
 # set(CMAKE_CXX_STANDARD 11)
 # set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(ROOT_DIR "${CMAKE_SOURCE_DIR}/../..")
+set(ROOT_DIR       "${CMAKE_SOURCE_DIR}/../..")
 set(THIRDPARTY_DIR "${ROOT_DIR}/thirdparty")
-set(SRC_DIR "${CMAKE_SOURCE_DIR}/..")
-set(PNG_DIR "${THIRDPARTY_DIR}/libpng")
-set(ZLIB_DIR "${THIRDPARTY_DIR}/zlib")
+set(SRC_DIR        "${CMAKE_SOURCE_DIR}/..")
+set(PNG_DIR        "${THIRDPARTY_DIR}/libpng")
+set(ZLIB_DIR       "${THIRDPARTY_DIR}/zlib")
 
 if(WIN32 AND MSVC)
 	# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -utf-8")
@@ -21,7 +21,7 @@ if(WIN32 AND MSVC)
 	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 
 	# set(THIRDPARTY_LIB_DIR ${THIRDPARTY_DIR}/lib/${CMAKE_GENERATOR_PLATFORM}_${CMAKE_BUILD_TYPE})
-	set(THIRDPARTY_LIB_DIR      ${THIRDPARTY_DIR}/lib/x64_Release)
+	set(THIRDPARTY_LIB_DIR   ${THIRDPARTY_DIR}/lib/x64_Release)
 
 	set(THIRDPARTY_JPEG_LIB_DIR ${THIRDPARTY_LIB_DIR}/libjpeg-turbo)
 	set(THIRDPARTY_PNG_LIB_DIR  ${THIRDPARTY_LIB_DIR}/libpng)
@@ -41,7 +41,7 @@ else()
 #		add_compile_options(-finput-charset=utf-8 -fexec-charset=utf-8 -fwide-exec-charset=utf-32LE)
 #	endif()
 #
-#	set(THIRDPARTY_LIB_DIR      ${THIRDPARTY_DIR}/lib)
+#	set(THIRDPARTY_LIB_DIR  ${THIRDPARTY_DIR}/lib)
 #
 #	set(THIRDPARTY_JPEG_LIB_DIR ${THIRDPARTY_LIB_DIR}/libjpeg-turbo)
 #	set(THIRDPARTY_PNG_LIB_DIR  ${THIRDPARTY_LIB_DIR}/libpng)

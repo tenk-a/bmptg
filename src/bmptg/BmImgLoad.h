@@ -1,21 +1,21 @@
 /**
- *	@file	BmImgLoad.h
- *	@brief	各種フォーマット(bmp,tga ..)のロード
- *	@author	Masashi Kitamura
- *	@date	2000,2007
+ *  @file   BmImgLoad.h
+ *  @brief  各種フォーマット(bmp,tga ..)のロード
+ *  @author Masashi Kitamura
+ *  @date   2000,2007
  */
 
 #ifndef BMIMGLOAD_H
 #define BMIMGLOAD_H
 
 typedef enum {
-	BM_FMT_NON=0,
-	BM_FMT_BMP,		///< bmp
-	BM_FMT_TGA,		///< targa
-	BM_FMT_BETA,	///< non-header raw
-	BM_FMT_JPG,		///< jpeg
-	BM_FMT_PNG,		///< peng
-	//BM_FMT_NUM
+    BM_FMT_NON=0,
+    BM_FMT_BMP,     ///< bmp
+    BM_FMT_TGA,     ///< targa
+    BM_FMT_BETA,    ///< non-header raw
+    BM_FMT_JPG,     ///< jpeg
+    BM_FMT_PNG,     ///< peng
+    //BM_FMT_NUM
 } BM_FMT;
 
 

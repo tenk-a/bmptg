@@ -1,8 +1,8 @@
 /**
- *	@file	pix8.h
- *	@biref	8ビット色画像をいろいろ変換
- *	@author	Masashi Kitamura
- *	@date	2000
+ *  @file   pix8.h
+ *  @biref  8ビット色画像をいろいろ変換
+ *  @author Masashi Kitamura
+ *  @date   2000
  */
 #ifndef PIX8_H
 #define PIX8_H
@@ -36,4 +36,4 @@ int pix8_hasPixOutOfIdx(uint8_t const* src, int w, int h, int idx);
 };
 #endif
 
-#endif	/* PIX8_H */
+#endif  /* PIX8_H */

@@ -17,18 +17,18 @@
 
 // Decrease Color Mode
 enum Dcm_t {
-	DCM_UNKOWN      = 0,
-	DCM_FIX_JP		= 1,	// 日本の80年代パソコン由来の 16色,256色(G3R3B2)固定パレット.
-	DCM_FIX_WIN 	= 2,	// 固定 Winシステムパレット
-	DCM_MC_YUV  	= 3,	// メディアンカット(yuv)
-	DCM_MC_RGB  	= 4,	// メディアンカット(rgb)
-	DCM_HIST    	= 5,	// 頻度順 clut
-	DCM_FIX_FILE    = 6,	// 固定外部 clut ファイル
-	DCM_FIX_XTERM	= 7,	// 固定 xterm256.
-	DCM_FIX_G6R6B6C40= 8,	// 固定 rgb 6*6*6+40.
-	//DCM_FIX_OTAMESHI1= 9,	// お試し clut
-	//DCM_FIX_OTAMESHI2= 10,	// お試し clut
-	DCM_FIX_MAX,
+    DCM_UNKOWN      = 0,
+    DCM_FIX_JP      = 1,    // 日本の80年代パソコン由来の 16色,256色(G3R3B2)固定パレット.
+    DCM_FIX_WIN     = 2,    // 固定 Winシステムパレット
+    DCM_MC_YUV      = 3,    // メディアンカット(yuv)
+    DCM_MC_RGB      = 4,    // メディアンカット(rgb)
+    DCM_HIST        = 5,    // 頻度順 clut
+    DCM_FIX_FILE    = 6,    // 固定外部 clut ファイル
+    DCM_FIX_XTERM   = 7,    // 固定 xterm256.
+    DCM_FIX_G6R6B6C40= 8,   // 固定 rgb 6*6*6+40.
+    //DCM_FIX_OTAMESHI1= 9, // お試し clut
+    //DCM_FIX_OTAMESHI2= 10,    // お試し clut
+    DCM_FIX_MAX,
 };
 
 struct ConvOne_Opts {
@@ -146,8 +146,8 @@ public:
 
     void readFixedClut(const char* fname);
     bool isFixedClut() const {
-		return decreaseColorMode == DCM_FIX_JP || decreaseColorMode == DCM_FIX_WIN || decreaseColorMode >= DCM_FIX_XTERM;
-	}
+        return decreaseColorMode == DCM_FIX_JP || decreaseColorMode == DCM_FIX_WIN || decreaseColorMode >= DCM_FIX_XTERM;
+    }
 };
 
 
@@ -198,7 +198,7 @@ private:
     void resizeImage2nd();
     void aptRect();
     void patternDither();
-	void errorDiffusion1b(int dpp);
+    void errorDiffusion1b(int dpp);
     void alphaBlendByColor();
     void setDstBpp();
     void checkSrcDstBpp();

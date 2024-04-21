@@ -233,7 +233,7 @@ bool HuffmanDecode<T,B>::decodeSet(std::uint8_t const* src, std::size_t srcSize)
     return true;
 }
 
-/** 
+/**
  */
 template<class T, unsigned B>
 std::size_t HuffmanDecode<T,B>::decodeGet(T* dst, std::size_t dstSize) {

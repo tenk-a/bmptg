@@ -50,9 +50,9 @@ private:
     typedef unsigned char   pix8_t;
     typedef unsigned short  pix16_t;
  #if defined _MSC_VER || defined __DMC__ || defined __WATCOMC__ || __BORLANDC__
-	typedef unsigned __int64 ulonglong_t;
+    typedef unsigned __int64 ulonglong_t;
  #else
-	typedef unsigned long long ulonglong_t;
+    typedef unsigned long long ulonglong_t;
  #endif
 
     bool init(pix8_t* dstPic, const pix32_t* srcPic, unsigned w, unsigned h, unsigned dstClut[], unsigned clutNum, int* pAlpNum);
@@ -529,10 +529,10 @@ int DecreaseColorMC_T<DMY>::convMain(int no, int num) {
     unsigned    maxU = minU;
     unsigned    minV = pixDat->v;
     unsigned    maxV = minV;
-    ulonglong_t	sumA = minA;
+    ulonglong_t sumA = minA;
     ulonglong_t sumY = minY;
-    ulonglong_t	sumU = minU;
-    ulonglong_t	sumV = minV;
+    ulonglong_t sumU = minU;
+    ulonglong_t sumV = minV;
 
     ulonglong_t sum  = 1;
     do {

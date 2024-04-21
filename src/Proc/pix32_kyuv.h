@@ -63,7 +63,7 @@ typedef union pix32_kyuv_t {
 
 enum {
     PIX32_KYUV_BIT     = 13,      // 11 .. 14 を想定 (8..10 bitだとrgbに戻す時の誤差がおきやすい)
-    PIX32_KYUV_MAX	   = (1 << PIX32_KYUV_BIT) - 1,
+    PIX32_KYUV_MAX     = (1 << PIX32_KYUV_BIT) - 1,
     PIX32_KYUV_SHIFT_K = PIX32_KYUV_BIT - 8,
     PIX32_KYUV_MUL_K   = 1 << PIX32_KYUV_SHIFT_K,
 };
@@ -78,8 +78,8 @@ enum {
 #define PIX32_KYUV_TO_RGB_R(kY__, kU__, kV__)       (((int)( 65536 * (kY__)                   +  91881 * (kV__)) + PIX32_KYUV_MUL_K * 65536 / 2) >> (PIX32_KYUV_SHIFT_K + 16))
 #define PIX32_KYUV_TO_RGB_B(kY__, kU__, kV__)       (((int)( 65536 * (kY__) + 116130 * (kU__)                  ) + PIX32_KYUV_MUL_K * 65536 / 2) >> (PIX32_KYUV_SHIFT_K + 16))
 
-#define PIX32_KYUV_U_TO_Cb(u)						((u) - 128 * PIX32_KYUV_MUL_K)
-#define PIX32_KYUV_V_TO_Cr(v)						((v) - 128 * PIX32_KYUV_MUL_K)
+#define PIX32_KYUV_U_TO_Cb(u)                       ((u) - 128 * PIX32_KYUV_MUL_K)
+#define PIX32_KYUV_V_TO_Cr(v)                       ((v) - 128 * PIX32_KYUV_MUL_K)
 
 
 /// kyuv 値を rgb 値に変換して代入するマクロ. (誤差の扱いのため計算中で使う変数の型を引数で指定)
@@ -119,7 +119,7 @@ extern "C" {
 void    pix32_kyuvFromRgb(pix32_kyuv_t *dst, unsigned dstW, unsigned dstH, unsigned ofsX, unsigned ofsY, const unsigned *src, unsigned srcW, unsigned srcH);
 
 /// ratio=0.0～1.0 の率で、画像の輝度を変更.
-void	pix32_changeTone(unsigned *pix, unsigned w, unsigned h, double ratio);
+void    pix32_changeTone(unsigned *pix, unsigned w, unsigned h, double ratio);
 
 
 #ifdef __cplusplus

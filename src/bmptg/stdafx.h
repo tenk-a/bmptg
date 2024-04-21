@@ -1,10 +1,10 @@
 /**
- *	@file	stdafx.h
- *	@brief	全てのソースで共通に読み込むヘッダ.
- *	@author	Masashi KITAMURA
- *	@note
- *		Visual C/C++ でのプリコンパイル用ヘッダ.
- *		すべてのソースの先頭でincludeする必要がある(T T)
+ *  @file   stdafx.h
+ *  @brief  全てのソースで共通に読み込むヘッダ.
+ *  @author Masashi KITAMURA
+ *  @note
+ *      Visual C/C++ でのプリコンパイル用ヘッダ.
+ *      すべてのソースの先頭でincludeする必要がある(T T)
  */
 #ifndef STDAFX_H
 #define STDAFX_H
@@ -25,4 +25,4 @@
 
 
 
-#endif	// STDAFX_H
+#endif  // STDAFX_H

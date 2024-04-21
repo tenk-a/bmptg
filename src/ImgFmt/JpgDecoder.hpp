@@ -47,11 +47,11 @@ public:
     /// メモリ上のjpgデータを設定. ポインタを保持するだけなのでread()を終える前にbinDataを破壊しないこと.
     bool        setData(const void* binData, unsigned binDataSize, bool thumbnail=false);
 
-    unsigned    bpp()        const { return bpp_; }         	///< ビット/ピクセル. 24のみ.
-    unsigned    width()      const;                         	///< 横幅.
-    unsigned    height()     const;                         	///< 縦幅.
-    unsigned    widthByte()  const { return width()*bpp_>>3; }	///< 横バイト数.
-    unsigned    widthByte(unsigned algn) const;             	///< algnバイトにアライメント済の横幅.
+    unsigned    bpp()        const { return bpp_; }             ///< ビット/ピクセル. 24のみ.
+    unsigned    width()      const;                             ///< 横幅.
+    unsigned    height()     const;                             ///< 縦幅.
+    unsigned    widthByte()  const { return width()*bpp_>>3; }  ///< 横バイト数.
+    unsigned    widthByte(unsigned algn) const;                 ///< algnバイトにアライメント済の横幅.
 
     unsigned    imageByte()  const { return widthByte() * height(); }
 
@@ -61,10 +61,10 @@ public:
     /// malloc したメモリに画像を入れて返す.
     void*       read(unsigned widAlgn=1, unsigned dir=0);
 
-	unsigned	originalWidth() const { return originalWidth_; }	// thumbnail指定時の元サイズ
-	unsigned	originalHeight() const { return originalHeight_; }	// thumbnail指定時の元サイズ
+    unsigned    originalWidth() const { return originalWidth_; }    // thumbnail指定時の元サイズ
+    unsigned    originalHeight() const { return originalHeight_; }  // thumbnail指定時の元サイズ
 
-	unsigned const*	clut() const { return gray_clut_; }
+    unsigned const* clut() const { return gray_clut_; }
 
 private:
     struct jpeg_decompress_struct*  info_;
@@ -73,10 +73,10 @@ private:
     unsigned                        binDataSize_;
     bool                            closeRq_;
     bool                            thumbnail_;
-	unsigned						originalWidth_;
-	unsigned						originalHeight_;
-	int								bpp_;
-	unsigned						gray_clut_[256];
+    unsigned                        originalWidth_;
+    unsigned                        originalHeight_;
+    int                             bpp_;
+    unsigned                        gray_clut_[256];
 };
 
 

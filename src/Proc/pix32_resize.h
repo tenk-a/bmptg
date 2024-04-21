@@ -24,14 +24,14 @@
  */
 inline void pix32_resize(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH, int type, int hasAlpha)
 {
-	switch (type) {
-	case 0:	pix32_resizeNearestNeighbor(dst, dstW, dstH, src, srcW, srcH);	break;
-	case 1:	pix32_resizeBilinear(dst, dstW, dstH, src, srcW, srcH);	break;
-	case 2: pix32_resizeBicubic( dst, dstW, dstH, src, srcW, srcH, hasAlpha); break;
-	case 3: pix32_resizeSpline36(dst, dstW, dstH, src, srcW, srcH, hasAlpha); break;
-	case 4: pix32_resizeLanczos3(dst, dstW, dstH, src, srcW, srcH, hasAlpha); break;
-	default: assert(0);
-	}
+    switch (type) {
+    case 0: pix32_resizeNearestNeighbor(dst, dstW, dstH, src, srcW, srcH);  break;
+    case 1: pix32_resizeBilinear(dst, dstW, dstH, src, srcW, srcH); break;
+    case 2: pix32_resizeBicubic( dst, dstW, dstH, src, srcW, srcH, hasAlpha); break;
+    case 3: pix32_resizeSpline36(dst, dstW, dstH, src, srcW, srcH, hasAlpha); break;
+    case 4: pix32_resizeLanczos3(dst, dstW, dstH, src, srcW, srcH, hasAlpha); break;
+    default: assert(0);
+    }
 }
 
 // ===========================================================================
