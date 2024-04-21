@@ -22,12 +22,12 @@
 #include <stdlib.h>
 
 #if 1 //def USE_JPG_TURBO
-#include "libjpeg-turbo/jpeglib.h"
+#include "jpeglib.h"
 #elif defined USE_MOZJPEG
-#include "mozjpeg/jpeglib.h"
+#include "jpeglib.h"
 #else
 extern "C" {
-#include "jpeg/jpeglib.h"
+#include "jpeglib.h"
 }
 #endif
 
@@ -138,10 +138,10 @@ JpgDecoder::JpgDecoder()
     ,   binDataSize_(0)
     ,   closeRq_(0)
     ,   thumbnail_(false)
-	,	originalWidth_(0)
-	,	originalHeight_(0)
+    ,   originalWidth_(0)
+    ,   originalHeight_(0)
 {
-	memset(gray_clut_, 0, sizeof gray_clut_);
+    memset(gray_clut_, 0, sizeof gray_clut_);
 }
 
 
@@ -153,9 +153,9 @@ JpgDecoder::JpgDecoder(const void* binData, unsigned binDataSize, bool thumbnail
     ,   binDataSize_(0)
     ,   closeRq_(0)
     ,   thumbnail_(false)
-	,	originalWidth_(0)
-	,	originalHeight_(0)
-	,	bpp_(0)
+    ,   originalWidth_(0)
+    ,   originalHeight_(0)
+    ,   bpp_(0)
 {
     setData(binData, binDataSize, thumbnail);
 }
@@ -221,13 +221,13 @@ bool    JpgDecoder::setData(const void* binData, unsigned binDataSize, bool thum
     jpgOnMem_src(info_, (void*)binData, binDataSize );
     jpeg_read_header(info_, TRUE);
 
-	int w = info_->image_width;
+    int w = info_->image_width;
     int h = info_->image_height;
-	originalWidth_	= w;
-	originalHeight_	= h;
-	enum { K = 1 << 8 };
+    originalWidth_  = w;
+    originalHeight_ = h;
+    enum { K = 1 << 8 };
     if (thumbnail && w >= 2*K && h >= 2*K) {
-		thumbnail_			= thumbnail;
+        thumbnail_          = thumbnail;
         info_->dct_method   = (J_DCT_METHOD)JDCT_IFAST;
         info_->scale_num    = 1;
         info_->scale_denom  = (w >= 8*K && h >= 8*K) ? 8 : (w >= 4*K && 4*K >= 256) ? 4 : 2;
@@ -235,16 +235,16 @@ bool    JpgDecoder::setData(const void* binData, unsigned binDataSize, bool thum
 
     jpeg_start_decompress(info_);
 
-	bpp_ = info_->output_components * 8;
-	if (bpp_ != 24 && bpp_ != 8) {
-		assert(bpp_ == 24 || bpp_ == 8);
-		bpp_ = 24;
-	}
-	if (bpp_ == 8) {
-		for (unsigned i = 0; i < 256; ++i) {
-			gray_clut_[i] = (0xFF<<24)|(i << 16)|(i << 8)|i;
-		}
-	}
+    bpp_ = info_->output_components * 8;
+    if (bpp_ != 24 && bpp_ != 8) {
+        assert(bpp_ == 24 || bpp_ == 8);
+        bpp_ = 24;
+    }
+    if (bpp_ == 8) {
+        for (unsigned i = 0; i < 256; ++i) {
+            gray_clut_[i] = (0xFF<<24)|(i << 16)|(i << 8)|i;
+        }
+    }
 
     closeRq_            = true;         // ˆ—’†‚¾‚©‚çÅŒã‚Éclose‚ª•K—v..
     return true;
