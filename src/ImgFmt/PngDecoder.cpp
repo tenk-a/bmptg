@@ -1,17 +1,17 @@
 /**
  *  @file PngDecoder.cpp
- *  @brief  ƒƒ‚ƒŠã‚Ìjpg‰æ‘œƒf[ƒ^‚ğ“WŠJ‚·‚é.
+ *  @brief  ãƒ¡ãƒ¢ãƒªä¸Šã®jpgç”»åƒãƒ‡ãƒ¼ã‚¿ã‚’å±•é–‹ã™ã‚‹.
  *  @author Masashi KITAMURA
  *  @note
  *
- *      - g‚¢•û
- *          - setData(binData,size) ‚Åƒƒ‚ƒŠ[ã‚Ìjpgƒf[ƒ^‚ğİ’è‚µA
- *            ‚»‚ÌŒã read()‚·‚ê‚Îmalloc‚µ‚½ƒƒ‚ƒŠ‚É24ƒrƒbƒgF‰æ‘œ‚ğ“¾‚é.
- *          - ‚ ‚é‚¢‚ÍsetData()Œã, ƒTƒCƒYwidthByte()*height() ˆÈã‚Ìƒƒ‚ƒŠ‚ğ
- *            ŒÄ‚ÑŒ³‚Å—pˆÓ‚µ‚Äread(pix, ...)‚ğg‚¤.
+ *      - ä½¿ã„æ–¹
+ *          - setData(binData,size) ã§ãƒ¡ãƒ¢ãƒªãƒ¼ä¸Šã®jpgãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã—ã€
+ *            ãã®å¾Œ read()ã™ã‚Œã°mallocã—ãŸãƒ¡ãƒ¢ãƒªã«24ãƒ“ãƒƒãƒˆè‰²ç”»åƒã‚’å¾—ã‚‹.
+ *          - ã‚ã‚‹ã„ã¯setData()å¾Œ, ã‚µã‚¤ã‚ºwidthByte()*height() ä»¥ä¸Šã®ãƒ¡ãƒ¢ãƒªã‚’
+ *            å‘¼ã³å…ƒã§ç”¨æ„ã—ã¦read(pix, ...)ã‚’ä½¿ã†.
  */
 
-#include <stdlib.h>     // calloc‚ğƒwƒbƒ_‚Åg—p‚·‚é‚½‚ß.
+#include <stdlib.h>     // callocã‚’ãƒ˜ãƒƒãƒ€ã§ä½¿ç”¨ã™ã‚‹ãŸã‚.
 #include <string.h>
 #include <assert.h>
 
@@ -52,7 +52,7 @@ PngDecoder::PngDecoder(const void* binData, unsigned binDataSize)
 }
 
 
-/// “à•”‚ÅŠm•Û‚µ‚Ä‚¢‚éƒƒ‚ƒŠ‚ğŠJ•ú.
+/// å†…éƒ¨ã§ç¢ºä¿ã—ã¦ã„ã‚‹ãƒ¡ãƒ¢ãƒªã‚’é–‹æ”¾.
 void    PngDecoder::release()
 {
     if (png_ptr_) {
@@ -62,7 +62,7 @@ void    PngDecoder::release()
 }
 
 
-unsigned    PngDecoder::imageByte()  const {    ///< “WŠJŒã‚ÌƒoƒCƒg”‚ğ•Ô‚·.
+unsigned    PngDecoder::imageByte()  const {    ///< å±•é–‹å¾Œã®ãƒã‚¤ãƒˆæ•°ã‚’è¿”ã™.
     unsigned wb = widthByte(align_);
     return wb * height_;
 }
@@ -74,7 +74,7 @@ void        PngDecoder::setWidthAlign(unsigned align) {
 }
 
 
-/// algnƒoƒCƒg‚ÉƒAƒ‰ƒCƒƒ“ƒgÏ‚Ì‰¡•ƒoƒCƒg”.
+/// algnãƒã‚¤ãƒˆã«ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆæ¸ˆã®æ¨ªå¹…ãƒã‚¤ãƒˆæ•°.
 unsigned    PngDecoder::widthByte(unsigned algn) const
 {
     if (algn == 0)
@@ -94,7 +94,7 @@ bool PngDecoder::isSupported(const void *binData) {
 }
 
 
-/// ƒƒ‚ƒŠã‚Ìpngƒf[ƒ^‚ğİ’è. ƒ|ƒCƒ“ƒ^‚ğ•Û‚·‚é‚¾‚¯‚È‚Ì‚Åread()‚ğI‚¦‚é‘O‚ÉbinData‚ğ”j‰ó‚µ‚È‚¢‚±‚Æ.
+/// ãƒ¡ãƒ¢ãƒªä¸Šã®pngãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®š. ãƒã‚¤ãƒ³ã‚¿ã‚’ä¿æŒã™ã‚‹ã ã‘ãªã®ã§read()ã‚’çµ‚ãˆã‚‹å‰ã«binDataã‚’ç ´å£Šã—ãªã„ã“ã¨.
 bool    PngDecoder::setData(const void* binData, unsigned binDataSize) throw()
 {
     if (isSupported(binData) == false)
@@ -132,15 +132,15 @@ bool    PngDecoder::setData(const void* binData, unsigned binDataSize) throw()
     orgBpp_     = bpp_;
 
     switch (color_type_) {
-    case 0: // ƒOƒŒ[ƒXƒP[ƒ‹. bpp=1,2,4,8,16. clut‰æˆµ‚¢‚É‚·‚é.
+    case 0: // ã‚°ãƒ¬ãƒ¼ã‚¹ã‚±ãƒ¼ãƒ«. bpp=1,2,4,8,16. clutç”»æ‰±ã„ã«ã™ã‚‹.
         //x orgBpp_     = bpp_;
-        if (bpp_ > 8)   // 16‚ÍŒÄ‚Ñ‘¤ƒ‹[ƒ`ƒ“‚ª–¢‘Î‰‚Å8ˆµ‚¢‚É‚·‚é.
+        if (bpp_ > 8)   // 16ã¯å‘¼ã³å´ãƒ«ãƒ¼ãƒãƒ³ãŒæœªå¯¾å¿œã§8æ‰±ã„ã«ã™ã‚‹.
             bpp_ = 8;
         clutSize_   = 1 << bpp_;
         haveAlpha_ = png_get_valid(png_ptr_, info_ptr_, PNG_INFO_tRNS) != 0;
         break;
 
-    case 2: // rgb True Color. bpp=8,16. rgb888‚Ì‚İ‚É‚·‚é.
+    case 2: // rgb True Color. bpp=8,16. rgb888ã®ã¿ã«ã™ã‚‹.
         orgBpp_     = bpp_ * 3;
         bpp_        = 24;   // 3*8
         haveAlpha_  = png_get_valid(png_ptr_, info_ptr_, PNG_INFO_tRNS) != 0;
@@ -148,10 +148,10 @@ bool    PngDecoder::setData(const void* binData, unsigned binDataSize) throw()
             bpp_    = 32;
         break;
 
-    case 3: // clut. ƒCƒ“ƒfƒbƒNƒXƒJƒ‰[ 1,2,4,8.  bpp=2‚Í”÷–­‚¾‚ª‚±‚Ìê‚Å‚Í‚»‚Ì‚Ü‚Ü‚É‚µ‚Æ‚­.
+    case 3: // clut. ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚«ãƒ©ãƒ¼ 1,2,4,8.  bpp=2ã¯å¾®å¦™ã ãŒã“ã®å ´ã§ã¯ãã®ã¾ã¾ã«ã—ã¨ã.
         {
             //x orgBpp_     = bpp_;
-            if (bpp_ > 8)   // 16‚ÍŒÄ‚Ñ‘¤ƒ‹[ƒ`ƒ“‚ª–¢‘Î‰‚Å8ˆµ‚¢‚É‚·‚é.
+            if (bpp_ > 8)   // 16ã¯å‘¼ã³å´ãƒ«ãƒ¼ãƒãƒ³ãŒæœªå¯¾å¿œã§8æ‰±ã„ã«ã™ã‚‹.
                 bpp_ = 8;
             png_colorp  palette     = 0;
             png_get_PLTE(png_ptr_, info_ptr_, &palette, (int*)&clutSize_);
@@ -159,14 +159,14 @@ bool    PngDecoder::setData(const void* binData, unsigned binDataSize) throw()
         }
         break;
 
-    case 4: // ƒ¿•t‚«ƒOƒŒƒCƒXƒP[ƒ‹. argb‰æ‘œ‚Æ‚µ‚Äˆµ‚¤.
+    case 4: // Î±ä»˜ãã‚°ãƒ¬ã‚¤ã‚¹ã‚±ãƒ¼ãƒ«. argbç”»åƒã¨ã—ã¦æ‰±ã†.
         haveAlpha_  = true;
         orgBpp_     = bpp_ * 2;
         bpp_        = 32;
         png_set_gray_to_rgb(png_ptr_);
         break;
 
-    case 6: // argb. ƒ¿•t‚ÌTrue Color. 8888‚Ì‚İ‚É‚µ‚Æ‚­.
+    case 6: // argb. Î±ä»˜ã®True Color. 8888ã®ã¿ã«ã—ã¨ã.
         haveAlpha_  = true;
         orgBpp_     = bpp_ * 4;
         bpp_        = 32;
@@ -180,11 +180,11 @@ bool    PngDecoder::setData(const void* binData, unsigned binDataSize) throw()
 }
 
 
-/** ARGB*clutSize‚Ìclut‚ğæ“¾.
+/** ARGB*clutSizeã®clutã‚’å–å¾—.
  */
 unsigned PngDecoder::getClut(unsigned* clut, unsigned clutSize)
 {
-    // clut€”õ.
+    // clutæº–å‚™.
     unsigned plttN = 1 << bpp_;
     if (bpp_ <= 8) {
         if (clutSize == 0)
@@ -227,7 +227,7 @@ unsigned PngDecoder::getClut(unsigned* clut, unsigned clutSize)
         }
         break;
 
-    case 3: // r,g,bƒpƒŒƒbƒg.
+    case 3: // r,g,bãƒ‘ãƒ¬ãƒƒãƒˆ.
         {
             assert(clut != NULL);
             png_colorp  palette     = 0;
@@ -238,7 +238,7 @@ unsigned PngDecoder::getClut(unsigned* clut, unsigned clutSize)
                     clut[i] = ARGB(0xFF, palette->red, palette->green, palette->blue);
                     ++palette;
                 }
-                // ƒ¿’l‚ª‚ ‚ê‚Î”½‰f.
+                // Î±å€¤ãŒã‚ã‚Œã°åæ˜ .
                 if (png_get_valid(png_ptr_, info_ptr_, PNG_INFO_tRNS)) {
                     int                 n = 0;
                     png_bytep           p = 0;
@@ -253,7 +253,7 @@ unsigned PngDecoder::getClut(unsigned* clut, unsigned clutSize)
                     }
                 }
             }
-          #if 1 // •K—v‚È‚µ?‚Æ‚¢‚¤‚©ŠÔˆá‚¢?
+          #if 1 // å¿…è¦ãªã—?ã¨ã„ã†ã‹é–“é•ã„?
             else if (png_get_valid(png_ptr_, info_ptr_, PNG_INFO_sPLT)) {
                 png_sPLT_tp     p = 0;
                 int n = png_get_sPLT(png_ptr_, info_ptr_, &p);
@@ -279,10 +279,10 @@ unsigned PngDecoder::getClut(unsigned* clut, unsigned clutSize)
 }
 
 
-/** malloc ‚µ‚½ƒƒ‚ƒŠ‚É‰æ‘œ‚ğ“ü‚ê‚Ä•Ô‚·.
- *  @param  widAlgn     ‰¡•ƒoƒCƒg”‚ÌƒAƒ‰ƒCƒƒ“ƒg. 1,2,4,8‚ğ‘z’è.
- *                      ƒfƒtƒHƒ‹ƒg 1. bmp‚É‡‚í‚¹‚½‚¢ê‡‚Í 4‚ğİ’è‚Ì‚±‚Æ.
- *  @param  dir         0:¶ã‚©‚ç‹l‚ß‚é.  1:¶‰º‚©‚ç‹l‚ß‚é.bmp‚É‡‚í‚¹‚½‚¢ê‡‚Í 1‚ğİ’è‚Ì‚±‚Æ.
+/** malloc ã—ãŸãƒ¡ãƒ¢ãƒªã«ç”»åƒã‚’å…¥ã‚Œã¦è¿”ã™.
+ *  @param  widAlgn     æ¨ªå¹…ãƒã‚¤ãƒˆæ•°ã®ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆ. 1,2,4,8ã‚’æƒ³å®š.
+ *                      ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ 1. bmpã«åˆã‚ã›ãŸã„å ´åˆã¯ 4ã‚’è¨­å®šã®ã“ã¨.
+ *  @param  dir         0:å·¦ä¸Šã‹ã‚‰è©°ã‚ã‚‹.  1:å·¦ä¸‹ã‹ã‚‰è©°ã‚ã‚‹.bmpã«åˆã‚ã›ãŸã„å ´åˆã¯ 1ã‚’è¨­å®šã®ã“ã¨.
  */
 void* PngDecoder::read(unsigned widAlgn, unsigned dir)
 {
@@ -294,19 +294,19 @@ void* PngDecoder::read(unsigned widAlgn, unsigned dir)
 }
 
 
-/// pix ‚É24ƒrƒbƒgF‰æ‘œ‚ğ“WŠJ‚·‚é. ƒTƒCƒY‚Í0‚¾‚ÆƒfƒtƒHƒ‹ƒg‚Ì‚Ü‚Ü. dir‚Í0‚ª¶ã‚©‚ç1‚È‚ç¶‰º‚©‚ç.
+/// pix ã«24ãƒ“ãƒƒãƒˆè‰²ç”»åƒã‚’å±•é–‹ã™ã‚‹. ã‚µã‚¤ã‚ºã¯0ã ã¨ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã¾ã¾. dirã¯0ãŒå·¦ä¸Šã‹ã‚‰1ãªã‚‰å·¦ä¸‹ã‹ã‚‰.
 bool    PngDecoder::read(void* pix)
 {
-   // 1ƒvƒŒ[ƒ“‚ª 16bit ‚Ìê‡‚ÍA8ƒrƒbƒg‚É‚·‚é‚æ‚¤‚Éİ’è.
+   // 1ãƒ—ãƒ¬ãƒ¼ãƒ³ãŒ 16bit ã®å ´åˆã¯ã€8ãƒ“ãƒƒãƒˆã«ã™ã‚‹ã‚ˆã†ã«è¨­å®š.
     png_set_strip_16(png_ptr_);
 
-  #if 1 // little endian ABGR ‚È‚Ì‚Å ARGB‰».(big endian RGBA->BGRA)
+  #if 1 // little endian ABGR ãªã®ã§ ARGBåŒ–.(big endian RGBA->BGRA)
     if (color_type_ & PNG_COLOR_MASK_COLOR)
         png_set_bgr(png_ptr_);
   #endif
 
-    // 1ƒoƒCƒg’†‚Ì‹l‚ß‡‚ğ•ÏX.
-    if (bigEndian_ == false)    // png‚ÌƒfƒtƒHƒ‹ƒg‚ÍƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“‚È‚Ì‚ÅAƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“‚Íswap‚Å.
+    // 1ãƒã‚¤ãƒˆä¸­ã®è©°ã‚é †ã‚’å¤‰æ›´.
+    if (bigEndian_ == false)    // pngã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã¯ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ãªã®ã§ã€ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³æ™‚ã¯swapã§.
         png_set_packswap(png_ptr_);
 
     if (toClutBpp8_) {
@@ -322,7 +322,7 @@ bool    PngDecoder::read(void* pix)
     if (toTrueColor_ || bpp_ >= 24) {
         if (png_get_valid(png_ptr_, info_ptr_, PNG_INFO_tRNS)) {
             png_set_tRNS_to_alpha(png_ptr_);
-        //} else if (!(color_type_ & PNG_COLOR_MASK_ALPHA)) {       // ‹­§32bpp‰»‚·‚éê‡...Œ»óŒÄ‚ÑŒ³‚Å32bpp‰»‚µ‚Ä‚é‚Ì‚Å–³‚µ
+        //} else if (!(color_type_ & PNG_COLOR_MASK_ALPHA)) {       // å¼·åˆ¶32bppåŒ–ã™ã‚‹å ´åˆ...ç¾çŠ¶å‘¼ã³å…ƒã§32bppåŒ–ã—ã¦ã‚‹ã®ã§ç„¡ã—.
         //  png_set_add_alpha(png_ptr_, 0xff, PNG_FILLER_AFTER);
         }
     }
@@ -389,7 +389,7 @@ bool    PngDecoder::read(void* pix)
 void PngDecoder::raw_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
 {
     PngDecoder* pOwn = (PngDecoder*)png_ptr->io_ptr;
-  #if 1 // ƒGƒ‰[‚¾‚ª“K“–‚É‘Îˆ.
+  #if 1 // ã‚¨ãƒ©ãƒ¼ã ãŒé©å½“ã«å¯¾å‡¦.
     if (pOwn->cur_ >= pOwn->binDataSize_) {
         if (data != 0 && length > 0)
             memset(data, 0, length);

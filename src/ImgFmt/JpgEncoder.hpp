@@ -1,23 +1,23 @@
 /**
  *  @file JpgEncoder.hpp
- *  @brief  ѓЃѓ‚ѓЉЏг‚Мjpg‰ж‘њѓfЃ[ѓ^‚р“WЉJ‚·‚й.
+ *  @brief  гѓЎгѓўгѓЄдёЉгЃ®jpgз”»еѓЏгѓ‡гѓјг‚їг‚’е±•й–‹гЃ™г‚‹.
  *  @author Masashi KITAMURA
  *  @note
- *      - Independent JPEG Group‚Мlibjpeg.lib‚р—p‚ў‚Д‚ў‚Ь‚·ЃB
+ *      - Independent JPEG GroupгЃ®libjpeg.libг‚’з”ЁгЃ„гЃ¦гЃ„гЃѕгЃ™гЂ‚
  *
- *      - Ћg‚ў•ы
- *          - setData(binData,size) ‚ЕѓЃѓ‚ѓЉЃ[Џг‚МjpgѓfЃ[ѓ^‚рђЭ’и‚µЃA
- *            ‚»‚МЊг read()‚·‚к‚Оmalloc‚µ‚ЅѓЃѓ‚ѓЉ‚Й24ѓrѓbѓgђF‰ж‘њ‚р“ѕ‚й.
- *          - ‚ ‚й‚ў‚НsetData()Њг, ѓTѓCѓYwidthByte()*height() €ИЏг‚МѓЃѓ‚ѓЉ‚р
- *            ЊД‚СЊі‚Е—p€У‚µ‚Дread(pix, ...)‚рЋg‚¤.
+ *      - дЅїгЃ„ж–№
+ *          - setData(binData,size) гЃ§гѓЎгѓўгѓЄгѓјдёЉгЃ®jpgгѓ‡гѓјг‚їг‚’иЁ­е®љгЃ—гЂЃ
+ *            гЃќгЃ®еѕЊ read()гЃ™г‚ЊгЃ°mallocгЃ—гЃџгѓЎгѓўгѓЄгЃ«24гѓ“гѓѓгѓ€и‰Із”»еѓЏг‚’еѕ—г‚‹.
+ *          - гЃ‚г‚‹гЃ„гЃЇsetData()еѕЊ, г‚µг‚¤г‚єwidthByte()*height() д»ҐдёЉгЃ®гѓЎгѓўгѓЄг‚’
+ *            е‘јгЃіе…ѓгЃ§з”Ёж„ЏгЃ—гЃ¦read(pix, ...)г‚’дЅїгЃ†.
  */
 #ifndef JPGENCODER_HPP
 #define JPGENCODER_HPP
 
 #include <assert.h>
 
-/// 24ѓrѓbѓgђF‰ж‘њ‚рjpgѓfЃ[ѓ^‚Й€іЏk. (libjpeg.lib‚Мѓ‰ѓbѓpЃ[)
-/// Ѓ¦1ѓsѓNѓZѓ‹‚НЃAѓЃѓ‚ѓЉ‚ЙR,G,BЏ‡‚Й•А‚с‚ѕѓ‚ѓmЃЃѓЉѓgѓ‹ѓGѓ“ѓfѓBѓAѓ“’l‚Ж‚µ‚Д‚НBGRЏ‡
+/// 24гѓ“гѓѓгѓ€и‰Із”»еѓЏг‚’jpgгѓ‡гѓјг‚їгЃ«ењ§зё®. (libjpeg.libгЃ®гѓ©гѓѓгѓ‘гѓј)
+/// вЂ»1гѓ”г‚Їг‚»гѓ«гЃЇгЂЃгѓЎгѓўгѓЄгЃ«R,G,Bй †гЃ«дё¦г‚“гЃ гѓўгѓЋпјќгѓЄгѓ€гѓ«г‚Ёгѓігѓ‡г‚Јг‚ўгѓіеЂ¤гЃЁгЃ—гЃ¦гЃЇBGRй †.
 class JpgEncoder {
 public:
     JpgEncoder() {;}
@@ -29,19 +29,19 @@ public:
             *pSz = sz;
     }
 
-    /// “а•”‚ЕЉm•Ы‚µ‚Д‚ў‚йѓЃѓ‚ѓЉ‚рЉJ•ъ. ’ТелЌ‡‚н‚№—p‚Мѓ_ѓ~Ѓ[.
+    /// е†…йѓЁгЃ§зўєдїќгЃ—гЃ¦гЃ„г‚‹гѓЎгѓўгѓЄг‚’й–‹ж”ѕ. иѕ»и¤„еђ€г‚ЏгЃ›з”ЁгЃ®гѓЂгѓџгѓј.
     void    release() {;}
 
-    /// pix ‚Й24ѓrѓbѓgђF‰ж‘њ‚р“WЉJ‚·‚й. ѓTѓCѓY‚Н0‚ѕ‚ЖѓfѓtѓHѓ‹ѓg‚М‚Ь‚Ь. dir‚Н0‚ЄЌ¶Џг‚©‚з1‚И‚зЌ¶‰є‚©‚з.
+    /// pix гЃ«24гѓ“гѓѓгѓ€и‰Із”»еѓЏг‚’е±•й–‹гЃ™г‚‹. г‚µг‚¤г‚єгЃЇ0гЃ гЃЁгѓ‡гѓ•г‚©гѓ«гѓ€гЃ®гЃѕгЃѕ. dirгЃЇ0гЃЊе·¦дёЉгЃ‹г‚‰1гЃЄг‚‰е·¦дё‹гЃ‹г‚‰.
     static unsigned     write(unsigned char* dst, unsigned dstSz, const void* src, unsigned wid, unsigned hei, unsigned quality=90, unsigned widByt=0, unsigned dir=0, unsigned mono=0);
 
-    /// malloc ‚µ‚ЅѓЃѓ‚ѓЉ‚ЙjpgѓfЃ[ѓ^‚р“ь‚к‚Д•Ф‚·.
+    /// malloc гЃ—гЃџгѓЎгѓўгѓЄгЃ«jpgгѓ‡гѓјг‚їг‚’е…Ґг‚ЊгЃ¦иї”гЃ™.
     static unsigned char*  write(const void* src, unsigned wid, unsigned hei, unsigned quality=90, unsigned widByt=0, unsigned dir=0, unsigned*pSz=0);
 
-    /// write‚Еѓ|ѓCѓ“ѓ^‚рЋу‚ЇЋж‚Б‚ЅЏкЌ‡‚М‘О‚Ж‚И‚йѓЃѓ‚ѓЉЉJ•ъ.
+    /// writeгЃ§гѓќг‚¤гѓіг‚їг‚’еЏ—гЃ‘еЏ–гЃЈгЃџе ґеђ€гЃ®еЇѕгЃЁгЃЄг‚‹гѓЎгѓўгѓЄй–‹ж”ѕ.
     static void     deallocate(void* p);
 
-    /// ‰Ў•ќ‚рѓoѓCѓgђ”‚Й•ПЉ·.
+    /// жЁЄе№…г‚’гѓђг‚¤гѓ€ж•°гЃ«е¤‰жЏ›.
     static unsigned wid2byt(unsigned wid, unsigned algn=1) {
         assert( algn == 1 || algn == 2 || algn == 4 || algn == 8 || algn == 16 );
         return (wid*3 + algn-1) & ~(algn-1);

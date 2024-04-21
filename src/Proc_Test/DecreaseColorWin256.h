@@ -1,6 +1,6 @@
 /**
  *  @file   DecreaseColorWin256.h
- *  @brief  32ƒrƒbƒgF‰æ‚ğwinƒVƒXƒeƒ€256FƒpƒŒƒbƒg‚Å8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+ *  @brief  32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’winã‚·ã‚¹ãƒ†ãƒ 256è‰²ãƒ‘ãƒ¬ãƒƒãƒˆã§8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
  *  @author Masashi KITAMURA
  */
 
@@ -13,14 +13,14 @@
 
 
 
-/// 32ƒrƒbƒgF‰æ‚ğwinƒVƒXƒeƒ€256FƒpƒŒƒbƒg‚Å8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+/// 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’winã‚·ã‚¹ãƒ†ãƒ 256è‰²ãƒ‘ãƒ¬ãƒƒãƒˆã§8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
 template<class A=void>
 class DecreaseColor {
 public:
     static bool conv(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h
                     , unsigned* pClut, unsigned clutSize, unsigned idx=0, int alp1=0, int alp2=0);
 
-    /// clut‚É]‚Á‚Ä32ƒrƒbƒgF‰æ‚ğ8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+    /// clutã«å¾“ã£ã¦32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
     static bool conv4clut(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h
                     , const unsigned* pClut, unsigned clutSize, unsigned idx=0, int alp1=0, int alp2=0);
 };
@@ -28,7 +28,7 @@ public:
 
 
 
-/// 32ƒrƒbƒgF‰æ‚ğwinƒVƒXƒeƒ€256FƒpƒŒƒbƒg‚Å8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+/// 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’winã‚·ã‚¹ãƒ†ãƒ 256è‰²ãƒ‘ãƒ¬ãƒƒãƒˆã§8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
 template<class A>
 bool DecreaseColor<A>::conv(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h
                                 , unsigned* pClut, unsigned clutSize, unsigned idx, int alp1, int alp2)
@@ -75,7 +75,7 @@ bool DecreaseColor<A>::conv(unsigned char* pDst, const unsigned* pSrc, unsigned 
 
 
 
-/// 32ƒrƒbƒgF‰æ‚ğ8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+/// 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
 template<class A>
 bool DecreaseColor<A>::conv4clut(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h
                                 , const unsigned* pClut, unsigned clutSize, unsigned idx, int alp1, int alp2)
@@ -83,11 +83,11 @@ bool DecreaseColor<A>::conv4clut(unsigned char* pDst, const unsigned* pSrc, unsi
     assert(clutSize <= 256 && clutSize >= idx+2);
     enum { ALP_D = 2 };
 
-    // w’è‚Ìclut‚ÅA‚·‚×‚Ä‚ÌƒsƒNƒZƒ‹‚ğclutSizeF‰».
-    // ‹ß‚¢F‚ÌğŒ‚Æ‚µ‚ÄA
-    //   - a,r,g,b‚Ì’l‚ª‹ß‚¢ƒ‚ƒm(F“¯m‚Ì·‚ª¬‚³‚¢ƒ‚ƒm)
-    //   - 1F“à‚Ìr,g,b‚Ì‹P“x‚Ì‘å¬ŠÖŒW‚ªA‹ß‚¢ƒ‚ƒm
-    // ‚ğƒ`ƒFƒbƒN.
+    // æŒ‡å®šã®clutã§ã€ã™ã¹ã¦ã®ãƒ”ã‚¯ã‚»ãƒ«ã‚’clutSizeè‰²åŒ–.
+    // è¿‘ã„è‰²ã®æ¡ä»¶ã¨ã—ã¦ã€
+    //   - a,r,g,bã®å€¤ãŒè¿‘ã„ãƒ¢ãƒ(è‰²åŒå£«ã®å·®ãŒå°ã•ã„ãƒ¢ãƒ)
+    //   - 1è‰²å†…ã®r,g,bã®è¼åº¦ã®å¤§å°é–¢ä¿‚ãŒã€è¿‘ã„ãƒ¢ãƒ
+    // ã‚’ãƒã‚§ãƒƒã‚¯.
     for (unsigned j = 0; j < w * h; ++j) {
         unsigned ii = 0;
         unsigned c  = pSrc[j];

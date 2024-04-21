@@ -1,9 +1,9 @@
 /**
  *  @file PngEncoder.cpp
- *  @brief  ƒƒ‚ƒŠã‚Épng‰æ‘œƒf[ƒ^‚ğì¬.
+ *  @brief  ãƒ¡ãƒ¢ãƒªä¸Šã«pngç”»åƒãƒ‡ãƒ¼ã‚¿ã‚’ä½œæˆ.
  *  @author Masashi KITAMURA
  */
-#include <stdlib.h>     // calloc‚ğƒwƒbƒ_‚Åg—p‚·‚é‚½‚ß.
+#include <stdlib.h>     // callocã‚’ãƒ˜ãƒƒãƒ€ã§ä½¿ç”¨ã™ã‚‹ãŸã‚.
 #include <string.h>
 #include <assert.h>
 
@@ -23,14 +23,14 @@ PngEncoder::PngEncoder() {
 }
 
 
-/// write‚Åƒ|ƒCƒ“ƒ^‚ğó‚¯æ‚Á‚½ê‡‚Ì‘Î‚Æ‚È‚éƒƒ‚ƒŠŠJ•ú.
+/// writeã§ãƒã‚¤ãƒ³ã‚¿ã‚’å—ã‘å–ã£ãŸå ´åˆã®å¯¾ã¨ãªã‚‹ãƒ¡ãƒ¢ãƒªé–‹æ”¾.
 void    PngEncoder::deallocate(void* p) {
     if (p)
         free(p);
 }
 
 
-/** malloc ‚µ‚½ƒƒ‚ƒŠ‚Épngƒf[ƒ^‚ğ“ü‚ê‚Ä•Ô‚·. ƒƒ‚ƒŠ‚ÍA‚©‚È‚è‘å‚«‚ß‚Éæ‚Á‚Ä‚¢‚é‚Ì‚Å’ˆÓ.
+/** malloc ã—ãŸãƒ¡ãƒ¢ãƒªã«pngãƒ‡ãƒ¼ã‚¿ã‚’å…¥ã‚Œã¦è¿”ã™. ãƒ¡ãƒ¢ãƒªã¯ã€ã‹ãªã‚Šå¤§ãã‚ã«å–ã£ã¦ã„ã‚‹ã®ã§æ³¨æ„.
  */
 unsigned char* PngEncoder::write(unsigned& rSz, const void* src, unsigned w, unsigned h, unsigned bpp, const unsigned* clut, unsigned widByt, unsigned dir) {
     if (widByt == 0)
@@ -44,7 +44,7 @@ unsigned char* PngEncoder::write(unsigned& rSz, const void* src, unsigned w, uns
 }
 
 
-/// pix ‚É‰æ‘œ‚ğ“WŠJ‚·‚é. ƒTƒCƒY‚Í0‚¾‚ÆƒfƒtƒHƒ‹ƒg‚Ì‚Ü‚Ü. dir‚Í0‚ª¶ã‚©‚ç1‚È‚ç¶‰º‚©‚ç.
+/// pix ã«ç”»åƒã‚’å±•é–‹ã™ã‚‹. ã‚µã‚¤ã‚ºã¯0ã ã¨ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã¾ã¾. dirã¯0ãŒå·¦ä¸Šã‹ã‚‰1ãªã‚‰å·¦ä¸‹ã‹ã‚‰.
 unsigned    PngEncoder::write(unsigned char* dst, unsigned dstSz, const void* src, unsigned width, unsigned height, unsigned bpp, const unsigned* clut, unsigned widByt, unsigned dir)
 {
     assert(bpp == 1 || bpp == 2 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32 || bpp == 13);
@@ -109,7 +109,7 @@ unsigned    PngEncoder::write(unsigned char* dst, unsigned dstSz, const void* sr
     png_write_info(png_ptr, info_ptr);
 
     png_bytepp  lines = (png_bytepp)png_malloc(png_ptr, height*sizeof(png_bytep));  //x new png_bytep[height];
-    if (dir & 1) {  //ã‰º”½“]‚·‚é‚Æ‚«.
+    if (dir & 1) {  //ä¸Šä¸‹åè»¢ã™ã‚‹ã¨ã.
         for (int i = height; --i >= 0;)
             lines[i] = (png_bytep)src + (height-1-i) * widByt;
     } else {

@@ -1,20 +1,20 @@
 /**
  *  @file   bmp_read.c
- *  @brief  BMP ‰æ‘œƒf[ƒ^“ü—Í
+ *  @brief  BMP ç”»åƒãƒ‡ãƒ¼ã‚¿å…¥åŠ›
  *  @author Masashi Kitamura
  *  @date   199?
  *  @note
- *  2001-04     bmp-rleŠÖŒW’Ç‰Á
+ *  2001-04     bmp-rleé–¢ä¿‚è¿½åŠ 
  */
 
 
 #include "bmp_read.h"
-#include <stdlib.h>     /* NULL,malloc,free ‚Ì‚½‚ß‚Éinclude */
+#include <stdlib.h>     /* NULL,malloc,free ã®ãŸã‚ã«include */
 #include <assert.h>
 
 
 /*---------------------------------------------------------------------------*/
-/* ƒRƒ“ƒpƒCƒ‹ŠÂ‹«‚Ì’Òåë‚ ‚í‚¹. */
+/* ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ç’°å¢ƒã®è¾»è¤„ã‚ã‚ã›. */
 
 #if (defined _MSC_VER) || (defined __BORLANDC__ && __BORLANDC__ <= 0x0551)
 typedef unsigned char   uint8_t;
@@ -39,7 +39,7 @@ typedef unsigned        uint32_t;
 #define BBBB(a,b,c,d)   ((((uint8_t)(a))<<24)+(((uint8_t)(b))<<16)+(((uint8_t)(c))<<8)+((uint8_t)(d)))
 #define PEEKB(a)        (*(const uint8_t *)(a))
 
-#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__   // X86 ‚ÍAƒAƒ‰ƒCƒƒ“ƒg‚ğ‹C‚É‚·‚é•K—v‚ª‚È‚¢‚Ì‚Å’¼ÚƒAƒNƒZƒX
+#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__   // X86 ã¯ã€ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã‚’æ°—ã«ã™ã‚‹å¿…è¦ãŒãªã„ã®ã§ç›´æ¥ã‚¢ã‚¯ã‚»ã‚¹.
 #define PEEKiW(a)       (*(const uint16_t *)(a))
 #define PEEKiD(a)       (*(const uint32_t *)(a))
 #else
@@ -49,7 +49,7 @@ typedef unsigned        uint32_t;
 
 #define PEEKmW(a)       ( (PEEKB(a)<<8) | PEEKB((const char *)(a)+1) )
 
-#define ABS(a)          ((a) < 0 ? -(a) : (a))      /* â‘Î’l */
+#define ABS(a)          ((a) < 0 ? -(a) : (a))      /* çµ¶å¯¾å€¤ */
 
 #define MEMSET4(d, s, sz)   do {int  *d__ = (int *)(d); int c__ = (unsigned)(sz)>>2; do { *d__++ = (int) (s); } while(--c__); } while (0)
 #define MEMCPY4(d, s, sz)   do {int  *d__ = (int *)(d); const int *s__ = (const int *)(s); int c__ = (unsigned)(sz)>>2; do { *d__++ = *s__++; } while (--c__); } while (0)
@@ -66,7 +66,7 @@ typedef unsigned        uint32_t;
 
 /*---------------------------------------------------------------------------*/
 
-/// bmpƒwƒbƒ_î•ñ
+/// bmpãƒ˜ãƒƒãƒ€æƒ…å ±.
 typedef struct bmp_hdr_t {
     uint16_t    id;
     uint32_t    fsize;
@@ -86,17 +86,17 @@ typedef struct bmp_hdr_t {
     uint32_t    impColCnt;
     uint32_t    mskR,mskG,mskB,mskA;
 
-    /*- ƒwƒbƒ_‚Å‚È‚¢î•ñ */
+    /*- ãƒ˜ãƒƒãƒ€ã§ãªã„æƒ…å ± */
     int         lenR,lenG,lenB,lenA;
     int         shlR,shlG,shlB,shlA;
     int         shrR,shrG,shrB,shrA;
     uint32_t    *clut;
     uint8_t     *pix;
 } bmp_hdr_t;
-                                    /* ˆê‰ bmp_hdr_t ‚Íƒwƒbƒ_’è‹`‚»‚Ì‚Ü‚Ü‚ğ\‘¢‘Ì‰»‚µ‚Ä‚é‚ª  */
+                                    /* ä¸€å¿œ bmp_hdr_t ã¯ãƒ˜ãƒƒãƒ€å®šç¾©ãã®ã¾ã¾ã‚’æ§‹é€ ä½“åŒ–ã—ã¦ã‚‹ãŒ  */
                                     /* (char=1byte, short=2byte, int=4byte)                   */
-                                    /* \‘¢‘ÌƒpƒeƒBƒ“ƒO‚Ì–â‘è‚ª‚ ‚é‚Ì‚ÅA‚±‚Ì\‘¢‘Ì‚Åbmp ƒf[ */
-                                    /* ƒ^‚Ìæ“ª‚ğƒLƒƒƒXƒg‚µ‚È‚¢‚±‚Æ                           */
+                                    /* æ§‹é€ ä½“ãƒ‘ãƒ†ã‚£ãƒ³ã‚°ã®å•é¡ŒãŒã‚ã‚‹ã®ã§ã€ã“ã®æ§‹é€ ä½“ã§bmp ãƒ‡ãƒ¼ */
+                                    /* ã‚¿ã®å…ˆé ­ã‚’ã‚­ãƒ£ã‚¹ãƒˆã—ãªã„ã“ã¨                           */
 
 #define BI_RGB          0
 #define BI_RLE8         1
@@ -152,32 +152,32 @@ static int  bmp_getRawHdr(bmp_hdr_t *t, const void *bmp_data)
 
     MEMSET4(t, 0, sizeof(*t));
     t->id       = PEEKmW(b);
-    if (t->id == BB('B','M')) {             /* BMPƒtƒ@ƒCƒ‹‚Ìê‡BƒŠƒ\[ƒX‚Ìê‡‚Í‚±‚Ì2•¶š‚ª‚È‚¢–Í—l */
+    if (t->id == BB('B','M')) {             /* BMPãƒ•ã‚¡ã‚¤ãƒ«ã®å ´åˆã€‚ãƒªã‚½ãƒ¼ã‚¹ã®å ´åˆã¯ã“ã®2æ–‡å­—ãŒãªã„æ¨¡æ§˜ */
         b += 2;
         rc = 1;
     }
     b0 = b;
-    t->fsize    = PEEKiD(b); b += 4;        /* ƒtƒ@ƒCƒ‹ƒTƒCƒY */
-    t->rsv1     = PEEKiD(b); b += 4;        /* —\–ñ */
-    t->pdatOfs  = PEEKiD(b); b += 4;        /* ƒsƒNƒZƒ‹Eƒf[ƒ^‚Ö‚ÌƒIƒtƒZƒbƒg */
-    t->hdrSz    = PEEKiD(b); b += 4;        /* ƒwƒbƒ_ƒTƒCƒY */
-    if (t->hdrSz == 12) {                   /* OS/2ƒwƒbƒ_   */
+    t->fsize    = PEEKiD(b); b += 4;        /* ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚º */
+    t->rsv1     = PEEKiD(b); b += 4;        /* äºˆç´„ */
+    t->pdatOfs  = PEEKiD(b); b += 4;        /* ãƒ”ã‚¯ã‚»ãƒ«ãƒ»ãƒ‡ãƒ¼ã‚¿ã¸ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ */
+    t->hdrSz    = PEEKiD(b); b += 4;        /* ãƒ˜ãƒƒãƒ€ã‚µã‚¤ã‚º */
+    if (t->hdrSz == 12) {                   /* OS/2ãƒ˜ãƒƒãƒ€   */
         t->w    = PEEKiW(b); b += 2;
         t->h    = PEEKiW(b); b += 2;
-        t->pln  = PEEKiW(b); b += 2;        /* ƒvƒŒ[ƒ“”. must be 1 */
+        t->pln  = PEEKiW(b); b += 2;        /* ãƒ—ãƒ¬ãƒ¼ãƒ³æ•°. must be 1 */
         t->bpp  = PEEKiW(b); /*b += 2;*/    /* bits per pixel */
         t->cmplMode = 0;
     } else {                                /* ms-win */
         t->w    = PEEKiD(b); b += 4;
         t->h    = PEEKiD(b); b += 4;
-        t->pln  = PEEKiW(b); b += 2;        /* ƒvƒŒ[ƒ“”. must be 1 */
+        t->pln  = PEEKiW(b); b += 2;        /* ãƒ—ãƒ¬ãƒ¼ãƒ³æ•°. must be 1 */
         t->bpp  = PEEKiW(b); b += 2;        /* bits per pixel */
-        t->cmplMode  = PEEKiD(b); b += 4;   /* ˆ³kƒ‚[ƒh */
-        t->cmplDatSz = PEEKiD(b); b += 4;   /* ˆ³kƒf[ƒ^ƒTƒCƒY */
+        t->cmplMode  = PEEKiD(b); b += 4;   /* åœ§ç¸®ãƒ¢ãƒ¼ãƒ‰ */
+        t->cmplDatSz = PEEKiD(b); b += 4;   /* åœ§ç¸®ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚º */
         t->xresol    = PEEKiD(b); b += 4;   /* x resolution */
         t->yresol    = PEEKiD(b); b += 4;   /* y resolution */
-        t->clutNum   = PEEKiD(b); b += 4;   /* clut‚Ì”. 2,4,8ƒrƒbƒgF‚Å‚Í‚±‚Ì’l‚ÉŠÖŒW‚È‚­1<<nF‚ ‚é. 16,24,32ƒrƒbƒgF‚Ì‚Æ‚«‚Í‹C‚ğ‚Â‚¯‚æ */
-        t->impColCnt = PEEKiD(b); b += 4;   /* d—v‚ÈF‚Ì”cc•’Ê–³‹‚·‚éƒf[ƒ^ */
+        t->clutNum   = PEEKiD(b); b += 4;   /* clutã®æ•°. 2,4,8ãƒ“ãƒƒãƒˆè‰²ã§ã¯ã“ã®å€¤ã«é–¢ä¿‚ãªã1<<nè‰²ã‚ã‚‹. 16,24,32ãƒ“ãƒƒãƒˆè‰²ã®ã¨ãã¯æ°—ã‚’ã¤ã‘ã‚ˆ */
+        t->impColCnt = PEEKiD(b); b += 4;   /* é‡è¦ãªè‰²ã®æ•°â€¦â€¦æ™®é€šç„¡è¦–ã™ã‚‹ãƒ‡ãƒ¼ã‚¿ */
         if (t->hdrSz >= 40 + 4 * 4) {
             t->mskR  = PEEKiD(b); b += 4;
             t->mskG  = PEEKiD(b); b += 4;
@@ -206,7 +206,7 @@ static int  bmp_getRawHdr(bmp_hdr_t *t, const void *bmp_data)
 
 
 
-/** bmp_getHdr‚Åæ“¾‚µ‚½‰¡•,bpp‚æ‚è‰¡•ƒoƒCƒg”‚ğŒvZ‚·‚é.
+/** bmp_getHdrã§å–å¾—ã—ãŸæ¨ªå¹…,bppã‚ˆã‚Šæ¨ªå¹…ãƒã‚¤ãƒˆæ•°ã‚’è¨ˆç®—ã™ã‚‹.
  */
 int bmp_width2byte(int w, int bpp, int algn)
 {
@@ -218,7 +218,7 @@ int bmp_width2byte(int w, int bpp, int algn)
 
 
 
-/** ƒƒ‚ƒŠã‚Ìbmpƒf[ƒ^‚©‚çA‰¡•Ac•Aƒrƒbƒg/ƒsƒNƒZƒ‹Aclut‚ÌF”‚ğæ“¾‚·‚é.
+/** ãƒ¡ãƒ¢ãƒªä¸Šã®bmpãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã€æ¨ªå¹…ã€ç¸¦å¹…ã€ãƒ“ãƒƒãƒˆ/ãƒ”ã‚¯ã‚»ãƒ«ã€clutã®è‰²æ•°ã‚’å–å¾—ã™ã‚‹.
  */
 int bmp_getHdr(const void *bmp_data, int *wp, int *hp, int *bppp, int *clutNump)
 {
@@ -228,7 +228,7 @@ int bmp_getHdr(const void *bmp_data, int *wp, int *hp, int *bppp, int *clutNump)
 
 
 
-/** ƒƒ‚ƒŠã‚Ìbmpƒf[ƒ^‚©‚çA‰¡•Ac•Aƒrƒbƒg/ƒsƒNƒZƒ‹Aclut‚ÌF”‚ğæ“¾‚·‚é.
+/** ãƒ¡ãƒ¢ãƒªä¸Šã®bmpãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã€æ¨ªå¹…ã€ç¸¦å¹…ã€ãƒ“ãƒƒãƒˆ/ãƒ”ã‚¯ã‚»ãƒ«ã€clutã®è‰²æ•°ã‚’å–å¾—ã™ã‚‹.
  */
 int bmp_getHdrEx(const void *bmp_data, int *wp, int *hp, int *bppp, int *clutNump, int *resolXp, int *resolYp)
 {
@@ -242,7 +242,7 @@ int bmp_getHdrEx(const void *bmp_data, int *wp, int *hp, int *bppp, int *clutNum
     if (resolXp)    *resolXp    = 0;
     if (resolYp)    *resolYp    = 0;
 
-    // tga ‚Ìƒwƒbƒ_¶î•ñ‚ğæ“¾
+    // tga ã®ãƒ˜ãƒƒãƒ€ç”Ÿæƒ…å ±ã‚’å–å¾—.
     bmp_getRawHdr(t, bmp_data);
 
   #if 1
@@ -252,13 +252,13 @@ int bmp_getHdrEx(const void *bmp_data, int *wp, int *hp, int *bppp, int *clutNum
     if (t->pln != 1)
         return 0;
 
-    // ƒsƒNƒZƒ‹ƒTƒCƒYƒ`ƒFƒbƒN
+    // ãƒ”ã‚¯ã‚»ãƒ«ã‚µã‚¤ã‚ºãƒã‚§ãƒƒã‚¯.
     switch (t->bpp) {
     case  1:
     case  2:            // ce ?
     case  4:
     case  8:
-    //case 12: case 15: // ‚©‚Á‚Ä‰ğß
+    //case 12: case 15: // ã‹ã£ã¦è§£é‡ˆ.
     case 16:
     case 24:
     case 32:
@@ -267,10 +267,10 @@ int bmp_getHdrEx(const void *bmp_data, int *wp, int *hp, int *bppp, int *clutNum
         return 0;
     }
 
-    // ‰æ‘œƒTƒCƒYƒ`ƒFƒbƒNB‚Ğ‚å‚Á‚Æ‚µ‚½‚çA’è‹`ã‚Í unsigned ‚©‚à‚¾‚ªÀ¿‚Ì“s‡‚ğl‚¦‚ê‚Î
+    // ç”»åƒã‚µã‚¤ã‚ºãƒã‚§ãƒƒã‚¯ã€‚ã²ã‚‡ã£ã¨ã—ãŸã‚‰ã€å®šç¾©ä¸Šã¯ unsigned ã‹ã‚‚ã ãŒå®Ÿè³ªã®éƒ½åˆã‚’è€ƒãˆã‚Œã°.
     if (t->w <= 0 || t->h == 0) {
         if (t->id == 0 && t->w == 0 && t->h == 0) {
-            // ‰æ‘œ–³‚µƒf[ƒ^‚Ìê‡‚ÍƒGƒ‰[‚É‚µ‚È‚¢
+            // ç”»åƒç„¡ã—ãƒ‡ãƒ¼ã‚¿ã®å ´åˆã¯ã‚¨ãƒ©ãƒ¼ã«ã—ãªã„.
         } else {
             return 0;
         }
@@ -288,11 +288,11 @@ int bmp_getHdrEx(const void *bmp_data, int *wp, int *hp, int *bppp, int *clutNum
 
 
 
-/** clut æ“¾ */
+/** clut å–å¾— */
 int bmp_getClut(
-    const void  *bmp_data,  ///< clut‚±‚İ‚Ì tga ƒf[ƒ^
-    void        *clut0,     ///< CLUT‚ğŠi”[‚·‚éƒAƒhƒŒƒX. unsigned ‚Í32bit‚Å numŒÂ•ª‚Ìƒƒ‚ƒŠ‚ª‚ ‚é‚±‚Æ
-    int         num)        ///< clut‚ÌŒÂ”
+    const void  *bmp_data,  ///< clutã“ã¿ã® tga ãƒ‡ãƒ¼ã‚¿.
+    void        *clut0,     ///< CLUTã‚’æ ¼ç´ã™ã‚‹ã‚¢ãƒ‰ãƒ¬ã‚¹. unsigned ã¯32bitã§ numå€‹åˆ†ã®ãƒ¡ãƒ¢ãƒªãŒã‚ã‚‹ã“ã¨.
+    int         num)        ///< clutã®å€‹æ•°.
 {
     bmp_hdr_t   tg;
     bmp_hdr_t*  t = &tg;
@@ -306,7 +306,7 @@ int bmp_getClut(
 
     bmp_getRawHdr(t, bmp_data);
 
-    if (t->bpp <= 8) {          // ƒpƒŒƒbƒg•t‚«‚Ì‚Æ‚«
+    if (t->bpp <= 8) {          // ãƒ‘ãƒ¬ãƒƒãƒˆä»˜ãã®ã¨ã.
         n = 1 << t->bpp;
         n = (n < num || num < 0) ? n : num;
         s = (uint8_t*)t->clut;
@@ -320,7 +320,7 @@ int bmp_getClut(
 }
 
 
-/** ƒfƒtƒHƒ‹ƒgƒpƒŒƒbƒg‚ğì¬ */
+/** ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ‘ãƒ¬ãƒƒãƒˆã‚’ä½œæˆ */
 static void bmp_getDfltClut(int bpp, uint32_t *clut)
 {
     int     i;
@@ -329,15 +329,15 @@ static void bmp_getDfltClut(int bpp, uint32_t *clut)
 
     if (clut == NULL)
         return;
-    if (bpp == 1) {         // •”’
+    if (bpp == 1) {         // é»’ç™½.
         clut[0] = 0;
         clut[1] = 0xFFFFFF;
-    } else if (bpp == 4) {  // ’PF”Z’W
+    } else if (bpp == 4) {  // å˜è‰²æ¿ƒæ·¡.
         for (i = 0; i < 16; i++) {
             c = (i << 4) | i;
             clut[i] = BBBB(0, c,c,c);
         }
-    } else {                // TOWNS‚â88VAŒn‚Ì G3R3B2
+    } else {                // TOWNSã‚„88VAç³»ã® G3R3B2
         i = 0;
         for (g = 0; g < 8; ++g) {
             for (r = 0; r < 8; ++r) {
@@ -353,10 +353,10 @@ static void bmp_getDfltClut(int bpp, uint32_t *clut)
 }
 
 
-/** bmp_data‚©‚ç‰æ‘œ‚ğbppƒrƒbƒgF‚Å dst ‚ÉƒTƒCƒY wb*h ‚ÅƒRƒs[B bpp=8‚È‚ç‚Îclut‚àæ“¾.
- * ofs_dir  bit0: 0=ƒsƒNƒZƒ‹‚Í¶ã‚©‚ç  1=ƒsƒNƒZƒ‹‚Í¶‰º‚©‚ç.
- *          bit4: 0=ƒf[ƒ^‚Ìclut‚ğæ“¾‚·‚é  1=æ“¾‚µ‚È‚¢(ˆø”‚Ìclut‚ğ—p‚¢‚é)
- *          bit15..8: 256F‚Ì‚Æ‚«‚ÌAƒsƒNƒZƒ‹’lƒIƒtƒZƒbƒg
+/** bmp_dataã‹ã‚‰ç”»åƒã‚’bppãƒ“ãƒƒãƒˆè‰²ã§ dst ã«ã‚µã‚¤ã‚º wb*h ã§ã‚³ãƒ”ãƒ¼ã€‚ bpp=8ãªã‚‰ã°clutã‚‚å–å¾—.
+ * ofs_dir  bit0: 0=ãƒ”ã‚¯ã‚»ãƒ«ã¯å·¦ä¸Šã‹ã‚‰  1=ãƒ”ã‚¯ã‚»ãƒ«ã¯å·¦ä¸‹ã‹ã‚‰.
+ *          bit4: 0=ãƒ‡ãƒ¼ã‚¿ã®clutã‚’å–å¾—ã™ã‚‹  1=å–å¾—ã—ãªã„(å¼•æ•°ã®clutã‚’ç”¨ã„ã‚‹)
+ *          bit15..8: 256è‰²ã®ã¨ãã®ã€ãƒ”ã‚¯ã‚»ãƒ«å€¤ã‚ªãƒ•ã‚»ãƒƒãƒˆ
  */
 int  bmp_read(const void *bmp_data, void *dst, int wb, int h, int bpp, void *clut, int ofs_dir)
 {
@@ -379,20 +379,20 @@ int  bmp_read(const void *bmp_data, void *dst, int wb, int h, int bpp, void *clu
     if (bmp_data == NULL)
         return 0;
 
-    // ƒwƒbƒ_î•ñæ“¾
+    // ãƒ˜ãƒƒãƒ€æƒ…å ±å–å¾—.
     bmp_getRawHdr(t, bmp_data);
 
     if (bpp == 0)
         bpp = t->bpp;
 
-    if (clut == NULL || (dir & 0x10) || bpp > 8) {  //‘½Fo—Í‚âclut‚Ìæ“¾‚ğ‚µ‚È‚¢‚Æ‚«‚ÌAƒ_ƒ~[clutİ’è
+    if (clut == NULL || (dir & 0x10) || bpp > 8) {  //å¤šè‰²å‡ºåŠ›ã‚„clutã®å–å¾—ã‚’ã—ãªã„ã¨ãã®ã€ãƒ€ãƒŸãƒ¼clutè¨­å®š.
         clut = clutBuf;
         MEMSET4(clut, 0, 256*4);
         bmp_getDfltClut(bpp, (uint32_t*)clut);
     }
 
-    if (t->bpp <= 8) {              // “ü—Í‚ª 256FˆÈ‰º‚È‚ç‚ÎAƒpƒŒƒbƒg‚ğæ“¾
-        if (bpp < t->bpp) {         // o—Í‚Ìbpp‚ª“ü—Í‚æ‚è¬‚³‚¯‚ê‚Î o—Í•ª‚ÌƒpƒŒƒbƒg‚ğæ“¾
+    if (t->bpp <= 8) {              // å…¥åŠ›ãŒ 256è‰²ä»¥ä¸‹ãªã‚‰ã°ã€ãƒ‘ãƒ¬ãƒƒãƒˆã‚’å–å¾—.
+        if (bpp < t->bpp) {         // å‡ºåŠ›ã®bppãŒå…¥åŠ›ã‚ˆã‚Šå°ã•ã‘ã‚Œã° å‡ºåŠ›åˆ†ã®ãƒ‘ãƒ¬ãƒƒãƒˆã‚’å–å¾—.
             n = 1 << bpp;
             s = (uint8_t*)t->clut+(ofs*sizeof(uint32_t));
         } else {
@@ -404,14 +404,14 @@ int  bmp_read(const void *bmp_data, void *dst, int wb, int h, int bpp, void *clu
             //DBG_F(("\t-%3d %06x\n", i, ((uint32_t*)clut)[i]));
             s += 4;
         }
-    } else if (bpp <= 8) {          // o—Í‚ª 256FˆÈ‰º‚È‚ç‚ÎAƒfƒtƒHƒ‹ƒgclut‚ğæ“¾
+    } else if (bpp <= 8) {          // å‡ºåŠ›ãŒ 256è‰²ä»¥ä¸‹ãªã‚‰ã°ã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆclutã‚’å–å¾—.
         bmp_getDfltClut(bpp, (uint32_t*)clut);
     }
 
     if (t->w == 0 || t->h == 0)
         return 0;
 
-    // ƒsƒNƒZƒ‹ˆÊ’uæ“¾
+    // ãƒ”ã‚¯ã‚»ãƒ«ä½ç½®å–å¾—.
     s   = t->pix;
 
     th = t->h;
@@ -430,18 +430,18 @@ int  bmp_read(const void *bmp_data, void *dst, int wb, int h, int bpp, void *clu
 
     if (t->cmplMode == 0) {
         if (t->bpp == 16)
-            t->bpp = 15;    // A1R5G5B5 ‚Æ‚µ‚Äˆ—
+            t->bpp = 15;    // A1R5G5B5 ã¨ã—ã¦å‡¦ç†.
 
     } else {
-        // ˆ³k‚³‚ê‚Ä‚¢‚½. RLE4,RLE8 ‚Ì‚İ‘Î‰
-        if (t->cmplMode <= BI_RLE4 && t->bpp == 4) {    // RLE4 16F‰æˆ³k
+        // åœ§ç¸®ã•ã‚Œã¦ã„ãŸ. RLE4,RLE8 ã®ã¿å¯¾å¿œ.
+        if (t->cmplMode <= BI_RLE4 && t->bpp == 4) {    // RLE4 16è‰²ç”»åœ§ç¸®.
             m = (uint8_t*)malloc((t->w+4) * th);
             if (m == NULL)
                 return 0;
             bmp_decodeRle4((uint8_t*)m, s, t->w, th);
             t->bpp = 8;
             s = m;
-        } else if (t->cmplMode <= BI_RLE4 && t->bpp == 8) { // RLE8 256F‰æˆ³k
+        } else if (t->cmplMode <= BI_RLE4 && t->bpp == 8) { // RLE8 256è‰²ç”»åœ§ç¸®.
             m = (uint8_t*)malloc((t->w+4) * th);
             if (m == NULL)
                 return 0;
@@ -453,19 +453,19 @@ int  bmp_read(const void *bmp_data, void *dst, int wb, int h, int bpp, void *clu
             else if (t->bpp == 32 && t->mskR == 0xFF0000 && t->mskG == 0x00FF00 && t->mskB == 0x0000FF)
                 ;
             else if (t->bpp == 16 && t->mskA == 0 && t->mskR == 0x7C00 && t->mskG == 0x03E0 && t->mskB == 0x001F)
-                t->bpp = 14;    // A0R5G5B5 ‚ğ•Ö‹Xã 14ƒrƒbƒgF‚Æ‚µ‚Äˆ—
+                t->bpp = 14;    // A0R5G5B5 ã‚’ä¾¿å®œä¸Š 14ãƒ“ãƒƒãƒˆè‰²ã¨ã—ã¦å‡¦ç†.
             else if (t->bpp == 16 && t->mskA == 0x8000 && t->mskR == 0x7C00 && t->mskG == 0x03E0 && t->mskB == 0x001F)
-                t->bpp = 15;    // A1R5G5B5 ‚ğ•Ö‹Xã 15ƒrƒbƒgF‚Æ‚µ‚Äˆ—
+                t->bpp = 15;    // A1R5G5B5 ã‚’ä¾¿å®œä¸Š 15ãƒ“ãƒƒãƒˆè‰²ã¨ã—ã¦å‡¦ç†.
             else if (t->bpp == 16 && t->mskR == 0xF800 && t->mskG == 0x07E0 && t->mskB == 0x001F)
-                t->bpp = 16;    // R5G6B5 ‚ğ16ƒrƒbƒgF‚Æ‚µ‚Äˆ—
+                t->bpp = 16;    // R5G6B5 ã‚’16ãƒ“ãƒƒãƒˆè‰²ã¨ã—ã¦å‡¦ç†.
             else if (t->bpp == 16 && t->mskA == 0xF000 && t->mskR == 0x0F00 && t->mskG == 0x00F0 && t->mskB == 0x000F)
                 t->bpp = 12;
             else if (t->bpp <= 16)
-                t->bpp = 11;    // ƒ}ƒXƒNƒf[ƒ^‚ğ—p‚¢‚Ä“WŠJ
+                t->bpp = 11;    // ãƒã‚¹ã‚¯ãƒ‡ãƒ¼ã‚¿ã‚’ç”¨ã„ã¦å±•é–‹.
             else if (t->bpp <= 24)
-                t->bpp = 23;    // ƒ}ƒXƒNƒf[ƒ^‚ğ—p‚¢‚Ä“WŠJ
+                t->bpp = 23;    // ãƒã‚¹ã‚¯ãƒ‡ãƒ¼ã‚¿ã‚’ç”¨ã„ã¦å±•é–‹.
             else
-                t->bpp = 31;    // ƒ}ƒXƒNƒf[ƒ^‚ğ—p‚¢‚Ä“WŠJ
+                t->bpp = 31;    // ãƒã‚¹ã‚¯ãƒ‡ãƒ¼ã‚¿ã‚’ç”¨ã„ã¦å±•é–‹.
         } else {
             return 0;
         }
@@ -554,7 +554,7 @@ static inline int bmp_getPix32(const uint8_t *s, int x, int bpp, uint32_t *clut,
     } else if (bpp <= 8) {
         return clut[s[x] + ofs];
 
-    } else if (bpp <= 11) { // ƒ}ƒXƒNî•ñ‚ğ—p‚¢‚é
+    } else if (bpp <= 11) { // ãƒã‚¹ã‚¯æƒ…å ±ã‚’ç”¨ã„ã‚‹.
         bmp_hdr_t *t = bmp_hdr;
         s += x * 2;
         c  = (s[1]<<8) | s[0];
@@ -598,7 +598,7 @@ static inline int bmp_getPix32(const uint8_t *s, int x, int bpp, uint32_t *clut,
         r  = ((c >> 11) & 0x1f) << 3; r |= r >> 5;
         return  BBBB(0, r,g,b);
 
-    } else if (bpp <= 23) { // ƒ}ƒXƒNî•ñ‚ğ—p‚¢‚é
+    } else if (bpp <= 23) { // ãƒã‚¹ã‚¯æƒ…å ±ã‚’ç”¨ã„ã‚‹.
         bmp_hdr_t *t = bmp_hdr;
         s += x * 3;
         c  = BBBB(0, s[2], s[1], s[0]);
@@ -612,7 +612,7 @@ static inline int bmp_getPix32(const uint8_t *s, int x, int bpp, uint32_t *clut,
         s += x * 3;
         return BBBB(0, s[2], s[1], s[0]);
 
-    } else if (bpp <= 31) { // ƒ}ƒXƒNî•ñ‚ğ—p‚¢‚é
+    } else if (bpp <= 31) { // ãƒã‚¹ã‚¯æƒ…å ±ã‚’ç”¨ã„ã‚‹.
         bmp_hdr_t *t = bmp_hdr;
         s += x * 4;
         c  = BBBB(s[3], s[2], s[1], s[0]);
@@ -630,7 +630,7 @@ static inline int bmp_getPix32(const uint8_t *s, int x, int bpp, uint32_t *clut,
 
 
 
-/** ‘½F‚Ì 256F‰»‚Í G3R3B2 Œ`®‚Ö‚ÌŠÈˆÕ•ÏŠ·. */
+/** å¤šè‰²ã® 256è‰²åŒ–ã¯ G3R3B2 å½¢å¼ã¸ã®ç°¡æ˜“å¤‰æ›. */
 static inline int bmp_getPix8(const uint8_t *s, int x, int bpp, uint32_t *dmy_clut, int ofs)
 {
     int     c;
@@ -652,7 +652,7 @@ static inline int bmp_getPix8(const uint8_t *s, int x, int bpp, uint32_t *dmy_cl
     } else if (bpp <= 8) {
         return (uint8_t)(s[x] + ofs);
 
-    } else if (bpp <= 11) { // ƒ}ƒXƒNî•ñ‚ğ—p‚¢‚é
+    } else if (bpp <= 11) { // ãƒã‚¹ã‚¯æƒ…å ±ã‚’ç”¨ã„ã‚‹.
         bmp_hdr_t *t = bmp_hdr;
         s += x * 2;
         c  = s[1]<<8 | s[0];
@@ -685,7 +685,7 @@ static inline int bmp_getPix8(const uint8_t *s, int x, int bpp, uint32_t *dmy_cl
         r  = ((c >> 11) & 0x1f) << 3;
         return  (((r>>5)&7)<<2) |(((g>>5)&7)<<5)| ((b>>6)&3);
 
-    } else if (bpp <= 23) { // ƒ}ƒXƒNî•ñ‚ğ—p‚¢‚é
+    } else if (bpp <= 23) { // ãƒã‚¹ã‚¯æƒ…å ±ã‚’ç”¨ã„ã‚‹.
         bmp_hdr_t *t = bmp_hdr;
         s += x * 3;
         c  = BBBB(0, s[2], s[1], s[0]);
@@ -698,7 +698,7 @@ static inline int bmp_getPix8(const uint8_t *s, int x, int bpp, uint32_t *dmy_cl
         s += x * 3;
         return (((s[2]>>5)&7)<<2) | (((s[1]>>5)&7)<<5) | ((s[0]>>6)&3);
 
-    } else if (bpp <= 31) { // ƒ}ƒXƒNî•ñ‚ğ—p‚¢‚é
+    } else if (bpp <= 31) { // ãƒã‚¹ã‚¯æƒ…å ±ã‚’ç”¨ã„ã‚‹.
         bmp_hdr_t *t = bmp_hdr;
         s += x * 4;
         c  = BBBB(s[3], s[2], s[1], s[0]);
@@ -717,7 +717,7 @@ static inline int bmp_getPix8(const uint8_t *s, int x, int bpp, uint32_t *dmy_cl
 
 static inline int bmp_getPix42(const uint8_t *s, int x, int bpp, uint32_t *dmy_clut, int ofs)
 {
-    // ‘½F‚Ì 16F‰»‚Í ƒ‚ƒmƒNƒ‚Ö‚ÌŠÈˆÕ•ÏŠ·.
+    // å¤šè‰²ã® 16è‰²åŒ–ã¯ ãƒ¢ãƒã‚¯ãƒ­ã¸ã®ç°¡æ˜“å¤‰æ›.
     int     c;
     int     r,g,b;
     int     m = (1<<bpp)-1;
@@ -739,7 +739,7 @@ static inline int bmp_getPix42(const uint8_t *s, int x, int bpp, uint32_t *dmy_c
         return (c + ofs) & m;
     } else if (bpp <= 8) {
         return (s[x] + ofs) & m;
-    } else if (bpp <= 11) { // ƒ}ƒXƒNî•ñ‚ğ—p‚¢‚é
+    } else if (bpp <= 11) { // ãƒã‚¹ã‚¯æƒ…å ±ã‚’ç”¨ã„ã‚‹.
         bmp_hdr_t *t = bmp_hdr;
         s += x * 2;
         c  = s[1]<<8 | s[0];
@@ -768,7 +768,7 @@ static inline int bmp_getPix42(const uint8_t *s, int x, int bpp, uint32_t *dmy_c
         g  = ((c >>  5) & 0x3f) << 2;
         r  = ((c >> 11) & 0x1f) << 3;
         return (g * 9 + r * 5 + b * 2) >> j;
-    } else if (bpp <= 23) { // ƒ}ƒXƒNî•ñ‚ğ—p‚¢‚é
+    } else if (bpp <= 23) { // ãƒã‚¹ã‚¯æƒ…å ±ã‚’ç”¨ã„ã‚‹.
         bmp_hdr_t *t = bmp_hdr;
         s += x * 3;
         c  = BBBB(0, s[2], s[1], s[0]);
@@ -779,7 +779,7 @@ static inline int bmp_getPix42(const uint8_t *s, int x, int bpp, uint32_t *dmy_c
     } else if (bpp <= 24) {
         s += x * 3;
         return (s[1] * 9 + s[2] * 5 + s[0] * 2) >> j;
-    } else if (bpp <= 31) { // ƒ}ƒXƒNî•ñ‚ğ—p‚¢‚é
+    } else if (bpp <= 31) { // ãƒã‚¹ã‚¯æƒ…å ±ã‚’ç”¨ã„ã‚‹.
         bmp_hdr_t *t = bmp_hdr;
         s += x * 4;
         c  = BBBB(s[3], s[2], s[1], s[0]);
@@ -797,7 +797,7 @@ static inline int bmp_getPix42(const uint8_t *s, int x, int bpp, uint32_t *dmy_c
 
 static int bmp_getPix1(const uint8_t *s, int x, int bpp, uint32_t *dmy_clut, int ofs)
 {
-    // ‘½F‚Ì 256F‰»‚Í G3R3B2 Œ`®‚Ö‚ÌŠÈˆÕ•ÏŠ·.
+    // å¤šè‰²ã® 256è‰²åŒ–ã¯ G3R3B2 å½¢å¼ã¸ã®ç°¡æ˜“å¤‰æ›.
     int c, n;
 
     dmy_clut;
@@ -830,9 +830,9 @@ static int bmp_getPix1(const uint8_t *s, int x, int bpp, uint32_t *dmy_clut, int
 
 
 
-/** srcBppF w*hƒhƒbƒg‚Ìsrc ‰æ‘œ‚ğAdstBppF w*h ‚Ì dst‰æ‘œ‚É•ÏŠ·‚·‚é.
- * o—Í‚ÍbmpŒü‚¯‚É 0ƒpƒeƒBƒ“ƒO‚·‚é
- * dir : bit0:ƒsƒNƒZƒ‹‡‚Í0=ã‚©‚ç 1=‰º‚©‚ç   bit1:0=¶‚©‚ç 1=‰E‚©‚ç
+/** srcBppè‰² w*hãƒ‰ãƒƒãƒˆã®src ç”»åƒã‚’ã€dstBppè‰² w*h ã® dstç”»åƒã«å¤‰æ›ã™ã‚‹.
+ * å‡ºåŠ›ã¯bmpå‘ã‘ã« 0ãƒ‘ãƒ†ã‚£ãƒ³ã‚°ã™ã‚‹.
+ * dir : bit0:ãƒ”ã‚¯ã‚»ãƒ«é †ã¯0=ä¸Šã‹ã‚‰ 1=ä¸‹ã‹ã‚‰   bit1:0=å·¦ã‹ã‚‰ 1=å³ã‹ã‚‰.
  */
 static int bmp_getPixs(uint8_t *dst, int dst_wb, int dstBpp, const uint8_t *src, int w, int h, int srcBpp, uint32_t *clut, int ofs_dir)
 {
@@ -859,7 +859,7 @@ static int bmp_getPixs(uint8_t *dst, int dst_wb, int dstBpp, const uint8_t *src,
     }
     DBG_F(("bmp_read spat=%d, dpat=%d, w=%d, dst_wb=%d, srcBpp=%d, dstBpp=%d\n", spat, dpat, w, dst_wb, srcBpp,dstBpp));
 
-    // ‰æ‘œ‚ÌŒü‚«‚Ì’²®
+    // ç”»åƒã®å‘ãã®èª¿æ•´.
     d   = (uint8_t *)dst;
     s   = (const uint8_t *)src;
     y0  = 0, y1 = h, yd = +1;
@@ -876,7 +876,7 @@ static int bmp_getPixs(uint8_t *dst, int dst_wb, int dstBpp, const uint8_t *src,
     DBG_F(("[%d, %d, %d, %d]\n", y0,y1,yd,dpat));
 
   #ifndef BIG_ENDIAN
-    // “üo—Í‚ª“¯‚¶bpp‚Å•ÏŠ·“™‚È‚­‰¡•4ƒoƒCƒg’PˆÊ‚Å‚ ‚ê‚ÎA‘f‘‚­ƒRƒs[
+    // å…¥å‡ºåŠ›ãŒåŒã˜bppã§å¤‰æ›ç­‰ãªãæ¨ªå¹…4ãƒã‚¤ãƒˆå˜ä½ã§ã‚ã‚Œã°ã€ç´ æ—©ãã‚³ãƒ”ãƒ¼.
     if (dstBpp == srcBpp && ofs == 0 && (dst_wb & 3) == 0 && (ABS(spat)&3) == 0 && (ABS(dpat)&3) == 0) {
         for (y = y0; y != y1; y += yd) {
             MEMCPY4(d, s, spat);
@@ -887,8 +887,8 @@ static int bmp_getPixs(uint8_t *dst, int dst_wb, int dstBpp, const uint8_t *src,
     }
   #endif
 
-    // ‰æ‘œƒRƒs[
-    if (dstBpp > 8) {   // o—Í‚ª‘½F‚Ì‚Æ‚«
+    // ç”»åƒã‚³ãƒ”ãƒ¼.
+    if (dstBpp > 8) {   // å‡ºåŠ›ãŒå¤šè‰²ã®ã¨ã.
         for (y = y0; y != y1; y += yd) {
             for (x = 0; x < w; x ++) {
                 c = bmp_getPix32(s, x, srcBpp, clut,ofs);
@@ -897,7 +897,7 @@ static int bmp_getPixs(uint8_t *dst, int dst_wb, int dstBpp, const uint8_t *src,
             d += dpat;
             s += spat;
         }
-    } else if (dstBpp > 4) {    // o—Í‚ª256F‚Ì‚Æ‚«
+    } else if (dstBpp > 4) {    // å‡ºåŠ›ãŒ256è‰²ã®ã¨ã.
         for (y = y0; y != y1; y += yd) {
             for (x = 0; x < w; x ++) {
                 c = bmp_getPix8(s, x, srcBpp, clut,ofs);
@@ -906,7 +906,7 @@ static int bmp_getPixs(uint8_t *dst, int dst_wb, int dstBpp, const uint8_t *src,
             d += dpat;
             s += spat;
         }
-    } else if (dstBpp > 2) {    // o—Í‚ª 16F‚Ì‚Æ‚«
+    } else if (dstBpp > 2) {    // å‡ºåŠ›ãŒ 16è‰²ã®ã¨ã.
         for (y = y0; y != y1; y += yd) {
             for (x = 0; x < w; x++) {
                 c = (uint8_t)(bmp_getPix42(s, x, srcBpp, clut,ofs) << 4);
@@ -917,7 +917,7 @@ static int bmp_getPixs(uint8_t *dst, int dst_wb, int dstBpp, const uint8_t *src,
             d += dpat;
             s += spat;
         }
-    } else if (dstBpp > 1) {    // o—Í‚ª 4F‚Ì‚Æ‚«
+    } else if (dstBpp > 1) {    // å‡ºåŠ›ãŒ 4è‰²ã®ã¨ã.
         for (y = y0; y != y1; y += yd) {
             for (x = 0; x < w; x++) {
                 c = bmp_getPix42(s, x, srcBpp, clut,ofs) << 6;
@@ -929,7 +929,7 @@ static int bmp_getPixs(uint8_t *dst, int dst_wb, int dstBpp, const uint8_t *src,
             d += dpat;
             s += spat;
         }
-    } else {    // o—Í‚ª 2F‚Ì‚Æ‚«
+    } else {    // å‡ºåŠ›ãŒ 2è‰²ã®ã¨ã.
         for (y = y0; y != y1; y += yd) {
             for (x = 0; x < w; x ++) {
                 c = bmp_getPix1(s, x, srcBpp, clut,ofs) << 7;
@@ -951,7 +951,7 @@ static int bmp_getPixs(uint8_t *dst, int dst_wb, int dstBpp, const uint8_t *src,
 
 
 
-/** rle8 ‚Åˆ³k‚³‚ê‚½ƒf[ƒ^‚ğ‰ğ“€ */
+/** rle8 ã§åœ§ç¸®ã•ã‚ŒãŸãƒ‡ãƒ¼ã‚¿ã‚’è§£å‡ */
 static int bmp_decodeRle8(uint8_t *dst, const uint8_t *src, int w, int h)
 {
     const uint8_t*  s;
@@ -966,7 +966,7 @@ static int bmp_decodeRle8(uint8_t *dst, const uint8_t *src, int w, int h)
     if (dst == NULL || src == NULL || w == 0 || h == 0)
         return 0;
 
-    wb = WID2BYT4(w, 8);        // dst‚Ì‰¡•‚Í4ƒoƒCƒg’PˆÊ
+    wb = WID2BYT4(w, 8);        // dstã®æ¨ªå¹…ã¯4ãƒã‚¤ãƒˆå˜ä½.
     s = (const uint8_t*)src;
     d = (uint8_t *)dst;
     e = dst + h * wb;
@@ -975,13 +975,13 @@ static int bmp_decodeRle8(uint8_t *dst, const uint8_t *src, int w, int h)
             l = *s++;
             if (l == 0x00) {
                 c = *s++;
-                if (c == 0x00) {        // s––‚Ü‚ÅƒXƒLƒbƒv
+                if (c == 0x00) {        // è¡Œæœ«ã¾ã§ã‚¹ã‚­ãƒƒãƒ—.
                     goto LINE_END;
-                } else if (c == 0x01) { // ‰æ‘œ‚ÌI’[‚¾‚Á‚½
+                } else if (c == 0x01) { // ç”»åƒã®çµ‚ç«¯ã ã£ãŸ.
                     while (d < e)
                         *d++ = 0;
                     goto EXIT;
-                } else if (c == 0x02) { // (+u,+v)•ªƒXƒLƒbƒv
+                } else if (c == 0x02) { // (+u,+v)åˆ†ã‚¹ã‚­ãƒƒãƒ—.
                     u = *s++;
                     v = *s++;
                     l = v * wb + u;
@@ -1007,10 +1007,10 @@ static int bmp_decodeRle8(uint8_t *dst, const uint8_t *src, int w, int h)
                         *d++ = *s++;
                         x++;
                     } while (--l);
-                    if (c & 1)  // ƒpƒeƒBƒ“ƒO‚ğƒXƒLƒbƒv
+                    if (c & 1)  // ãƒ‘ãƒ†ã‚£ãƒ³ã‚°ã‚’ã‚¹ã‚­ãƒƒãƒ—.
                         s++;
                 }
-            } else {        // c ‚ğl bytes‘‚«‚Ş
+            } else {        // c ã‚’l bytesæ›¸ãè¾¼ã‚€.
                 c = *s++;
                 do {
                     if (x >= w) {
@@ -1025,7 +1025,7 @@ static int bmp_decodeRle8(uint8_t *dst, const uint8_t *src, int w, int h)
                 } while (--l);
             }
         }
-        if (s[0] == 0 && s[1] == 0) // ‚Ç‚¤‚â‚çâ‘Î‚És––•„†‚Í“ü‚Á‚Ä‚¢‚é?
+        if (s[0] == 0 && s[1] == 0) // ã©ã†ã‚„ã‚‰çµ¶å¯¾ã«è¡Œæœ«ç¬¦å·ã¯å…¥ã£ã¦ã„ã‚‹?
             s += 2;
       LINE_END:
         while (x++ < wb)
@@ -1037,7 +1037,7 @@ static int bmp_decodeRle8(uint8_t *dst, const uint8_t *src, int w, int h)
 
 
 
-/** rle4 ‚Åˆ³k‚³‚ê‚½ƒf[ƒ^‚ğ‰ğ“€. 8ƒrƒbƒgF‚É‚µ‚Ä•Ô‚· */
+/** rle4 ã§åœ§ç¸®ã•ã‚ŒãŸãƒ‡ãƒ¼ã‚¿ã‚’è§£å‡. 8ãƒ“ãƒƒãƒˆè‰²ã«ã—ã¦è¿”ã™ */
 static int bmp_decodeRle4(uint8_t *dst, const uint8_t *src, int w, int h)
 {
     const uint8_t*  s;
@@ -1052,7 +1052,7 @@ static int bmp_decodeRle4(uint8_t *dst, const uint8_t *src, int w, int h)
     if (dst == NULL || src == NULL || w == 0 || h == 0)
         return 0;
 
-    wb   = WID2BYT4(w, 8);      // dst‚Ì‰¡•‚Í4ƒoƒCƒg’PˆÊ
+    wb   = WID2BYT4(w, 8);      // dstã®æ¨ªå¹…ã¯4ãƒã‚¤ãƒˆå˜ä½.
     s = (const uint8_t*)src;
     d = (uint8_t *)dst;
     e = dst + h * wb;
@@ -1061,13 +1061,13 @@ static int bmp_decodeRle4(uint8_t *dst, const uint8_t *src, int w, int h)
             l = *s++;
             if (l == 0x00) {
                 c = *s++;
-                if (c == 0x00) {        // s––‚Ü‚ÅƒXƒLƒbƒv
+                if (c == 0x00) {        // è¡Œæœ«ã¾ã§ã‚¹ã‚­ãƒƒãƒ—.
                     goto LINE_END;
-                } else if (c == 0x01) { // ‰æ‘œ‚ÌI’[‚¾‚Á‚½
+                } else if (c == 0x01) { // ç”»åƒã®çµ‚ç«¯ã ã£ãŸ.
                     while (d < e)
                         *d++ = 0;
                     goto EXIT;
-                } else if (c == 0x02) { // (+u,+v)•ªƒXƒLƒbƒv
+                } else if (c == 0x02) { // (+u,+v)åˆ†ã‚¹ã‚­ãƒƒãƒ—.
                     u = *s++;
                     v = *s++;
                     l = v * wb + u;
@@ -1106,10 +1106,10 @@ static int bmp_decodeRle4(uint8_t *dst, const uint8_t *src, int w, int h)
                         x++;
                     } while (--l);
                     v =  (-v) & 3;
-                    if (v & 2)  // ƒpƒeƒBƒ“ƒO‚ğƒXƒLƒbƒv
+                    if (v & 2)  // ãƒ‘ãƒ†ã‚£ãƒ³ã‚°ã‚’ã‚¹ã‚­ãƒƒãƒ—.
                         s++;
                 }
-            } else {        // c ‚ğl bytes‘‚«‚Ş
+            } else {        // c ã‚’l bytesæ›¸ãè¾¼ã‚€.
                 c = *s++;
                 u = c & 0x0f;
                 c = c >> 4;

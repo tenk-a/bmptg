@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
     bool rc = dec.read(&img[0]);
     if (rc) {
         unsigned clut[1024] = {0};
-        int dst_bpp    = dec.bpp() <=8 ? 8 : dec.bpp();         // tga‚Í2F16F‚ª–³‚¢‚Ì‚Å256F‚É.
+        int dst_bpp    = dec.bpp() <=8 ? 8 : dec.bpp();         // tgaã¯2è‰²16è‰²ãŒç„¡ã„ã®ã§256è‰²ã«.
         printf("%s %d*%d bpp=%d wb=%d dec.bpp=%d\n", dst_name, dec.width(), dec.height(), dst_bpp, dec.widthByte(), dec.bpp());
         convRGB(&img[0], dec.imageByte() );
         tga_write_file(dst_name, dec.width(), dec.height(), dst_bpp, &img[0], dec.widthByte(), dec.bpp(), clut, 0);

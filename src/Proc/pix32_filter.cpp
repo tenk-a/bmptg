@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_filter.cpp
- *  @brief  ƒtƒBƒ‹ƒ^
+ *  @brief  ãƒ•ã‚£ãƒ«ã‚¿
  */
 
 #ifndef PIX32_FILTER_H

@@ -1,7 +1,7 @@
 /**
  *  @file   HuffmanEncode.hpp
  *  @brief  huffman encode
- *  @author Masahi Kitamura  (Original program by Haruhiko Okumura "CŒ¾Œê‚É‚æ‚éÅVƒAƒ‹ƒSƒŠƒYƒ€–“T")
+ *  @author Masahi Kitamura  (Original program by Haruhiko Okumura "Cè¨€èªã«ã‚ˆã‚‹æœ€æ–°ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ äº‹å…¸")
  */
 
 #ifndef FKS_HUFFMANDECODE_HPP

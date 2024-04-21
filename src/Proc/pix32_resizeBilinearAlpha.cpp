@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_resizeBilinearAlpha.c
- *  @brief  alphaƒ`ƒƒƒ“ƒlƒ‹‚Ì‚İ‚ğƒoƒCƒŠƒjƒA–@‚ÅŠg‘åk¬. rgb‚Íæ‚Éo—Í‚³‚ê‚Ä‚¢‚é‚±‚Æ‘O’ñ
+ *  @brief  alphaãƒãƒ£ãƒ³ãƒãƒ«ã®ã¿ã‚’ãƒã‚¤ãƒªãƒ‹ã‚¢æ³•ã§æ‹¡å¤§ç¸®å°. rgbã¯å…ˆã«å‡ºåŠ›ã•ã‚Œã¦ã„ã‚‹ã“ã¨å‰æ.
  *  @author Masashi KITAMURA
  */
 
@@ -28,7 +28,7 @@ static void pix32_resizeBilinearAlphaSub(unsigned* dst, unsigned dstW, unsigned 
 static void pix32_resizeBilinearAlphaReduc(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH);
 
 
-/** ƒ¿ƒ`ƒƒƒ“ƒlƒ‹‚Ì‚İŠg‘åk¬
+/** Î±ãƒãƒ£ãƒ³ãƒãƒ«ã®ã¿æ‹¡å¤§ç¸®å°.
  */
 int  pix32_resizeBilinearAlpha(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH)
 {
@@ -52,7 +52,7 @@ int  pix32_resizeBilinearAlpha(unsigned *dst, unsigned dstW, unsigned dstH, cons
 }
 
 
-/** Bilinear Šg‘å‚Ì‚İ
+/** Bilinear æ‹¡å¤§ã®ã¿.
  */
 static void  pix32_resizeBilinearAlphaSub(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH)
 {
@@ -143,7 +143,7 @@ static void  pix32_resizeBilinearAlphaSub(unsigned* dst, unsigned dstW, unsigned
 }
 
 
-/** Bilinear Šg‘åk¬
+/** Bilinear æ‹¡å¤§ç¸®å°.
  */
 static void  pix32_resizeBilinearAlphaReduc(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH)
 {
@@ -157,7 +157,7 @@ static void  pix32_resizeBilinearAlphaReduc(unsigned* dst, unsigned dstW, unsign
 
     assert(dst && dstW && dstH && src && srcW && srcH);
 
-    // Šg‘å‚µ‚½‚ ‚Æ ®””{‚Åk¬‚·‚é‚½‚ß‚Ì®””{—¦‚ğ‹‚ß‚é.
+    // æ‹¡å¤§ã—ãŸã‚ã¨ æ•´æ•°å€ã§ç¸®å°ã™ã‚‹ãŸã‚ã®æ•´æ•°å€ç‡ã‚’æ±‚ã‚ã‚‹.
     rscaleX  = (double)srcW / dstW;
     rscaleY  = (double)srcH / dstH;
     mw       = (rscaleX <= 1.0) ? 1 : (int)rscaleX + 1;

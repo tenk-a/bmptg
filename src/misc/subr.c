@@ -1,6 +1,6 @@
 /**
  *  @file   subr.c
- *  @biref  ŠeíG‘½‚Èƒ‹[ƒ`ƒ“ŒQ
+ *  @biref  å„ç¨®é›‘å¤šãªãƒ«ãƒ¼ãƒãƒ³ç¾¤
  *  @author Masashi Kitamura
  *  @date   199?-??-??
  */
@@ -25,13 +25,13 @@ extern "C" {
 
 /*--------------------------------------------------------------------------*/
 
-int     dbgExLog_sw__ = 0;      ///< [’¼Úg—p‚µ‚¿‚áƒ_ƒ] dbg_printf“™‚Å‚ÌƒƒOo—Í‚Ì—L–³‚ğ•Û. 0:off 1:on
+int     dbgExLog_sw__ = 0;      ///< [ç›´æ¥ä½¿ç”¨ã—ã¡ã‚ƒãƒ€ãƒ¡] dbg_printfç­‰ã§ã®ãƒ­ã‚°å‡ºåŠ›ã®æœ‰ç„¡ã‚’ä¿æŒ. 0:off 1:on
 
 
 
 
 /*--------------------------------------------------------------------------*/
-/* •¶š—ñˆ—ŠÖŒW                                                           */
+/* æ–‡å­—åˆ—å‡¦ç†é–¢ä¿‚                                                           */
 
 
 static inline char *strNCpyZ(char *dst, const char *src, size_t size)
@@ -86,9 +86,9 @@ long strtolKM(const char *s, char **d, int r)
 
 
 /*--------------------------------------------------------------------------*/
-/* ƒGƒ‰[ˆ—•t‚«‚Ì•W€ŠÖ”                                                 */
+/* ã‚¨ãƒ©ãƒ¼å‡¦ç†ä»˜ãã®æ¨™æº–é–¢æ•°                                                 */
 
-/** ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦exit‚Ì malloc() */
+/** ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³exitã® malloc() */
 void *mallocE(size_t a)
 {
     void *p;
@@ -98,14 +98,14 @@ void *mallocE(size_t a)
     p = calloc(1,a);
     //printf("malloc(0x%x)\n",a);
     if (p == NULL) {
-        err_abortMsg("ƒƒ‚ƒŠ‚ª‘«‚è‚È‚¢(%d byte(s))\n",a);
+        err_abortMsg("ãƒ¡ãƒ¢ãƒªãŒè¶³ã‚Šãªã„(%d byte(s))\n",a);
     }
     return p;
 }
 
 
 
-/** ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦exit‚Ì calloc() */
+/** ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³exitã® calloc() */
 void *callocE(size_t a, size_t b)
 {
     void *p;
@@ -115,7 +115,7 @@ void *callocE(size_t a, size_t b)
     p = calloc(a,b);
     //printf("calloc(0x%x,0x%x)\n",a,b);
     if (p == NULL) {
-        err_abortMsg("ƒƒ‚ƒŠ‚ª‘«‚è‚È‚¢(%d*%d byte(s))\n",a,b);
+        err_abortMsg("ãƒ¡ãƒ¢ãƒªãŒè¶³ã‚Šãªã„(%d*%d byte(s))\n",a,b);
     }
     return p;
 }
@@ -123,7 +123,7 @@ void *callocE(size_t a, size_t b)
 
 
 #if 0
-/** ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦exit‚Ì calloc() */
+/** ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³exitã® calloc() */
 void *reallocE(void *m, size_t a)
 {
     void *p;
@@ -133,7 +133,7 @@ void *reallocE(void *m, size_t a)
     p = realloc(m, a);
     //printf("realloc(0x%x,0x%x)\n",m,a);
     if (p == NULL) {
-        err_abortMsg("ƒƒ‚ƒŠ‚ª‘«‚è‚È‚¢(%d byte(s))\n",a);
+        err_abortMsg("ãƒ¡ãƒ¢ãƒªãŒè¶³ã‚Šãªã„(%d byte(s))\n",a);
     }
     return p;
 }
@@ -141,7 +141,7 @@ void *reallocE(void *m, size_t a)
 
 
 
-/** ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦exit‚Ì strdup() */
+/** ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³exitã® strdup() */
 char *strdupE(const char *s)
 {
     char *p;
@@ -153,7 +153,7 @@ char *strdupE(const char *s)
     if (p)
         strcpy(p, s);
     if (p == NULL) {
-        err_abortMsg("ƒƒ‚ƒŠ‚ª‘«‚è‚È‚¢(’·‚³%d+1)\n",strlen(s));
+        err_abortMsg("ãƒ¡ãƒ¢ãƒªãŒè¶³ã‚Šãªã„(é•·ã•%d+1)\n",strlen(s));
     }
     return p;
 }
@@ -176,28 +176,28 @@ void *mallocMaE(int sz, int minSz, int aln)
 
     p = mallocMa(sz, minSz, aln);
     if (p == NULL) {
-        err_abortMsg("ƒƒ‚ƒŠ‚ª‘«‚è‚È‚¢(%d byte(s))\n",sz);
+        err_abortMsg("ãƒ¡ãƒ¢ãƒªãŒè¶³ã‚Šãªã„(%d byte(s))\n",sz);
     }
     return p;
 }
 
 
-/** w’è‚µ‚½sz ‚Åmalloc ‚µ‚Ä¸”s‚µ‚½‚çAminSz `sz ‚Ì”ÍˆÍ‚Å“K“–‚É‚µ‚Äƒƒ‚ƒŠ‚ğŠm•Û‚·‚é.
- * aln ‚ª 0ˆÈã‚Å‚ ‚ê‚Î 2‚Ìalnæ‚ÅƒTƒCƒY‚ğƒAƒ‰ƒCƒƒ“ƒg‚µ‚Ü‚·
+/** æŒ‡å®šã—ãŸsz ã§malloc ã—ã¦å¤±æ•—ã—ãŸã‚‰ã€minSz ï½sz ã®ç¯„å›²ã§é©å½“ã«è©¦ã—ã¦ãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿ã™ã‚‹.
+ * aln ãŒ 0ä»¥ä¸Šã§ã‚ã‚Œã° 2ã®alnä¹—ã§ã‚µã‚¤ã‚ºã‚’ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã—ã¾ã™
  */
 void *mallocMa(int sz, int minSz, int aln)
 {
     void *p;
     int  a;
 
-    /* ƒAƒ‰ƒCƒƒ“ƒg—p‚Ìƒ}ƒXƒN‚ğ¶¬ */
+    /* ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆç”¨ã®ãƒã‚¹ã‚¯ã‚’ç”Ÿæˆ */
     if (aln <= 0)
         a = 1;
     else
         a = (1<<aln);
     a = a - 1;
 
-    /* ƒTƒCƒY‚ğ’²® */
+    /* ã‚µã‚¤ã‚ºã‚’èª¿æ•´ */
     sz = (sz + a) & ~a;
     minSz = (minSz + a) & ~a;
 
@@ -205,7 +205,7 @@ void *mallocMa(int sz, int minSz, int aln)
     if (p)
         return p;
 
-    /* Å¬ƒTƒCƒY‚ªŠm•Û‚Å‚«‚é‚©ƒ`ƒFƒbƒN */
+    /* æœ€å°ã‚µã‚¤ã‚ºãŒç¢ºä¿ã§ãã‚‹ã‹ãƒã‚§ãƒƒã‚¯ */
     if (minSz <= 0)
         return NULL;
     p = malloc(minSz);
@@ -213,7 +213,7 @@ void *mallocMa(int sz, int minSz, int aln)
         return NULL;
     free(p);
 
-    /* Šm•Û‚Å‚«‚éƒTƒCƒY‚ğ’T‚·*/
+    /* ç¢ºä¿ã§ãã‚‹ã‚µã‚¤ã‚ºã‚’æ¢ã™*/
     do {
         sz = (sz/2 + a) & ~a;
         if (sz < minSz)
@@ -233,7 +233,7 @@ void *mallocMa(int sz, int minSz, int aln)
 #if 0
 
 /*--------------------------------------------------------------------------*/
-/* ƒGƒ‰[ˆ—AƒfƒoƒbƒO—pŠÖ”                                               */
+/* ã‚¨ãƒ©ãƒ¼å‡¦ç†ã€ãƒ‡ãƒãƒƒã‚°ç”¨é–¢æ•°                                               */
 
 /*volatile*/void err_abortMsg(const char *fmt, ...)
 {
@@ -277,7 +277,7 @@ void dbg_printf(const char *fmt, ...)
 
 
 /*--------------------------------------------------------------------------*/
-/* ƒtƒ@ƒCƒ‹–¼•¶š—ñˆ—                                                     */
+/* ãƒ•ã‚¡ã‚¤ãƒ«åæ–‡å­—åˆ—å‡¦ç†                                                     */
 
 int  fname_sjisFlag = 1;
 
@@ -359,7 +359,7 @@ char *fname_addExt(char filename[], const char *ext)
 
 
 
-/** •¶š—ñ‚ÌÅŒã‚É \ ‚© / ‚ª‚ ‚ê‚Îíœ */
+/** æ–‡å­—åˆ—ã®æœ€å¾Œã« \ ã‹ / ãŒã‚ã‚Œã°å‰Šé™¤ */
 char *fname_delLastDirSep(char *dir)
 {
     char *p, *s;
@@ -397,7 +397,7 @@ char *fname_delLastDirSep(char *dir)
 
 
 #if 0
-/** ‘SŠp‚QƒoƒCƒg–Ú‚ğl—¶‚µ‚½ strupr
+/** å…¨è§’ï¼’ãƒã‚¤ãƒˆç›®ã‚’è€ƒæ…®ã—ãŸ strupr
  */
 char *fname_strUpr(char *s0)
 {
@@ -419,8 +419,8 @@ char *fname_strUpr(char *s0)
 
 
 
-/** ƒfƒBƒŒƒNƒgƒŠ–¼‚Æƒtƒ@ƒCƒ‹–¼‚ğ‚­‚Á‚Â‚¯‚½‚à‚Ì‚ğstrdup‚·‚é
- *  Šg’£q‚Ì•t‚¯‘Ö‚¦‚ª‚Å‚«‚é‚æ‚¤A+5ƒoƒCƒg‚Í—]•ª‚Éƒƒ‚ƒŠ‚ÍŠm•Û‚·‚é
+/** ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã¨ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ãã£ã¤ã‘ãŸã‚‚ã®ã‚’strdupã™ã‚‹
+ *  æ‹¡å¼µå­ã®ä»˜ã‘æ›¿ãˆãŒã§ãã‚‹ã‚ˆã†ã€+5ãƒã‚¤ãƒˆã¯ä½™åˆ†ã«ãƒ¡ãƒ¢ãƒªã¯ç¢ºä¿ã™ã‚‹
  */
 char *fname_dirNameDupE(const char *dir, const char *name)
 {
@@ -428,15 +428,15 @@ char *fname_dirNameDupE(const char *dir, const char *name)
 
     m = fname_dirNameDup(dir,name);
     if (m == NULL) {
-        err_abortMsg("ƒƒ‚ƒŠ‚ª‘«‚è‚Ü‚¹‚ñ\n");
+        err_abortMsg("ãƒ¡ãƒ¢ãƒªãŒè¶³ã‚Šã¾ã›ã‚“\n");
     }
     return (char*)m;
 }
 
 
 
-/** ƒfƒBƒŒƒNƒgƒŠ–¼‚Æƒtƒ@ƒCƒ‹–¼‚ğ‚­‚Á‚Â‚¯‚½‚à‚Ì‚ğstrdup‚·‚é
- *  Šg’£q‚Ì•t‚¯‘Ö‚¦‚ª‚Å‚«‚é‚æ‚¤A+5ƒoƒCƒg‚Í—]•ª‚Éƒƒ‚ƒŠ‚ÍŠm•Û‚·‚é
+/** ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã¨ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ãã£ã¤ã‘ãŸã‚‚ã®ã‚’strdupã™ã‚‹.
+ *  æ‹¡å¼µå­ã®ä»˜ã‘æ›¿ãˆãŒã§ãã‚‹ã‚ˆã†ã€+5ãƒã‚¤ãƒˆã¯ä½™åˆ†ã«ãƒ¡ãƒ¢ãƒªã¯ç¢ºä¿ã™ã‚‹.
  */
 char *fname_dirNameDup(const char *dir, const char *name)
 {
@@ -469,7 +469,7 @@ char *fname_dirDirNameChgExt(char *onam, const char *dir, const char *mdir, cons
     onam[0] = 0;
     if (dir && dir[0])
         strcpy(onam, dir);
-    if (mdir && mdir[0]) {      // ƒ\[ƒXƒfƒBƒŒƒNƒgƒŠ‚ªw’è‚³‚ê‚Ä‚¢‚ê‚ÎAŒ³‚Ìw’è–¼‚ÌƒfƒBƒŒƒNƒgƒŠ‚à•t‚¯‚é
+    if (mdir && mdir[0]) {      // ã‚½ãƒ¼ã‚¹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒæŒ‡å®šã•ã‚Œã¦ã„ã‚Œã°ã€å…ƒã®æŒ‡å®šåã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚‚ä»˜ã‘ã‚‹.
         if (onam[0])
             strcat(onam, "\\");
         strcat(onam, mdir);
@@ -516,16 +516,16 @@ char *fname_dirNameAddExt(char *nam, const char *dir, const char *name, const ch
 #endif
 
 
-/// name ’†‚Ìƒhƒ‰ƒCƒu–¼‚Æƒx[ƒX–¼‚ğ”²‚¢‚½ƒfƒBƒŒƒNƒgƒŠ–¼‚ğmdir[]‚É“ü‚ê‚Ä•Ô‚·
+/// name ä¸­ã®ãƒ‰ãƒ©ã‚¤ãƒ–åã¨ãƒ™ãƒ¼ã‚¹åã‚’æŠœã„ãŸãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã‚’mdir[]ã«å…¥ã‚Œã¦è¿”ã™.
 char *fname_getMidDir(char mdir[], const char *name)
 {
     char *d;
 
     if (mdir == NULL || name == NULL)
         return NULL;
-    if (name[1] == ':')     // ƒhƒ‰ƒCƒu–¼•t‚«‚¾‚Á‚½
+    if (name[1] == ':')     // ãƒ‰ãƒ©ã‚¤ãƒ–åä»˜ãã ã£ãŸ.
         name += 2;
-    if (name[0] == '\\')    // ƒ‹[ƒgw’è‚³‚ê‚Ä‚½
+    if (name[0] == '\\')    // ãƒ«ãƒ¼ãƒˆæŒ‡å®šã•ã‚Œã¦ãŸ.
         name += 1;
     strcpy(mdir, name);
     d = fname_baseName(mdir);
@@ -541,7 +541,7 @@ char *fname_getMidDir(char mdir[], const char *name)
 /* ------------------------- */
 
 #if 0
-/// ƒtƒ@ƒCƒ‹‚ğrename. newname ‚ª‚·‚Å‚É‚ ‚ê‚Î .bak ‚É—\‚ß•Ï–¼.
+/// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’rename. newname ãŒã™ã§ã«ã‚ã‚Œã° .bak ã«äºˆã‚å¤‰å.
 int fil_rename(const char *oldname, const char *newname)
 {
     char bak[FIL_NMSZ];
@@ -587,7 +587,7 @@ static int fil_getTmpDirSub(char *t, int f)
                 if (f == 0)
                     p = ".\\";
                 else
-                    err_abortMsg("ŠÂ‹«•Ï”TMP‚©TEMP‚Åƒeƒ“ƒ|ƒ‰ƒŠEƒfƒBƒŒƒNƒgƒŠ‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢\n");
+                    err_abortMsg("ç’°å¢ƒå¤‰æ•°TMPã‹TEMPã§ãƒ†ãƒ³ãƒãƒ©ãƒªãƒ»ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æŒ‡å®šã—ã¦ãã ã•ã„\n");
             }
         }
         strcpy(nm, p);
@@ -617,9 +617,9 @@ int fil_isWildC(const char *onam)
 
 
 #if defined(__SC__) || defined(__LCC__) // dmc, lcc
-// _finddatai64_t ‚ª–³‚¢ê‡—p...
-// ‚È‚ñ‚¾‚ª windows Œn‚¾‚Æ‚Ş‚µ‚ëA‚±‚Ì‚Ù‚¤‚ª”Ä—p“I‚¾‚ë‚¤...
-// ‚ªAƒRƒ“ƒpƒCƒ‹’Ê‚µ‚½‚¾‚¯‚ÅA•ÏŠ·ƒeƒXƒg“™‚µ‚Ä‚¢‚È‚¢‚Ì‚ÅA‚Æ‚è‚ ‚¦‚¸b’è•¨B
+// _finddatai64_t ãŒç„¡ã„å ´åˆç”¨...
+// ãªã‚“ã ãŒ windows ç³»ã ã¨ã‚€ã—ã‚ã€ã“ã®ã»ã†ãŒæ±ç”¨çš„ã ã‚ã†...
+// ãŒã€ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«é€šã—ãŸã ã‘ã§ã€å¤‰æ›ãƒ†ã‚¹ãƒˆç­‰ã—ã¦ã„ãªã„ã®ã§ã€ã¨ã‚Šã‚ãˆãšæš«å®šç‰©.
 
 static WIN32_FIND_DATA  fil_findData;
 static char             fil_findDir[FIL_NMSZ];
@@ -667,8 +667,8 @@ char *fil_findNextName(char dst[])
 
 
 
-/** “ñ‚Â‚Ìƒtƒ@ƒCƒ‹‚Ì“ú•t‚Ì‘å¬‚ğ”äŠr‚·‚é.
- *  tgt ‚ªV‚µ‚¯‚ê‚Î 1(³), “¯‚¶‚È‚ç‚Î 0, tgt ‚ªŒÃ‚¯‚ê‚Î -1(•‰)
+/** äºŒã¤ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®æ—¥ä»˜ã®å¤§å°ã‚’æ¯”è¼ƒã™ã‚‹.
+ *  tgt ãŒæ–°ã—ã‘ã‚Œã° 1(æ­£), åŒã˜ãªã‚‰ã° 0, tgt ãŒå¤ã‘ã‚Œã° -1(è² )
  */
 int fil_fdateCmp(const char *tgt, const char *src)
 {
@@ -747,8 +747,8 @@ char *fil_findNextName(char dst[])
 
 
 
-/** “ñ‚Â‚Ìƒtƒ@ƒCƒ‹‚Ì“ú•t‚Ì‘å¬‚ğ”äŠr‚·‚é.
- *  tgt ‚ªV‚µ‚¯‚ê‚Î 1(³), “¯‚¶‚È‚ç‚Î 0, tgt ‚ªŒÃ‚¯‚ê‚Î -1(•‰)
+/** äºŒã¤ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®æ—¥ä»˜ã®å¤§å°ã‚’æ¯”è¼ƒã™ã‚‹.
+ *  tgt ãŒæ–°ã—ã‘ã‚Œã° 1(æ­£), åŒã˜ãªã‚‰ã° 0, tgt ãŒå¤ã‘ã‚Œã° -1(è² )
  */
 int fil_fdateCmp(const char *tgt, const char *src)
 {
@@ -788,13 +788,13 @@ void fil_makeDmyFileE(const char *oname, size_t fsiz, int fh)
     if (c < 0) {
         switch (c) {
         case -1:
-            err_abortMsg("ƒtƒ@ƒCƒ‹ %s ‚ğƒI[ƒvƒ“‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½\n", oname);
+            err_abortMsg("ãƒ•ã‚¡ã‚¤ãƒ« %s ã‚’ã‚ªãƒ¼ãƒ—ãƒ³ã§ãã¾ã›ã‚“ã§ã—ãŸ\n", oname);
             break;
         case -2:
-            err_abortMsg("ƒtƒ@ƒCƒ‹ %s ‚Ì‘‚«‚İ’†‚ÉƒGƒ‰[”­¶\n", oname);
+            err_abortMsg("ãƒ•ã‚¡ã‚¤ãƒ« %s ã®æ›¸ãè¾¼ã¿ä¸­ã«ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿ\n", oname);
             break;
         case -3:
-            err_abortMsg("ƒtƒ@ƒCƒ‹ %s ‚Ìì¬Aƒƒ‚ƒŠ‚ª•s‘«‚µ‚½.\n", oname);
+            err_abortMsg("ãƒ•ã‚¡ã‚¤ãƒ« %s ã®ä½œæˆæ™‚ã€ãƒ¡ãƒ¢ãƒªãŒä¸è¶³ã—ãŸ.\n", oname);
             break;
         default:
             assert(0);
@@ -856,7 +856,7 @@ void *fil_saveE(const char *name, void *buf, int size)
 
     p = fil_save(name, buf, size);
     if (p == NULL) {
-        err_abortMsg("%s‚ÌƒZ[ƒu‚É¸”s‚µ‚Ü‚µ‚½\n", name);
+        err_abortMsg("%sã®ã‚»ãƒ¼ãƒ–ã«å¤±æ•—ã—ã¾ã—ãŸ\n", name);
     }
     return p;
 }
@@ -864,7 +864,7 @@ void *fil_saveE(const char *name, void *buf, int size)
 
 
 
-/// ƒfƒBƒŒƒNƒgƒŠŒ@‚è‹@”\•t‚«‚Ìfopen
+/// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªæ˜ã‚Šæ©Ÿèƒ½ä»˜ãã®fopen
 FILE *fopenMD(const char *name, char *mode)
 {
     FILE *fp;
@@ -874,7 +874,7 @@ FILE *fopenMD(const char *name, char *mode)
     fp = fopen(name, mode);
     if (fp)
         return fp;
-    if (strpbrk(mode, "wa") == NULL)    // “Ç‚İ‚İƒ‚[ƒh‚È‚ç‚ÎƒtƒHƒ‹ƒ_‚ğì¬‚µ‚È‚¢
+    if (strpbrk(mode, "wa") == NULL)    // èª­ã¿è¾¼ã¿ãƒ¢ãƒ¼ãƒ‰ãªã‚‰ã°ãƒ•ã‚©ãƒ«ãƒ€ã‚’ä½œæˆã—ãªã„.
         return NULL;
     strcpy(nm, name);
     e = nm + strlen(nm);
@@ -922,21 +922,21 @@ void *fil_loadE(const char *name, void *buf, int bufsz, int *rdszp)
 
     p = fil_load(name, buf, bufsz, rdszp);
     if (p == NULL) {
-        err_abortMsg("%s‚Ìƒ[ƒh‚É¸”s‚µ‚Ü‚µ‚½\n", name);
+        err_abortMsg("%sã®ãƒ­ãƒ¼ãƒ‰ã«å¤±æ•—ã—ã¾ã—ãŸ\n", name);
     }
     return p;
 }
 
 
 
-/** ƒtƒ@ƒCƒ‹Eƒ[ƒh
- *  @return buf‚ÌƒAƒhƒŒƒX‚©malloc‚³‚ê‚½ƒAƒhƒŒƒX. ƒGƒ‰[‚ÍNULL‚ğ•Ô‚·
+/** ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ­ãƒ¼ãƒ‰.
+ *  @return bufã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‹mallocã•ã‚ŒãŸã‚¢ãƒ‰ãƒ¬ã‚¹. ã‚¨ãƒ©ãƒ¼æ™‚ã¯NULLã‚’è¿”ã™.
  */
 void *fil_load(
-    const char  *name,  ///< “Ç‚İ‚±‚Şƒtƒ@ƒCƒ‹
-    void        *buf,   ///< “Ç‚İ‚±‚Şƒƒ‚ƒŠBNULL‚ªw’è‚³‚ê‚ê‚Î malloc‚µA16ƒoƒCƒg—]•ª‚ÉŠm•Û‚·‚é
-    int         bufsz,  ///< buf‚ÌƒTƒCƒYB0‚ªw’è‚³‚ê‚ê‚Î ƒtƒ@ƒCƒ‹ƒTƒCƒY‚Æ‚È‚é
-    int         *rdszp) ///< NULL‚Å‚È‚¯‚ê‚ÎA“Ç‚İ‚±‚ñ‚¾ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ğ“ü‚ê‚Ä•Ô‚·
+    const char  *name,  ///< èª­ã¿ã“ã‚€ãƒ•ã‚¡ã‚¤ãƒ«.
+    void        *buf,   ///< èª­ã¿ã“ã‚€ãƒ¡ãƒ¢ãƒªã€‚NULLãŒæŒ‡å®šã•ã‚Œã‚Œã° mallocã—ã€16ãƒã‚¤ãƒˆä½™åˆ†ã«ç¢ºä¿ã™ã‚‹.
+    int         bufsz,  ///< bufã®ã‚µã‚¤ã‚ºã€‚0ãŒæŒ‡å®šã•ã‚Œã‚Œã° ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã¨ãªã‚‹.
+    int         *rdszp) ///< NULLã§ãªã‘ã‚Œã°ã€èª­ã¿ã“ã‚“ã ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã‚’å…¥ã‚Œã¦è¿”ã™.
 {
     FILE *fp;
     int  l;
@@ -972,7 +972,7 @@ void *fil_load(
 #if 0
 
 /*--------------------------------------------------------------------------*/
-/* ƒtƒ@ƒCƒ‹‚Ì“ú•t‚ğæ“¾                                                     */
+/* ãƒ•ã‚¡ã‚¤ãƒ«ã®æ—¥ä»˜ã‚’å–å¾—                                                     */
 
 #ifdef __BORLANDC__
 
@@ -1037,17 +1037,17 @@ int fil_timeCmp(FIL_TIME t1, FIL_TIME t2)
 
 
 /* ------------------------------------------------------------------------ */
-/* ƒGƒ‰[exit‚·‚é ƒtƒ@ƒCƒ‹ŠÖ”                                              */
+/* ã‚¨ãƒ©ãƒ¼exitã™ã‚‹ ãƒ•ã‚¡ã‚¤ãƒ«é–¢æ•°                                              */
 
 
 FILE *fopenE(const char *name, const char *mod)
 {
-    /* ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦exit‚Ì fopen() */
+    /* ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³exitã® fopen() */
     FILE *fp;
 
     fp = fopen(name,mod);
     if (fp == NULL) {
-        err_abortMsg("ƒtƒ@ƒCƒ‹ %s ‚ğƒI[ƒvƒ“‚Å‚«‚Ü‚¹‚ñ\n",name);
+        err_abortMsg("ãƒ•ã‚¡ã‚¤ãƒ« %s ã‚’ã‚ªãƒ¼ãƒ—ãƒ³ã§ãã¾ã›ã‚“\n",name);
     }
     setvbuf(fp, NULL, _IOFBF, 1024*1024);
     return fp;
@@ -1056,13 +1056,13 @@ FILE *fopenE(const char *name, const char *mod)
 
 size_t  fwriteE(const void *buf, size_t sz, size_t num, FILE *fp)
 {
-    /* ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦exit‚Ì fwrite() */
+    /* ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³exitã® fwrite() */
     size_t l;
 
     l = fwrite(buf, sz, num, fp);
     if (ferror(fp)) {
         fcloseE(fp);
-        err_abortMsg("ƒtƒ@ƒCƒ‹‘‚İ‚ÅƒGƒ‰[”­¶\n");
+        err_abortMsg("ãƒ•ã‚¡ã‚¤ãƒ«æ›¸è¾¼ã¿ã§ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿ\n");
     }
     return l;
 }
@@ -1070,13 +1070,13 @@ size_t  fwriteE(const void *buf, size_t sz, size_t num, FILE *fp)
 
 size_t  freadE(void *buf, size_t sz, size_t num, FILE *fp)
 {
-    /* ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦exit‚Ì fread() */
+    /* ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³exitã® fread() */
     size_t l;
 
     l = fread(buf, sz, num, fp);
     if (ferror(fp)) {
         fcloseE(fp);
-        err_abortMsg("ƒtƒ@ƒCƒ‹“Ç‚İ‚ÅƒGƒ‰[”­¶\n");
+        err_abortMsg("ãƒ•ã‚¡ã‚¤ãƒ«èª­è¾¼ã¿ã§ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿ\n");
     }
     return l;
 }
@@ -1095,7 +1095,7 @@ void fcloseE(FILE *fp)
 
 
 #if 0
-/* ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ğ‹‚ß‚é */
+/* ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã‚’æ±‚ã‚ã‚‹ */
 size_t  fil_length(FILE *fp)
 {
     return filelength(fileno(fp));
@@ -1106,11 +1106,11 @@ size_t  fil_length(FILE *fp)
 
 
 /* ------------------------------------------------------------------------ */
-/* ƒGƒ‰[exit‚·‚é fgetc,fputcƒtƒ@ƒCƒ‹ŠÖ”                                   */
+/* ã‚¨ãƒ©ãƒ¼exitã™ã‚‹ fgetc,fputcãƒ•ã‚¡ã‚¤ãƒ«é–¢æ•°                                   */
 
 #if 0
 
-/** fp‚æ‚è 1ƒoƒCƒg(0..255) “Ç‚İ‚Ş. ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦I—¹ */
+/** fpã‚ˆã‚Š 1ãƒã‚¤ãƒˆ(0..255) èª­ã¿è¾¼ã‚€. ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³çµ‚äº† */
 int fgetcE(FILE *fp)
 {
     static uint8_t buf[1];
@@ -1120,7 +1120,7 @@ int fgetcE(FILE *fp)
 }
 
 
-/** fp‚æ‚è ØÄÙ´İÃŞ¨±İ‚Å 2ƒoƒCƒg“Ç‚İ‚Ş. ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦I—¹ */
+/** fpã‚ˆã‚Š ï¾˜ï¾„ï¾™ï½´ï¾ï¾ƒï¾ï½¨ï½±ï¾ã§ 2ãƒã‚¤ãƒˆèª­ã¿è¾¼ã‚€. ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³çµ‚äº† */
 int fgetc2iE(FILE *fp)
 {
     int c;
@@ -1129,7 +1129,7 @@ int fgetc2iE(FILE *fp)
 }
 
 
-/** fp‚æ‚è ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“‚Å 4ƒoƒCƒg“Ç‚İ‚Ş. ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦I—¹ */
+/** fpã‚ˆã‚Š ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã§ 4ãƒã‚¤ãƒˆèª­ã¿è¾¼ã‚€. ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³çµ‚äº† */
 int fgetc4iE(FILE *fp)
 {
     int c;
@@ -1139,7 +1139,7 @@ int fgetc4iE(FILE *fp)
 }
 
 
-/** fp‚æ‚è bigƒGƒ“ƒfƒBƒAƒ“‚Å 2ƒoƒCƒg“Ç‚İ‚Ş. ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦I—¹ */
+/** fpã‚ˆã‚Š bigã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã§ 2ãƒã‚¤ãƒˆèª­ã¿è¾¼ã‚€. ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³çµ‚äº† */
 int fgetc2mE(FILE *fp)
 {
     int c;
@@ -1149,7 +1149,7 @@ int fgetc2mE(FILE *fp)
 }
 
 
-/** fp‚æ‚è bigƒGƒ“ƒfƒBƒAƒ“‚Å 4ƒoƒCƒg“Ç‚İ‚Ş. ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦I—¹ */
+/** fpã‚ˆã‚Š bigã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã§ 4ãƒã‚¤ãƒˆèª­ã¿è¾¼ã‚€. ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³çµ‚äº† */
 int fgetc4mE(FILE *fp)
 {
     int c;
@@ -1159,7 +1159,7 @@ int fgetc4mE(FILE *fp)
 }
 
 
-/** fp‚É 1ƒoƒCƒg(0..255) ‘‚«‚Ş. ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦I—¹ */
+/** fpã« 1ãƒã‚¤ãƒˆ(0..255) æ›¸ãè¾¼ã‚€. ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³çµ‚äº† */
 void fputcE(int c, FILE *fp)
 {
     static uint8_t buf[1];
@@ -1169,7 +1169,7 @@ void fputcE(int c, FILE *fp)
 }
 
 
-/** fp‚É ËŞ¯¸Ş´İÃŞ¨±İ‚Å 2ƒoƒCƒg‘‚«‚Ş. ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦I—¹ */
+/** fpã« ï¾‹ï¾ï½¯ï½¸ï¾ï½´ï¾ï¾ƒï¾ï½¨ï½±ï¾ã§ 2ãƒã‚¤ãƒˆæ›¸ãè¾¼ã‚€. ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³çµ‚äº† */
 void fputc2mE(int c, FILE *fp)
 {
     static uint8_t buf[4];
@@ -1180,7 +1180,7 @@ void fputc2mE(int c, FILE *fp)
 }
 
 
-/** fp‚É ËŞ¯¸Ş´İÃŞ¨±İ‚Å 4ƒoƒCƒg‘‚«‚Ş. ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦I—¹ */
+/** fpã« ï¾‹ï¾ï½¯ï½¸ï¾ï½´ï¾ï¾ƒï¾ï½¨ï½±ï¾ã§ 4ãƒã‚¤ãƒˆæ›¸ãè¾¼ã‚€. ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³çµ‚äº† */
 void fputc4mE(int c, FILE *fp)
 {
     static uint8_t buf[4];
@@ -1203,7 +1203,7 @@ void *fputsE(char *s, FILE *fp)
 }
 
 
-/** fp‚É ØÄÙ´İÃŞ¨±İ‚Å 2ƒoƒCƒg‘‚«‚Ş. ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦I—¹ */
+/** fpã« ï¾˜ï¾„ï¾™ï½´ï¾ï¾ƒï¾ï½¨ï½±ï¾ã§ 2ãƒã‚¤ãƒˆæ›¸ãè¾¼ã‚€. ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³çµ‚äº† */
 void fputc2iE(int c, FILE *fp)
 {
     static uint8_t buf[4];
@@ -1214,7 +1214,7 @@ void fputc2iE(int c, FILE *fp)
 }
 
 
-/** fp‚É ØÄÙ´İÃŞ¨±İ‚Å 4ƒoƒCƒg‘‚«‚Ş. ƒGƒ‰[‚ª‚ ‚ê‚Î‘¦I—¹ */
+/** fpã« ï¾˜ï¾„ï¾™ï½´ï¾ï¾ƒï¾ï½¨ï½±ï¾ã§ 4ãƒã‚¤ãƒˆæ›¸ãè¾¼ã‚€. ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°å³çµ‚äº† */
 void fputc4iE(int c, FILE *fp)
 {
     static uint8_t buf[4];
@@ -1234,14 +1234,14 @@ void fputc4iE(int c, FILE *fp)
 /*--------------------------------------------------------------------------*/
 
 #if 0
-/** BM–@‚ğ—p‚¢‚½•¡”ƒoƒCƒgƒf[ƒ^‚ÌƒT[ƒ`
- * ¦ CŒ¾Œê‚É‚æ‚éƒAƒ‹ƒSƒŠƒYƒ€«“T‚Ì‚ğ‰ü‘¢
+/** BMæ³•ã‚’ç”¨ã„ãŸè¤‡æ•°ãƒã‚¤ãƒˆãƒ‡ãƒ¼ã‚¿ã®ã‚µãƒ¼ãƒ.
+ * â€» Cè¨€èªã«ã‚ˆã‚‹ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ è¾å…¸ã®ã‚’æ”¹é€ .
  */
 void *memSearch(
-    const void *area0,      ///< ŒŸõŠJnƒAƒhƒŒƒX
-    int         asiz,       ///< ŒŸõ”ÍˆÍ(byte)
-    const void *ptn0,       ///< ŒŸõ‚·‚éƒpƒ^[ƒ“
-    int ptnlen)             ///< ƒpƒ^[ƒ“‚Ì’·‚³(byte)
+    const void *area0,      ///< æ¤œç´¢é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹.
+    int         asiz,       ///< æ¤œç´¢ç¯„å›²(byte)
+    const void *ptn0,       ///< æ¤œç´¢ã™ã‚‹ãƒ‘ã‚¿ãƒ¼ãƒ³.
+    int ptnlen)             ///< ãƒ‘ã‚¿ãƒ¼ãƒ³ã®é•·ã•(byte)
 {
     int skp[256];
     int i, j, k;
@@ -1251,35 +1251,35 @@ void *memSearch(
     if (ptnlen <= 0 || asiz <= 0) {
         return NULL;
     }
-    tail = ptn[ptnlen - 1];             /* ÅŒã‚Ì•¶š(1byte) */
-    if (ptnlen == 1) {                  /* ’·‚³1‚È‚çŠÈ’P! */
-        for (i = 0; i < asiz; i++) {    /* ’Pƒ‚É“¯‚¶1byte‚ªŒ©‚Â‚©‚é‚Ü‚ÅŒŸõ */
+    tail = ptn[ptnlen - 1];             /* æœ€å¾Œã®æ–‡å­—(1byte) */
+    if (ptnlen == 1) {                  /* é•·ã•1ãªã‚‰ç°¡å˜! */
+        for (i = 0; i < asiz; i++) {    /* å˜ç´”ã«åŒã˜1byteãŒè¦‹ã¤ã‹ã‚‹ã¾ã§æ¤œç´¢ */
             if (area[i] == tail)
-                return area + i;        /* ‚İ‚Â‚©‚Á‚½ */
+                return area + i;        /* ã¿ã¤ã‹ã£ãŸ */
         }
-    } else {                            /* ’·‚³2ˆÈã‚Ì‚Æ‚«•\ˆø‚« */
-                                        /* skp[]‚ÉA‚»‚Ì•¶š‚ªŒŸõ•¶šŠO‚Ì‚Æ‚«‚ÉŸ‚ÌŒŸõŠJnˆÊ’u‚ÖƒXƒLƒbƒv‚·‚éƒoƒCƒg”‚ğİ’è‚·‚é */
-        for (i = 0; i < 256; i++)       /* ‚Ü‚¸256•¶š‚·‚×‚Ä•sˆê’v‚Ìê‡‚Æ‚µ‚ÄŒŸõƒf[ƒ^ƒTƒCƒY•ª‚ÌƒXƒLƒbƒv’l‚ğİ’è */
+    } else {                            /* é•·ã•2ä»¥ä¸Šã®ã¨ãè¡¨å¼•ã */
+                                        /* skp[]ã«ã€ãã®æ–‡å­—ãŒæ¤œç´¢æ–‡å­—å¤–ã®ã¨ãã«æ¬¡ã®æ¤œç´¢é–‹å§‹ä½ç½®ã¸ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹ãƒã‚¤ãƒˆæ•°ã‚’è¨­å®šã™ã‚‹ */
+        for (i = 0; i < 256; i++)       /* ã¾ãš256æ–‡å­—ã™ã¹ã¦ä¸ä¸€è‡´ã®å ´åˆã¨ã—ã¦æ¤œç´¢ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚ºåˆ†ã®ã‚¹ã‚­ãƒƒãƒ—å€¤ã‚’è¨­å®š */
             skp[i] = ptnlen;
-        for (i = 0; i < ptnlen-1; i++)  /* Ÿ‚ÉŒŸõƒf[ƒ^‚ğ\¬‚·‚é•¶š‚Ìê‡‚ÍA‚»‚Ì•¶š‚æ‚èŒã‚ë‚ÌŒŸõƒf[ƒ^‚ÌƒoƒCƒg”•ª‚ğƒXƒLƒbƒv‚É‚·‚é */
+        for (i = 0; i < ptnlen-1; i++)  /* æ¬¡ã«æ¤œç´¢ãƒ‡ãƒ¼ã‚¿ã‚’æ§‹æˆã™ã‚‹æ–‡å­—ã®å ´åˆã¯ã€ãã®æ–‡å­—ã‚ˆã‚Šå¾Œã‚ã®æ¤œç´¢ãƒ‡ãƒ¼ã‚¿ã®ãƒã‚¤ãƒˆæ•°åˆ†ã‚’ã‚¹ã‚­ãƒƒãƒ—ã«ã™ã‚‹ */
             skp[ptn[i]] = ptnlen - 1 - i;
-        /* i = ptnlen - 1; */           /* for•¶‚ÌŒ‹‰Ê‚ª‚±‚Ì®‚É“™‚µ‚¢‚©‚ç•s—v */
-        /* w’è”ÍˆÍ‚ÌŒŸõŠJnI */
+        /* i = ptnlen - 1; */           /* foræ–‡ã®çµæœãŒã“ã®å¼ã«ç­‰ã—ã„ã‹ã‚‰ä¸è¦ */
+        /* æŒ‡å®šç¯„å›²ã®æ¤œç´¢é–‹å§‹ï¼ */
         while (i < asiz) {
-            c = area[i];                /* ŒŸõƒf[ƒ^‚Ì”öŒŠ‚Ì1byte‚ğƒ`ƒFƒbƒN‚·‚é. */
-            if (c == tail) {            /* ‚±‚±‚Åˆá‚¦‚ÎA(Å‘å)ŒŸõƒf[ƒ^ƒoƒCƒg”‚ÍA”äŠr‚¹‚¸ƒXƒLƒbƒv‚Å‚«‚é */
-                j = ptnlen - 1;         /* “¯‚¶‚È‚ç‚ÎA‚³‚ç‚ÉŒŸõƒf[ƒ^‚ğŒã‚ë‚©‚ç”äŠr‚·‚é */
+            c = area[i];                /* æ¤œç´¢ãƒ‡ãƒ¼ã‚¿ã®å°¾ç©´ã®1byteã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹. */
+            if (c == tail) {            /* ã“ã“ã§é•ãˆã°ã€(æœ€å¤§)æ¤œç´¢ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒˆæ•°ã¯ã€æ¯”è¼ƒã›ãšã‚¹ã‚­ãƒƒãƒ—ã§ãã‚‹ */
+                j = ptnlen - 1;         /* åŒã˜ãªã‚‰ã°ã€ã•ã‚‰ã«æ¤œç´¢ãƒ‡ãƒ¼ã‚¿ã‚’å¾Œã‚ã‹ã‚‰æ¯”è¼ƒã™ã‚‹ */
                 k = i;
                 while (ptn[--j] == area[--k]) {
-                    if (j == 0)         /* ŒŸõƒf[ƒ^‚Ìæ“ª‚È‚ç‚Î */
-                        return area + k;/* Œ©‚Â‚©‚Á‚½ */
+                    if (j == 0)         /* æ¤œç´¢ãƒ‡ãƒ¼ã‚¿ã®å…ˆé ­ãªã‚‰ã° */
+                        return area + k;/* è¦‹ã¤ã‹ã£ãŸ */
                 }
             }
-            i += skp[c];                /* ‚»‚ÌˆÊ’u‚Åƒ}ƒbƒ`‚µ‚È‚©‚Á‚½‚Ì‚ÅAŸ‚ÌˆÊ’u‚Ü‚ÅƒXƒLƒbƒv */
+            i += skp[c];                /* ãã®ä½ç½®ã§ãƒãƒƒãƒã—ãªã‹ã£ãŸã®ã§ã€æ¬¡ã®ä½ç½®ã¾ã§ã‚¹ã‚­ãƒƒãƒ— */
         }
     }
 
-    /* Œ©‚Â‚©‚ç‚È‚©‚Á‚½ */
+    /* è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸ */
     return NULL;
 }
 #endif
@@ -1288,9 +1288,9 @@ void *memSearch(
 
 
 /* ------------------------------------------------------------------------ */
-/* •¶š—ñ‚ÌƒŠƒXƒg‚ğì¬     */
+/* æ–‡å­—åˆ—ã®ãƒªã‚¹ãƒˆã‚’ä½œæˆ     */
 
-/** •¶š—ñ‚ÌƒŠƒXƒg‚ğ’Ç‰Á        */
+/** æ–‡å­—åˆ—ã®ãƒªã‚¹ãƒˆã‚’è¿½åŠ         */
 slist_t *slist_add(slist_t **p0, char *s)
 {
     slist_t* p;
@@ -1312,7 +1312,7 @@ slist_t *slist_add(slist_t **p0, char *s)
 }
 
 
-/** •¶š—ñ‚ÌƒŠƒXƒg‚ğíœ    */
+/** æ–‡å­—åˆ—ã®ãƒªã‚¹ãƒˆã‚’å‰Šé™¤    */
 void slist_free(slist_t **p0)
 {
     slist_t *p, *q;
@@ -1328,7 +1328,7 @@ void slist_free(slist_t **p0)
 
 
 /* ------------------------------------------------------------------------ */
-/* ƒtƒ@ƒCƒ‹–¼ ‚Ìæ“¾ */
+/* ãƒ•ã‚¡ã‚¤ãƒ«å ã®å–å¾— */
 #if 0
 
 static flist_mode = 0;
@@ -1377,7 +1377,7 @@ void flist_setOutName(const char *dst)
 
 static flist_t *flist_add1(flist_t **p0, const char *nm)
 {
-    /* •¶š—ñ‚ÌƒŠƒXƒg‚ğ’Ç‰Á     */
+    /* æ–‡å­—åˆ—ã®ãƒªã‚¹ãƒˆã‚’è¿½åŠ      */
     char buf[FIL_NMSZ], mdir[FIL_NMSZ];
     flist_t* p;
 
@@ -1430,7 +1430,7 @@ flist_t *flist_add(flist_t **p0, const char *s)
 
 #if 0
 /* ------------------------------------------------------------------------ */
-/* ƒ\[ƒgÏ‚İ•¶š—ñƒ|ƒCƒ“ƒ^‚Ì”z—ñ‚æ‚èA•¶š—ñ‚ğŒŸõ‚µ‚Ä‚»‚ÌˆÊ’u‚ğ•Ô‚·       */
+/* ã‚½ãƒ¼ãƒˆæ¸ˆã¿æ–‡å­—åˆ—ãƒã‚¤ãƒ³ã‚¿ã®é…åˆ—ã‚ˆã‚Šã€æ–‡å­—åˆ—ã‚’æ¤œç´¢ã—ã¦ãã®ä½ç½®ã‚’è¿”ã™       */
 
 static int STBL_strCmp(const char *a, const char *b)
 {
@@ -1448,11 +1448,11 @@ STBL_CMP STBL_setFncCmp(STBL_CMP cmp)
 }
 
 
-/** •¶š—ñƒe[ƒuƒ‹‚Éˆê‚Â“o˜^
- *  @param t     : •¶š—ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ‚¨‚³‚ß‚½”z—ñ
- *  @param tblcnt: “o˜^ÏŒÂ”
- *  @param key   : ’Ç‰Á‚·‚é•¶š—ñ
- *  @return 0:’Ç‰Á -1:‚·‚Å‚É“o˜^Ï
+/** æ–‡å­—åˆ—ãƒ†ãƒ¼ãƒ–ãƒ«ã«ä¸€ã¤ç™»éŒ²
+ *  @param t     : æ–‡å­—åˆ—ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’ãŠã•ã‚ãŸé…åˆ—
+ *  @param tblcnt: ç™»éŒ²æ¸ˆå€‹æ•°
+ *  @param key   : è¿½åŠ ã™ã‚‹æ–‡å­—åˆ—
+ *  @return 0:è¿½åŠ  -1:ã™ã§ã«ç™»éŒ²æ¸ˆ
  */
 int STBL_add(void *t[], int *tblcnt, void *key)
 {
@@ -1468,7 +1468,7 @@ int STBL_add(void *t[], int *tblcnt, void *key)
             mid++;
             low = mid;
         } else {
-            return -1;  /* “¯‚¶‚à‚Ì‚ª‚İ‚Â‚©‚Á‚½‚Ì‚Å’Ç‰Á‚µ‚È‚¢ */
+            return -1;  /* åŒã˜ã‚‚ã®ãŒã¿ã¤ã‹ã£ãŸã®ã§è¿½åŠ ã—ãªã„ */
         }
     }
     (*tblcnt)++;
@@ -1483,10 +1483,10 @@ int STBL_add(void *t[], int *tblcnt, void *key)
 int STBL_search(void *tbl[], int nn, void *key)
 {
    /*
-    *  key:‚³‚ª‚·•¶š—ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^
-    *  tbl:•¶š—ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ‚¨‚³‚ß‚½”z—ñ
-    *  nn:”z—ñ‚ÌƒTƒCƒY
-    *  •œ‹A’l:Œ©‚Â‚©‚Á‚½•¶š—ñ‚Ì”Ô†(0‚æ‚è)  ‚İ‚Â‚©‚ç‚È‚©‚Á‚½‚Æ‚«-1
+    *  key:ã•ãŒã™æ–‡å­—åˆ—ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+    *  tbl:æ–‡å­—åˆ—ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’ãŠã•ã‚ãŸé…åˆ—
+    *  nn:é…åˆ—ã®ã‚µã‚¤ã‚º
+    *  å¾©å¸°å€¤:è¦‹ã¤ã‹ã£ãŸæ–‡å­—åˆ—ã®ç•ªå·(0ã‚ˆã‚Š)  ã¿ã¤ã‹ã‚‰ãªã‹ã£ãŸã¨ã-1
     */
     int     low, mid, f;
 
@@ -1508,7 +1508,7 @@ int STBL_search(void *tbl[], int nn, void *key)
 
 
 /*--------------------------------------------------------------------------*/
-/* ˆê‚Â‚ÌƒeƒLƒXƒgƒtƒ@ƒCƒ‹“Ç‚İ‚±‚İ                                           */
+/* ä¸€ã¤ã®ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿ã“ã¿                                           */
 
 unsigned int    TXT1_line;
 char    TXT1_name[FIL_NMSZ];
@@ -1582,7 +1582,7 @@ void TXT1_close(void)
 
 #if 0
 /* ------------------------------------------------------------------------ */
-/* ˆê‚Â‚ÌƒeƒLƒXƒgƒtƒ@ƒCƒ‹o—Í                                               */
+/* ä¸€ã¤ã®ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ›                                               */
 
 uint32_t    OTXT1_line;
 char    OTXT1_name[FIL_NMSZ];

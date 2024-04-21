@@ -1,6 +1,6 @@
 /**
  *  @file   BmImgSave.h
- *  @brief  ŠeíƒtƒH[ƒ}ƒbƒg(bmp,tga ..)‚ÌƒZ[ƒu
+ *  @brief  å„ç¨®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ(bmp,tga ..)ã®ã‚»ãƒ¼ãƒ–
  *  @author Masashi Kitamura
  *  @date   2000
  */
@@ -35,7 +35,7 @@
 
 int  bm_write(int fmt, void *bm_data, int w, int h, int bpp, const void *src, int srcWb, int srcBpp, const void *clut, int dir_flags, const bm_opt_t *o)
 {
-    // bpp‚ª8ƒrƒbƒgˆÈ‰º‚Ì‚Æ‚«‚ÍsrcBpp=8, ‘½F‰æ‚Ì‚Æ‚«‚Í srcBpp=32 ‚Å‚ ‚é‚±‚Æ
+    // bppãŒ8ãƒ“ãƒƒãƒˆä»¥ä¸‹ã®ã¨ãã¯srcBpp=8, å¤šè‰²ç”»ã®ã¨ãã¯ srcBpp=32 ã§ã‚ã‚‹ã“ã¨.
     int n = 0;
 
     switch (fmt) {
@@ -52,14 +52,14 @@ int  bm_write(int fmt, void *bm_data, int w, int h, int bpp, const void *src, in
       #else
         {
             int clutBpp = o->clutBpp;
-            if (dir_flags & 0x40)   // clut‚ğƒ¿•t‚É‚·‚é.
+            if (dir_flags & 0x40)   // clutã‚’Î±ä»˜ã«ã™ã‚‹.
                 clutBpp = 32;
             n = tga_writeEx(bm_data, 0x7FFFFFFF, w, h, bpp, src, srcWb, srcBpp, clut, clutBpp, dir_flags, 0,0);
         }
       #endif
         break;
 
-    case BM_FMT_BETA:   // ƒwƒbƒ_–³‚µ‚Ì¶ƒf[ƒ^
+    case BM_FMT_BETA:   // ãƒ˜ãƒƒãƒ€ç„¡ã—ã®ç”Ÿãƒ‡ãƒ¼ã‚¿.
         n = beta_conv(bm_data, WID2BYT(w,bpp), h, bpp, src, srcWb, srcBpp, clut, dir_flags, 0,0);
         break;
 
@@ -123,7 +123,7 @@ int  bm_write(int fmt, void *bm_data, int w, int h, int bpp, const void *src, in
 
 int bm_chkDstBpp(int fmt, int bpp)
 {
-    // Œ¸F‚ÌF”‚Ì‚½‚ß‚ÉdstBpp‚ğ—¬—p‚µ‚Ä’l‚ª”ÍˆÍŠO‚Ìê‡‚ª‚ ‚é‚Ì‚ÅA‹­ˆø‚É’Òåë‡‚í‚¹
+    // æ¸›è‰²ã®è‰²æ•°ã®ãŸã‚ã«dstBppã‚’æµç”¨ã—ã¦å€¤ãŒç¯„å›²å¤–ã®å ´åˆãŒã‚ã‚‹ã®ã§ã€å¼·å¼•ã«è¾»è¤„åˆã‚ã›.
     if (bpp <= 1)       bpp = 1;
     else if (bpp <=  2) bpp = 2;
     //else if(bpp <= 3) bpp = 3;

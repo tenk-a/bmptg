@@ -1,6 +1,6 @@
 /**
  *  @file   tga_wrt.c
- *  @brief  tga‰æ‘œo—Í.
+ *  @brief  tgaç”»åƒå‡ºåŠ›.
  *  @author Masashi Kitamura
  */
 
@@ -10,7 +10,7 @@
 
 
 /*--------------------------------------------------------------------------*/
-/* ƒRƒ“ƒpƒCƒ‹ŠÂ‹«‚Ì’Òåë‚ ‚í‚¹. */
+/* ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ç’°å¢ƒã®è¾»è¤„ã‚ã‚ã›. */
 
 
 #if (defined _MSC_VER) || (defined __BORLANDC__ && __BORLANDC__ <= 0x0551)
@@ -28,12 +28,12 @@ typedef unsigned       uint32_t;
 
 
 
-#ifdef _WINDOWS         // winƒAƒvƒŠ‚ÅA‚È‚é‚×‚­ Cƒ‰ƒCƒuƒ‰ƒŠ‚ğƒŠƒ“ƒN‚µ‚½‚­‚È‚¢ê‡—p.
+#ifdef _WINDOWS         // winã‚¢ãƒ—ãƒªã§ã€ãªã‚‹ã¹ã Cãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’ãƒªãƒ³ã‚¯ã—ãŸããªã„å ´åˆç”¨.
 #include <windows.h>
 #define MALLOC(sz)          LocalAlloc(LMEM_FIXED, (sz))
 #define FREE(p)             LocalFree(p)
 #else
-#include <stdlib.h>     /* NULL, malloc, free ‚ğg—p */
+#include <stdlib.h>     /* NULL, malloc, free ã‚’ä½¿ç”¨ */
 #define MALLOC(sz)          malloc(sz)
 #define FREE(p)             free(p)
 #endif
@@ -41,7 +41,7 @@ typedef unsigned       uint32_t;
 
 
 /*--------------------------------------------------------------------------*/
-//x #define MY_EX           /* ‚±‚ê‚ğ’è‹`‚·‚é‚ÆA“Æ©‚Ìbpp=12(A4R4G4B4)ƒtƒH[ƒ}ƒbƒg‚É‘Î‰ */
+//x #define MY_EX           /* ã“ã‚Œã‚’å®šç¾©ã™ã‚‹ã¨ã€ç‹¬è‡ªã®bpp=12(A4R4G4B4)ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã«å¯¾å¿œ */
 
 #define BBBB(a,b,c,d)   ((((uint8_t)(a))<<24)+(((uint8_t)(b))<<16)+(((uint8_t)(c))<<8)+((uint8_t)(d)))
 
@@ -54,8 +54,8 @@ typedef unsigned       uint32_t;
 #define POKEW(a,b)      (*(uint16_t *)(a) = (b))
 #define POKED(a,b)      (*(uint32_t *)(a) = (b))
 
-#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__   // X86 ‚ÍAƒAƒ‰ƒCƒƒ“ƒg‚ğ‹C‚É‚·‚é•K—v‚ª‚È‚¢‚Ì‚Å’¼ÚƒAƒNƒZƒX
- // DM-C v8.41‚Å‚Ì-j0‚ÌƒoƒO‘Îô‚Å, ƒ}ƒNƒ“à‚Éƒ}ƒNƒ‚ğ‘‚©‚È‚¢‚æ‚¤‚ÉC³.
+#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__   // X86 ã¯ã€ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã‚’æ°—ã«ã™ã‚‹å¿…è¦ãŒãªã„ã®ã§ç›´æ¥ã‚¢ã‚¯ã‚»ã‚¹.
+ // DM-C v8.41ã§ã®-j0ã®ãƒã‚°å¯¾ç­–ã§, ãƒã‚¯ãƒ­å†…ã«ãƒã‚¯ãƒ­ã‚’æ›¸ã‹ãªã„ã‚ˆã†ã«ä¿®æ­£.
  #define POKEiW(a,b)    (*(uint16_t *)(a) = (b))
 #else
  #define POKEiW(a,b)    (POKEB((a),GLB(b)), POKEB((ptrdiff_t)(a)+1,GHB(b)))
@@ -70,13 +70,13 @@ typedef unsigned       uint32_t;
 
 
 /*--------------------------------------------------------------------------*/
-/* o—Í‚Ì‚½‚ß‚Ì‘‚«‚±‚İˆ—(ƒGƒ“ƒfƒBƒAƒ“‘Îô)                               */
+/* å‡ºåŠ›ã®ãŸã‚ã®æ›¸ãã“ã¿å‡¦ç†(ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³å¯¾ç­–)                               */
 
 
-#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__   // X86 ‚ÍAƒAƒ‰ƒCƒƒ“ƒg‚ğ‹C‚É‚·‚é•K—v‚ª‚È‚¢‚Ì‚Å’¼ÚƒAƒNƒZƒX
-/* ”Ä—p‚Å‚Í‚È‚­A‚±‚Ìƒtƒ@ƒCƒ‹‚Ì‚İ‚Å—LŒø‚Èƒ}ƒNƒB */
-/* ˆø” a ‚Í•K‚¸uint8_t*Œ^•Ï”‚Ö‚Ìƒ|ƒCƒ“ƒ^‚Å‚ ‚é‚±‚Æ! */
-/* mput_b3()‚Ì c ‚Í•›ì—p‚Ì‚È‚¢’l‚Å‚ ‚é‚±‚ÆI */
+#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__   // X86 ã¯ã€ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã‚’æ°—ã«ã™ã‚‹å¿…è¦ãŒãªã„ã®ã§ç›´æ¥ã‚¢ã‚¯ã‚»ã‚¹.
+/* æ±ç”¨ã§ã¯ãªãã€ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿ã§æœ‰åŠ¹ãªãƒã‚¯ãƒ­ã€‚ */
+/* å¼•æ•° a ã¯å¿…ãšuint8_t*å‹å¤‰æ•°ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã§ã‚ã‚‹ã“ã¨! */
+/* mput_b3()ã® c ã¯å‰¯ä½œç”¨ã®ãªã„å€¤ã§ã‚ã‚‹ã“ã¨ï¼ */
 
 #define mput_b1(a, c)       (*((*a)++) = (c))
 #define mput_b2(a, c)       (*(uint16_t*)(*a) = (c),  (*a) += 2)
@@ -88,7 +88,7 @@ typedef unsigned       uint32_t;
 
 #define mput_b1(a, c)       (*((*a)++) = (c))
 
-/** 2ƒoƒCƒgƒƒ‚ƒŠ‘‚«‚±‚İ */
+/** 2ãƒã‚¤ãƒˆãƒ¡ãƒ¢ãƒªæ›¸ãã“ã¿ */
 static inline void mput_b2(uint8_t **a, int c)
 {
     uint8_t *d = *a;
@@ -98,7 +98,7 @@ static inline void mput_b2(uint8_t **a, int c)
     *a   = d;
 }
 
-/** 3ƒoƒCƒgƒƒ‚ƒŠ‘‚«‚±‚İ */
+/** 3ãƒã‚¤ãƒˆãƒ¡ãƒ¢ãƒªæ›¸ãã“ã¿ */
 static inline void mput_b3(uint8_t **a, int c)
 {
     uint8_t *d = *a;
@@ -109,7 +109,7 @@ static inline void mput_b3(uint8_t **a, int c)
     *a   = d;
 }
 
-/** 4ƒoƒCƒgƒƒ‚ƒŠ‘‚«‚±‚İ */
+/** 4ãƒã‚¤ãƒˆãƒ¡ãƒ¢ãƒªæ›¸ãã“ã¿ */
 static inline void mput_b4(uint8_t **a, int c)
 {
     uint8_t *d = *a;
@@ -203,17 +203,17 @@ static ptrdiff_t tga_encode(uint8_t *d, const uint8_t *s, int w, int h, int bypp
 
 enum { F_BPP4CNV = 1 << 3, };
 
-/** targa ‰æ‘œ‚Ì¶¬ (‹¤’Êˆø””Å) */
+/** targa ç”»åƒã®ç”Ÿæˆ (å…±é€šå¼•æ•°ç‰ˆ) */
 int  tga_write(
-    void        *tga_data,  ///< ¶¬æ
-    int         w,          ///< ¶¬‰æ‘œ‚Ì‰¡•
-    int         h,          ///< ¶¬‰æ‘œ‚Ìc•
-    int         bpp,        ///< ¶¬‰æ‘œ‚Ì BPP
-    const void  *src,       ///< Œ³‰æ‘œ
-    int         srcWb,      ///< Œ³‰æ‘œ‚Ì‰¡ƒoƒCƒg”
-    int         srcBpp,     ///< Œ³‰æ‘œ‚Ì BPP. 8,16,24,32‚Ì‚±‚Æ. (4–¢‘Î‰‚È‚Ì‚Å’ˆÓ)
-    const void  *clut0,     ///< FƒpƒŒƒbƒg
-    int         dir)        ///< tga_writeEx() ‚ğQÆ
+    void        *tga_data,  ///< ç”Ÿæˆå…ˆ.
+    int         w,          ///< ç”Ÿæˆç”»åƒã®æ¨ªå¹….
+    int         h,          ///< ç”Ÿæˆç”»åƒã®ç¸¦å¹….
+    int         bpp,        ///< ç”Ÿæˆç”»åƒã® BPP
+    const void  *src,       ///< å…ƒç”»åƒ.
+    int         srcWb,      ///< å…ƒç”»åƒã®æ¨ªãƒã‚¤ãƒˆæ•°.
+    int         srcBpp,     ///< å…ƒç”»åƒã® BPP. 8,16,24,32ã®ã“ã¨. (4æœªå¯¾å¿œãªã®ã§æ³¨æ„)
+    const void  *clut0,     ///< è‰²ãƒ‘ãƒ¬ãƒƒãƒˆ.
+    int         dir)        ///< tga_writeEx() ã‚’å‚ç…§.
 {
     int clutBpp = 24;
     if (dir & 0x40)
@@ -222,27 +222,27 @@ int  tga_write(
 }
 
 
-/** targa ‰æ‘œ‚Ì¶¬
- *  @return ¶¬‚µ‚½ƒTƒCƒY‚ğ•Ô‚·B
+/** targa ç”»åƒã®ç”Ÿæˆ
+ *  @return ç”Ÿæˆã—ãŸã‚µã‚¤ã‚ºã‚’è¿”ã™ã€‚
  */
 int  tga_writeEx(
-    void        *tga_data,  /**< ¶¬æ                             */
-    int         dataSiz,    /**< ¶¬æƒTƒCƒY                       */
-    int         w,          /**< ¶¬‰æ‘œ‚Ì‰¡•                     */
-    int         h,          /**< ¶¬‰æ‘œ‚Ìc•                     */
-    int         dstBpp,     /**< ¶¬‰æ‘œ‚Ì BPP                     */
-    const void  *src0,      /**< Œ³‰æ‘œ                             */
-    int         src_wb,     /**< Œ³‰æ‘œ‚Ì‰¡ƒoƒCƒg”                 */
-    int         srcBpp,     /**< Œ³‰æ‘œ‚Ì BPP. 4,8,16,24,32         */
-    const void  *clut0,     /**< FƒpƒŒƒbƒg                         */
-    int         clutBpp,    /**< FƒpƒŒƒbƒg‚Ì BPP                   */
-    int         flags,      /**< bit 0: “ü—Í‚µ‚½‰æ‘œ‚ÌŠi”[•ûŒü 0:’Êí 1:c‹t(bmp‘Îô)               <br>
-                             *   bit 3: “ü—Í‚µ‚½‰æ‘œ‚ªbpp=4‚Ì‚Æ‚«‚Ìã‰º‚Ì‹l‚ß‡‚ğ”½“]               <br>
-                             *   bit 4: ¶¬‚Å‚ÌŠi”[•ûŒü(tga‚Å‚Ì) 0:¶‰º 1:¶ã (2,3‚Í–¢ƒTƒ|[ƒg)   <br>
-                             *   bit 7: on ‚È‚çˆ³k‚·‚é
+    void        *tga_data,  /**< ç”Ÿæˆå…ˆ                             */
+    int         dataSiz,    /**< ç”Ÿæˆå…ˆã‚µã‚¤ã‚º                       */
+    int         w,          /**< ç”Ÿæˆç”»åƒã®æ¨ªå¹…                     */
+    int         h,          /**< ç”Ÿæˆç”»åƒã®ç¸¦å¹…                     */
+    int         dstBpp,     /**< ç”Ÿæˆç”»åƒã® BPP                     */
+    const void  *src0,      /**< å…ƒç”»åƒ                             */
+    int         src_wb,     /**< å…ƒç”»åƒã®æ¨ªãƒã‚¤ãƒˆæ•°                 */
+    int         srcBpp,     /**< å…ƒç”»åƒã® BPP. 4,8,16,24,32         */
+    const void  *clut0,     /**< è‰²ãƒ‘ãƒ¬ãƒƒãƒˆ                         */
+    int         clutBpp,    /**< è‰²ãƒ‘ãƒ¬ãƒƒãƒˆã® BPP                   */
+    int         flags,      /**< bit 0: å…¥åŠ›ã—ãŸç”»åƒã®æ ¼ç´æ–¹å‘ 0:é€šå¸¸ 1:ç¸¦é€†(bmpå¯¾ç­–)               <br>
+                             *   bit 3: å…¥åŠ›ã—ãŸç”»åƒãŒbpp=4ã®ã¨ãã®ä¸Šä¸‹ã®è©°ã‚é †ã‚’åè»¢               <br>
+                             *   bit 4: ç”Ÿæˆã§ã®æ ¼ç´æ–¹å‘(tgaã§ã®) 0:å·¦ä¸‹ 1:å·¦ä¸Š (2,3ã¯æœªã‚µãƒãƒ¼ãƒˆ)   <br>
+                             *   bit 7: on ãªã‚‰åœ§ç¸®ã™ã‚‹
                              */
-    int         x0,         /**< tgaƒwƒbƒ_‚Ì¶‚Ìn“_xB’Êí 0‚ğw’è */
-    int         y0)         /**< tgaƒwƒbƒ_‚Ì¶‚Ìn“_yB’Êí 0‚ğw’è */
+    int         x0,         /**< tgaãƒ˜ãƒƒãƒ€ã®ç”Ÿã®å§‹ç‚¹xã€‚é€šå¸¸ 0ã‚’æŒ‡å®š */
+    int         y0)         /**< tgaãƒ˜ãƒƒãƒ€ã®ç”Ÿã®å§‹ç‚¹yã€‚é€šå¸¸ 0ã‚’æŒ‡å®š */
 {
     uint32_t    clut1[256];
     uint8_t     *d      = (uint8_t*)tga_data;
@@ -252,7 +252,7 @@ int  tga_writeEx(
     int         dn      = BPP2BYT(dstBpp);
 //x int         sn      = BPP2BYT(srcBpp);
     int         cn      = BPP2BYT(clutBpp);
-    int         dr      = (flags & 0x10) | 0x0;     /* ‘®«‚Í‚ ‚Æ‚Å‚È‚ñ‚Æ‚©‚µ‚ëB */
+    int         dr      = (flags & 0x10) | 0x0;     /* å±æ€§ã¯ã‚ã¨ã§ãªã‚“ã¨ã‹ã—ã‚ã€‚ */
     int         i;
     int         n;
     int         dir     = (flags & 1) ^ ((dr>>4)^1);
@@ -265,7 +265,7 @@ int  tga_writeEx(
 
     /*DBG_F(("dstBpp = %d dir=%x dr=%x\n",dstBpp,dir,dr)); */
 
-    /* ƒwƒbƒ_[ì¬ */
+    /* ãƒ˜ãƒƒãƒ€ãƒ¼ä½œæˆ */
     if (dstBpp == 8) {
         dataSiz -= 0x12 + 0x100*cn;
         if (dataSiz < w * h)
@@ -280,7 +280,7 @@ int  tga_writeEx(
         mput_b2(&d,     w);         /* w */
         mput_b2(&d,     h);         /* h */
         mput_b1(&d,     8);         /* dstBpp */
-        n =  (clutBpp == 32) ? 8 : (clutBpp == 16) ? 1 : 0;     /* ‘®«‚Í‚ ‚Æ‚Å‚È‚ñ‚Æ‚©‚µ‚ë */
+        n =  (clutBpp == 32) ? 8 : (clutBpp == 16) ? 1 : 0;     /* å±æ€§ã¯ã‚ã¨ã§ãªã‚“ã¨ã‹ã—ã‚ */
         mput_b1(&d,  dr|n);
 
         if (srcBpp > 8) {
@@ -322,7 +322,7 @@ int  tga_writeEx(
         mput_b1(&d,  2+cm);         /* id */
         mput_b2(&d,     0);         /* clutTop */
         mput_b2(&d,     0);         /* clutNum */
-        mput_b1(&d,     0);         /* clutBpp.  32ƒrƒbƒgŒÅ’è */
+        mput_b1(&d,     0);         /* clutBpp.  32ãƒ“ãƒƒãƒˆå›ºå®š */
         mput_b2(&d,    x0);         /* x0 */
         mput_b2(&d,    y0);         /* y0 */
         mput_b2(&d,     w);         /* w */
@@ -330,18 +330,18 @@ int  tga_writeEx(
         n = (dstBpp == 15) ? 16 : dstBpp;
         mput_b1(&d,   n);           /* dstBpp */
       #if 0 //def MY_EX
-        n =  (dstBpp == 32) ? 8 : (dstBpp == 16||dstBpp == 12) ? 1 : 0; /* ‘®«‚Í‚ ‚Æ‚Å‚È‚ñ‚Æ‚©‚µ‚ë */
+        n =  (dstBpp == 32) ? 8 : (dstBpp == 16||dstBpp == 12) ? 1 : 0; /* å±æ€§ã¯ã‚ã¨ã§ãªã‚“ã¨ã‹ã—ã‚ */
       #else
-        n =  (dstBpp == 32) ? 8 : (dstBpp == 16) ? 1 : 0;               /* ‘®«‚Í‚ ‚Æ‚Å‚È‚ñ‚Æ‚©‚µ‚ë */
+        n =  (dstBpp == 32) ? 8 : (dstBpp == 16) ? 1 : 0;               /* å±æ€§ã¯ã‚ã¨ã§ãªã‚“ã¨ã‹ã—ã‚ */
       #endif
         mput_b1(&d,  dr|n);
     }
-    if (cm == 0) {  /*–³ˆ³k */
+    if (cm == 0) {  /*ç„¡åœ§ç¸® */
         tga_wrt_putPixs(d, dataSiz, w, h, dstBpp, src, src_wb, srcBpp, clut, dir, flags);
         d += w * h * dn;
     } else {
         if (dstBpp == srcBpp && w * dn == src_wb && dir == 0) {
-            /* “üo—Í‚ÌF”A‰¡•‚ªˆê‚ÅAŒü‚«‚ª³•ûŒü‚Ì‚Æ‚« */
+            /* å…¥å‡ºåŠ›ã®è‰²æ•°ã€æ¨ªå¹…ãŒä¸€ç·’ã§ã€å‘ããŒæ­£æ–¹å‘ã®ã¨ã */
             d += tga_encode(d, src, w, h, BPP2BYT(dstBpp));
         } else {
             uint8_t *m = (uint8_t*)MALLOC(w * h * dn);
@@ -354,11 +354,11 @@ int  tga_writeEx(
     }
 
   #if 0 //def MY_EX
-    if (clutBpp != 12)      //clut‚ª12ƒrƒbƒgF‚Í©•ª—p“Á‰»ƒ‹[ƒ`ƒ“‚È‚Ì‚Åƒtƒbƒ^‚ğ•t‰Á‚µ‚È‚¢‚Å‚·‚Ü‚·
+    if (clutBpp != 12)      //clutãŒ12ãƒ“ãƒƒãƒˆè‰²ã¯è‡ªåˆ†ç”¨ç‰¹åŒ–ãƒ«ãƒ¼ãƒãƒ³ãªã®ã§ãƒ•ãƒƒã‚¿ã‚’ä»˜åŠ ã—ãªã„ã§ã™ã¾ã™.
   #endif
-    {   /* ’Êí‚Í ƒtƒ@ƒCƒ‹ƒtƒbƒ^‚ğ•t‰Á */
-        mput_b4(&d, 0); /* Šg’£—Ìˆæ‚Ìƒtƒ@ƒCƒ‹ˆÊ’u */
-        mput_b4(&d, 0); /* ƒfƒxƒƒbƒpƒfƒBƒŒƒNƒgƒŠ‚Ìƒtƒ@ƒCƒ‹ˆÊ’u */
+    {   /* é€šå¸¸ã¯ ãƒ•ã‚¡ã‚¤ãƒ«ãƒ•ãƒƒã‚¿ã‚’ä»˜åŠ  */
+        mput_b4(&d, 0); /* æ‹¡å¼µé ˜åŸŸã®ãƒ•ã‚¡ã‚¤ãƒ«ä½ç½® */
+        mput_b4(&d, 0); /* ãƒ‡ãƒ™ãƒ­ãƒƒãƒ‘ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ•ã‚¡ã‚¤ãƒ«ä½ç½® */
         mput_cpy(d, "TRUEVISION-XFILE.", 18, 1);
         /*mput_cpy(d, "TRUEVISION-TARGA.", 18, 1); */
         d += 18;
@@ -453,9 +453,9 @@ static int  tga_wrt_putPixs(
     }
 
     if (dstBpp == srcBpp) {
-        /* “üo—Í‚ª“¯‚¶F”‚Ì‚Æ‚« */
+        /* å…¥å‡ºåŠ›ãŒåŒã˜è‰²æ•°ã®ã¨ã */
         if (dir == 0 && dst_wb == src_wb) {
-            /*“¯‚¶‰¡•‚Å³•ûŒü‚È‚ç‚Î */
+            /*åŒã˜æ¨ªå¹…ã§æ­£æ–¹å‘ãªã‚‰ã° */
             mput_cpy(d, s, w*h, dn);
         } else {
             /*spat =  src_wb; */
@@ -467,7 +467,7 @@ static int  tga_wrt_putPixs(
                 dpat = -dpat;
             }
           #if 0
-            if (((w * dn)&3) == 0) {    /* 4‚ÅŠ„‚èØ‚ê‚éƒTƒCƒY‚Ì‚Æ‚« */
+            if (((w * dn)&3) == 0) {    /* 4ã§å‰²ã‚Šåˆ‡ã‚Œã‚‹ã‚µã‚¤ã‚ºã®ã¨ã */
                 for (y = y0; y != y1; y += yd) {
                     MEMCPY4(d, s, w * dn);
                     s += src_wb;
@@ -484,7 +484,7 @@ static int  tga_wrt_putPixs(
             }
         }
 
-  #if 1 // 2007-06  16F‰æ‚Ì“ü—Í‘Î‰
+  #if 1 // 2007-06  16è‰²ç”»ã®å…¥åŠ›å¯¾å¿œ.
     } else if (srcBpp == 4) {
         y0  = 0, y1 = h, yd = +1;
         if (dir & 1) {
@@ -642,7 +642,7 @@ static int tga_encode(uint8_t *dst, const uint8_t *s, int w, int h, int bypp)
 
 #else
 
-/* bcc55‚Íwhile,for,switch‚ğŠÜ‚ŞinlineŠÖ”‚Íinline“WŠJ‚Å‚«‚È‚¢ */
+/* bcc55ã¯while,for,switchã‚’å«ã‚€inlineé–¢æ•°ã¯inlineå±•é–‹ã§ããªã„ */
 #define TGA_ENCODE0(dst, s, w, h, bypp, a_n) do {\
     int sz = w * h;\
     uint8_t  *d = dst;\
@@ -688,7 +688,7 @@ static int tga_encode(uint8_t *dst, const uint8_t *s, int w, int h, int bypp)
 } while (0)
 
 
-/** ƒ‰ƒ“ƒŒƒ“ƒOƒXˆ³k‚µ‚½ƒf[ƒ^‚Ìì¬
+/** ãƒ©ãƒ³ãƒ¬ãƒ³ã‚°ã‚¹åœ§ç¸®ã—ãŸãƒ‡ãƒ¼ã‚¿ã®ä½œæˆ
  */
 static ptrdiff_t tga_encode(uint8_t *dst, const uint8_t *s, int w, int h, int bypp)
 {
@@ -714,16 +714,16 @@ static ptrdiff_t tga_encode(uint8_t *dst, const uint8_t *s, int w, int h, int by
 
 
 //----------------------------------------------------------------------
-// ¶¬•â•
+// ç”Ÿæˆè£œåŠ©.
 //----------------------------------------------------------------------
 
-/** ¶¬ bpp ‚Ì’²®
+/** ç”Ÿæˆ bpp ã®èª¿æ•´.
  */
 int tga_chkDstBpp(int bpp)
 {
     if (bpp <= 8)       return 8;
   #if 0 //def MY_EX
-    else if (bpp <= 12) return 12;  //¦–{•¨‚É‚Í‘¶İ‚µ‚È‚¢BÀŒ±ƒ‹[ƒ`ƒ“—p
+    else if (bpp <= 12) return 12;  //â€»æœ¬ç‰©ã«ã¯å­˜åœ¨ã—ãªã„ã€‚å®Ÿé¨“ãƒ«ãƒ¼ãƒãƒ³ç”¨.
   #endif
     else if (bpp <= 16) return 16;
     else if (bpp <= 24) return 24;
@@ -731,7 +731,7 @@ int tga_chkDstBpp(int bpp)
 }
 
 
-/// ‰æ‘œƒtƒ@ƒCƒ‹ƒf[ƒ^‚ğì‚é‚Ì‚É•K—v‚Èƒƒ‚ƒŠƒTƒCƒY‚ğ•Ô‚·
+/// ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’ä½œã‚‹ã®ã«å¿…è¦ãªãƒ¡ãƒ¢ãƒªã‚µã‚¤ã‚ºã‚’è¿”ã™.
 int tga_encodeWorkSize(int w, int h, int bpp)
 {
     int wb = WID2BYT4(w, bpp);

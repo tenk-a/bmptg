@@ -1,6 +1,6 @@
 /**
  *  @file gen.h
- *  @brief  �s�N�Z���f�[�^�̃T�C�Y�����R�s�[��
+ *  @brief  ピクセルデータのサイズ調整コピー等
  *  @author Masashi Kitamura
  *  @date   199?
  */
@@ -27,42 +27,42 @@ int gen_clmp32(uint8_t **a_map, int *a_mapSz, int *a_celNum, uint8_t **a_pix, in
 #endif
 
 /*
-�� �Z��(�`�b�v)���}�b�v���B
-���Ƃ���640x480 �̉摜��16x16�̃Z���P�ʂɂ΂炵�ă_�u��Ȃ�����
-���ׂȂ�����256x256���̃e�N�X�`���摜�� �Ǝ��̃}�b�v�t�@�C����
-�����\�B
-�@-mh,-mp�ɂ��A�摜���A�w���`(-mcN:M)�ŃZ���ɕ������āA
-�����̃Z���𓝈ꂵ�ĉ摜�����炵�ċl�ߍ��킹���e�N�X�`����
-�𐶐��ł��邪�A���̂Ƃ��΂ɂȂ�}�b�v�i�w�b�_�j���͈ȉ���
-�悤�Ȃ�B
-�i�l�̓��g���G���f�B�A��(�C���e����)�B�w�b�_���͂R�Q�o�C�g)
+■ セル(チップ)＆マップ化。
+たとえば640x480 の画像を16x16のセル単位にばらしてダブりなくして
+並べなおした256x256等のテクスチャ画像と 独自のマップファイルを
+生成可能。
+　-mh,-mpにより、画像を、指定矩形(-mcN:M)でセルに分割して、
+同一画のセルを統一して画像を減らして詰め合わせたテクスチャ画
+を生成できるが、そのとき対になるマップ（ヘッダ）情報は以下の
+ようなる。
+（値はリトルエンディアン(インテル式)。ヘッダ部は３２バイト)
 
-�@OFFS  SIZE    name    �⑫
-�@00    4       id      "MAP\0" or "MAP\1"
-�@04    4       offs    �e�N�X�`���摜�ւ̃I�t�Z�b�g(-mp���̂݁j
-�@08    4       rsv.    �\��. �l=0
-�@0C    1       flags   �t���O. 2=1�Z��������1�o�C�g. �ȊO��2�o�C�g
-�@0D    1       bpp     �e�N�X�`����BPP
-�@0E    2       celNum  �Z���̐�
-�@10    2       mapW    �}�b�v�̉���(�Z����)
-�@12    2       mapH    �}�b�v�̏c��(�Z����)
-�@14    2       celW    �Z���̉���(�s�N�Z����)
-�@16    2       celH    �Z���̉���(�s�N�Z����)
-�@18    2       orgW    ���摜�̉���(�s�N�Z����)
-�@1A    2       orgH    ���摜�̉���(�s�N�Z����)
-�@1C    2       x0      �\�����W�I�t�Z�b�g�w(�s�N�Z����)
-�@1E    2       y0      �\�����W�I�t�Z�b�g�x(�s�N�Z����)
-�@30    mapW*mapH       �}�b�v���
+　OFFS  SIZE    name    補足
+　00    4       id      "MAP\0" or "MAP\1"
+　04    4       offs    テクスチャ画像へのオフセット(-mp時のみ）
+　08    4       rsv.    予約. 値=0
+　0C    1       flags   フラグ. 2=1セル属性は1バイト. 以外は2バイト
+　0D    1       bpp     テクスチャのBPP
+　0E    2       celNum  セルの数
+　10    2       mapW    マップの横幅(セル数)
+　12    2       mapH    マップの縦幅(セル数)
+　14    2       celW    セルの横幅(ピクセル数)
+　16    2       celH    セルの横幅(ピクセル数)
+　18    2       orgW    元画像の横幅(ピクセル数)
+　1A    2       orgH    元画像の横幅(ピクセル数)
+　1C    2       x0      表示座標オフセットＸ(ピクセル数)
+　1E    2       y0      表示座標オフセットＹ(ピクセル数)
+　30    mapW*mapH       マップ情報
 
-�E�P�Z���̑�������
-�@�@�@1�o�C�g�̂Ƃ��A0:�����Z�� 1..255:�Z���ԍ�
-�@�@�@2�o�C�g�̂Ƃ�
-�@�@�@�@bit 13-0:�@0:�����Z�� 1�` �Z���ԍ�
-�@�@�@�@bit 14:�@�@�������� 0=�܂܂Ȃ��Z���@1=�܂ރZ��
-�@�@�@�@bit 15:�@�@0:�����F,�������F���܂ރZ���@1=�������F�݂̂̃Z��
+・１セルの属性情報は
+　　　1バイトのとき、0:透明セル 1..255:セル番号
+　　　2バイトのとき
+　　　　bit 13-0:　0:透明セル 1～ セル番号
+　　　　bit 14:　　半透明を 0=含まないセル　1=含むセル
+　　　　bit 15:　　0:透明色,半透明色を含むセル　1=無透明色のみのセル
 
-�E�e�N�X�`���́A�Z���P�Ԃ��炪���������ɍ�����E�ɏォ�牺�ɋl�߂�
-�@�z�u�����B0�Ԃ̓����Z���悤�̉摜�͗p�ӂ���Ȃ��̂Œ��ӁB
+・テクスチャは、セル１番からが小さい順に左から右に上から下に詰めて
+　配置される。0番の透明セルようの画像は用意されないので注意。
 */
 
 #endif

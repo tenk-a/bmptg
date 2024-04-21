@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_resizeLanczos3.c
- *  @brief  lanczos-3 –@‚ÅŠg‘åk¬.
+ *  @brief  lanczos-3 æ³•ã§æ‹¡å¤§ç¸®å°.
  *  @author Masashi KITAMURA
  *  @note
     http://www.rainorshine.asia/2015/10/12/post2602.html
@@ -16,7 +16,7 @@
 
 void pix32_resizeLanczos3Sub(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH);
 
-/** Šg‘åk¬
+/** æ‹¡å¤§ç¸®å°
  */
 int pix32_resizeLanczos3(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH, int hasAlpha)
 {
@@ -26,18 +26,18 @@ int pix32_resizeLanczos3(unsigned *dst, unsigned dstW, unsigned dstH, const unsi
     }
 
     if (dstW == srcW && dstH == srcH) {
-        memcpy(dst, src, dstW*srcH*sizeof(*dst));                       // “¯‚¶ƒTƒCƒY‚È‚çƒƒ‚ƒŠƒRƒs[‚Å‚·‚Ü‚·
+        memcpy(dst, src, dstW*srcH*sizeof(*dst));                       // åŒã˜ã‚µã‚¤ã‚ºãªã‚‰ãƒ¡ãƒ¢ãƒªã‚³ãƒ”ãƒ¼ã§ã™ã¾ã™.
         return 1;
     }
 
     if ((srcW % dstW) == 0 && (srcH % dstH) == 0) {
-        pix32_resizeAveragingI(dst, dstW, dstH, src, srcW, srcH);       // ®”Š„‚è‚Å‚·‚Şê‡‚ÍA‚»‚êê—p‚Ìˆ—‚É‚µ‚ÄAŸø‚İ‚ğŒ¸‚ç‚·
+        pix32_resizeAveragingI(dst, dstW, dstH, src, srcW, srcH);       // æ•´æ•°å‰²ã‚Šã§ã™ã‚€å ´åˆã¯ã€ãã‚Œå°‚ç”¨ã®å‡¦ç†ã«ã—ã¦ã€æ»²ã¿ã‚’æ¸›ã‚‰ã™.
         return 1;
     }
 
     pix32_resizeLanczos3Sub(dst, dstW, dstH, src, srcW, srcH);
 
-    if (hasAlpha) { // ƒ¿ƒ`ƒƒƒ“ƒlƒ‹•”•ª‚ÍƒoƒCƒŠƒjƒA‚Åˆ—
+    if (hasAlpha) { // Î±ãƒãƒ£ãƒ³ãƒãƒ«éƒ¨åˆ†ã¯ãƒã‚¤ãƒªãƒ‹ã‚¢ã§å‡¦ç†.
         pix32_resizeBilinearAlpha(dst, dstW, dstH, src, srcW, srcH);
     }
     return 1;

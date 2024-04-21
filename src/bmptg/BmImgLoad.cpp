@@ -1,6 +1,6 @@
 /**
  *  @file   BmImgLoad.h
- *  @brief  ŠeíƒtƒH[ƒ}ƒbƒg(bmp,tga ..)‚Ìƒ[ƒh
+ *  @brief  å„ç¨®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ(bmp,tga ..)ã®ãƒ­ãƒ¼ãƒ‰
  *  @author Masashi Kitamura
  *  @date   2000,2007
  */
@@ -29,7 +29,7 @@
 
 #include "mem_mac.h"
 
-/** ‰æ‘œ‚Ìƒwƒbƒ_î•ñ‚Ìæ“¾
+/** ç”»åƒã®ãƒ˜ãƒƒãƒ€æƒ…å ±ã®å–å¾—
  */
 int  bm_getHdr(const void *bm_data, unsigned sz, int *w_p, int *h_p, int *bpp_p, int *clutNum_p)
 {
@@ -115,7 +115,7 @@ int  bm_read(const void *bm_data, unsigned dataSz, void *dst, int wb, int h, int
             }
             //if (bpp== 8)
             //  dec.toClutBpp8();
-            //if (bpp == 32)    // ƒ¿‚Ì—L–³‚Åbpp‚ª24,32‚Ç‚¿‚ç‚É‚È‚é‚©‚í‚©‚è‚É‚­‚¢‚Ì‚ÅA•’Ê‚É“WŠJŒã©‘O‚Ås‚¤.
+            //if (bpp == 32)    // Î±ã®æœ‰ç„¡ã§bppãŒ24,32ã©ã¡ã‚‰ã«ãªã‚‹ã‹ã‚ã‹ã‚Šã«ãã„ã®ã§ã€æ™®é€šã«å±•é–‹å¾Œè‡ªå‰ã§è¡Œã†.
             //  dec.toTrueColor();
             uint8_t* s = (uint8_t*)dec.read();
             if (s != 0) {
@@ -149,7 +149,7 @@ int  bm_read(const void *bm_data, unsigned dataSz, void *dst, int wb, int h, int
 
 
 
-/** 32ƒrƒbƒgF‰æ‘œ‚É‚µ‚Äƒ[ƒh.
+/** 32ãƒ“ãƒƒãƒˆè‰²ç”»åƒã«ã—ã¦ãƒ­ãƒ¼ãƒ‰.
  */
 unsigned*  bm_load32(const void *bm_data, unsigned sz, int *w_p, int *h_p, int* bpp_p)
 {

@@ -1,6 +1,6 @@
 /**
  *  @file   gen_clm8.c
- *  @brief  8ビット色画像のセル/マップ化
+ *  @brief  8繝薙ャ繝郁牡逕ｻ蜒上�ｮ繧ｻ繝ｫ/繝槭ャ繝怜喧
  *  @author Masashi Kitamura
  *  @date   2001-01-28
  */

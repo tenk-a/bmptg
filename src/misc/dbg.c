@@ -1,6 +1,6 @@
 /**
  *  @file   dbg.c
- *  @breaf  ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“—p ƒGƒ‰[•ƒfƒoƒbƒOƒ‹[ƒ`ƒ“
+ *  @breaf  ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ç”¨ ã‚¨ãƒ©ãƒ¼ï¼†ãƒ‡ãƒãƒƒã‚°ãƒ«ãƒ¼ãƒãƒ³
  *  @author Masashi Kitamura
  */
 
@@ -8,14 +8,14 @@
 //x #include "dbg.h"
 
 //---------------------------------------------------------------------------
-// ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆ—Œü‚¯‚ÌŠÖ”À‘Ì‚Ì’è‹`.
-// ‚P‰ÓŠ‚ÅADBG_GEN_CMDLINE ‚ğ’è‹`‚µ‚Äinclude‚·‚ê‚ÎÀ‘Ì‰»Bdbg.c‚ğƒŠƒ“ƒN‚µ‚È‚¢—pB
+// ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å‡¦ç†å‘ã‘ã®é–¢æ•°å®Ÿä½“ã®å®šç¾©.
+// ï¼‘ç®‡æ‰€ã§ã€DBG_GEN_CMDLINE ã‚’å®šç¾©ã—ã¦includeã™ã‚Œã°å®Ÿä½“åŒ–ã€‚dbg.cã‚’ãƒªãƒ³ã‚¯ã—ãªã„ç”¨.
 
 #include <stdarg.h>
 #include <stdlib.h>
 #ifdef _MSC_VER
-//void _CrtDbgBreak(int);   // ˆø”‰R
-//void DebugBreak(int);     // ˆø”‰R
+//void _CrtDbgBreak(int);   // å¼•æ•°å˜˜.
+//void DebugBreak(int);     // å¼•æ•°å˜˜.
 //#define exit      DebugBreak
 #endif
 
@@ -25,10 +25,10 @@ int         dbg_log_sw__ = 0/*1*/;
 int         dbg_log_sw__ = 0;
 #endif
 int         dbg_level__  = 0;
-const char  *err_fname__;       ///< [’¼Úg—p‚µ‚¿‚áƒ_ƒ] ƒGƒ‰[ƒtƒ@ƒCƒ‹–¼‚Ö‚Ìƒ|ƒCƒ“ƒ^. ƒ[ƒJƒ‹•Ï”•s‰Â!
-int         err_line__;         ///< [’¼Úg—p‚µ‚¿‚áƒ_ƒ] ƒGƒ‰[s”Ô†.
+const char  *err_fname__;       ///< [ç›´æ¥ä½¿ç”¨ã—ã¡ã‚ƒãƒ€ãƒ¡] ã‚¨ãƒ©ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«åã¸ã®ãƒã‚¤ãƒ³ã‚¿. ãƒ­ãƒ¼ã‚«ãƒ«å¤‰æ•°ä¸å¯!
+int         err_line__;         ///< [ç›´æ¥ä½¿ç”¨ã—ã¡ã‚ƒãƒ€ãƒ¡] ã‚¨ãƒ©ãƒ¼è¡Œç•ªå·.
 
-/// •W€ƒGƒ‰[o—Í‚©A•W€o—Í‚©‚ğİ’è
+/// æ¨™æº–ã‚¨ãƒ©ãƒ¼å‡ºåŠ›ã‹ã€æ¨™æº–å‡ºåŠ›ã‹ã‚’è¨­å®š.
 #define DBG_STDERR      stdout
 //#define DBG_STDERR    stderr
 
@@ -99,7 +99,7 @@ int __cdecl err_abortMsg(const char *fmt, ...) {
     }
 //  *(char *)0 = 0;
     exit(1);
-    return 0;   // ƒ}ƒNƒ‚Å®‚É¬‚º‚é‚Æ‚«Šy‚È‚æ‚¤‚É0‚ğ•Ô‚·ƒtƒŠ
+    return 0;   // ãƒã‚¯ãƒ­ã§å¼ã«æ··ãœã‚‹ã¨ãæ¥½ãªã‚ˆã†ã«0ã‚’è¿”ã™ãƒ•ãƒª.
 }
 
 

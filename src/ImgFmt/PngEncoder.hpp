@@ -1,6 +1,6 @@
 /**
  *  @file PngEncoder.hpp
- *  @brief  ƒƒ‚ƒŠã‚Épng‰æ‘œƒf[ƒ^‚ğì¬.
+ *  @brief  ãƒ¡ãƒ¢ãƒªä¸Šã«pngç”»åƒãƒ‡ãƒ¼ã‚¿ã‚’ä½œæˆ.
  *  @author Masashi KITAMURA
  */
 #ifndef PNGENCODER_HPP
@@ -19,16 +19,16 @@ public:
         dstSz = sz;
     }
 
-    /// “à•”‚ÅŠm•Û‚µ‚Ä‚¢‚éƒƒ‚ƒŠ‚ğŠJ•ú. ’Òåë‡‚í‚¹—p‚Ìƒ_ƒ~[.
+    /// å†…éƒ¨ã§ç¢ºä¿ã—ã¦ã„ã‚‹ãƒ¡ãƒ¢ãƒªã‚’é–‹æ”¾. è¾»è¤„åˆã‚ã›ç”¨ã®ãƒ€ãƒŸãƒ¼.
     void    release() {;}
 
-    /// pix ‚É24ƒrƒbƒgF‰æ‘œ‚ğ“WŠJ‚·‚é. ƒTƒCƒY‚Í0‚¾‚ÆƒfƒtƒHƒ‹ƒg‚Ì‚Ü‚Ü. dir‚Í0‚ª¶ã‚©‚ç1‚È‚ç¶‰º‚©‚ç.
+    /// pix ã«24ãƒ“ãƒƒãƒˆè‰²ç”»åƒã‚’å±•é–‹ã™ã‚‹. ã‚µã‚¤ã‚ºã¯0ã ã¨ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã¾ã¾. dirã¯0ãŒå·¦ä¸Šã‹ã‚‰1ãªã‚‰å·¦ä¸‹ã‹ã‚‰.
     unsigned    write(unsigned char* dst, unsigned dstSz, const void* src, unsigned wid, unsigned hei, unsigned bpp, const unsigned* clut=0, unsigned widByt=0, unsigned dir=0);
 
-    /// malloc ‚µ‚½ƒƒ‚ƒŠ‚Épngƒf[ƒ^‚ğ“ü‚ê‚Ä•Ô‚·.
+    /// malloc ã—ãŸãƒ¡ãƒ¢ãƒªã«pngãƒ‡ãƒ¼ã‚¿ã‚’å…¥ã‚Œã¦è¿”ã™.
     unsigned char*  write(unsigned& rSz, const void* src, unsigned w, unsigned h, unsigned bpp, const unsigned* clut=0, unsigned widByt=0, unsigned dir=0);
 
-    /// write‚Åƒ|ƒCƒ“ƒ^‚ğó‚¯æ‚Á‚½ê‡‚Ì‘Î‚Æ‚È‚éƒƒ‚ƒŠŠJ•ú.
+    /// writeã§ãƒã‚¤ãƒ³ã‚¿ã‚’å—ã‘å–ã£ãŸå ´åˆã®å¯¾ã¨ãªã‚‹ãƒ¡ãƒ¢ãƒªé–‹æ”¾.
     static void     deallocate(void* p);
 
     unsigned    workSize(unsigned w, unsigned h, unsigned bpp);
@@ -36,7 +36,7 @@ public:
     void        setWidthAlign(unsigned algn);
     void        setWidthByte(unsigned widByt);
 
-    /// ‰¡•‚ğƒoƒCƒg”‚É•ÏŠ·.
+    /// æ¨ªå¹…ã‚’ãƒã‚¤ãƒˆæ•°ã«å¤‰æ›.
     static unsigned wid2byt(unsigned wid, unsigned algn=1) {
         assert( algn == 1 || algn == 2 || algn == 4 || algn == 8 || algn == 16 );
         return (wid*3 + algn-1) & ~(algn-1);

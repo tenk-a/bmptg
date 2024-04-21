@@ -1,6 +1,6 @@
 /**
  *  @file   GrayClut.hpp
- *  @brief  ŠDFclut‰æŠÖŒW‚Ì•ÏŠ·
+ *  @brief  ç°è‰²clutç”»é–¢ä¿‚ã®å¤‰æ›
  *  @author Masashi KITAMURA
  */
 
@@ -14,38 +14,38 @@
 #include <cassert>
 
 
-/// clut‚É]‚Á‚Ä32ƒrƒbƒgF‰æ‚ğ8ƒrƒbƒgF‰æ‚É•ÏŠ·. ƒfƒtƒHƒ‹ƒgclut‚Ìì¬.
+/// clutã«å¾“ã£ã¦32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›. ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆclutã®ä½œæˆ.
 template<class A=int>
 class GrayClut {
 public:
-    /// ƒOƒŒƒC‰æ‘œ‚©?
+    /// ã‚°ãƒ¬ã‚¤ç”»åƒã‹?
     static bool isGrey(const unsigned* pSrc, unsigned w, unsigned h);
     static bool isGreyRGB(const unsigned* pSrc, unsigned w, unsigned h);
 
-    /// ƒOƒŒƒC‚É‹ß‚¢‰æ‘œ‚©?
+    /// ã‚°ãƒ¬ã‚¤ã«è¿‘ã„ç”»åƒã‹?
     static bool isNearGrey(const unsigned* pSrc, unsigned w, unsigned h, int threshold=12);
 
-    /// ƒOƒŒƒC(ƒ‚ƒmƒNƒ)ƒpƒŒƒbƒg‚Ìì¬. •K‚¸256F•ª‚Ìƒƒ‚ƒŠ‚ğ—pˆÓ‚Ì‚±‚Æ. bpp=3,4,6,8
+    /// ã‚°ãƒ¬ã‚¤(ãƒ¢ãƒã‚¯ãƒ­)ãƒ‘ãƒ¬ãƒƒãƒˆã®ä½œæˆ. å¿…ãš256è‰²åˆ†ã®ãƒ¡ãƒ¢ãƒªã‚’ç”¨æ„ã®ã“ã¨. bpp=3,4,6,8
     static void getFixedGreyClut(unsigned *clut, unsigned clutSize, unsigned clutBpp=8);
 
-    /// “ü—Í‚ªƒOƒŒƒC‰æ‘œ‘O’ñ‚Å 8bit‰æ‘œ‰»
+    /// å…¥åŠ›ãŒã‚°ãƒ¬ã‚¤ç”»åƒå‰æã§ 8bitç”»åƒåŒ–.
     static bool fromGreyToBpp8(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h);
 
-    /// ƒ‚ƒmƒNƒ‚Ì32ƒrƒbƒgF‰æ‚ğ‘O’ñ‚Ébpp(1,2,4)ƒrƒbƒgF‰æ‚É•ÏŠ·.
+    /// ãƒ¢ãƒã‚¯ãƒ­ã®32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’å‰æã«bpp(1,2,4)ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
     static bool fromGreyToBppN(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, int bpp);
 
-    /// ƒ‚ƒmƒNƒ‚Ì32ƒrƒbƒgF‰æ‚ğ‘O’ñ‚É1ƒrƒbƒgF‰æ‚É•ÏŠ·. clut‚àì¬
+    /// ãƒ¢ãƒã‚¯ãƒ­ã®32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’å‰æã«1ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›. clutã‚‚ä½œæˆ.
     static bool fromGreyToBpp1Clut(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, unsigned* clut);
 
-    /// ƒ‚ƒmƒNƒ‚Ì32ƒrƒbƒgF‰æ‚ğ‘O’ñ‚É2ƒrƒbƒgF‰æ‚É•ÏŠ·. clut‚àì¬
+    /// ãƒ¢ãƒã‚¯ãƒ­ã®32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’å‰æã«2ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›. clutã‚‚ä½œæˆ.
     static bool fromGreyToBpp2Clut(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, unsigned* clut);
 
-    /// ƒ‚ƒmƒNƒ‚Ì32ƒrƒbƒgF‰æ‚ğ‘O’ñ‚É4ƒrƒbƒgF‰æ‚É•ÏŠ·. clut‚àì¬
+    /// ãƒ¢ãƒã‚¯ãƒ­ã®32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’å‰æã«4ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›. clutã‚‚ä½œæˆ.
     static bool fromGreyToBpp4Clut(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, unsigned* clut);
 };
 
 
-/// ƒOƒŒƒC‰æ‘œ‚©?
+/// ã‚°ãƒ¬ã‚¤ç”»åƒã‹?
 template<class A>
 bool GrayClut<A>::isGrey(const unsigned* pSrc, unsigned w, unsigned h)
 {
@@ -59,7 +59,7 @@ bool GrayClut<A>::isGrey(const unsigned* pSrc, unsigned w, unsigned h)
     return true;
 }
 
-/// RGB•”•ª‚ªƒOƒŒƒC‰æ‘œ‚©?
+/// RGBéƒ¨åˆ†ãŒã‚°ãƒ¬ã‚¤ç”»åƒã‹?
 template<class A>
 bool GrayClut<A>::isGreyRGB(const unsigned* pSrc, unsigned w, unsigned h)
 {
@@ -72,7 +72,7 @@ bool GrayClut<A>::isGreyRGB(const unsigned* pSrc, unsigned w, unsigned h)
     return true;
 }
 
-/// ƒOƒŒƒC‰æ‘œ‚É‹ß‚¢‚©?
+/// ã‚°ãƒ¬ã‚¤ç”»åƒã«è¿‘ã„ã‹?
 template<class A>
 bool GrayClut<A>::isNearGrey(const unsigned* pSrc, unsigned w, unsigned h, int threshold)
 {
@@ -117,7 +117,7 @@ bool GrayClut<A>::isNearGrey(const unsigned* pSrc, unsigned w, unsigned h, int t
 }
 
 
-/** ƒOƒŒƒC(ƒ‚ƒmƒNƒ)ƒpƒŒƒbƒg‚Ìì¬.
+/** ã‚°ãƒ¬ã‚¤(ãƒ¢ãƒã‚¯ãƒ­)ãƒ‘ãƒ¬ãƒƒãƒˆã®ä½œæˆ.
  * bpp : 3,4,6,8
  */
 template<class A>
@@ -141,7 +141,7 @@ void GrayClut<A>::getFixedGreyClut(unsigned *clut, unsigned clutSize, unsigned b
 }
 
 
-/// ƒ‚ƒmƒNƒ‚Ì32ƒrƒbƒgF‰æ‚ğ‘O’ñ‚É8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+/// ãƒ¢ãƒã‚¯ãƒ­ã®32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’å‰æã«8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
 template<class A>
 bool GrayClut<A>::fromGreyToBpp8(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h)
 {
@@ -151,7 +151,7 @@ bool GrayClut<A>::fromGreyToBpp8(unsigned char* pDst, const unsigned* pSrc, unsi
 }
 
 
-/// ƒ‚ƒmƒNƒ‚Ì32ƒrƒbƒgF‰æ‚ğ‘O’ñ‚Ébpp(1,2,4,8)ƒrƒbƒgF‰æ‚É•ÏŠ·.
+/// ãƒ¢ãƒã‚¯ãƒ­ã®32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’å‰æã«bpp(1,2,4,8)ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
 template<class A>
 bool GrayClut<A>::fromGreyToBppN(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, int bpp)
 {
@@ -162,13 +162,13 @@ bool GrayClut<A>::fromGreyToBppN(unsigned char* pDst, const unsigned* pSrc, unsi
 }
 
 
-/// ƒ‚ƒmƒNƒ‚Ì32ƒrƒbƒgF‰æ‚ğ‘O’ñ‚É1ƒrƒbƒgF‰æ‚É•ÏŠ·. clut‚àì¬
+/// ãƒ¢ãƒã‚¯ãƒ­ã®32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’å‰æã«1ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›. clutã‚‚ä½œæˆ.
 template<class A>
 bool GrayClut<A>::fromGreyToBpp1Clut(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, unsigned* clut)
 {
     int c;
     unsigned wh = w * h;
-    // ‚Ü‚¸ bpp8 ‚É‚·‚é
+    // ã¾ãš bpp8 ã«ã™ã‚‹.
     uint64_t total = 0;
     for (unsigned j = 0; j < wh; ++j) {
         pDst[j] = c = (uint8_t)pSrc[j];
@@ -201,13 +201,13 @@ bool GrayClut<A>::fromGreyToBpp1Clut(unsigned char* pDst, const unsigned* pSrc, 
 }
 
 
-/// ƒ‚ƒmƒNƒ‚Ì32ƒrƒbƒgF‰æ‚ğ‘O’ñ‚É2ƒrƒbƒgF‰æ‚É•ÏŠ·. clut‚àì¬
+/// ãƒ¢ãƒã‚¯ãƒ­ã®32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’å‰æã«2ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›. clutã‚‚ä½œæˆ.
 template<class A>
 bool GrayClut<A>::fromGreyToBpp2Clut(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, unsigned* clut)
 {
     int c;
     unsigned wh = w * h;
-    // ‚Ü‚¸ bpp8 ‚É‚·‚é
+    // ã¾ãš bpp8 ã«ã™ã‚‹.
     uint64_t total0 = 0;
     for (unsigned j = 0; j < wh; ++j) {
         pDst[j] = c = (uint8_t)pSrc[j];
@@ -267,13 +267,13 @@ bool GrayClut<A>::fromGreyToBpp2Clut(unsigned char* pDst, const unsigned* pSrc, 
 
 
 
-/// ƒ‚ƒmƒNƒ‚Ì32ƒrƒbƒgF‰æ‚ğ‘O’ñ‚É4ƒrƒbƒgF‰æ‚É•ÏŠ·. clut‚àì¬
+/// ãƒ¢ãƒã‚¯ãƒ­ã®32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’å‰æã«4ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›. clutã‚‚ä½œæˆ.
 template<class A>
 bool GrayClut<A>::fromGreyToBpp4Clut(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, unsigned* clut)
 {
     int c;
     unsigned wh = w * h;
-    // ‚Ü‚¸ bpp8 ‚É‚·‚é
+    // ã¾ãš bpp8 ã«ã™ã‚‹.
     uint64_t total0 = 0;
     for (unsigned j = 0; j < wh; ++j) {
         pDst[j] = c = (uint8_t)pSrc[j];

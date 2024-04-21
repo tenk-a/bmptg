@@ -1,6 +1,6 @@
 /**
  *  @file   beta.c
- *  @brief  ђ¶ѓoѓCѓiѓЉ‚Мђ¶ђ¬ЃBѓpѓЊѓbѓg–і‚µ. “З‚ЭЌћ‚ЭЊn‚Н–ў‘О‰ћ
+ *  @brief  з”џгѓђг‚¤гѓЉгѓЄгЃ®з”џж€ђгЂ‚гѓ‘гѓ¬гѓѓгѓ€з„ЎгЃ—. иЄ­гЃїиѕјгЃїзі»гЃЇжњЄеЇѕеїњ
  *  @author Masashi Kitamura
  */
 
@@ -12,7 +12,7 @@
 
 
 /*---------------------------------------------------------------------------*/
-/* ѓRѓ“ѓpѓCѓ‹ЉВ‹«‚М’Тел‚ ‚н‚№. */
+/* г‚ігѓігѓ‘г‚¤гѓ«з’°еўѓгЃ®иѕ»и¤„гЃ‚г‚ЏгЃ›. */
 
 
 #if (defined _MSC_VER) || (__BORLANDC__ <= 0x0551)
@@ -42,11 +42,11 @@ typedef short           int16_t;
 #define GLW(a)          ((unsigned short)(a))
 #define GHW(a)          GLW(((unsigned long)(a))>>16)
 
-/* ѓoѓCѓg’P€К‚МѓAѓhѓЊѓX‚©‚з’l‚рЋж‚иЏo‚·ѓЃѓ‚ѓЉѓAѓNѓZѓX—pѓ}ѓNѓЌ */
+/* гѓђг‚¤гѓ€еЌдЅЌгЃ®г‚ўгѓ‰гѓ¬г‚№гЃ‹г‚‰еЂ¤г‚’еЏ–г‚Ље‡єгЃ™гѓЎгѓўгѓЄг‚ўг‚Їг‚»г‚№з”Ёгѓћг‚Їгѓ­ */
 #define PEEKB(a)        (*(const unsigned char  *)(a))
 #define POKEB(a,b)      (*(unsigned char  *)(a) = (b))
 
-#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__   // X86 ‚НЃAѓAѓ‰ѓCѓЃѓ“ѓg‚р‹C‚Й‚·‚й•K—v‚Є‚И‚ў‚М‚Е’јђЪѓAѓNѓZѓX
+#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__   // X86 гЃЇгЂЃг‚ўгѓ©г‚¤гѓЎгѓігѓ€г‚’ж°—гЃ«гЃ™г‚‹еї…и¦ЃгЃЊгЃЄгЃ„гЃ®гЃ§з›ґжЋҐг‚ўг‚Їг‚»г‚№.
 #define PEEKiW(a)       (*(const unsigned short *)(a))
 #define PEEKiD(a)       (*(const unsigned long  *)(a))
 #define POKEiW(a,b)     (*(unsigned short *)(a) = (b))
@@ -63,7 +63,7 @@ typedef short           int16_t;
 #define POKEmW(a,b)     (POKEB((a),GHB(b)), POKEB((char *)(a)+1,GLB(b)))
 #define POKEmD(a,b)     (POKEmW((a),GHW(b)), POKEmW((char *)(a)+2,GLW(b)))
 
-// ‰ж‘њ—p
+// з”»еѓЏз”Ё.
 #define WID2BYT(w,bpp)  (((w) * "\1\2\4\4\10\10\10\10\20\20\20\20\20\20\20\20\30\30\30\30\30\30\30\30\40\40\40\40\40\40\40\40"[(bpp)-1] + 7) >> 3)
 #define BYT2WID(w,bpp)  (((bpp) > 24) ? (w)>>2 : ((bpp) > 16) ? (w)/3 : ((bpp) > 8) ? (w)>>1 : ((bpp) > 4) ? (w) : ((bpp) > 2) ? ((w) << 1) : ((bpp) > 1) ? ((w)<<2) : ((w)<<3))
 
@@ -99,10 +99,10 @@ void beta_genClut(uint32_t *clut, int dbpp)
     int i,c, r,g,b, n=0;
     if (clut == NULL)
         return;
-    if (dbpp == 1) {                        // Ќ•”’
+    if (dbpp == 1) {                        // й»’з™Ѕ.
         clut[0] = 0;
         clut[1] = 0xFFFFFF;
-    } else if (2 <= dbpp && dbpp <= 5) {    // ’PђF”Z’W
+    } else if (2 <= dbpp && dbpp <= 5) {    // еЌи‰Іжїѓж·Ў.
         int m = (1<<dbpp) - 1;
         for (i = 0; i < (1<<dbpp); i++) {
             c = ((i&m) << (8-dbpp));
@@ -135,7 +135,7 @@ void beta_genClut(uint32_t *clut, int dbpp)
                 }
             }
         }
-    } else {                // TOWNS‚в88VAЊn‚М G3R3B2
+    } else {                // TOWNSг‚„88VAзі»гЃ® G3R3B2
         for (g = 0; g < 8; ++g) {
             for (r = 0; r < 8; ++r) {
                 for (b = 0; b < 4; ++b) {
@@ -1035,11 +1035,11 @@ static inline void beta_pixCpy(uint8_t *d, int dstBpp, uint8_t const* s, int src
 
 // ----------------------------------------------------------------------------
 
-/** flags;bit 0:Y”Ѕ“]
- *  boI,boO : “ь—Н&Џo—НѓoѓCѓgѓIЃ[ѓ_Ѓ[
- *          0:ѓЉѓgѓ‹ѓGѓ“ѓfѓBѓAѓ“(ѓCѓ“ѓeѓ‹) 1:ѓrѓbѓOѓGѓ“ѓfѓBѓAѓ“(ѓ‚ѓgѓЌЃ[ѓ‰)
- *          1ѓoѓCѓg‚МѓsѓNѓZѓ‹‚М‚Ж‚«‚Н,ѓoѓCѓg“а‚М‹l‚ЯЏ‡.
- *          0:Џг‹l‚Я(bmp‚Й“Ї‚¶)     1:‰є‹l‚Я(towns-tiffЊn)
+/** flags;bit 0:YеЏЌи»ў
+ *  boI,boO : е…ҐеЉ›&е‡єеЉ›гѓђг‚¤гѓ€г‚ЄгѓјгѓЂгѓј
+ *          0:гѓЄгѓ€гѓ«г‚Ёгѓігѓ‡г‚Јг‚ўгѓі(г‚¤гѓігѓ†гѓ«) 1:гѓ“гѓѓг‚°г‚Ёгѓігѓ‡г‚Јг‚ўгѓі(гѓўгѓ€гѓ­гѓјгѓ©)
+ *          1гѓђг‚¤гѓ€гЃ®гѓ”г‚Їг‚»гѓ«гЃ®гЃЁгЃЌгЃЇ,гѓђг‚¤гѓ€е†…гЃ®и©°г‚Ѓй †.
+ *          0:дёЉи©°г‚Ѓ(bmpгЃ«еђЊгЃ)     1:дё‹и©°г‚Ѓ(towns-tiffзі»)
  */
 int  beta_conv(const void *beta_data, int dstWb, int h, int dbpp, const void *src, int srcWb, int sbpp, const void *clut, int flags, int boI, int boO)
 {
@@ -1063,7 +1063,7 @@ int  beta_conv(const void *beta_data, int dstWb, int h, int dbpp, const void *sr
     s_pat = srcWb /*- WID2BYT(sw,sbpp)*/;
     d_pat = dstWb /*- WID2BYT(dw,dbpp)*/;
     y0   = 0, y1 = h, yd = +1;
-    if (flags & 1) {    // y”Ѕ“]
+    if (flags & 1) {    // yеЏЌи»ў.
         y0 = h-1, y1 = -1, yd = -1;
         d     = d + y0 * dstWb;
         d_pat = d_pat - dstWb * 2;

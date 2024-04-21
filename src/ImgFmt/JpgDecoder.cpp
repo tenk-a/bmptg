@@ -1,19 +1,19 @@
 /**
  *  @file JpgDecoder.cpp
- *  @brief  ƒƒ‚ƒŠã‚Ìjpg‰æ‘œƒf[ƒ^‚ð“WŠJ‚·‚é.
+ *  @brief  ãƒ¡ãƒ¢ãƒªä¸Šã®jpgç”»åƒãƒ‡ãƒ¼ã‚¿ã‚’å±•é–‹ã™ã‚‹.
  *  @author Masashi KITAMURA
  *  @note
- *      - Independent JPEG Group‚Ìlibjpeg.lib
- *             ‚Ü‚½‚Í libjpeg-turbo.lib ‚ð—p‚¢‚Ä‚¢‚Ü‚·B
+ *      - Independent JPEG Groupã®libjpeg.lib
+ *             ã¾ãŸã¯ libjpeg-turbo.lib ã‚’ç”¨ã„ã¦ã„ã¾ã™ã€‚
  *
- *      - Žg‚¢•û
- *          - setData(binData,size) ‚Åƒƒ‚ƒŠ[ã‚Ìjpgƒf[ƒ^‚ðÝ’è‚µA
- *            ‚»‚ÌŒã read()‚·‚ê‚Îmalloc‚µ‚½ƒƒ‚ƒŠ‚É24ƒrƒbƒgF‰æ‘œ‚ð“¾‚é.
- *          - ‚ ‚é‚¢‚ÍsetData()Œã, ƒTƒCƒYwidthByte()*height() ˆÈã‚Ìƒƒ‚ƒŠ‚ð
- *            ŒÄ‚ÑŒ³‚Å—pˆÓ‚µ‚Äread(pix, ...)‚ðŽg‚¤.
+ *      - ä½¿ã„æ–¹
+ *          - setData(binData,size) ã§ãƒ¡ãƒ¢ãƒªãƒ¼ä¸Šã®jpgãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã—ã€
+ *            ãã®å¾Œ read()ã™ã‚Œã°mallocã—ãŸãƒ¡ãƒ¢ãƒªã«24ãƒ“ãƒƒãƒˆè‰²ç”»åƒã‚’å¾—ã‚‹.
+ *          - ã‚ã‚‹ã„ã¯setData()å¾Œ, ã‚µã‚¤ã‚ºwidthByte()*height() ä»¥ä¸Šã®ãƒ¡ãƒ¢ãƒªã‚’
+ *            å‘¼ã³å…ƒã§ç”¨æ„ã—ã¦read(pix, ...)ã‚’ä½¿ã†.
  *
- *      - ‚Ü‚¾AƒGƒ‰[ˆ—‚ð’[Ü‚Á‚ÄƒfƒtƒHƒ‹ƒg‚Ì‚Ü‚Ü‚È‚Ì‚ÅA
- *        ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ƒc[ƒ‹ˆÈŠO‚Å‚ÍŽg‚¦‚È‚¢.
+ *      - ã¾ã ã€ã‚¨ãƒ©ãƒ¼å‡¦ç†ã‚’ç«¯æŠ˜ã£ã¦ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã¾ã¾ãªã®ã§ã€
+ *        ã‚³ãƒžãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ãƒ„ãƒ¼ãƒ«ä»¥å¤–ã§ã¯ä½¿ãˆãªã„.
  */
 
 
@@ -37,7 +37,7 @@ extern "C" {
 
 // ===========================================================================
 // ===========================================================================
-// ƒƒ‚ƒŠã‚Ìjpegƒf[ƒ^‚ðˆµ‚¤‚½‚ß‚Ìƒ‹[ƒ`ƒ“.
+// ãƒ¡ãƒ¢ãƒªä¸Šã®jpegãƒ‡ãƒ¼ã‚¿ã‚’æ‰±ã†ãŸã‚ã®ãƒ«ãƒ¼ãƒãƒ³.
 
 // namespace JpgOnMem {
 
@@ -95,7 +95,7 @@ static void jpgOnMem_src(j_decompress_ptr cinfo, void *data, size_t size)
     JpgOnMemMgr* src;
 
     if (cinfo->src == NULL) {
-        // ƒƒ‚ƒŠŠm•Û.
+        // ãƒ¡ãƒ¢ãƒªç¢ºä¿.
         src         = (JpgOnMemMgr*)(*cinfo->mem->alloc_small) ( (j_common_ptr)cinfo, JPOOL_PERMANENT, sizeof(JpgOnMemMgr) );
         cinfo->src  = (struct jpeg_source_mgr *)src;
         src->buffer = (JOCTET *)(*cinfo->mem->alloc_small)( (j_common_ptr)cinfo, JPOOL_PERMANENT, size * sizeof(JOCTET) );
@@ -103,14 +103,14 @@ static void jpgOnMem_src(j_decompress_ptr cinfo, void *data, size_t size)
 
     src = (JpgOnMemMgr*) cinfo->src;
 
-    // Žg—p‚·‚éƒ‹[ƒ`ƒ“‚ðÝ’è.
+    // ä½¿ç”¨ã™ã‚‹ãƒ«ãƒ¼ãƒãƒ³ã‚’è¨­å®š.
     src->pub.init_source        = jpgOnMem_init_source;
     src->pub.fill_input_buffer  = jpgOnMem_fill_input_buffer;
     src->pub.skip_input_data    = jpgOnMem_skip_input_data;
     src->pub.resync_to_restart  = jpeg_resync_to_restart;   /* use default method */
     src->pub.term_source        = jpgOnMem_term_source;
 
-    // ƒoƒbƒtƒ@‚Ì€”õ.
+    // ãƒãƒƒãƒ•ã‚¡ã®æº–å‚™.
     src->pub.next_input_byte    = (JOCTET *) data;
     src->pub.bytes_in_buffer    = size;
 }
@@ -127,7 +127,7 @@ static void jpgOnMem_src(j_decompress_ptr cinfo, void *data, size_t size)
 
 // ===========================================================================
 // ===========================================================================
-// ŠO•”‚ÉŒ©‚¹‚éƒNƒ‰ƒX.
+// å¤–éƒ¨ã«è¦‹ã›ã‚‹ã‚¯ãƒ©ã‚¹.
 
 
 
@@ -170,7 +170,7 @@ JpgDecoder::~JpgDecoder()
 
 
 
-/// “à•”‚ÅŠm•Û‚µ‚Ä‚¢‚éƒƒ‚ƒŠ‚ðŠJ•ú.
+/// å†…éƒ¨ã§ç¢ºä¿ã—ã¦ã„ã‚‹ãƒ¡ãƒ¢ãƒªã‚’é–‹æ”¾.
 void JpgDecoder::release() {
     if (closeRq_) {
         //jpeg_finish_decompress(info_);
@@ -202,8 +202,8 @@ unsigned    JpgDecoder::height() const
 
 
 
-/** ƒƒ‚ƒŠã‚Ìjpgƒf[ƒ^‚ðÝ’è.
- * ƒ|ƒCƒ“ƒ^‚ð•ÛŽ‚·‚é‚¾‚¯‚È‚Ì‚Åread()‚ðI‚¦‚é‘O‚ÉbinData‚ð”j‰ó‚µ‚È‚¢‚±‚Æ.
+/** ãƒ¡ãƒ¢ãƒªä¸Šã®jpgãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®š.
+ * ãƒã‚¤ãƒ³ã‚¿ã‚’ä¿æŒã™ã‚‹ã ã‘ãªã®ã§read()ã‚’çµ‚ãˆã‚‹å‰ã«binDataã‚’ç ´å£Šã—ãªã„ã“ã¨.
  */
 bool    JpgDecoder::setData(const void* binData, unsigned binDataSize, bool thumbnail)
 {
@@ -246,20 +246,20 @@ bool    JpgDecoder::setData(const void* binData, unsigned binDataSize, bool thum
         }
     }
 
-    closeRq_            = true;         // ˆ—’†‚¾‚©‚çÅŒã‚Éclose‚ª•K—v..
+    closeRq_            = true;         // å‡¦ç†ä¸­ã ã‹ã‚‰æœ€å¾Œã«closeãŒå¿…è¦..
     return true;
 }
 
 
 
 
-/** pix ‚É24ƒrƒbƒgF‰æ‘œ‚ð“WŠJ‚·‚é.
- * widByt,hei‚ÌƒTƒCƒY‚Í0‚¾‚ÆƒfƒtƒHƒ‹ƒg‚Ì‚Ü‚Ü.
- * dir‚Í0‚ª¶ã‚©‚ç1‚È‚ç¶‰º‚©‚ç.
+/** pix ã«24ãƒ“ãƒƒãƒˆè‰²ç”»åƒã‚’å±•é–‹ã™ã‚‹.
+ * widByt,heiã®ã‚µã‚¤ã‚ºã¯0ã ã¨ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã¾ã¾.
+ * dirã¯0ãŒå·¦ä¸Šã‹ã‚‰1ãªã‚‰å·¦ä¸‹ã‹ã‚‰.
  */
 bool  JpgDecoder::read(void* pix, unsigned widByt, unsigned hei, unsigned dir)
 {
-    assert(closeRq_ == true);           // setData‚ð’Ê‰ß‚µ‚Ä‚¢‚È‚¢‚Æ‘Ê–Ú.
+    assert(closeRq_ == true);           // setDataã‚’é€šéŽã—ã¦ã„ãªã„ã¨é§„ç›®.
 
     unsigned    row_stride  = info_->output_width * info_->output_components;
     JSAMPARRAY  buffer      = (*info_->mem->alloc_sarray) ((j_common_ptr)info_, JPOOL_IMAGE, row_stride, 1);
@@ -277,7 +277,7 @@ bool  JpgDecoder::read(void* pix, unsigned widByt, unsigned hei, unsigned dir)
     unsigned char*  m   = 0;
     int             rst = int(widByt - row_stride);
 
-    if ((dir & 1) == 0) {   // ¶ã‚©‚çƒsƒNƒZƒ‹‚ð‹l‚ß‚é.
+    if ((dir & 1) == 0) {   // å·¦ä¸Šã‹ã‚‰ãƒ”ã‚¯ã‚»ãƒ«ã‚’è©°ã‚ã‚‹.
         while (info_->output_scanline < info_->output_height) {
             jpeg_read_scanlines(info_, buffer, 1);
             m = (unsigned char*)pix + i * widByt;
@@ -286,7 +286,7 @@ bool  JpgDecoder::read(void* pix, unsigned widByt, unsigned hei, unsigned dir)
                 memset(m + row_stride, 0, rst);
             ++i;
         }
-    } else {                // ¶‰º‚©‚çƒsƒNƒZƒ‹‚ð‹l‚ß‚é.
+    } else {                // å·¦ä¸‹ã‹ã‚‰ãƒ”ã‚¯ã‚»ãƒ«ã‚’è©°ã‚ã‚‹.
         while (info_->output_scanline < info_->output_height) {
             jpeg_read_scanlines(info_, buffer, 1);
             m = (unsigned char*)pix + (hei - 1 - i) * widByt;
@@ -306,10 +306,10 @@ bool  JpgDecoder::read(void* pix, unsigned widByt, unsigned hei, unsigned dir)
 
 
 
-/** malloc ‚µ‚½ƒƒ‚ƒŠ‚É‰æ‘œ‚ð“ü‚ê‚Ä•Ô‚·.
- *  @param  widAlgn     ‰¡•ƒoƒCƒg”‚ÌƒAƒ‰ƒCƒƒ“ƒg. 1,2,4,8‚ð‘z’è.
- *                      ƒfƒtƒHƒ‹ƒg 1. bmp‚É‡‚í‚¹‚½‚¢ê‡‚Í 4‚ðÝ’è‚Ì‚±‚Æ.
- *  @param  dir         0:¶ã‚©‚ç‹l‚ß‚é.  1:¶‰º‚©‚ç‹l‚ß‚é.bmp‚É‡‚í‚¹‚½‚¢ê‡‚Í 1‚ðÝ’è‚Ì‚±‚Æ.
+/** malloc ã—ãŸãƒ¡ãƒ¢ãƒªã«ç”»åƒã‚’å…¥ã‚Œã¦è¿”ã™.
+ *  @param  widAlgn     æ¨ªå¹…ãƒã‚¤ãƒˆæ•°ã®ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆ. 1,2,4,8ã‚’æƒ³å®š.
+ *                      ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ 1. bmpã«åˆã‚ã›ãŸã„å ´åˆã¯ 4ã‚’è¨­å®šã®ã“ã¨.
+ *  @param  dir         0:å·¦ä¸Šã‹ã‚‰è©°ã‚ã‚‹.  1:å·¦ä¸‹ã‹ã‚‰è©°ã‚ã‚‹.bmpã«åˆã‚ã›ãŸã„å ´åˆã¯ 1ã‚’è¨­å®šã®ã“ã¨.
  */
 void* JpgDecoder::read(unsigned widAlgn, unsigned dir) {
     unsigned wb = this->widthByte(widAlgn);

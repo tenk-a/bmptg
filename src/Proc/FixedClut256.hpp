@@ -1,6 +1,6 @@
 /**
  *  @file   FixedClut256.hpp
- *  @brief  clut‚É]‚Á‚Ä32ƒrƒbƒgF‰æ‚ğ8ƒrƒbƒgF‰æ‚É•ÏŠ·. ƒfƒtƒHƒ‹ƒgclut‚Ìì¬.
+ *  @brief  clutã«å¾“ã£ã¦32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›. ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆclutã®ä½œæˆ.
  *  @author Masashi KITAMURA
  */
 
@@ -15,22 +15,22 @@
 
 
 
-/// clut‚É]‚Á‚Ä32ƒrƒbƒgF‰æ‚ğ8ƒrƒbƒgF‰æ‚É•ÏŠ·. ƒfƒtƒHƒ‹ƒgclut‚Ìì¬.
+/// clutã«å¾“ã£ã¦32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›. ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆclutã®ä½œæˆ.
 template<class A=int>
 class FixedClut256 {
 public:
-    /// ƒfƒtƒHƒ‹ƒgƒpƒŒƒbƒg‚Ìì¬.•K‚¸256F•ª‚Ìƒƒ‚ƒŠ‚ğ—pˆÓ‚Ì‚±‚Æ. bpp=3,4,6,8   typ:0=jpn 1=win. ...
+    /// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ‘ãƒ¬ãƒƒãƒˆã®ä½œæˆ.å¿…ãš256è‰²åˆ†ã®ãƒ¡ãƒ¢ãƒªã‚’ç”¨æ„ã®ã“ã¨. bpp=3,4,6,8   typ:0=jpn 1=win. ...
     static void getFixedClut256(unsigned *clut, unsigned clutSize, unsigned clutBpp, unsigned typ=0);
 
-    /// clut‚É]‚Á‚Ä32ƒrƒbƒgF‰æ‚ğ8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+    /// clutã«å¾“ã£ã¦32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
     static bool decreaseColor(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h
                     , const unsigned* pClut, unsigned clutSize, unsigned idx=0, int alp1=0, int alp2=0, int type=0);
 
-    /// 8F‚Ö‚ÌŒ¸F.
+    /// 8è‰²ã¸ã®æ¸›è‰².
     static bool decreaseColorRGB111(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, bool type=false);
 
 public:
-    /// g1r1b1 ƒfƒWƒ^ƒ‹8F. (ŒÃ‚¢“ú–{‚Ìƒpƒ\ƒRƒ“‚ÌƒpƒŒƒbƒg”Ô†‚É‡‚í‚¹‚½‚à‚Ì)
+    /// g1r1b1 ãƒ‡ã‚¸ã‚¿ãƒ«8è‰². (å¤ã„æ—¥æœ¬ã®ãƒ‘ã‚½ã‚³ãƒ³ã®ãƒ‘ãƒ¬ãƒƒãƒˆç•ªå·ã«åˆã‚ã›ãŸã‚‚ã®)
     static const unsigned* clutGRB111() {
         static const unsigned jpn8[] = {
             0xFF000000, 0xFF0000ff, 0xFFff0000, 0xFFff00ff, 0xFF00ff00, 0xFF00ffff, 0xFFffff00, 0xFFffffff,
@@ -38,7 +38,7 @@ public:
         return jpn8;
     }
 
-    /// ŒÃ‚¢“ú–{‚Ìƒpƒ\ƒRƒ“‚ÌƒfƒtƒHƒ‹ƒgƒpƒŒƒbƒg(‚¶‚á‚È‚¢‚©‚à‚¾‚¯‚ÇA‚»‚ê‚É‹ß‚¢‚à‚Ì)
+    /// å¤ã„æ—¥æœ¬ã®ãƒ‘ã‚½ã‚³ãƒ³ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ‘ãƒ¬ãƒƒãƒˆ(ã˜ã‚ƒãªã„ã‹ã‚‚ã ã‘ã©ã€ãã‚Œã«è¿‘ã„ã‚‚ã®)
     static const unsigned* clutJpn16() {
         static const unsigned jpn16[] = {
             0xFF000000, 0xFF0000ff, 0xFFff0000, 0xFFff00ff, 0xFF00ff00, 0xFF00ffff, 0xFFffff00, 0xFFffffff,
@@ -47,7 +47,7 @@ public:
         return jpn16;
     }
 
-    /// dos/win‚È8F(‚¶‚á‚È‚¢‚©‚à‚¾‚¯‚Ç)
+    /// dos/winãª8è‰²(ã˜ã‚ƒãªã„ã‹ã‚‚ã ã‘ã©)
     static const unsigned* clutBGR111() {
         static const unsigned win8[] = {
             0xFF000000, 0xFFff0000, 0xFF00ff00, 0xFFffff00, 0xFF0000ff, 0xFFff00ff, 0xFF00ffff, 0xFFffffff,
@@ -55,7 +55,7 @@ public:
         return win8;
     }
 
-    /// dos/win‚È16F.
+    /// dos/winãª16è‰².
     static const unsigned* clutWin16() {
         static const unsigned win16[] = {
             0xFF000000, 0xFF800000, 0xFF008000, 0xFF808000, 0xFF000080, 0xFF800080, 0xFF008080, 0xFFc0c0c0,
@@ -64,7 +64,7 @@ public:
         return win16;
     }
 
-    /// ŒÅ’è GRB(Še4ŠK’²) 64F. (g2r2b2)
+    /// å›ºå®š GRB(å„4éšèª¿) 64è‰². (g2r2b2)
     static const unsigned* clutGRB222() {
         static const unsigned grb222[] = {
             0xff000000,0xff000055,0xff0000aa,0xff0000ff,0xff550000,0xff550055,0xff5500aa,0xff5500ff,
@@ -79,7 +79,7 @@ public:
         return grb222;
     }
 
-    /// 128F. rgb Še5ŠK’² + 3F.
+    /// 128è‰². rgb å„5éšèª¿ + 3è‰².
     static const unsigned* clut_g5r5b5c3() {
         static const unsigned clut[] = {
             0x00000000,
@@ -113,7 +113,7 @@ public:
         return clut;
     }
 
-    /// win‚ÌƒVƒXƒeƒ€256F.
+    /// winã®ã‚·ã‚¹ãƒ†ãƒ 256è‰².
     static const unsigned* clutWin256() {
         static const unsigned win256[] = {
             0xFF000000,0xFF800000,0xFF008000,0xFF808000,0xFF000080,0xFF800080,0xFF008080,0xFF808080,
@@ -152,7 +152,7 @@ public:
         return win256;
     }
 
-    /// ŒÅ’èGRB 256F. (g3r3b2) (G,R 8ŠK’² B 4ŠK’²)
+    /// å›ºå®šGRB 256è‰². (g3r3b2) (G,R 8éšèª¿ B 4éšèª¿)
     static const unsigned* clutGRB332() {
         static const unsigned grb332[] = {
             0xff000000,0xff000055,0xff0000aa,0xff0000ff,0xff240000,0xff240055,0xff2400aa,0xff2400ff,
@@ -191,7 +191,7 @@ public:
         return grb332;
     }
 
-    /// xterm256 rgb Še6ŠK’² + 40F. ƒVƒXƒeƒ€ƒJƒ‰[16F. ƒ‚ƒmƒNƒ 24.
+    /// xterm256 rgb å„6éšèª¿ + 40è‰². ã‚·ã‚¹ãƒ†ãƒ ã‚«ãƒ©ãƒ¼16è‰². ãƒ¢ãƒã‚¯ãƒ­ 24.
     static const unsigned* clutXterm256() {
         static const unsigned clut[] = {
             0xff000000,0xff800000,0xff008000,0xff808000,0xff000080,0xff800080,0xff008080,0xffc0c0c0,
@@ -230,7 +230,7 @@ public:
         return clut;
     }
 
-    /// rgb Še6ŠK’² + 40F(”²‚«1. )
+    /// rgb å„6éšèª¿ + 40è‰²(æŠœã1. )
     static const unsigned* clut_g6r6b6c40() {
         static const unsigned clut[] = {
          #if 0
@@ -324,7 +324,7 @@ public:
             0xffee00ee,0xffeeee00,0xff007700,0xff007777,0xff770000,0xff770077,0xff777700,
          #elif 1
             0x00000000,
-            // 6x6x6 ‚ÍÈ—ª.
+            // 6x6x6 ã¯çœç•¥.
             0xff000077,0xff007700,0xff007777,0xff770000,0xff770077,0xff777700,
             0xff333377,0xff337733,0xff337777,0xff773333,0xff773377,0xff777733,
             0xff999977,0xff997799,0xff997777,0xff779999,0xff779977,0xff777799,
@@ -333,7 +333,7 @@ public:
             0xff222222,0xff444444,0xff555555,0xff777777,0xff888888,0xffaaaaaa,
             0xffbbbbbb,0xffdddddd,0xffeeeeee,
          #elif 1
-            // 6x6x6 ‚ÍÈ—ª.
+            // 6x6x6 ã¯çœç•¥.
             0xff00007f,0xff007f00,0xff007f7f,0xff7f0000,0xff7f007f,0xff7f7f00,
             0xff33337f,0xff337f33,0xff337f7f,0xff7f3333,0xff7f337f,0xff7f7f33,
             0xffcccc7f,0xffcc7fcc,0xffcc7f7f,0xff7fcccc,0xff7fcc7f,0xff7f7fcc,
@@ -344,7 +344,7 @@ public:
             0xff4c4c4c,0xff7f7f7f,0xffb2b2b2,
             0x00000000,
          #elif 1
-            // 6x6x6 ‚ÍÈ—ª.
+            // 6x6x6 ã¯çœç•¥.
             //0xff191919,0xff4c4c4c,0xff7f7f7f,0xffb2b2b2,0xffe5e5e5,
             //0xff191919,
             0xff4c4c4c,
@@ -410,8 +410,8 @@ public:
         return clut;
     }
 
- #if 0  // 6,6,6 Œn‚Ì‚Ù‚¤‚ªˆÀ’è‚µ‚Ä‚é‚Ì‚Å~‚ß.
-    /// rgb 7,7,5ŠK’² + 11F.
+ #if 0  // 6,6,6 ç³»ã®ã»ã†ãŒå®‰å®šã—ã¦ã‚‹ã®ã§æ­¢ã‚.
+    /// rgb 7,7,5éšèª¿ + 11è‰².
     static const unsigned* clut_g7r7b5c11() {
         static const unsigned clut[] = {
             0x00000000,
@@ -471,8 +471,8 @@ public:
     }
  #endif
 
- #if 0  // ‘Ê–Ú‚·‚¬‚½.
-    /// rgb yuvƒx[ƒX‚Å¶¬
+ #if 0  // é§„ç›®ã™ããŸ.
+    /// rgb yuvãƒ™ãƒ¼ã‚¹ã§ç”Ÿæˆ.
     static const unsigned* clut_yuv() {
         static const unsigned clut[] = {
             // yuv 5,7,7
@@ -518,7 +518,7 @@ public:
 
 
 
-/** ƒfƒtƒHƒ‹ƒgƒpƒŒƒbƒg‚Ìì¬.
+/** ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ‘ãƒ¬ãƒƒãƒˆã®ä½œæˆ.
  * bpp : 3,4,6,8   typ : 0=jpn 1=pcat/win
  */
 template<class A>
@@ -565,20 +565,20 @@ void FixedClut256<A>::getFixedClut256(unsigned *clut, unsigned clutSize, unsigne
 }
 
 
-/// 32ƒrƒbƒgF‰æ‚ğ8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+/// 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
 template<class A>
 bool FixedClut256<A>::decreaseColor(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h
                                 , const unsigned* pClut, unsigned clutSize, unsigned idx, int alp1, int alp2, int type)
 {
     assert(clutSize <= 256 && clutSize >= idx+2);
     enum { ALP_D = 2 };
-    enum { DN = 8-1 }; // —\‚ß15ƒrƒbƒgF(ˆÈ‰º)‚É‚³‚ê‚Ä‚éê‡‚ğ‘z’è.
+    enum { DN = 8-1 }; // äºˆã‚15ãƒ“ãƒƒãƒˆè‰²(ä»¥ä¸‹)ã«ã•ã‚Œã¦ã‚‹å ´åˆã‚’æƒ³å®š.
 
-    // w’è‚Ìclut‚ÅA‚·‚×‚Ä‚ÌƒsƒNƒZƒ‹‚ğclutSizeF‰».
-    // ‹ß‚¢F‚ÌğŒ‚Æ‚µ‚ÄA
-    //   - a,r,g,b‚Ì’l‚ª‹ß‚¢ƒ‚ƒm(F“¯m‚Ì·‚ª¬‚³‚¢ƒ‚ƒm)
-    //   - 1F“à‚Ìr,g,b‚Ì‹P“x‚Ì‘å¬ŠÖŒW‚ªA‹ß‚¢ƒ‚ƒm
-    // ‚ğƒ`ƒFƒbƒN.
+    // æŒ‡å®šã®clutã§ã€ã™ã¹ã¦ã®ãƒ”ã‚¯ã‚»ãƒ«ã‚’clutSizeè‰²åŒ–.
+    // è¿‘ã„è‰²ã®æ¡ä»¶ã¨ã—ã¦,
+    //   - a,r,g,bã®å€¤ãŒè¿‘ã„ãƒ¢ãƒ(è‰²åŒå£«ã®å·®ãŒå°ã•ã„ãƒ¢ãƒ)
+    //   - 1è‰²å†…ã®r,g,bã®è¼åº¦ã®å¤§å°é–¢ä¿‚ãŒã€è¿‘ã„ãƒ¢ãƒ.
+    // ã‚’ãƒã‚§ãƒƒã‚¯.
     for (unsigned j = 0; j < w * h; ++j) {
         unsigned ii = 0;
         unsigned c  = pSrc[j];
@@ -666,7 +666,7 @@ bool FixedClut256<A>::decreaseColor(unsigned char* pDst, const unsigned* pSrc, u
 }
 
 
-/// 32ƒrƒbƒgF‰æ‚ğ8F‰æ‚É•ÏŠ·.
+/// 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8è‰²ç”»ã«å¤‰æ›.
 template<class A>
 bool FixedClut256<A>::decreaseColorRGB111(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, bool clutType)
 {

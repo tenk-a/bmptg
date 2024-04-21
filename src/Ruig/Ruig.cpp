@@ -1,6 +1,6 @@
 /**
  *  @file Ruig.cpp
- *  @brief ŠÈˆÕ—Ş—‰æ‘œ ŒŸoE•À‘Öƒc[ƒ‹
+ *  @brief ç°¡æ˜“é¡ä¼¼ç”»åƒ æ¤œå‡ºãƒ»ä¸¦æ›¿ãƒ„ãƒ¼ãƒ«
  *  @author Masashi Kitamura (tenka@6809.net)
  */
 #include <stdio.h>
@@ -36,7 +36,7 @@ public:
     {
     }
 
-    /// ƒƒCƒ“ˆ—
+    /// ãƒ¡ã‚¤ãƒ³å‡¦ç†
     int main(int argc, char* argv[]) {
         if (argc < 2)
             return usage();
@@ -70,7 +70,7 @@ public:
     }
 
 private:
-    /// ƒwƒ‹ƒv•\¦
+    /// ãƒ˜ãƒ«ãƒ—è¡¨ç¤º
     int usage() {
         printf("usage: ruig [-opts] jpeg-files...     # " __DATE__ " by tenk*\n");
         printf(" -?            help(this message).\n"
@@ -88,7 +88,7 @@ private:
         return 1;
     }
 
-    /// ƒIƒvƒVƒ‡ƒ“‘–¸
+    /// ã‚ªãƒ—ã‚·ãƒ§ãƒ³èµ°æŸ»
     int scanOption(char const* opt) {
         char const* p = opt + 1;
         int  c = *(unsigned char*)p;
@@ -137,7 +137,7 @@ private:
         return 0;
     }
 
-    /// 1ƒtƒ@ƒCƒ‹ˆ—
+    /// 1ãƒ•ã‚¡ã‚¤ãƒ«å‡¦ç†
     void oneFile(const char* name) {
         NamedImgPtr         imgPtr  = jpgLoad(name);
         BppCnvImg const&    rImg    = imgPtr->img();
@@ -148,7 +148,7 @@ private:
         sortIniTime_ += PerfCnt_get() - tm;
     }
 
-    /// jpg‰æ‘œƒ[ƒh
+    /// jpgç”»åƒãƒ­ãƒ¼ãƒ‰
     NamedImgPtr jpgLoad(const char* name) {
         buf_.clear();
         PerfCnt_t tm  = PerfCnt_get();
@@ -164,7 +164,7 @@ private:
         return p;
     }
 
-    /// ‚·‚×‚Ä•\¦‚·‚éê‡
+    /// ã™ã¹ã¦è¡¨ç¤ºã™ã‚‹å ´åˆ
     struct PrintAll {
         PrintAll(App& rApp) : rApp_(rApp) {}
         bool operator()(RuigFactor const* factor) {
@@ -175,7 +175,7 @@ private:
         App&    rApp_;
     };
 
-    /// ‚·‚×‚Ä•\¦‚·‚éê‡
+    /// ã™ã¹ã¦è¡¨ç¤ºã™ã‚‹å ´åˆ
     struct PrintDebugLog {
         PrintDebugLog(App& rApp) : rApp_(rApp) {}
         bool operator()(RuigFactor const* factor) {
@@ -189,7 +189,7 @@ private:
         App&    rApp_;
     };
 
-    /// ‹ß‚¢‰æ‘œ‚Ì‚ ‚é‚à‚Ì‚¾‚¯o—Í
+    /// è¿‘ã„ç”»åƒã®ã‚ã‚‹ã‚‚ã®ã ã‘å‡ºåŠ›
     struct PrintNears {
         PrintNears(App& rApp) : rApp_(rApp), prevMajorNo_(0) { }
         bool operator()(RuigFactor const* factor) {
@@ -206,7 +206,7 @@ private:
         uint32_t    prevMajorNo_;
     };
 
-    /// —‚½‰æ‘œ‚Ì‚ ‚é‚à‚Ì‚¾‚¯o—Í
+    /// ä¼¼ãŸç”»åƒã®ã‚ã‚‹ã‚‚ã®ã ã‘å‡ºåŠ›
     struct PrintSames {
         PrintSames(App& rApp) : rApp_(rApp), prevMajorNo_(0), prevMinorNo_(0) { }
         bool operator()(RuigFactor const* factor) {
@@ -225,7 +225,7 @@ private:
         uint32_t    prevMinorNo_;
     };
 
-    /// ˆá‚¤ƒtƒHƒ‹ƒ_‚Ì—Ş—‰æ‘œ‚Ì‚İ‚Ì•W¦
+    /// é•ã†ãƒ•ã‚©ãƒ«ãƒ€ã®é¡ä¼¼ç”»åƒã®ã¿ã®æ¨™ç¤º
     struct PrintNears_NotMatchSameDir {
         typedef std::vector<RuigFactor const*>  Factors;
 
@@ -277,7 +277,7 @@ private:
         uint32_t    prevMajorNo_;
     };
 
-    /// ƒ^ƒCƒ€ƒXƒ^ƒ“ƒv‚ğ•t‚¯‘Ö‚¦‚é
+    /// ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—ã‚’ä»˜ã‘æ›¿ãˆã‚‹
     struct ChangeTimestamp {
         enum { SKIP_SEC = 60 };
 
@@ -301,7 +301,7 @@ private:
         fks_file_time_t time_;
     };
 
-    /// ‰æ‘œî•ñæ“¾Œã‚ÌAŠeíˆ—
+    /// ç”»åƒæƒ…å ±å–å¾—å¾Œã®ã€å„ç¨®å‡¦ç†
     void body() {
         if (vflag_)
             fprintf(stderr, "sorting...\n");
@@ -336,7 +336,7 @@ private:
             ruigMgr_.for_each(PrintDebugLog(*this));
     }
 
-    /// ‰æ‘œˆê‚Â‚Ìî•ñ•W¦
+    /// ç”»åƒä¸€ã¤ã®æƒ…å ±æ¨™ç¤º
     void printFactor1(uint32_t majorNo, uint32_t minorNo, uint32_t subNo, RuigFactor const& rFactor) {
         char    newName[2048];
         if (execType_) {
@@ -352,7 +352,7 @@ private:
         }
     }
 
-    /// ‰æ‘œˆê‚Â‚Ìî•ñ•W¦
+    /// ç”»åƒä¸€ã¤ã®æƒ…å ±æ¨™ç¤º
     void execFactor1(uint32_t majorNo, uint32_t minorNo, uint32_t subNo, RuigFactor const& rFactor) {
         if (!execType_) {
             printf("\"%s\"\n", rFactor.name().c_str());
@@ -387,7 +387,7 @@ private:
         }
     }
 
-    /// ƒpƒX–¼‚Ì’†‚Ìƒtƒ@ƒCƒ‹–¼‚ÌˆÊ’u‚ğ•Ô‚·
+    /// ãƒ‘ã‚¹åã®ä¸­ã®ãƒ•ã‚¡ã‚¤ãƒ«åã®ä½ç½®ã‚’è¿”ã™
     static char* fname_baseName(char const* adr)
     {
         char const* p = adr;

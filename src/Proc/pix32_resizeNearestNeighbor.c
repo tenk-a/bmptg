@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_resizeNearestNeighbor.c
- *  @brief  ƒjƒAƒŒƒXƒgƒlƒCƒo[–@‚ÅŠg‘åk¬.
+ *  @brief  ãƒ‹ã‚¢ãƒ¬ã‚¹ãƒˆãƒã‚¤ãƒãƒ¼æ³•ã§æ‹¡å¤§ç¸®å°.
  *  @author Masashi KITAMURA
  */
 
@@ -12,7 +12,7 @@
 static void pix32_resizeNearestNeighborSub(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH);
 
 
-/** Šg‘åk¬
+/** æ‹¡å¤§ç¸®å°.
  */
 int  pix32_resizeNearestNeighbor(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH)
 {
@@ -22,7 +22,7 @@ int  pix32_resizeNearestNeighbor(unsigned *dst, unsigned dstW, unsigned dstH, co
     }
 
     if (dstW == srcW && dstH == srcH) {
-        memcpy(dst, src, dstW*srcH*sizeof(*dst));                       // “¯‚¶ƒTƒCƒY‚È‚çƒƒ‚ƒŠƒRƒs[‚Å‚·‚Ü‚·
+        memcpy(dst, src, dstW*srcH*sizeof(*dst));                       // åŒã˜ã‚µã‚¤ã‚ºãªã‚‰ãƒ¡ãƒ¢ãƒªã‚³ãƒ”ãƒ¼ã§ã™ã¾ã™.
         return 1;
     }
 
@@ -31,7 +31,7 @@ int  pix32_resizeNearestNeighbor(unsigned *dst, unsigned dstW, unsigned dstH, co
 }
 
 
-/** Nearest Neighbor –@‚ÅŠg‘åk¬
+/** Nearest Neighbor æ³•ã§æ‹¡å¤§ç¸®å°.
  */
 static void  pix32_resizeNearestNeighborSub(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH)
 {

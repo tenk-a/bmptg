@@ -5,15 +5,15 @@
 #define PIX32_H
 
 
-#ifndef PIX32_ARGB  // a,r,g,bŒ‹‡••ª‰ğƒ}ƒNƒ
+#ifndef PIX32_ARGB  // a,r,g,bçµåˆï¼†åˆ†è§£ãƒã‚¯ãƒ­.
 
-/// 8bit’l‚Ìa,r,g,b‚ğŒq‚°‚Ä 32bit ‚ÌF’l‚É‚·‚é
+/// 8bitå€¤ã®a,r,g,bã‚’ç¹‹ã’ã¦ 32bit ã®è‰²å€¤ã«ã™ã‚‹.
 #define PIX32_ARGB(a,r,g,b)     ((((unsigned char)(a))<<24)|(((unsigned char)(r))<<16)|(((unsigned char)(g))<<8)|((unsigned char)(b)))
 
-#define PIX32_GET_B(argb)       ((unsigned char)(argb))         ///< argb’l’†‚Ì blue‚Ì’l‚ğæ“¾
-#define PIX32_GET_G(argb)       ((unsigned char)((argb)>>8))    ///< argb’l’†‚Ì green‚Ì’l‚ğæ“¾
-#define PIX32_GET_R(argb)       ((unsigned char)((argb)>>16))   ///< argb’l’†‚Ì green‚Ì’l‚ğæ“¾
-#define PIX32_GET_A(argb)       (((unsigned)(argb))>>24)        ///< argb’l’†‚Ì alpha‚Ì’l‚ğæ“¾
+#define PIX32_GET_B(argb)       ((unsigned char)(argb))         ///< argbå€¤ä¸­ã® blueã®å€¤ã‚’å–å¾—.
+#define PIX32_GET_G(argb)       ((unsigned char)((argb)>>8))    ///< argbå€¤ä¸­ã® greenã®å€¤ã‚’å–å¾—.
+#define PIX32_GET_R(argb)       ((unsigned char)((argb)>>16))   ///< argbå€¤ä¸­ã® greenã®å€¤ã‚’å–å¾—.
+#define PIX32_GET_A(argb)       (((unsigned)(argb))>>24)        ///< argbå€¤ä¸­ã® alphaã®å€¤ã‚’å–å¾—.
 
 #endif
 
@@ -24,17 +24,17 @@ extern "C" {
 
 void pix32_copyRect(void *dst, int dstW, int dstH, int dstX, int dstY, void *src, int srcW, int srcH, int rctX, int rctY, int rctW, int rctH);
 void pix32_copyWH(void *dst, int dstW, void *src, int srcW, int rctW, int rctH);
-    // src‰æ‘œ(‰¡•srcW)‚Ì‹éŒ`(rctW*rctH)‚ğdst‰æ‘œ(‰¡•dstW)‚ÉƒRƒs[
-    // ”ÍˆÍƒ`ƒFƒbƒN‚È‚Ç‚Í‚µ‚È‚¢‚Ì‚Åg‚¢è‘¤‚Å’²®‚Ì‚±‚Æ
+    // srcç”»åƒ(æ¨ªå¹…srcW)ã®çŸ©å½¢(rctW*rctH)ã‚’dstç”»åƒ(æ¨ªå¹…dstW)ã«ã‚³ãƒ”ãƒ¼.
+    // ç¯„å›²ãƒã‚§ãƒƒã‚¯ãªã©ã¯ã—ãªã„ã®ã§ä½¿ã„æ‰‹å´ã§èª¿æ•´ã®ã“ã¨.
 
 // int pix32_getNukiRect(void *pix0, int xsz, int ysz, int nukiClut, int *x_p, int *y_p, int *w_p, int *h_p);
-//  /* ”wŒiFˆÈŠO‚ªg‚Á‚Ä‚¢‚é‹éŒ`‚ğ‹‚ß‚é. */
+//  /* èƒŒæ™¯è‰²ä»¥å¤–ãŒä½¿ã£ã¦ã„ã‚‹çŸ©å½¢ã‚’æ±‚ã‚ã‚‹. */
 
 // int pix32_getAlpRect(void *pix0, int xsz, int ysz, int *x_p, int *y_p, int *w_p, int *h_p);
-//  /* ƒ¿!=0‚ªg‚Á‚Ä‚¢‚é‹éŒ`‚ğ‹‚ß‚é. */
+//  /* Î±!=0ãŒä½¿ã£ã¦ã„ã‚‹çŸ©å½¢ã‚’æ±‚ã‚ã‚‹. */
 
 //x int pix32_gridRect(int gw, int gh, int *x_p, int *y_p, int *w_p, int *h_p);
-//x /* ƒOƒŠƒbƒhƒTƒCƒY gw*gh ‚Æ‚µ‚ÄAƒOƒŠƒbƒh‚É‡‚¤‚æ‚¤‚É‹éŒ`ƒTƒCƒY‚ğ’²® */
+//x /* ã‚°ãƒªãƒƒãƒ‰ã‚µã‚¤ã‚º gw*gh ã¨ã—ã¦ã€ã‚°ãƒªãƒƒãƒ‰ã«åˆã†ã‚ˆã†ã«çŸ©å½¢ã‚µã‚¤ã‚ºã‚’èª¿æ•´ */
 
 
 void pix32_blackAMskGen(unsigned *pix, unsigned w, unsigned h, unsigned sikiiA, unsigned bpp);

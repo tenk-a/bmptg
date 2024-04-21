@@ -1,14 +1,14 @@
 /**
  *  @file PngDecoder.hpp
- *  @brief  ƒƒ‚ƒŠã‚Ìpng‰æ‘œƒf[ƒ^‚ğ“WŠJ‚·‚é.
+ *  @brief  ãƒ¡ãƒ¢ãƒªä¸Šã®pngç”»åƒãƒ‡ãƒ¼ã‚¿ã‚’å±•é–‹ã™ã‚‹.
  *  @author Masashi KITAMURA
  *  @note
  *
- *      - g‚¢•û
- *          - setData(binData,size) ‚Åƒƒ‚ƒŠ[ã‚Ìpngƒf[ƒ^‚ğİ’è‚µA
- *            ‚»‚ÌŒã read()‚·‚ê‚Îmalloc‚µ‚½ƒƒ‚ƒŠ‚É24ƒrƒbƒgF‰æ‘œ‚ğ“¾‚é.
- *          - ‚ ‚é‚¢‚ÍsetData()Œã, ƒTƒCƒYwidthByte()*height() ˆÈã‚Ìƒƒ‚ƒŠ‚ğ
- *            ŒÄ‚ÑŒ³‚Å—pˆÓ‚µ‚Äread(pix, ...)‚ğg‚¤.
+ *      - ä½¿ã„æ–¹
+ *          - setData(binData,size) ã§ãƒ¡ãƒ¢ãƒªãƒ¼ä¸Šã®pngãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã—ã€
+ *            ãã®å¾Œ read()ã™ã‚Œã°mallocã—ãŸãƒ¡ãƒ¢ãƒªã«24ãƒ“ãƒƒãƒˆè‰²ç”»åƒã‚’å¾—ã‚‹.
+ *          - ã‚ã‚‹ã„ã¯setData()å¾Œ, ã‚µã‚¤ã‚ºwidthByte()*height() ä»¥ä¸Šã®ãƒ¡ãƒ¢ãƒªã‚’
+ *            å‘¼ã³å…ƒã§ç”¨æ„ã—ã¦read(pix, ...)ã‚’ä½¿ã†.
  */
 #ifndef PNGDECODER_HPP
 #define PNGDECODER_HPP
@@ -19,7 +19,7 @@
 #include "libpng/png.h"
 
 
-/// ƒƒ‚ƒŠã‚Ìpng‰æ‘œƒf[ƒ^‚ğ“WŠJ‚·‚é. (libjpeg.lib‚Ìƒ‰ƒbƒp[)
+/// ãƒ¡ãƒ¢ãƒªä¸Šã®pngç”»åƒãƒ‡ãƒ¼ã‚¿ã‚’å±•é–‹ã™ã‚‹. (libjpeg.libã®ãƒ©ãƒƒãƒ‘ãƒ¼)
 class PngDecoder {
 public:
     PngDecoder();
@@ -28,30 +28,30 @@ public:
 
     static bool isSupported(const void* data);
 
-    /// “à•”‚ÅŠm•Û‚µ‚Ä‚¢‚éƒƒ‚ƒŠ‚ğŠJ•ú.
+    /// å†…éƒ¨ã§ç¢ºä¿ã—ã¦ã„ã‚‹ãƒ¡ãƒ¢ãƒªã‚’é–‹æ”¾.
     void        release();
 
-    /// ƒƒ‚ƒŠã‚Ìpngƒf[ƒ^‚ğİ’è. ƒ|ƒCƒ“ƒ^‚ğ•Û‚·‚é‚¾‚¯‚È‚Ì‚Åread()‚ğI‚¦‚é‘O‚ÉbinData‚ğ”j‰ó‚µ‚È‚¢‚±‚Æ.
+    /// ãƒ¡ãƒ¢ãƒªä¸Šã®pngãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®š. ãƒã‚¤ãƒ³ã‚¿ã‚’ä¿æŒã™ã‚‹ã ã‘ãªã®ã§read()ã‚’çµ‚ãˆã‚‹å‰ã«binDataã‚’ç ´å£Šã—ãªã„ã“ã¨.
     bool        setData(const void* binData, unsigned binDataSize) throw();
 
-    unsigned    bpp()        const { return bpp_; }         ///< ƒrƒbƒg/ƒsƒNƒZƒ‹. 24‚Ì‚İ.
-    unsigned    width()      const { return width_; }       ///< ‰¡•.
-    unsigned    height()     const { return height_; }      ///< c•.
-    unsigned    widthByte(unsigned algn=0) const;           ///< algnƒoƒCƒg‚ÉƒAƒ‰ƒCƒƒ“ƒgÏ‚Ì‰¡•ƒoƒCƒg”.
+    unsigned    bpp()        const { return bpp_; }         ///< ãƒ“ãƒƒãƒˆ/ãƒ”ã‚¯ã‚»ãƒ«. 24ã®ã¿.
+    unsigned    width()      const { return width_; }       ///< æ¨ªå¹….
+    unsigned    height()     const { return height_; }      ///< ç¸¦å¹….
+    unsigned    widthByte(unsigned algn=0) const;           ///< algnãƒã‚¤ãƒˆã«ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆæ¸ˆã®æ¨ªå¹…ãƒã‚¤ãƒˆæ•°.
 
     void        setBigEndian() { bigEndian_  = true; }
     void        revY()         { revY_ = true; }
-    void        stripAlpha()   { stripAlpha_  = true; }     ///< ƒ¿•t‚«‰æ‘œ‚Ìê‡‚Å‚à,ƒ¿‚ğ–³‹.
+    void        stripAlpha()   { stripAlpha_  = true; }     ///< Î±ä»˜ãç”»åƒã®å ´åˆã§ã‚‚,Î±ã‚’ç„¡è¦–.
     void        toTrueColor()  { toTrueColor_ = true; bpp_ = haveAlpha_ ? 32 : 24; }
     void        setWidthAlign(unsigned align);
 
-    // ƒ¿ŠÖŒW‚Ì‹““®‚ª‚Ö‚ñ‚É‚È‚Á‚Ä‚µ‚Ü‚¤.
+    // Î±é–¢ä¿‚ã®æŒ™å‹•ãŒã¸ã‚“ã«ãªã£ã¦ã—ã¾ã†.
     void        toClutBpp8()   { toClutBpp8_  = true; bpp_ = 8; }
 
     unsigned    clutSize()   const { return clutSize_; }
     unsigned    getClut(unsigned* clut, unsigned clutSize=0);
 
-    unsigned    imageByte()  const;                         ///< “WŠJ‚É•K—v‚ÈƒoƒCƒg”‚ğ•Ô‚·.
+    unsigned    imageByte()  const;                         ///< å±•é–‹ã«å¿…è¦ãªãƒã‚¤ãƒˆæ•°ã‚’è¿”ã™.
     bool        read(void* img);
 
     void*       read(unsigned widAlgn=1, unsigned dir=0);

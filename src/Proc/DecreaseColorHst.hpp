@@ -1,6 +1,6 @@
 /**
  *  @file   DecreaseColorHst.h
- *  @brief  Œ¸Fˆ—. •p“xƒJƒEƒ“ƒg‚µ‚Ä‘½‚¢‚à‚Ì‡. ƒ¿(ˆÀˆÕ)‘Î‰”Å.
+ *  @brief  æ¸›è‰²å‡¦ç†. é »åº¦ã‚«ã‚¦ãƒ³ãƒˆã—ã¦å¤šã„ã‚‚ã®é †. Î±(å®‰æ˜“)å¯¾å¿œç‰ˆ.
  *  @author Masashi KITAMURA
  */
 
@@ -21,7 +21,7 @@
 
 
 
-/// Œ¸Fˆ—. 32ƒrƒbƒgF‰æ‚ğ8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+/// æ¸›è‰²å‡¦ç†. 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
 template<class A=void>
 class DecreaseColorHst {
 public:
@@ -49,8 +49,8 @@ private:
     enum { ALP_D = 4 };
 
     struct Hst {
-      #if defined _WIN32                // vc‚Éstdint.h‚ª‚È‚¢‚Ì‚Å‚»‚Ì‘Îô.
-        typedef unsigned __int64 sum_t; // winŒnƒRƒ“ƒpƒCƒ‰‚ÍvcŒİŠ·‚ÅŒÃ‚­‚©‚ç__int64‚ª‚ ‚é.
+      #if defined _WIN32                // vcã«stdint.hãŒãªã„ã®ã§ãã®å¯¾ç­–.
+        typedef unsigned __int64 sum_t; // winç³»ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã¯vcäº’æ›ã§å¤ãã‹ã‚‰__int64ãŒã‚ã‚‹.
       #else
         typedef uint64_t         sum_t;
       #endif
@@ -70,16 +70,16 @@ private:
 
 
 
-/// 32ƒrƒbƒgF‰æ‚ğ8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+/// 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
 template<class A>
 bool DecreaseColorHst<A>::conv(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, unsigned* pClut, unsigned clutSize, int alpNum)
 {
     using namespace std;
-    // ƒsƒNƒZƒ‹•clut‰Šú‰». (“§–¾‰æ‘œó‘Ô‚É‚·‚é)
+    // ãƒ”ã‚¯ã‚»ãƒ«ï¼†clutåˆæœŸåŒ–. (é€æ˜ç”»åƒçŠ¶æ…‹ã«ã™ã‚‹)
     memset(pDst, 0, w*h);
     memset(pClut, 0, 256*sizeof(pClut[0]));
 
-    // “§–¾,”¼“§–¾,•s“§–¾‚Ì‘¶İƒ`ƒFƒbƒN
+    // é€æ˜,åŠé€æ˜,ä¸é€æ˜ã®å­˜åœ¨ãƒã‚§ãƒƒã‚¯.
     enum { MIN_A = ALP_D, MAX_A = 255-ALP_D };
     bool tranf = false;
     bool alpf  = false;
@@ -98,15 +98,15 @@ bool DecreaseColorHst<A>::conv(unsigned char* pDst, const unsigned* pSrc, unsign
     }
 
     if (nalpf == 0) {
-        // •s“§–¾‚ª‚È‚¢ê‡‚ÍA‚·‚×‚Ä‚ÌƒpƒŒƒbƒg‚ğ”¼“§–¾ˆµ‚¢.
+        // ä¸é€æ˜ãŒãªã„å ´åˆã¯ã€ã™ã¹ã¦ã®ãƒ‘ãƒ¬ãƒƒãƒˆã‚’åŠé€æ˜æ‰±ã„.
         return conv1(pDst,pSrc,w,h,pClut,clutSize, tranf, MIN_A, 255) != 0;
     } else if (alpf == false || clutSize < 32) {
-        // •s“§–¾‚Æ”²‚«F‚Ì‚İ‚Ì‚Æ‚«
+        // ä¸é€æ˜ã¨æŠœãè‰²ã®ã¿ã®ã¨ã.
         return conv1(pDst,pSrc,w,h,pClut,clutSize, tranf, MAX_A+1, 255) != 0;
     } else {
-        // •s“§–¾‚Æ”¼“§–¾‚ª‚ ‚é‚Æ‚« (ƒoƒXƒgƒAƒbƒv‰æ/•£”¼“§–¾‚ğ‘z’è)
+        // ä¸é€æ˜ã¨åŠé€æ˜ãŒã‚ã‚‹ã¨ã (ãƒã‚¹ãƒˆã‚¢ãƒƒãƒ—ç”»/æ·µåŠé€æ˜ã‚’æƒ³å®š)
         unsigned idx = (unsigned)alpNum;
-        if (alpNum < 0) {       // “K“–‚É”¼“§–¾”‚ğŒˆ‚ß‚éw’è‚¾‚Á‚½.(256F‚É32F).
+        if (alpNum < 0) {       // é©å½“ã«åŠé€æ˜æ•°ã‚’æ±ºã‚ã‚‹æŒ‡å®šã ã£ãŸ.(256è‰²æ™‚ã«32è‰²).
             idx = clutSize / 8;
             if (idx < 16)
                 idx = 16;
@@ -118,7 +118,7 @@ bool DecreaseColorHst<A>::conv(unsigned char* pDst, const unsigned* pSrc, unsign
 
 
 
-/// 32ƒrƒbƒgF‰æ‚ğ8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+/// 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
 template<class A>
 unsigned DecreaseColorHst<A>::conv1(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h
                                 , unsigned* pClut, unsigned clutSize, int idx, int minA, int maxA)
@@ -154,16 +154,16 @@ unsigned DecreaseColorHst<A>::conv1(unsigned char* pDst, const unsigned* pSrc, u
 
     unsigned colNum = clutSize - idx;
 
- #ifdef __WATCOMC__ // for open watcom 1.9. nth_element ‚ª‚È‚¢‚Ì‚Å sort ‚Å‘ã—p.
+ #ifdef __WATCOMC__ // for open watcom 1.9. nth_element ãŒãªã„ã®ã§ sort ã§ä»£ç”¨.
     sort(&pHst[0], &pHst[NUM], less<Hst>() );
  #else
-    // ‘½‚¢ƒ‚ƒm‚©‚çclutSizeŒÂ‚ğ‘Io(æ“ª‚ÉˆÚ“®).
+    // å¤šã„ãƒ¢ãƒã‹ã‚‰clutSizeå€‹ã‚’é¸å‡º(å…ˆé ­ã«ç§»å‹•).
     nth_element( &pHst[0], &pHst[colNum], &pHst[NUM], std::less<Hst>() );
  #endif
 
     memset(pClut+idx, 0, colNum*sizeof(pClut[0]));
 
-    // ‘½‚¢‚à‚Ì‚©‚çF‚ğæ“¾.
+    // å¤šã„ã‚‚ã®ã‹ã‚‰è‰²ã‚’å–å¾—.
     unsigned n = 0;
     for (unsigned j = 0; j < colNum; ++j) {
         const Hst*  h   = &pHst[j];
@@ -180,24 +180,24 @@ unsigned DecreaseColorHst<A>::conv1(unsigned char* pDst, const unsigned* pSrc, u
     }
 
     if (clutSize >= 128 && n <= clutSize-32 && (BI >= 4 && BI < 8) ) {
-        // clut‚ª‘½‚­‚ ‚Ü‚Á‚Ä‚½‚çF[“x‚ğ‘‚â‚·(‚¨‚»‚ç‚­’PF‚âƒc[ƒgƒ“ƒJƒ‰[Œn‚Ì‰æ‘œ‚¾‚ë‚¤)
+        // clutãŒå¤šãã‚ã¾ã£ã¦ãŸã‚‰è‰²æ·±åº¦ã‚’å¢—ã‚„ã™(ãŠãã‚‰ãå˜è‰²ã‚„ãƒ„ãƒ¼ãƒˆãƒ³ã‚«ãƒ©ãƒ¼ç³»ã®ç”»åƒã ã‚ã†)
         ++BI;
         goto RETRY;
     }
 
-    // ÀÛ‚Ég—p‚³‚ê‚Ä‚¢‚éclut”‚ğ‹‚ß‚é.
-    if (n < 2)  // ‚½‚¾‚µÅ’á2F‚Íg‚¤‚±‚Æ‚É.
+    // å®Ÿéš›ã«ä½¿ç”¨ã•ã‚Œã¦ã„ã‚‹clutæ•°ã‚’æ±‚ã‚ã‚‹.
+    if (n < 2)  // ãŸã ã—æœ€ä½2è‰²ã¯ä½¿ã†ã“ã¨ã«.
         n = 2;
     clutSize = n + idx;
 
-    // ˆÃ‚¢‚à‚Ì‡‚É•À‚×’¼‚·.
+    // æš—ã„ã‚‚ã®é †ã«ä¸¦ã¹ç›´ã™.
     std::sort( &pClut[idx], &pClut[clutSize] );
 
-    // Œ»ó‚Ìclut‚ÅA‚·‚×‚Ä‚ÌƒsƒNƒZƒ‹‚ğclutSizeF‰».
-    // ‹ß‚¢F‚ÌğŒ‚Æ‚µ‚ÄA
-    //   - a,r,g,b‚Ì’l‚ª‹ß‚¢ƒ‚ƒm(F“¯m‚Ì·‚ª¬‚³‚¢ƒ‚ƒm)
-    //   - 1F“à‚Ìr,g,b‚Ì‹P“x‚Ì‘å¬ŠÖŒW‚ªA‹ß‚¢ƒ‚ƒm
-    // ‚ğƒ`ƒFƒbƒN.
+    // ç¾çŠ¶ã®clutã§ã€ã™ã¹ã¦ã®ãƒ”ã‚¯ã‚»ãƒ«ã‚’clutSizeè‰²åŒ–.
+    // è¿‘ã„è‰²ã®æ¡ä»¶ã¨ã—ã¦,
+    //   - a,r,g,bã®å€¤ãŒè¿‘ã„ãƒ¢ãƒ(è‰²åŒå£«ã®å·®ãŒå°ã•ã„ãƒ¢ãƒ)
+    //   - 1è‰²å†…ã®r,g,bã®è¼åº¦ã®å¤§å°é–¢ä¿‚ãŒã€è¿‘ã„ãƒ¢ãƒ.
+    // ã‚’ãƒã‚§ãƒƒã‚¯.
     memset(pHst, 0, sizeof(Hst) * clutSize);
     for (unsigned j = 0; j < w * h; ++j) {
         unsigned ii = 0;
@@ -238,7 +238,7 @@ unsigned DecreaseColorHst<A>::conv1(unsigned char* pDst, const unsigned* pSrc, u
             }
             pDst[j] = ii;
 
-            // g—p”‚âF’l‚Ì‡Œv‚ğ‚·‚é.
+            // ä½¿ç”¨æ•°ã‚„è‰²å€¤ã®åˆè¨ˆã‚’ã™ã‚‹.
             Hst* t = &pHst[ ii ];
             ++t->num;
             t->a += a;
@@ -248,7 +248,7 @@ unsigned DecreaseColorHst<A>::conv1(unsigned char* pDst, const unsigned* pSrc, u
         }
     }
 
-    // clut‚ÌŠeF‚ğÀÛ‚ÌƒsƒNƒZƒ‹‚ÌF‚Ì•½‹Ï‚É‚·‚é.
+    // clutã®å„è‰²ã‚’å®Ÿéš›ã®ãƒ”ã‚¯ã‚»ãƒ«ã®è‰²ã®å¹³å‡ã«ã™ã‚‹.
     for (unsigned i = idx; i < clutSize; ++i) {
         const Hst*  t    = &pHst[i];
         size_t      n    = t->num;

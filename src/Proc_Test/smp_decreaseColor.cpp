@@ -1,11 +1,11 @@
 /**
  *  @file   smp_decreaseColor.cpp
- *  @brief  Œ¸Fƒ‹[ƒ`ƒ“‚Ìg—pƒTƒ“ƒvƒ‹.
+ *  @brief  æ¸›è‰²ãƒ«ãƒ¼ãƒãƒ³ã®ä½¿ç”¨ã‚µãƒ³ãƒ—ãƒ«.
  *  @author Masashi Kitamura
  *  @date   2007
  */
 
-//#include "DecreaseColor.h"        // ƒRƒ“ƒpƒCƒ‰‚ÌƒfƒtƒHƒ‹ƒginclude‹@”\‚ğg‚¤‚Ì‚ÅAƒRƒƒ“ƒgƒAƒEƒg.
+//#include "DecreaseColor.h"        // ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆincludeæ©Ÿèƒ½ã‚’ä½¿ã†ã®ã§ã€ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆ.
 #include <stdio.h>
 #include <stdlib.h>
 #include "tga_read.h"

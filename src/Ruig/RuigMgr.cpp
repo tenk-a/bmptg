@@ -1,6 +1,6 @@
 /**
  *  @file RuigMgr.cpp
- *  @brief  ‰æ‘œ—Ş—‡•À‚×ˆ—
+ *  @brief  ç”»åƒé¡ä¼¼é †ä¸¦ã¹å‡¦ç†
  *  @author Masashi Kitamura (tenka@6809.net)
  */
 #include "RuigMgr.hpp"
@@ -15,7 +15,7 @@
 #define DBGPRINTF(...)      printf(__VA_ARGS__)
 #endif
 
-// ®”’l’†‚Ìonƒrƒbƒg‚Ì”‚ğ”‚¦‚é
+// æ•´æ•°å€¤ä¸­ã®onãƒ“ãƒƒãƒˆã®æ•°ã‚’æ•°ãˆã‚‹
 #if defined(__GNUC__) && (defined _WIN64 || defined __x86_64__)
 #define FORCE_INLINE    __attribute__((always_inline))
 static FORCE_INLINE uint32_t bit_popcount16(uint32_t x) { return __builtin_popcount((uint16_t)(x)); }
@@ -55,14 +55,14 @@ static FORCE_INLINE uint32_t bit_popcount64(uint64_t bits) {
 }
 #endif
 
-/** lÌŒÜ“ü
+/** å››æ¨äº”å…¥
  */
 static FORCE_INLINE double round(double x)
 {
     return (x >= 0) ? floor(x + 0.5) : ceil(x - 0.5);
 }
 
-/// ‹ß—•]‰¿’l‚Ì”»’è‚Ég‚¤è‡’l“™
+/// è¿‘ä¼¼è©•ä¾¡å€¤ã®åˆ¤å®šã«ä½¿ã†é–¾å€¤ç­‰
 enum CmpVal {
     CMPVAL_SAME = 6,
     CMPVAL_NEAR = 20, //16,
@@ -75,7 +75,7 @@ enum CmpVal {
 
 int g_debug_flag = 0;
 
-/** ƒfƒtƒHƒ‹ƒgEƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ì‰º¿‚¯
+/** ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ»ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®ä¸‹è«‹ã‘
  */
 void RuigFactor::defaultConstruct()
 {
@@ -133,14 +133,14 @@ void RuigFactor::defaultConstruct()
 }
 
 
-/** ƒfƒtƒHƒ‹ƒgEƒRƒ“ƒXƒgƒ‰ƒNƒ^
+/** ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ»ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
  */
 RuigFactor::RuigFactor()
 {
     defaultConstruct();
 }
 
-/** ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+/** ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
  */
 RuigFactor::RuigFactor(NamedImgPtr imgPtr, uint32_t fsize)
 {
@@ -160,8 +160,8 @@ RuigFactor::RuigFactor(NamedImgPtr imgPtr, uint32_t fsize)
     origHeight_ = imgPtr->height();
 }
 
-/** ‰Šú‰».
- *  ‰æ‘œ‚©‚ç ‹ß—ƒ`ƒFƒbƒN—p‚ÌŠeíî•ñ‚ğ¶¬
+/** åˆæœŸåŒ–.
+ *  ç”»åƒã‹ã‚‰ è¿‘ä¼¼ãƒã‚§ãƒƒã‚¯ç”¨ã®å„ç¨®æƒ…å ±ã‚’ç”Ÿæˆ
  */
 bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned bpp)
 {
@@ -179,22 +179,22 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
     unsigned        wid[LSZ];
     unsigned        hig[LSZ];
 
-    // ƒAƒXƒyƒNƒg”äŠÖŒW
+    // ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”é–¢ä¿‚
     width_  = srcW;
     height_ = srcH;
     aspW_   = int(round(ASPECT_K * double(srcH) / double(srcW)));
     aspH_   = int(round(ASPECT_K * double(srcW) / double(srcH)));
     if (srcW >= srcH) {
         lsize_ = width_;
-        asp_   = -int(aspH_);   // ‰¡•‚Ì‚Ù‚¤‚ª’·‚¢‚Ù‚Ç ’l‚Í¬‚³‚­‚È‚é
+        asp_   = -int(aspH_);   // æ¨ªå¹…ã®ã»ã†ãŒé•·ã„ã»ã© å€¤ã¯å°ã•ããªã‚‹
     } else {
         lsize_ = height_;
-        asp_   = int(aspW_);    // c•‚Ì‚Ù‚¤‚ª’·‚¢‚Ù‚Ç ’l‚Í‘å‚«‚­‚È‚é
+        asp_   = int(aspW_);    // ç¸¦å¹…ã®ã»ã†ãŒé•·ã„ã»ã© å€¤ã¯å¤§ãããªã‚‹
     }
 
     DBGPRINTF("%s %d*%d asp=%d lsize_=%d\n", name_.c_str(), width_, height_, asp_, lsize_);
 
-    // •½‹Ï‚ğæ‚é‚½‚ß‚Ì‚P”ÍˆÍ‚Ìc‰¡ƒsƒNƒZƒ‹”‚ğ’²®
+    // å¹³å‡ã‚’å–ã‚‹ãŸã‚ã®ï¼‘ç¯„å›²ã®ç¸¦æ¨ªãƒ”ã‚¯ã‚»ãƒ«æ•°ã‚’èª¿æ•´
     unsigned        x1 = 0;
     unsigned        y1 = 0;
     for (unsigned i = 0; i < LSZ; ++i) {
@@ -206,7 +206,7 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
         y1 = y2;
     }
 
-    // ‰æ‘œ‚ğ 16x16 k¬‚·‚é.
+    // ç”»åƒã‚’ 16x16 ç¸®å°ã™ã‚‹.
  #if defined _WIN64 || defined __x86_64__
     typedef double      total_t;
  #else
@@ -310,7 +310,7 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
     DBGPRINTF("\n");
 #endif
 
-    // 16x16 ‚ğŒ³‚É 8x8 k¬‚ğ‚Â‚­‚èA—Ş—ƒ`ƒFƒbƒN—pbitƒpƒ^[ƒ“‚ğì‚é
+    // 16x16 ã‚’å…ƒã« 8x8 ç¸®å°ã‚’ã¤ãã‚Šã€é¡ä¼¼ãƒã‚§ãƒƒã‚¯ç”¨bitãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’ä½œã‚‹
     uint8_t (*pixM)[8][3] = pix8x8_;
     {
         uint64_t    ptnY = 0;
@@ -351,7 +351,7 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
     DBGPRINTF("\n");
 #endif
 
-    // 8x8 ‚ğŒ³‚É 4x4 k¬‚ğ‚Â‚­‚èA—Ş—ƒ`ƒFƒbƒN—pbitƒpƒ^[ƒ“‚Æ 16ŠK’²ƒpƒ^[ƒ“‚ğì‚é.
+    // 8x8 ã‚’å…ƒã« 4x4 ç¸®å°ã‚’ã¤ãã‚Šã€é¡ä¼¼ãƒã‚§ãƒƒã‚¯ç”¨bitãƒ‘ã‚¿ãƒ¼ãƒ³ã¨ 16éšèª¿ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’ä½œã‚‹.
     {
      #if 0
         uint64_t  pixY = 0;
@@ -397,14 +397,14 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
      #endif
     }
 
-    // 16x16 ‚ğ 8x8 ‚S‚Â‚Æ‚µ‚ÄA‚»‚ê‚¼‚ê‚Ì ”äŠr—pƒpƒ^[ƒ“‚ğì¬‚·‚é.
+    // 16x16 ã‚’ 8x8 ï¼”ã¤ã¨ã—ã¦ã€ãã‚Œãã‚Œã® æ¯”è¼ƒç”¨ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’ä½œæˆã™ã‚‹.
     {
         pix_t           threshold = midY;
         RuigPtn8x8_t    ptn[2][2] = {0};
         uint64_t        m         = uint64_t(1) << (MSZ*MSZ - 1);
         for (unsigned dy = 0; dy < MSZ; ++dy) {
             for (unsigned dx = 0; dx < MSZ; ++dx) {
-                //pix_t threshold = pixM[dy][dx][0];    // 8x8‚Ì1“_‚Í 16x16‚Ì4“_‚Ì•½‹Ï’l->è‡’lˆµ‚¢
+                //pix_t threshold = pixM[dy][dx][0];    // 8x8ã®1ç‚¹ã¯ 16x16ã®4ç‚¹ã®å¹³å‡å€¤->é–¾å€¤æ‰±ã„
                 for (unsigned ey = 0; ey < 2; ++ey) {
                     for (unsigned ex = 0; ex < 2; ++ex) {
                         pix_t pix = pixL[dy*2+ey][dx*2+ex][0];
@@ -424,9 +424,9 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
         DBGPRINTF("\t      %016llx %016llx\n", ptnY16x16_[1][0], ptnY16x16_[1][1]);
     }
 
-    // 8x8 ‚Ì•â•ƒpƒ^[ƒ“‚Ìì¬
+    // 8x8 ã®è£œåŠ©ãƒ‘ã‚¿ãƒ¼ãƒ³ã®ä½œæˆ
     {
-        // –¾‚é‚¢•û‚ÆˆÃ‚¢•û•ÊX‚ÉA‹P“x‚Ì•½‹Ï‚ğ‹‚ß‚é.
+        // æ˜ã‚‹ã„æ–¹ã¨æš—ã„æ–¹åˆ¥ã€…ã«ã€è¼åº¦ã®å¹³å‡ã‚’æ±‚ã‚ã‚‹.
         uint64_t subMidVal[2]   = { 0 };
         uint64_t subMidCnt[2]   = { 0 };
         uint64_t ptnY           = ptnY8x8_;
@@ -449,7 +449,7 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
         if (subMidCnt[1] > 0)
             subMidVal[1] /= subMidCnt[1];
 
-        // ptnY8x8_ ‚Ìon/off ‚É‘Î‰‚·‚é•”•ª‚Ì–¾‚é‚¢/ˆÃ‚¢•Ê‚ÌA–¾ˆÃ”»’è‚ğs‚¤.
+        // ptnY8x8_ ã®on/off ã«å¯¾å¿œã™ã‚‹éƒ¨åˆ†ã®æ˜ã‚‹ã„/æš—ã„åˆ¥ã®ã€æ˜æš—åˆ¤å®šã‚’è¡Œã†.
         uint64_t    ptnS = 0;
         m                = 1LL << (MSZ*MSZ - 1);
         for (unsigned dy = 0; dy < MSZ; ++dy) {
@@ -466,7 +466,7 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
     return true;
 }
 
-/** ƒfƒoƒbƒO—p‚ÌƒƒO•\¦
+/** ãƒ‡ãƒãƒƒã‚°ç”¨ã®ãƒ­ã‚°è¡¨ç¤º
  */
 void RuigFactor::debugPrintLog() const
 {
@@ -480,7 +480,7 @@ void RuigFactor::debugPrintLog() const
     DBGPRINTF("\tsame %d+%d=%d\n", sameCount_, nearCount_, sameCount_+nearCount_);
 }
 
-/** Å‰‚Ì‰æ‘œ“o˜^‚Ìƒ\[ƒg—p”äŠr
+/** æœ€åˆã®ç”»åƒç™»éŒ²æ™‚ã®ã‚½ãƒ¼ãƒˆç”¨æ¯”è¼ƒ
  */
 inline bool RuigFactor::isLess4FirstSort(RuigFactor const& r) const {
     int dif = asp_ - r.asp_;
@@ -509,7 +509,7 @@ inline bool RuigFactor::isLess4FirstSort(RuigFactor const& r) const {
     return fsize_ > r.fsize_;
 }
 
-/** w’è Factor‚Æ‚Ì—‚Ä‹ï‡‚Ì•]‰¿’lŒvZ
+/** æŒ‡å®š Factorã¨ã®ä¼¼ã¦å…·åˆã®è©•ä¾¡å€¤è¨ˆç®—
  */
 uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
 {
@@ -528,7 +528,7 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
 
     uint32_t li8 = 0;
     uint32_t luv = 0;
-    // 8x8 ‹P“x‚Ìˆá‚¤ƒsƒNƒZƒ‹”‚ğ‹‚ß‚é.
+    // 8x8 è¼åº¦ã®é•ã†ãƒ”ã‚¯ã‚»ãƒ«æ•°ã‚’æ±‚ã‚ã‚‹.
     uint64_t mi8 = ptnY8x8_ ^ rhs.ptnY8x8_;
     DBGPRINTF("\t%s\t%016llx\n", "mi8", mi8);
     uint64_t mu8 = ptnU8x8_ ^ rhs.ptnU8x8_;
@@ -552,7 +552,7 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
  #if 1
     uint32_t li8s = 0;
     {
-        // 8x8 ‹P“x‚Ì•â•î•ñ‚Ìˆá‚¤ƒsƒNƒZƒ‹”‚ğ”½‰f.
+        // 8x8 è¼åº¦ã®è£œåŠ©æƒ…å ±ã®é•ã†ãƒ”ã‚¯ã‚»ãƒ«æ•°ã‚’åæ˜ .
         uint64_t mi8s = ptnY8x8sub_ ^ rhs.ptnY8x8sub_;
         DBGPRINTF("\t%s\t%016llx\n", "mi8s", mi8s);
         mi8s    &= ~mi8;
@@ -567,7 +567,7 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
 
     uint32_t li16 = 0;
     {
-        // 16x16 ‹P“x‚Ìˆá‚¤ƒsƒNƒZƒ‹”‚ğ”½‰f.
+        // 16x16 è¼åº¦ã®é•ã†ãƒ”ã‚¯ã‚»ãƒ«æ•°ã‚’åæ˜ .
         uint64_t m00 = ptnY16x16_[0][0] ^ rhs.ptnY16x16_[0][0];
         DBGPRINTF("\t%s\t%016llx\n", "m00", m00);
         uint64_t m01 = ptnY16x16_[0][1] ^ rhs.ptnY16x16_[0][1];
@@ -578,14 +578,14 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
         DBGPRINTF("\t%s\t%016llx\n", "m11", m11);
         uint64_t mi16= (m00 | m01 | m10 | m11);
         DBGPRINTF("\t%s\t%016llx\n", "mi16", mi16);
-      #if 0 // 2x2 ’† 1‚µ‚©ˆá‚í‚È‚¢ê‡‚ÍA“¯‚¶‚Æ‚İ‚È‚·
+      #if 0 // 2x2 ä¸­ 1ã—ã‹é•ã‚ãªã„å ´åˆã¯ã€åŒã˜ã¨ã¿ãªã™
         uint64_t em0 = m00 ^ m01;
         uint64_t em1 = m10 ^ m11;
         uint64_t em  = em0 ^ em1;
         mi16 = mi16 & ~em;
       #endif
         DBGPRINTF("\t%s\t%016llx\n", "mi16e", mi16);
-        mi16         = mi16 & ~mi8; // 8x8 ‚Åˆá‚¤•”•ª‚Í‚·‚Å‚ÉƒJƒEƒ“ƒgÏ‚Æ‚·‚é.
+        mi16         = mi16 & ~mi8; // 8x8 ã§é•ã†éƒ¨åˆ†ã¯ã™ã§ã«ã‚«ã‚¦ãƒ³ãƒˆæ¸ˆã¨ã™ã‚‹.
         if (mi16) {
             li16 = bit_popcount64(mi16);
             DBGPRINTF("\tptnY16x16:%016llx cnt=%d\n", mi16, li16);
@@ -594,7 +594,7 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
             return 10000;
     }
 
-    // y,u,v è‡’l(•½‹Ï’l) ‚ÌA‘Šè‚Æ‚Ì·‚ğ‹‚ß‚é
+    // y,u,v é–¾å€¤(å¹³å‡å€¤) ã®ã€ç›¸æ‰‹ã¨ã®å·®ã‚’æ±‚ã‚ã‚‹
     enum { THR_SAME = 4 };
     enum { THR_NEAR = 10 };
     int difThrY = packKey_.thresholdY_ - rhs.packKey_.thresholdY_;
@@ -605,7 +605,7 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
     difThrU = abs(difThrU);
     difThrV = abs(difThrV);
 
-    // —¼•ûƒ‚ƒmƒNƒ‚Ìê‡‚Í uv‚Ìƒ_ƒ~[‚ğİ’è.
+    // ä¸¡æ–¹ãƒ¢ãƒã‚¯ãƒ­ã®å ´åˆã¯ uvã®ãƒ€ãƒŸãƒ¼ã‚’è¨­å®š.
     if (unsigned(mono_) & unsigned(rhs.mono_)) {
         luv = li8;
         difThrU = difThrV = difThrY / 4;
@@ -616,7 +616,7 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
     if (li8 <= ML_NEAR) {
         if (difThrU <= THR_NEAR && difThrV <= THR_NEAR) { // u,v
             bool issameuv = (difThrU <= THR_SAME && difThrV <= THR_SAME);
-            if (luv <= ML_NEAR) {                         // u,v ‚Í‚Ù‚Úˆê‚Æ‚İ‚È‚·
+            if (luv <= ML_NEAR) {                         // u,v ã¯ã»ã¼ä¸€ç·’ã¨ã¿ãªã™
                 if (issameuv && luv <= ML_SAME && difThrY <= THR_SAME) {
                     rc = difAsp/2 + (li8+luv) / 2 + (difThrY+difThrU+difThrV) / (3*8) + li16/4 + li8s/4;
                     DBGPRINTF("\tyuv-same %d\n", rc);
@@ -630,7 +630,7 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
                     DBGPRINTF("\tuv-same %d\n", rc);
                 }
             } else if (difThrY <= THR_SAME) {
-                if (issameuv && li8s <= ML_NEAR || li16 <= ML_NEAR) {  // ‘å‹Ø—‚Ä‚¢‚é‚¯‚ê‚Ç×•”‚ªˆá‚¤ƒpƒ^[ƒ“?
+                if (issameuv && li8s <= ML_NEAR || li16 <= ML_NEAR) {  // å¤§ç­‹ä¼¼ã¦ã„ã‚‹ã‘ã‚Œã©ç´°éƒ¨ãŒé•ã†ãƒ‘ã‚¿ãƒ¼ãƒ³?
                     rc = difAsp + li8 + luv / 3 + (difThrY + difThrU + difThrV) / 8 + li16/3 + li8s/3;
                     DBGPRINTF("\ty-same %d\n", rc);
                 } else {
@@ -650,7 +650,7 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
                 rc = difAsp + li8 + luv + (difThrY + difThrU + difThrV) / 3 + li16/2 + li8s/2;
                 DBGPRINTF("\ti-near %d\n", rc);
             }
-        } else if (unsigned(mono_) | unsigned(rhs.mono_)) {               // •Ğ•û‚ªƒ‚ƒmƒNƒ‚Ì
+        } else if (unsigned(mono_) | unsigned(rhs.mono_)) {               // ç‰‡æ–¹ãŒãƒ¢ãƒã‚¯ãƒ­ã®æ™‚
             if (difThrY <= THR_SAME) {
                 rc = difAsp + li8*4/3 + li16 / 4 + li8s/4;
                 DBGPRINTF("\tkatamono-same %d\n", rc);
@@ -670,7 +670,7 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
         DBGPRINTF("\tetc %d\n", rc);
     }
  #if 1
-    // ‚ ‚Ü‚è“¯‚¶‚Å‚Í‚È‚¢‚¯‚ê‚Ç—‚Ä‚é‚©‚à‚µ‚ê‚È‚¢”ÍˆÍ‚É‚ ‚é‚È‚çA8x8‰æ‘œ‚Ìyuv”äŠr
+    // ã‚ã¾ã‚ŠåŒã˜ã§ã¯ãªã„ã‘ã‚Œã©ä¼¼ã¦ã‚‹ã‹ã‚‚ã—ã‚Œãªã„ç¯„å›²ã«ã‚ã‚‹ãªã‚‰ã€8x8ç”»åƒã®yuvæ¯”è¼ƒ
     if (CMPVAL_SAME < rc && rc <= CMPVAL_LARGE && !skip) {
         uint32_t        isum = 0, usum = 0, vsum = 0;
         uint32_t        icnt = 0, uvcnt = 0, iuvcnt = 0;
@@ -755,7 +755,7 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
     return rc;
 }
 
-/** ‹ß“¯•]‰¿’lƒŠƒ“ƒN‚É“o˜^
+/** è¿‘åŒè©•ä¾¡å€¤ãƒªãƒ³ã‚¯ã«ç™»éŒ²
  */
 void RuigFactor::addLink(RuigFactor* child, uint32_t cmpVal)
 {
@@ -770,13 +770,13 @@ void RuigFactor::addLink(RuigFactor* child, uint32_t cmpVal)
     valueLinks_.insert(ValueLinks::value_type(cmpVal, child));
 }
 
-/** ‚È‚é‚×‚­—‚Ä‚é‰æ‘œ‚ª‹ß‚­‚É•À‚Ô‚æ‚¤‚É‚µ‚ÄAsortFactors‚É“o˜^
+/** ãªã‚‹ã¹ãä¼¼ã¦ã‚‹ç”»åƒãŒè¿‘ãã«ä¸¦ã¶ã‚ˆã†ã«ã—ã¦ã€sortFactorsã«ç™»éŒ²
  */
 void RuigFactor::checkAndGenSameLinks(RuigFactors& sortFactors, uint32_t& majorNo)
 {
-    if (parent_)    // ‚·‚Å‚ÉŒˆ’èÏ‚İ‚¾‚Á‚½.
+    if (parent_)    // ã™ã§ã«æ±ºå®šæ¸ˆã¿ã ã£ãŸ.
         return;
-    if (valueLinks_.empty()) {  // —Ş—‰æ‘œ‚ª‚È‚¢‚È‚ç ‚±‚êˆê‚Â‚ÉŒˆ’è.
+    if (valueLinks_.empty()) {  // é¡ä¼¼ç”»åƒãŒãªã„ãªã‚‰ ã“ã‚Œä¸€ã¤ã«æ±ºå®š.
         parent_  = this;
         majorNo_ = majorNo;
         minorNo_ = 0;
@@ -788,12 +788,12 @@ void RuigFactor::checkAndGenSameLinks(RuigFactors& sortFactors, uint32_t& majorN
     RuigFactors nearSameLinks;
     genNearSameLinks(nearSameLinks);
 
-    // ‹ß“¯‡‚Ìˆê——‚Ìì¬
+    // è¿‘åŒé †ã®ä¸€è¦§ã®ä½œæˆ
     uint32_t minorNo = 0;
     for (size_t i = 0; i < nearSameLinks.size(); ++i) {
         RuigFactor* cur = nearSameLinks[i];
         if (!cur->parent_) {
-            if (i && !cur->hasNearLinks()) {    // “o˜^Ï‚İ‚É‹ß‚¢‚©H
+            if (i && !cur->hasNearLinks()) {    // ç™»éŒ²æ¸ˆã¿ã«è¿‘ã„ã‹ï¼Ÿ
               #ifndef USE_NATIVE_MINOR_NO
                 if (minorNo == 1) {
                     RuigFactor* prev = sortFactors.back();
@@ -830,26 +830,26 @@ void RuigFactor::checkAndGenSameLinks(RuigFactors& sortFactors, uint32_t& majorN
  #endif
 }
 
-/// ‹ß“¯‰æ‘œˆê——‚Ìƒ\[ƒg—p(–ÊÏ‘å‚«‚¢‚Ì‚ğ—Dæ)
+/// è¿‘åŒç”»åƒä¸€è¦§ã®ã‚½ãƒ¼ãƒˆç”¨(é¢ç©å¤§ãã„ã®ã‚’å„ªå…ˆ)
 struct RuigFactor::NearSameLinksCmp {
     bool operator()(RuigFactor const* l, RuigFactor const* r) const {
-        // ƒJƒ‰[—Dæ.
+        // ã‚«ãƒ©ãƒ¼å„ªå…ˆ.
         if (!l->mono_ && r->mono_)
             return true;
         else if (l->mono_ && !r->mono_)
             return false;
 
-        // –ÊÏ‘å‚«‚¢‚Ì‚ğ—Dæ
+        // é¢ç©å¤§ãã„ã®ã‚’å„ªå…ˆ
         size_t   lsz = l->origWidth_ * l->origHeight_;
         size_t   rsz = r->origWidth_ * r->origHeight_;
         if (lsz != rsz)
             return lsz > rsz;
 
-        // “¯ˆê‰æ‘œ‚ª‘½‚¢‚à‚Ì‚ğ—Dæ
+        // åŒä¸€ç”»åƒãŒå¤šã„ã‚‚ã®ã‚’å„ªå…ˆ
         if (l->sameCount_ != r->sameCount_)
             return l->sameCount_ > r->sameCount_;
 
-        // ‹ß‚¢‰æ‘œ‚ª‘½‚¢‚à‚Ì‚ğ—Dæ
+        // è¿‘ã„ç”»åƒãŒå¤šã„ã‚‚ã®ã‚’å„ªå…ˆ
         size_t lv = l->sameCount_ + l->nearCount_;
         size_t rv = r->sameCount_ + r->nearCount_;
         if (lv != rv)
@@ -859,20 +859,20 @@ struct RuigFactor::NearSameLinksCmp {
         if (lv != rv)
             return lv > rv;
 
-        // ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ª‘å‚«‚¢‚à‚Ì‚ğ—Dæ
-        // (jpg‚Ì‚ƒNƒƒŠƒeƒB‚¾‚ÆƒTƒCƒY‚ª‘å‚«‚­‚È‚éŒXŒü‚ğl—¶. ’áƒNƒIƒŠƒeƒB‚ÌÄjpg‰»‚É‚æ‚éˆ«‰»•¨‚à‚ ‚é‚Ì‚Å’ˆÓ‚¾‚¯‚Ç)
+        // ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºãŒå¤§ãã„ã‚‚ã®ã‚’å„ªå…ˆ
+        // (jpgã®é«˜ã‚¯ãƒ­ãƒªãƒ†ã‚£ã ã¨ã‚µã‚¤ã‚ºãŒå¤§ãããªã‚‹å‚¾å‘ã‚’è€ƒæ…®. ä½ã‚¯ã‚ªãƒªãƒ†ã‚£ã®å†jpgåŒ–ã«ã‚ˆã‚‹æ‚ªåŒ–ç‰©ã‚‚ã‚ã‚‹ã®ã§æ³¨æ„ã ã‘ã©)
         return l->fsize_ > r->fsize_;
     }
 };
 
-/** ŠeFactor‚ª‚Â‹ß“¯ƒŠƒ“ƒN‚ğ‚Ğ‚Æ‚Ü‚Æ‚ß‚É‚µA‰æ‘œƒTƒCƒY‚âƒŠƒ“ƒN—Ê‚ğŒ³‚É‚P‚Â‚Ìˆê——‚ğì¬‚·‚é.
+/** å„FactorãŒæŒã¤è¿‘åŒãƒªãƒ³ã‚¯ã‚’ã²ã¨ã¾ã¨ã‚ã«ã—ã€ç”»åƒã‚µã‚¤ã‚ºã‚„ãƒªãƒ³ã‚¯é‡ã‚’å…ƒã«ï¼‘ã¤ã®ä¸€è¦§ã‚’ä½œæˆã™ã‚‹.
  */
 void RuigFactor::genNearSameLinks(RuigFactors& nearSameLinks)
 {
     FactorVals factorVals;
     convValueLinks(factorVals);
 
-    // ‹ß‚¢ƒ‚ƒm‚ª‘½‚¢‡ˆÊ•À‚×‚é
+    // è¿‘ã„ãƒ¢ãƒãŒå¤šã„é †ä½ä¸¦ã¹ã‚‹
     typedef std::multiset<RuigFactor*, RuigFactor::NearSameLinksCmp> NaerSameLinkSet;
     NaerSameLinkSet links;
     for (FactorVals::iterator ite = factorVals.begin(); ite != factorVals.end(); ++ite) {
@@ -884,7 +884,7 @@ void RuigFactor::genNearSameLinks(RuigFactors& nearSameLinks)
 
  #if 1
     size_t size = links.size();
-    // Šùo‚ÌFactor‚É‹ß‚¢•¨‡‚É•À‚×‚é
+    // æ—¢å‡ºã®Factorã«è¿‘ã„ç‰©é †ã«ä¸¦ã¹ã‚‹
     int*   cmpVals = reinterpret_cast<int*>(alloca(size * sizeof(int)));
     if (!cmpVals) {
         std::vector<int> cmpValTmp(size);
@@ -934,7 +934,7 @@ void RuigFactor::genNearSameLinks(RuigFactors& nearSameLinks)
  #endif
 }
 
-/** ŠeFactor‚Ì‹ß“¯ƒŠƒ“ƒN‚ğ (Factor*,•]‰¿’l) ‚È‹ß“¯ƒŠƒ“ƒNˆê——‚ÉƒŠƒ“ƒN‚ğ’H‚è‚È‚ª‚çÄ‹A“o˜^
+/** å„Factorã®è¿‘åŒãƒªãƒ³ã‚¯ã‚’ (Factor*,è©•ä¾¡å€¤) ãªè¿‘åŒãƒªãƒ³ã‚¯ä¸€è¦§ã«ãƒªãƒ³ã‚¯ã‚’è¾¿ã‚ŠãªãŒã‚‰å†å¸°ç™»éŒ²
  */
 void RuigFactor::convValueLinks(FactorVals& factorVals)
 {
@@ -947,20 +947,20 @@ void RuigFactor::convValueLinks(FactorVals& factorVals)
     }
 }
 
-/** “o˜^Ï‚İ‚ÌƒŠƒ“ƒN‚Æ‹ß‚¢‚©‚Ç‚¤‚©
+/** ç™»éŒ²æ¸ˆã¿ã®ãƒªãƒ³ã‚¯ã¨è¿‘ã„ã‹ã©ã†ã‹
  */
 bool RuigFactor::hasNearLinks()
 {
     for (ValueLinks::iterator ite = valueLinks_.begin(); ite != valueLinks_.end(); ++ite) {
         RuigFactor* cur = ite->second;
         if (cur->parent_ && ite->first <= CMPVAL_NEAR)
-            return true;    // “o˜^Ï‚İ‚Ì‚à‚Ì‚Æ‹ß‚¢‚à‚Ì‚ª‚ ‚ê‚Î true
+            return true;    // ç™»éŒ²æ¸ˆã¿ã®ã‚‚ã®ã¨è¿‘ã„ã‚‚ã®ãŒã‚ã‚Œã° true
     }
-    // “o˜^Ï‚İ‚Ì‚à‚Ì‚Å‹ß‚¢‚à‚Ì‚Í‚È‚©‚Á‚½
+    // ç™»éŒ²æ¸ˆã¿ã®ã‚‚ã®ã§è¿‘ã„ã‚‚ã®ã¯ãªã‹ã£ãŸ
     return false;
 }
 
-/** “ˆê‚³‚ê‚½ ‹ß“¯ƒŠƒ“ƒN ‚©‚çA©g‚Æ ‚Ù‚Ú“¯‚¶ ‚à‚Ì‚Ì‚İ‚ğW‚ß‚Ä resultFactors ‚É“o˜^.
+/** çµ±ä¸€ã•ã‚ŒãŸ è¿‘åŒãƒªãƒ³ã‚¯ ã‹ã‚‰ã€è‡ªèº«ã¨ ã»ã¼åŒã˜ ã‚‚ã®ã®ã¿ã‚’é›†ã‚ã¦ resultFactors ã«ç™»éŒ².
  */
 void RuigFactor::setSameLinks(RuigFactors const& nearSameLinks, size_t idx, uint32_t majorNo, uint32_t minorNo, RuigFactors& resultFactors)
 {
@@ -972,15 +972,15 @@ void RuigFactor::setSameLinks(RuigFactors const& nearSameLinks, size_t idx, uint
     //sameLinks_.push_back(this);
     resultFactors.push_back(this);
     for (ValueLinks::iterator ite = valueLinks_.begin(); ite != valueLinks_.end(); ++ite) {
-        if (ite->first > CMPVAL_SAME)  // “¯‚¶‚Æ‚İ‚È‚·‚É‚Íˆá‚¢‚ª‘å‚«‚¢‚à‚Ì‚ÍƒXƒLƒbƒv
+        if (ite->first > CMPVAL_SAME)  // åŒã˜ã¨ã¿ãªã™ã«ã¯é•ã„ãŒå¤§ãã„ã‚‚ã®ã¯ã‚¹ã‚­ãƒƒãƒ—
             continue;
         RuigFactor* cur = ite->second;
-        if (cur->parent_)               // ‚·‚Å‚Éˆ—Ï‚İ‚È‚çƒXƒLƒbƒv
+        if (cur->parent_)               // ã™ã§ã«å‡¦ç†æ¸ˆã¿ãªã‚‰ã‚¹ã‚­ãƒƒãƒ—
             continue;
         RuigFactors::const_iterator fnd = std::find(nearSameLinks.begin()+idx+1, nearSameLinks.end(), cur);
-        if (fnd == nearSameLinks.end()) // “ˆê‚Ìˆê——‚É‚È‚¯‚ê‚ÎƒXƒLƒbƒv(ˆ—Ï‚ÍŒŸ¸‘ÎÛ‚É‚µ‚Ä‚È‚¢‚Ì‚ÅŒ©‚Â‚©‚ç‚È‚¢ê‡—L‚è)
+        if (fnd == nearSameLinks.end()) // çµ±ä¸€ã®ä¸€è¦§ã«ãªã‘ã‚Œã°ã‚¹ã‚­ãƒƒãƒ—(å‡¦ç†æ¸ˆã¯æ¤œæŸ»å¯¾è±¡ã«ã—ã¦ãªã„ã®ã§è¦‹ã¤ã‹ã‚‰ãªã„å ´åˆæœ‰ã‚Š)
             continue;
-        cur->parent_  = this;           // e‚ğİ’è.
+        cur->parent_  = this;           // è¦ªã‚’è¨­å®š.
         cur->majorNo_ = majorNo;
         cur->minorNo_ = minorNo;
         cur->subNo_   = ++subNo;
@@ -996,13 +996,13 @@ void RuigFactor::setSameLinks(RuigFactors const& nearSameLinks, size_t idx, uint
 
 // ---------------------------------------------------------------------------------
 
-/** ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+/** ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
  */
 RuigMgr::RuigMgr()
 {
 }
 
-/** ‰æ‘œ(î•ñ)“o˜^
+/** ç”»åƒ(æƒ…å ±)ç™»éŒ²
  */
 bool RuigMgr::insert(NamedImgPtr img, uint32_t fsize)
 {
@@ -1011,7 +1011,7 @@ bool RuigMgr::insert(NamedImgPtr img, uint32_t fsize)
     return true;
 }
 
-/** “o˜^Ï‚İ‚Ì‚à‚Ì‚ğ‹ß—‡‚É•À‚×‚é
+/** ç™»éŒ²æ¸ˆã¿ã®ã‚‚ã®ã‚’è¿‘ä¼¼é †ã«ä¸¦ã¹ã‚‹
  */
 bool RuigMgr::run()
 {
@@ -1025,14 +1025,14 @@ bool RuigMgr::run()
     return true;
 }
 
-/** ‘“–‚èƒ`ƒFƒbƒN—p‚É tree\‘¢‚ÈƒRƒ“ƒeƒi‚ğ vector ‚É•ÏŠ·.
+/** ç·å½“ã‚Šãƒã‚§ãƒƒã‚¯ç”¨ã« treeæ§‹é€ ãªã‚³ãƒ³ãƒ†ãƒŠã‚’ vector ã«å¤‰æ›.
  */
 bool RuigMgr::initAllFactors()
 {
     size_t size = factorBodys_.size();
     if (!size)
         return false;
-    allFactors_.resize(size);        ///< ‘Sfactorƒ\[ƒgÏ‚Ìˆê——(är‚ß‚é—p)
+    allFactors_.resize(size);        ///< å…¨factorã‚½ãƒ¼ãƒˆæ¸ˆã®ä¸€è¦§(èˆã‚ã‚‹ç”¨)
     if (allFactors_.size() < size)
         return false;
     size_t i = 0;
@@ -1045,7 +1045,7 @@ bool RuigMgr::initAllFactors()
     return !allFactors_.empty();
 }
 
-/** ‘S‚Ä‚ÌFactor‚Ì ‹ß“¯•]‰¿‚ğs‚¤
+/** å…¨ã¦ã®Factorã® è¿‘åŒè©•ä¾¡ã‚’è¡Œã†
  */
 void RuigMgr::checkNearSameLinks()
 {
@@ -1058,7 +1058,7 @@ void RuigMgr::checkNearSameLinks()
             RuigFactor* kp =  factors[k];
             uint32_t val = ip->calcCmpVal(*kp);
             DBGPRINTF("\tcmpVal=%d\n", val);
-            if (val <= CMPVAL_MID) {     // ‹ß“¯‚¾‚Á‚½‚çA‚»‚ê‚¼‚ê‚É•]‰¿•ƒŠƒ“ƒN‚ğ“o˜^.
+            if (val <= CMPVAL_MID) {     // è¿‘åŒã ã£ãŸã‚‰ã€ãã‚Œãã‚Œã«è©•ä¾¡ï¼†ãƒªãƒ³ã‚¯ã‚’ç™»éŒ².
                 ip->addLink(kp, val);
                 kp->addLink(ip, val);
             }
@@ -1066,7 +1066,7 @@ void RuigMgr::checkNearSameLinks()
     }
 }
 
-/** Factor‚²‚Æ‚Ì‹ß“¯•]‰¿‚ğŒ³‚ÉA‹ß“¯‡‚É allFactors_ ‚ğ•À‚×’¼‚·.
+/** Factorã”ã¨ã®è¿‘åŒè©•ä¾¡ã‚’å…ƒã«ã€è¿‘åŒé †ã« allFactors_ ã‚’ä¸¦ã¹ç›´ã™.
  */
 void RuigMgr::sortFactors()
 {
@@ -1081,11 +1081,11 @@ void RuigMgr::sortFactors()
             ip->checkAndGenSameLinks(factors, majorNo);
         }
     }
-    // Œ‹‰Ê‚ğ”½‰f
+    // çµæœã‚’åæ˜ 
     factors.swap(allFactors_);
 }
 
-/** ‹ß“¯ƒCƒ[ƒW‚ª‚ ‚é‰æ‘œ‚Ì”‚ğ”‚¦‚é
+/** è¿‘åŒã‚¤ãƒ¡ãƒ¼ã‚¸ãŒã‚ã‚‹ç”»åƒã®æ•°ã‚’æ•°ãˆã‚‹
  */
 size_t RuigMgr::countNearSameFactors()
 {

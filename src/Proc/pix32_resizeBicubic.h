@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_resizeBicubic.h
- *  @brief  ƒoƒCƒLƒ…[ƒrƒbƒN–@‚ÅŠg‘åk¬.
+ *  @brief  ãƒã‚¤ã‚­ãƒ¥ãƒ¼ãƒ“ãƒƒã‚¯æ³•ã§æ‹¡å¤§ç¸®å°.
  *  @author Masashi KITAMURA
  */
 
@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-/** Šg‘åk¬
+/** æ‹¡å¤§ç¸®å°
  */
 int pix32_resizeBicubic(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH, int hasAlpha);
 
@@ -20,8 +20,8 @@ int pix32_resizeBicubic(unsigned *dst, unsigned dstW, unsigned dstH, const unsig
 #endif
 
 #if defined __cplusplus
-// C++Œü
-// image(), witdh(),height(),bpp() ‚ğƒƒ“ƒo[‚É‚Â‰æ‘œƒNƒ‰ƒX‚ğ‘€ì.
+// C++å‘.
+// image(), witdh(),height(),bpp() ã‚’ãƒ¡ãƒ³ãƒãƒ¼ã«æŒã¤ç”»åƒã‚¯ãƒ©ã‚¹ã‚’æ“ä½œ.
 
 template<class IMG>
 void pix32_resizeBicubic(IMG& dst, const IMG& src) {

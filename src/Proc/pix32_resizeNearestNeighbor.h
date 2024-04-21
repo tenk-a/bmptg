@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_resizeNearestNeighbor.h
- *  @brief  ƒjƒAƒŒƒXƒgƒlƒCƒo[–@‚ÅŠg‘åk¬.
+ *  @brief  ãƒ‹ã‚¢ãƒ¬ã‚¹ãƒˆãƒã‚¤ãƒãƒ¼æ³•ã§æ‹¡å¤§ç¸®å°.
  *  @author Masashi KITAMURA
  */
 
@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-/** Šg‘åk¬
+/** æ‹¡å¤§ç¸®å°
  */
 int  pix32_resizeNearestNeighbor(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH);
 
@@ -20,8 +20,8 @@ int  pix32_resizeNearestNeighbor(unsigned *dst, unsigned dstW, unsigned dstH, co
 #endif
 
 #if defined __cplusplus
-// C++Œü
-// image(), witdh(),height(),bpp() ‚ğƒƒ“ƒo[‚É‚Â‰æ‘œƒNƒ‰ƒX‚ğ‘€ì.
+// C++å‘.
+// image(), witdh(),height(),bpp() ã‚’ãƒ¡ãƒ³ãƒãƒ¼ã«æŒã¤ç”»åƒã‚¯ãƒ©ã‚¹ã‚’æ“ä½œ.
 
 template<class IMG>
 int  pix32_resizeNearestNeighbor(IMG& dst, const IMG& src) {

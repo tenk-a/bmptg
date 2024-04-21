@@ -1,10 +1,10 @@
 /**
  *  @file   tga_read.c
- *  @brief  tga‰ж‘њ“ь—Н.
+ *  @brief  tgaз”»еѓЏе…ҐеЉ›.
  *  @author Masashi Kitamura
  * @note
- *  Ѓ¦  “ьЏo—Н‚ЕђFђ”‚в‰ж‘њѓTѓCѓY‚М€б‚¤€іЏkѓfЃ[ѓ^‚М“WЉJ‚Й malloc&free‚рЋg—p
- *  2001-01-30  tga‚М16ѓrѓbѓgђF‚Мѓї‚М€µ‚ў‚Єѓ|ѓJ‚µ‚Д‚Ѕ‚М‚р(0x80‚Е‚И‚­0xFF‚Й)ЏCђі.
+ *  вЂ»  е…Ґе‡єеЉ›гЃ§и‰Іж•°г‚„з”»еѓЏг‚µг‚¤г‚єгЃ®йЃ•гЃ†ењ§зё®гѓ‡гѓјг‚їгЃ®е±•й–‹гЃ« malloc&freeг‚’дЅїз”Ё
+ *  2001-01-30  tgaгЃ®16гѓ“гѓѓгѓ€и‰ІгЃ®О±гЃ®ж‰±гЃ„гЃЊгѓќг‚«гЃ—гЃ¦гЃџгЃ®г‚’(0x80гЃ§гЃЄгЃЏ0xFFгЃ«)дї®ж­Ј.
  */
 
 
@@ -15,7 +15,7 @@
 
 
 /*---------------------------------------------------------------------------*/
-/* ѓRѓ“ѓpѓCѓ‹ЉВ‹«‚М’Тел‚ ‚н‚№. */
+/* г‚ігѓігѓ‘г‚¤гѓ«з’°еўѓгЃ®иѕ»и¤„гЃ‚г‚ЏгЃ›. */
 
 
 #if (defined _MSC_VER) || (defined __BORLANDC__ && __BORLANDC__ <= 0x0551)
@@ -32,15 +32,15 @@ typedef unsigned       uint32_t;
 #endif
 
 
-// ‚±‚Мѓtѓ@ѓCѓ‹“а‚М‚Э‚Е‚М malloc/free ‚М’Іђ®.
-#ifdef _WINDOWS         // winѓAѓvѓЉ(iftga.spi)‚ЕЃA‚И‚й‚Ч‚­ Cѓ‰ѓCѓuѓ‰ѓЉ‚рѓЉѓ“ѓN‚µ‚Ѕ‚­‚И‚ўЏкЌ‡—p.
+// гЃ“гЃ®гѓ•г‚Ўг‚¤гѓ«е†…гЃ®гЃїгЃ§гЃ® malloc/free гЃ®иЄїж•ґ.
+#ifdef _WINDOWS         // winг‚ўгѓ—гѓЄ(iftga.spi)гЃ§гЂЃгЃЄг‚‹гЃ№гЃЏ Cгѓ©г‚¤гѓ–гѓ©гѓЄг‚’гѓЄгѓіг‚ЇгЃ—гЃџгЃЏгЃЄгЃ„е ґеђ€з”Ё.
 #include <windows.h>
 #define MALLOC(sz)          LocalAlloc(LMEM_FIXED, (sz))
 #define FREE(p)             LocalFree(p)
 #define MEM_CPY(d,s,sz)     CopyMemory((d),(s),(sz))
 #define MEM_CLR(m,sz)       ZeroMemory((m), (sz))
 #else
-#include <stdlib.h>     /* NULL, malloc, free ‚рЋg—p */
+#include <stdlib.h>     /* NULL, malloc, free г‚’дЅїз”Ё */
 #define MALLOC(sz)          malloc(sz)
 #define FREE(p)             free(p)
 #define MEM_CPY(d,s,sz)     memcpy((d),(s),(sz))
@@ -55,10 +55,10 @@ typedef unsigned       uint32_t;
 #define BB(a,b)         ((((uint8_t)(a))<<8)+(uint8_t)(b))
 #define BBBB(a,b,c,d)   ((((uint8_t)(a))<<24)+(((uint8_t)(b))<<16)+(((uint8_t)(c))<<8)+((uint8_t)(d)))
 
-/* ѓoѓCѓg’P€К‚МѓAѓhѓЊѓX‚©‚з’l‚рЋж‚иЏo‚·ѓЃѓ‚ѓЉѓAѓNѓZѓX—pѓ}ѓNѓЌ */
+/* гѓђг‚¤гѓ€еЌдЅЌгЃ®г‚ўгѓ‰гѓ¬г‚№гЃ‹г‚‰еЂ¤г‚’еЏ–г‚Ље‡єгЃ™гѓЎгѓўгѓЄг‚ўг‚Їг‚»г‚№з”Ёгѓћг‚Їгѓ­ */
 #define PEEKB(a)        (*(const unsigned char  *)(a))
 
-#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__   // X86 ‚НЃAѓAѓ‰ѓCѓЃѓ“ѓg‚р‹C‚Й‚·‚й•K—v‚Є‚И‚ў‚М‚Е’јђЪѓAѓNѓZѓX
+#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__   // X86 гЃЇгЂЃг‚ўгѓ©г‚¤гѓЎгѓігѓ€г‚’ж°—гЃ«гЃ™г‚‹еї…и¦ЃгЃЊгЃЄгЃ„гЃ®гЃ§з›ґжЋҐг‚ўг‚Їг‚»г‚№.
 #define PEEKiW(a)       (*(const unsigned short *)(a))
 #define PEEKiD(a)       (*(const unsigned long  *)(a))
 #else
@@ -69,7 +69,7 @@ typedef unsigned       uint32_t;
 #define PEEKmW(a)       ( (PEEKB(a)<<8) | PEEKB((const char *)(a)+1) )
 #define PEEKmD(a)       ( (PEEKmW(a)<<16) | PEEKmW((const char *)(a)+2) )
 
-#ifdef __SC__           // DM-C v8.41‚Е‚М-j0‚МѓoѓO‘ОЌф‚Е, ѓ}ѓNѓЌ“а‚Йѓ}ѓNѓЌ‚рЏ‘‚©‚И‚ў‚ж‚¤‚ЙЏCђі
+#ifdef __SC__           // DM-C v8.41гЃ§гЃ®-j0гЃ®гѓђг‚°еЇѕз­–гЃ§, гѓћг‚Їгѓ­е†…гЃ«гѓћг‚Їгѓ­г‚’ж›ёгЃ‹гЃЄгЃ„г‚€гЃ†гЃ«дї®ж­Ј.
 #define PEEKW(a)        (*(const unsigned short *)(a))
 #define PEEKD(a)        (*(const unsigned long  *)(a))
 #elif defined(BIG_ENDIAN)
@@ -89,33 +89,33 @@ typedef unsigned       uint32_t;
 
 /*---------------------------------------------------------------------------*/
 
-/** tgaѓwѓbѓ_Џо•с */
+/** tgaгѓгѓѓгѓЂжѓ…е ± */
 typedef struct tga_hdr_t {
   #if 1 //
-    unsigned char   exHdrSz;        /**< ѓwѓbѓ_Њг‚МѓsѓNѓZѓ‹ѓfЃ[ѓ^‚Ь‚Е‚МѓoѓCѓgђ”? */
-    unsigned char   colorMapFlag;   /**< ѓJѓ‰Ѓ[ѓ}ѓbѓv‚М—L–і?(0=‚И‚µ,1=‚ ‚и)      */
+    unsigned char   exHdrSz;        /**< гѓгѓѓгѓЂеѕЊгЃ®гѓ”г‚Їг‚»гѓ«гѓ‡гѓјг‚їгЃѕгЃ§гЃ®гѓђг‚¤гѓ€ж•°? */
+    unsigned char   colorMapFlag;   /**< г‚«гѓ©гѓјгѓћгѓѓгѓ—гЃ®жњ‰з„Ў?(0=гЃЄгЃ—,1=гЃ‚г‚Љ)      */
   #else
-    unsigned short  exHdrSz;        /**< ѓwѓbѓ_Њг‚МѓsѓNѓZѓ‹ѓfЃ[ѓ^‚Ь‚Е‚МѓoѓCѓgђ”? */
+    unsigned short  exHdrSz;        /**< гѓгѓѓгѓЂеѕЊгЃ®гѓ”г‚Їг‚»гѓ«гѓ‡гѓјг‚їгЃѕгЃ§гЃ®гѓђг‚¤гѓ€ж•°? */
   #endif
-    char            id;             /**< ѓtѓHЃ[ѓ}ѓbѓg‚МЋн—Ю. 0,1,2,3,9,10,11 */
-    unsigned short  clutNo;         /**< ђFѓpѓЊѓbѓg‚МЉJЋn”ФЌ† */
-    unsigned short  clutNum;        /**< ђFѓpѓЊѓbѓg‚МЊВђ” */
-    char            clutBit;        /**< ђFѓpѓЊѓbѓg‚Мѓrѓbѓgђ” 15,16,24,32 */
-    short           x0;             /**< Ћn“_x */
-    short           y0;             /**< Ћn“_y ‰ж–КЌ¶‰є‚ЄЊґ“_(0,0)‚И‚М‚Е’Ќ€УЃI */
-    short           w;              /**< ‰Ў•ќ */
-    short           h;              /**< Џc•ќ */
-    char            bpp;            /**< ѓsѓNѓZѓ‹‚Мѓrѓbѓgђ”  8,16,24,32 */
-    char            mode;           /**< bit 3..0(4bits) : ‘®ђ«. 0:ѓї‚И‚µ. 1:–ў’и‹`‚М‚Ѕ‚Я–іЋ‹‰В”\. 2:–ў’и‹`‚ѕ‚Є•Ы‘¶‚·‚Ч‚«<br>
-                                     *   3:’КЏн‚Мѓї 4:—\‚ЯЏжЋZ‚і‚к‚Ѕѓї. 8:ЏЪЌЧ•s–ѕ. <br>
-                                     *   (bpp=32‚М‚Ж‚«:0x08, 24‚М‚Ж‚«0x00, 16‚М‚Ж‚«0x01 8‚М‚Ж‚«0x08,‚ѕ‚Б‚Ѕ)<br>
-                                     *   bit 5,4         : ѓsѓNѓZѓ‹‚МЉi”[Џ‡‚Н  0:Ќ¶‰є‚©‚з 1:Ќ¶Џг 2:‰E‰є  3:‰EЏг
+    char            id;             /**< гѓ•г‚©гѓјгѓћгѓѓгѓ€гЃ®зЁ®йЎћ. 0,1,2,3,9,10,11 */
+    unsigned short  clutNo;         /**< и‰Ігѓ‘гѓ¬гѓѓгѓ€гЃ®й–‹е§‹з•ЄеЏ· */
+    unsigned short  clutNum;        /**< и‰Ігѓ‘гѓ¬гѓѓгѓ€гЃ®еЂ‹ж•° */
+    char            clutBit;        /**< и‰Ігѓ‘гѓ¬гѓѓгѓ€гЃ®гѓ“гѓѓгѓ€ж•° 15,16,24,32 */
+    short           x0;             /**< е§‹з‚№x */
+    short           y0;             /**< е§‹з‚№y з”»йќўе·¦дё‹гЃЊеЋџз‚№(0,0)гЃЄгЃ®гЃ§жіЁж„ЏпјЃ */
+    short           w;              /**< жЁЄе№… */
+    short           h;              /**< зё¦е№… */
+    char            bpp;            /**< гѓ”г‚Їг‚»гѓ«гЃ®гѓ“гѓѓгѓ€ж•°  8,16,24,32 */
+    char            mode;           /**< bit 3..0(4bits) : е±ћжЂ§. 0:О±гЃЄгЃ—. 1:жњЄе®љзѕ©гЃ®гЃџг‚Ѓз„Ўи¦–еЏЇиѓЅ. 2:жњЄе®љзѕ©гЃ гЃЊдїќе­гЃ™гЃ№гЃЌ<br>
+                                     *   3:йЂљеёёгЃ®О± 4:дє€г‚Ѓд№—з®—гЃ•г‚ЊгЃџО±. 8:и©ізґ°дёЌжЋ. <br>
+                                     *   (bpp=32гЃ®гЃЁгЃЌ:0x08, 24гЃ®гЃЁгЃЌ0x00, 16гЃ®гЃЁгЃЌ0x01 8гЃ®гЃЁгЃЌ0x08,гЃ гЃЈгЃџ)<br>
+                                     *   bit 5,4         : гѓ”г‚Їг‚»гѓ«гЃ®ж јзґЌй †гЃЇ  0:е·¦дё‹гЃ‹г‚‰ 1:е·¦дёЉ 2:еЏідё‹  3:еЏідёЉ
                                      */
 } tga_hdr_t;
-                                    /* €к‰ћ tga_hdr_t ‚Нѓwѓbѓ_’и‹`‚»‚М‚Ь‚Ь‚рЌ\‘ў‘М‰»‚µ‚Д‚й‚Є  */
+                                    /* дёЂеїњ tga_hdr_t гЃЇгѓгѓѓгѓЂе®љзѕ©гЃќгЃ®гЃѕгЃѕг‚’ж§‹йЂ дЅ“еЊ–гЃ—гЃ¦г‚‹гЃЊ  */
                                     /* (char=1byte, short=2byte, int=4byte)                   */
-                                    /* Ќ\‘ў‘МѓpѓeѓBѓ“ѓO‚М–в‘и‚Є‚ ‚й‚М‚ЕЃA‚±‚МЌ\‘ў‘М‚Еtga ѓfЃ[ */
-                                    /* ѓ^‚Мђж“Є‚рѓLѓѓѓXѓg‚µ‚И‚ў‚±‚Ж                           */
+                                    /* ж§‹йЂ дЅ“гѓ‘гѓ†г‚Јгѓіг‚°гЃ®е•ЏйЎЊгЃЊгЃ‚г‚‹гЃ®гЃ§гЂЃгЃ“гЃ®ж§‹йЂ дЅ“гЃ§tga гѓ‡гѓј */
+                                    /* г‚їгЃ®е…€й ­г‚’г‚­гѓЈг‚№гѓ€гЃ—гЃЄгЃ„гЃ“гЃЁ                           */
 
 
 
@@ -127,7 +127,7 @@ static void tga_getPixs_fast_8(uint8_t *dst, const uint8_t *s, int w, int h, int
 static void tga_getPixs_fast(uint8_t *dst, const uint8_t *s, int w, int h, int bpp, int id, int dir);
 
 
-/** ђ¶‚Мtga‚Мѓwѓbѓ_Џо•с‚рЋж“ѕ
+/** з”џгЃ®tgaгЃ®гѓгѓѓгѓЂжѓ…е ±г‚’еЏ–еѕ—
  */
 static int  tga_getRawHdr(tga_hdr_t *t, const void *tga_data)
 {
@@ -158,7 +158,7 @@ static int  tga_getRawHdr(tga_hdr_t *t, const void *tga_data)
 
 
 
-/** ѓwѓbѓ_‚ж‚и‰ж‘њѓTѓCѓY‚ЖђFђ”‚р“ѕ‚й
+/** гѓгѓѓгѓЂг‚€г‚Љз”»еѓЏг‚µг‚¤г‚єгЃЁи‰Іж•°г‚’еѕ—г‚‹
  */
 int tga_getHdr(const void *tga_data, int *wp, int *hp, int *bppp, int *clutNump)
 {
@@ -167,7 +167,7 @@ int tga_getHdr(const void *tga_data, int *wp, int *hp, int *bppp, int *clutNump)
 
 
 
-/** ѓwѓbѓ_‚ж‚и‰ж‘њѓTѓCѓY‚ЖђFђ”‚р“ѕ‚й. ѓї‚М—L–і‚а•Ф‚·.
+/** гѓгѓѓгѓЂг‚€г‚Љз”»еѓЏг‚µг‚¤г‚єгЃЁи‰Іж•°г‚’еѕ—г‚‹. О±гЃ®жњ‰з„Ўг‚‚иї”гЃ™.
  */
 int tga_getHdrEx(const void *tga_data, int *wp, int *hp, int *bppp, int *clutNump, int* alpModep)
 {
@@ -181,14 +181,14 @@ int tga_getHdrEx(const void *tga_data, int *wp, int *hp, int *bppp, int *clutNum
     if (bppp)       *bppp       = -1;
     if (alpModep)   *alpModep   = 0;
 
-    /* tga ‚Мѓwѓbѓ_ђ¶Џо•с‚рЋж“ѕ */
+    /* tga гЃ®гѓгѓѓгѓЂз”џжѓ…е ±г‚’еЏ–еѕ— */
     tga_getRawHdr(t, tga_data);
 
-    /* id ѓ`ѓFѓbѓN */
+    /* id гѓЃг‚§гѓѓг‚Ї */
     switch (t->id) {
-    case 0:             /* ѓCѓЃЃ[ѓW–і‚µ */
-    case 1:             /* clut‚ ‚и. –і€іЏk */
-    case 8+1:           /* clut‚ ‚и. €іЏk */
+    case 0:             /* г‚¤гѓЎгѓјг‚ёз„ЎгЃ— */
+    case 1:             /* clutгЃ‚г‚Љ. з„Ўењ§зё® */
+    case 8+1:           /* clutгЃ‚г‚Љ. ењ§зё® */
         switch (t->clutBit) {
         case 16:
         case 32:
@@ -197,24 +197,24 @@ int tga_getHdrEx(const void *tga_data, int *wp, int *hp, int *bppp, int *clutNum
         case 15:
         case 24:
             break;
-        default:        /* ’m‚з‚И‚ўђFђ” */
+        default:        /* зџҐг‚‰гЃЄгЃ„и‰Іж•° */
             return 0;
         }
         break;
 
-    case 2:             /* ‘ЅђF. –і€іЏk */
-    case 3:             /* ”’Ќ•. –і€іЏk */
-    case 8+2:           /* ‘ЅђF. €іЏk   */
-    case 8+3:           /* ”’Ќ•. €іЏk   */
+    case 2:             /* е¤љи‰І. з„Ўењ§зё® */
+    case 3:             /* з™Ѕй»’. з„Ўењ§зё® */
+    case 8+2:           /* е¤љи‰І. ењ§зё®   */
+    case 8+3:           /* з™Ѕй»’. ењ§зё®   */
         if (t->clutBit || t->clutNum)
             return 0;
         break;
 
-    default:            /* ‚µ‚з‚И‚ўID */
+    default:            /* гЃ—г‚‰гЃЄгЃ„ID */
         return 0;
     }
 
-    /* ѓsѓNѓZѓ‹ѓTѓCѓYѓ`ѓFѓbѓN */
+    /* гѓ”г‚Їг‚»гѓ«г‚µг‚¤г‚єгѓЃг‚§гѓѓг‚Ї */
     switch (t->bpp) {
     case  8:
     /*case 15:*/
@@ -230,10 +230,10 @@ int tga_getHdrEx(const void *tga_data, int *wp, int *hp, int *bppp, int *clutNum
         return 0;
     }
 
-    /* ‰ж‘њѓTѓCѓYѓ`ѓFѓbѓNЃB‚Р‚е‚Б‚Ж‚µ‚Ѕ‚зЃA’и‹`Џг‚Н unsigned ‚©‚а‚ѕ‚ЄЋАЋї‚М“sЌ‡‚рЌl‚¦‚к‚О */
+    /* з”»еѓЏг‚µг‚¤г‚єгѓЃг‚§гѓѓг‚ЇгЂ‚гЃІг‚‡гЃЈгЃЁгЃ—гЃџг‚‰гЂЃе®љзѕ©дёЉгЃЇ unsigned гЃ‹г‚‚гЃ гЃЊе®џиіЄгЃ®йѓЅеђ€г‚’иЂѓгЃ€г‚ЊгЃ° */
     if (t->w <= 0 || t->h <= 0) {
         if (t->id == 0 && t->w == 0 && t->h == 0) {
-            /* ‰ж‘њ–і‚µѓfЃ[ѓ^‚МЏкЌ‡‚НѓGѓ‰Ѓ[‚Й‚µ‚И‚ў */
+            /* з”»еѓЏз„ЎгЃ—гѓ‡гѓјг‚їгЃ®е ґеђ€гЃЇг‚Ёгѓ©гѓјгЃ«гЃ—гЃЄгЃ„ */
         } else {
             return 0;
         }
@@ -250,13 +250,13 @@ int tga_getHdrEx(const void *tga_data, int *wp, int *hp, int *bppp, int *clutNum
 
 
 
-/** clut ‚МЋж“ѕ. tga_data’†‚Йclut‚ЄnumЊВ–і‚©‚Б‚Ѕ‚Ж‚«‚М‚Ѕ‚Я‚Й—\‚ЯЏ‰Љъ‰»‚µ‚Д‚Ё‚­‚±‚Ж.
- *  @return  0:€шђ”‚Є•sђі  1:Ћж“ѕ.  2:Ћж“ѕ(ѓї‚рЋќ‚ВѓpѓЊѓbѓg‚ѕ‚Б‚Ѕ)
+/** clut гЃ®еЏ–еѕ—. tga_dataдё­гЃ«clutгЃЊnumеЂ‹з„ЎгЃ‹гЃЈгЃџгЃЁгЃЌгЃ®гЃџг‚ЃгЃ«дє€г‚Ѓе€ќжњџеЊ–гЃ—гЃ¦гЃЉгЃЏгЃ“гЃЁ.
+ *  @return  0:еј•ж•°гЃЊдёЌж­Ј  1:еЏ–еѕ—.  2:еЏ–еѕ—(О±г‚’жЊЃгЃ¤гѓ‘гѓ¬гѓѓгѓ€гЃ гЃЈгЃџ)
  */
 int tga_getClut(
-        const void  *tga_data,  ///< clut‚±‚Э‚М tga ѓfЃ[ѓ^
-        void        *clut0,     ///< CLUT‚рЉi”[‚·‚йѓAѓhѓЊѓX. unsigned ‚Н32bit‚Е numЊВ•Є‚МѓЃѓ‚ѓЉ‚Є‚ ‚й‚±‚Ж
-        int         num)        ///< ЌЎ‰сЋж“ѕ—ЇЋзѓpѓЊѓbѓg‚МЊВђ” ЌЕ‘е 256.
+        const void  *tga_data,  ///< clutгЃ“гЃїгЃ® tga гѓ‡гѓјг‚ї.
+        void        *clut0,     ///< CLUTг‚’ж јзґЌгЃ™г‚‹г‚ўгѓ‰гѓ¬г‚№. unsigned гЃЇ32bitгЃ§ numеЂ‹е€†гЃ®гѓЎгѓўгѓЄгЃЊгЃ‚г‚‹гЃ“гЃЁ.
+        int         num)        ///< д»Ље›ћеЏ–еѕ—з•™е®€гѓ‘гѓ¬гѓѓгѓ€гЃ®еЂ‹ж•° жњЂе¤§ 256.
 {
     tga_hdr_t   tg;
     tga_hdr_t   *t      = &tg;
@@ -280,8 +280,8 @@ int tga_getClut(
     s       = (uint8_t*)tga_data + 0x12 + t->exHdrSz;
   #endif
 
-    if (t->id == 1 || t->id == 8+1) {   /* ѓpѓЊѓbѓg•t‚«‚М‚Ж‚« */
-        /* ‚±‚МЉЦђ”‚Н256ђF‚Ь‚Е‚ѕ‚ЄЃAѓtѓHЃ[ѓ}ѓbѓg“I‚Й‚Н 256ђF€ИЏг‚МѓpѓЊѓbѓg‚а‰В”\‚Э‚Ѕ‚ў‚И‚М‚ЕѓKЃ[ѓh */
+    if (t->id == 1 || t->id == 8+1) {   /* гѓ‘гѓ¬гѓѓгѓ€д»гЃЌгЃ®гЃЁгЃЌ */
+        /* гЃ“гЃ®й–ўж•°гЃЇ256и‰ІгЃѕгЃ§гЃ гЃЊгЂЃгѓ•г‚©гѓјгѓћгѓѓгѓ€зљ„гЃ«гЃЇ 256и‰Ід»ҐдёЉгЃ®гѓ‘гѓ¬гѓѓгѓ€г‚‚еЏЇиѓЅгЃїгЃџгЃ„гЃЄгЃ®гЃ§г‚¬гѓјгѓ‰ */
         top = t->clutNo;
         num = (t->clutNum < num || num < 0) ? t->clutNum : num;
         if (top + num > 256) {
@@ -347,12 +347,12 @@ int tga_getClut(
         }
         return 1 + haveAlp;
 
-    } else if (t->id == 3 || t->id == 8+3) {    /* ѓ‚ѓmѓNѓЌ‚М‚Ж‚« */
+    } else if (t->id == 3 || t->id == 8+3) {    /* гѓўгѓЋг‚Їгѓ­гЃ®гЃЁгЃЌ */
         for (i = 0; i < 256; i++)
             clut[i] = BBBB(a, i, i, i);
         return 1;
 
-    } else {                                    /* ѓpѓЊѓbѓg‚И‚µ‚М‚Ж‚« .. Ћg‚н‚И‚ў‚Н‚ё‚ѕ‚Є“K“–‚ЙђЭ’и‚µ‚Д‚Ё‚­. */
+    } else {                                    /* гѓ‘гѓ¬гѓѓгѓ€гЃЄгЃ—гЃ®гЃЁгЃЌ .. дЅїг‚ЏгЃЄгЃ„гЃЇгЃљгЃ гЃЊйЃ©еЅ“гЃ«иЁ­е®љгЃ—гЃ¦гЃЉгЃЏ. */
         i = 0;
         for (g = 0; g < 8; ++g) {
             for (r = 0; r < 8; ++r) {
@@ -370,10 +370,10 @@ int tga_getClut(
 
 
 
-/** tga_data‚©‚з‰ж‘њ‚рbppѓrѓbѓgђF‚Е dst ‚ЙѓTѓCѓY wb*h ‚ЕѓRѓsЃ[ЃB
- *  bpp=8‚И‚з‚Оclut‚аЋж“ѕ.Ѓ¦bpp8–ў–ћ‚Н–ў‘О‰ћ. clut‚Н•K‚ё256•Є‚ ‚й‚±‚Ж.
- * @param ofs_dir bit0: 0=ѓsѓNѓZѓ‹‚НЌ¶Џг‚©‚з  1=Ќ¶‰є‚©‚з.
- *                bit15..8: 256ђF‚М‚Ж‚«‚МЃAѓsѓNѓZѓ‹’lѓIѓtѓZѓbѓg
+/** tga_dataгЃ‹г‚‰з”»еѓЏг‚’bppгѓ“гѓѓгѓ€и‰ІгЃ§ dst гЃ«г‚µг‚¤г‚є wb*h гЃ§г‚ігѓ”гѓјгЂ‚
+ *  bpp=8гЃЄг‚‰гЃ°clutг‚‚еЏ–еѕ—.вЂ»bpp8жњЄжєЂгЃЇжњЄеЇѕеїњ. clutгЃЇеї…гЃљ256е€†гЃ‚г‚‹гЃ“гЃЁ.
+ * @param ofs_dir bit0: 0=гѓ”г‚Їг‚»гѓ«гЃЇе·¦дёЉгЃ‹г‚‰  1=е·¦дё‹гЃ‹г‚‰.
+ *                bit15..8: 256и‰ІгЃ®гЃЁгЃЌгЃ®гЂЃгѓ”г‚Їг‚»гѓ«еЂ¤г‚Єгѓ•г‚»гѓѓгѓ€
  */
 int  tga_read(const void *tga_data, void *dst, int wb, int h, int bpp, void *clut, int ofs_dir)
 {
@@ -392,7 +392,7 @@ int  tga_read(const void *tga_data, void *dst, int wb, int h, int bpp, void *clu
     if (tga_data == NULL || wb <= 0 || h <= 0 || bpp < 0)
         return 0;
 
-    /* ѓwѓbѓ_Џо•сЋж“ѕ */
+    /* гѓгѓѓгѓЂжѓ…е ±еЏ–еѕ— */
     tga_getRawHdr(t, tga_data);
     if (bpp == 0)
         bpp = (t->bpp <= 8) ? 8 : (t->bpp <= 16) ? 32 : (t->bpp <= 24) ? 24 : 32;
@@ -400,8 +400,8 @@ int  tga_read(const void *tga_data, void *dst, int wb, int h, int bpp, void *clu
     if (clut == 0) {
         clut = clut0;
     }
-    // 256ђF‰ж‚И‚зЃAclutЋж“ѕ‚µ‚Ж‚­.
-    if (t->bpp <= 8) {  /* 256ђF‚И‚з‚Оclut‚рЋж“ѕ... */
+    // 256и‰Із”»гЃЄг‚‰гЂЃclutеЏ–еѕ—гЃ—гЃЁгЃЏ.
+    if (t->bpp <= 8) {  /* 256и‰ІгЃЄг‚‰гЃ°clutг‚’еЏ–еѕ—... */
         for (n = 0; n < 256; ++n)
             ((uint32_t*)clut)[n] = 0x00000000;  //x 0xFF000000;
         tga_getClut(tga_data, clut, -1);
@@ -410,7 +410,7 @@ int  tga_read(const void *tga_data, void *dst, int wb, int h, int bpp, void *clu
     if (t->w == 0 || t->h == 0)
         return 1;
 
-    /* ѓsѓNѓZѓ‹€К’uЋж“ѕ */
+    /* гѓ”г‚Їг‚»гѓ«дЅЌзЅ®еЏ–еѕ— */
     n   = (((t->clutBit) > 24) ? 4 : ((t->clutBit) > 16) ? 3 : ((t->clutBit) > 8) ? 2 : ((t->clutBit) > 0) ? 1 : 0);    /*n = BPP2BYT(t->clutBit); */
   #if 1 //
     s   = (uint8_t *)tga_data + 0x12 + t->exHdrSz + t->clutNum*n;
@@ -418,16 +418,16 @@ int  tga_read(const void *tga_data, void *dst, int wb, int h, int bpp, void *clu
     s   = (uint8_t *)tga_data + 0x12 + t->clutNum*n;
   #endif
 
-    // 2007-05 IssikiЋЃ‚МЏCђі”Е‚©‚з‹t—A“ь. ‚З‚¤‚а bit”z’u‚рЉФ€б‚Б‚Д‚ў‚Ѕ–Н—l.
+    // 2007-05 Issikiж°ЏгЃ®дї®ж­Јз‰€гЃ‹г‚‰йЂ†ијёе…Ґ. гЃ©гЃ†г‚‚ bitй…ЌзЅ®г‚’й–“йЃ•гЃЈгЃ¦гЃ„гЃџжЁЎж§.
     //x n   = (t->mode >> 4) ^ 1;
-    // TGA ‹KЉi‚Е‚НЃA ((t->mode)>>4)&0x3 ‚Є
-    //      0:Ќ¶‰єЋn“_ 1:‰E‰єЋn“_ 2:Ќ¶ЏгЋn“_ 3:‰EЏгЋn“_
-    // ‚ЕЃAbit0‚ЄЌ¶‰E”Ѕ“], bit2‚ЄЏг‰є”Ѕ“]ЃA‚Жxy‚М”z’u‚рЉЁ€б‚ў‚µ‚Д‚ў‚Ѕ–Н—l.
+    // TGA и¦Џж јгЃ§гЃЇгЂЃ ((t->mode)>>4)&0x3 гЃЊ,
+    //      0:е·¦дё‹е§‹з‚№ 1:еЏідё‹е§‹з‚№ 2:е·¦дёЉе§‹з‚№ 3:еЏідёЉе§‹з‚№.
+    // гЃ§гЂЃbit0гЃЊе·¦еЏіеЏЌи»ў, bit2гЃЊдёЉдё‹еЏЌи»ўгЂЃгЃЁxyгЃ®й…ЌзЅ®г‚’е‹йЃ•гЃ„гЃ—гЃ¦гЃ„гЃџжЁЎж§.
     n   = t->mode >> 4;
-    n   = ((n&1)<<1) | ((n&2)>>1);      // Џг‰є‚ЖЌ¶‰E‚Мѓrѓbѓg‚М•А‚С‚рЊрЉ·
-    n   ^= 1;                           // tga_readЉЦђ”Ћd—l‚М‚Ѕ‚ЯЃAЏг‰є”Ѕ“].
-    // n= 0:Ќ¶ЏгЋn“_ 1:Ќ¶‰єЋn“_ 2:‰EЏгЋn“_ 3:‰E‰єЋn“_ //
-    // ‚±‚к‚ЕЃAread_tga() ‚М dir ‚М’и‹`‚Й€к’v //
+    n   = ((n&1)<<1) | ((n&2)>>1);      // дёЉдё‹гЃЁе·¦еЏігЃ®гѓ“гѓѓгѓ€гЃ®дё¦гЃіг‚’дє¤жЏ›.
+    n   ^= 1;                           // tga_readй–ўж•°д»•ж§гЃ®гЃџг‚ЃгЂЃдёЉдё‹еЏЌи»ў.
+    // n= 0:е·¦дёЉе§‹з‚№ 1:е·¦дё‹е§‹з‚№ 2:еЏідёЉе§‹з‚№ 3:еЏідё‹е§‹з‚№ //
+    // гЃ“г‚ЊгЃ§гЂЃread_tga() гЃ® dir гЃ®е®љзѕ©гЃ«дёЂи‡ґ //
 
 
     dir = (dir ^ n) & 3;
@@ -437,23 +437,23 @@ int  tga_read(const void *tga_data, void *dst, int wb, int h, int bpp, void *clu
     wb  = (wb) ? wb : w4;
 
   #if 1
-    /* Ќ‚‘¬‰»‚М‚Ѕ‚Я‚Мђк—pѓ‹Ѓ[ѓ`ѓ“ЃB‚±‚±‚Н‚И‚­‚Д‚а“®‚­ */
+    /* й«йЂџеЊ–гЃ®гЃџг‚ЃгЃ®е°‚з”Ёгѓ«гѓјгѓЃгѓігЂ‚гЃ“гЃ“гЃЇгЃЄгЃЏгЃ¦г‚‚е‹•гЃЏ */
     if (WID2BYT(t->w,bpp) == wb && t->h == h && (dir & 2) == 0) {
-        if (bpp == 8 && t->bpp == 8) {  /* “ьЏo—Н‚Є256ђF‚©‚В‰ж‘њѓTѓCѓY‚Є“Ї€к‚Е‰Ў”Ѕ“]‚Є‚И‚ў‚Ж‚«‚Мђк—p‚МѓRѓ“ѓoЃ[ѓg */
+        if (bpp == 8 && t->bpp == 8) {  /* е…Ґе‡єеЉ›гЃЊ256и‰ІгЃ‹гЃ¤з”»еѓЏг‚µг‚¤г‚єгЃЊеђЊдёЂгЃ§жЁЄеЏЌи»ўгЃЊгЃЄгЃ„гЃЁгЃЌгЃ®е°‚з”ЁгЃ®г‚ігѓігѓђгѓјгѓ€ */
             tga_getPixs_fast_8((uint8_t*)dst, s, t->w, h, t->id&8, dir, ofs);
             return 1;
-        } else if (bpp == t->bpp) {     /* “ьЏo—Н‚Є “Ї€кђF‚©‚В‰ж‘њѓTѓCѓY‚Є“Ї€к‚Е‰Ў”Ѕ“]‚Є‚И‚ў‚Ж‚«‚Мђк—p‚МѓRѓ“ѓoЃ[ѓg */
+        } else if (bpp == t->bpp) {     /* е…Ґе‡єеЉ›гЃЊ еђЊдёЂи‰ІгЃ‹гЃ¤з”»еѓЏг‚µг‚¤г‚єгЃЊеђЊдёЂгЃ§жЁЄеЏЌи»ўгЃЊгЃЄгЃ„гЃЁгЃЌгЃ®е°‚з”ЁгЃ®г‚ігѓігѓђгѓјгѓ€ */
             tga_getPixs_fast((uint8_t*)dst, s, t->w, h, bpp, t->id&8, dir);
             return 1;
         }
     }
   #endif
     h   = (h >= t->h) ? h : t->h;
-    if (t->id & 0x8) {  /* €іЏk‚і‚к‚Д‚Ѕ */
+    if (t->id & 0x8) {  /* ењ§зё®гЃ•г‚ЊгЃ¦гЃџ */
         unsigned l;
         n = WID2BYT4(t->w, t->bpp);
         l = n * t->h + 10;
-        m = (uint8_t*)MALLOC(l);            /*“WЉJ—pѓoѓbѓtѓ@‚р malloc ‚ЕЉm•Ы */
+        m = (uint8_t*)MALLOC(l);            /*е±•й–‹з”Ёгѓђгѓѓгѓ•г‚Ўг‚’ malloc гЃ§зўєдїќ */
         if (m == NULL)
             return 0;
         MEM_CLR(m, l);
@@ -468,7 +468,7 @@ int  tga_read(const void *tga_data, void *dst, int wb, int h, int bpp, void *clu
 
 
 
-/** “ьЏo—Н‚Є “Ї€кђF‚©‚В‰ж‘њѓTѓCѓY‚Є“Ї€к‚М‚Ж‚«ђк—p‚МѓRѓ“ѓoЃ[ѓg */
+/** е…Ґе‡єеЉ›гЃЊ еђЊдёЂи‰ІгЃ‹гЃ¤з”»еѓЏг‚µг‚¤г‚єгЃЊеђЊдёЂгЃ®гЃЁгЃЌе°‚з”ЁгЃ®г‚ігѓігѓђгѓјгѓ€ */
 static void tga_getPixs_fast(uint8_t *dst, const uint8_t *s, int w, int h, int bpp, int id, int dir)
 {
     uint8_t *d = (uint8_t*)dst;
@@ -479,11 +479,11 @@ static void tga_getPixs_fast(uint8_t *dst, const uint8_t *s, int w, int h, int b
     int     wb;
 
     wb = WID2BYT(w, bpp);
-    if (id == 0) {          /* –і€іЏk */
-        if (dir == 0) {     /* ђі•ыЊь */
+    if (id == 0) {          /* з„Ўењ§зё® */
+        if (dir == 0) {     /* ж­Јж–№еђ‘ */
             i= wb * h;
             MEM_CPY(d, s, i);
-        } else {            /* ‹t•ыЊь */
+        } else {            /* йЂ†ж–№еђ‘ */
             d += wb * (h - 1);
             for (i = h; --i >= 0;) {
                 MEM_CPY(d, s, wb);
@@ -491,7 +491,7 @@ static void tga_getPixs_fast(uint8_t *dst, const uint8_t *s, int w, int h, int b
                 d -= wb;
             };
         }
-    } else {                /* €іЏkѓfЃ[ѓ^ */
+    } else {                /* ењ§зё®гѓ‡гѓјг‚ї */
         tga_read_decode(d, s, w, h, bpp);
         if (dir) {
             d = (uint8_t*)dst;
@@ -510,7 +510,7 @@ static void tga_getPixs_fast(uint8_t *dst, const uint8_t *s, int w, int h, int b
 
 
 
-/** “ьЏo—Н‚Є 256ђF‚©‚В‰ж‘њѓTѓCѓY‚Є“Ї€к‚М‚Ж‚«ђк—p‚МѓRѓ“ѓoЃ[ѓg */
+/** е…Ґе‡єеЉ›гЃЊ 256и‰ІгЃ‹гЃ¤з”»еѓЏг‚µг‚¤г‚єгЃЊеђЊдёЂгЃ®гЃЁгЃЌе°‚з”ЁгЃ®г‚ігѓігѓђгѓјгѓ€ */
 static void tga_getPixs_fast_8(uint8_t *dst, const uint8_t *s, int w, int h, int id, int dir, int ofs)
 {
     uint8_t *d = (uint8_t*)dst;
@@ -519,8 +519,8 @@ static void tga_getPixs_fast_8(uint8_t *dst, const uint8_t *s, int w, int h, int
     int     l;
     int     c;
 
-    if (id == 0) {          /* –і€іЏk */
-        if (dir == 0) {     /* ђі•ыЊь */
+    if (id == 0) {          /* з„Ўењ§зё® */
+        if (dir == 0) {     /* ж­Јж–№еђ‘ */
             if (ofs == 0) {
                 i = w * h;
                 MEM_CPY(d, s, i);
@@ -529,7 +529,7 @@ static void tga_getPixs_fast_8(uint8_t *dst, const uint8_t *s, int w, int h, int
                     *d++ = *s++ + ofs;
                 }
             }
-        } else {            /* ‹t•ыЊь */
+        } else {            /* йЂ†ж–№еђ‘ */
             d += w * (h - 1);
             if (ofs == 0) {
                 for (i = h; --i >= 0;) {
@@ -546,7 +546,7 @@ static void tga_getPixs_fast_8(uint8_t *dst, const uint8_t *s, int w, int h, int
                 }
             }
         }
-    } else {                /* €іЏk */
+    } else {                /* ењ§зё® */
         while (d < e) {
             l = *s++;
             if (l & 0x80) {
@@ -564,7 +564,7 @@ static void tga_getPixs_fast_8(uint8_t *dst, const uint8_t *s, int w, int h, int
                 }
             }
         }
-        if (dir) {          /* ‹t•ыЊь */
+        if (dir) {          /* йЂ†ж–№еђ‘ */
             d = (uint8_t*)dst;
             e = (uint8_t*)dst + w * (h - 1);
             for (i = 0; i < h/2; i++) {
@@ -609,7 +609,7 @@ static inline int tga_getPix32(const uint8_t *s, int x, int bpp, uint32_t *clut,
 
 
 
-/* ‘ЅђF‚М 256ђF‰»‚Н G3R3B2 Њ`Ћ®‚Ц‚МЉИ€Х•ПЉ·.
+/* е¤љи‰ІгЃ® 256и‰ІеЊ–гЃЇ G3R3B2 еЅўејЏгЃёгЃ®з°Ўж“е¤‰жЏ›.
  */
 static inline int tga_getPix8(const uint8_t *s, int x, int bpp, uint32_t *dmy_clut, int ofs)
 {
@@ -681,8 +681,8 @@ static inline uint8_t *tga_putPix32(uint8_t *d, int c, int bpp)
 
 
 
-/** srcBppђF w*hѓhѓbѓg‚Мsrc ‰ж‘њ‚рЃAdstBppђF w*h ‚М dst‰ж‘њ‚Й•ПЉ·‚·‚й.
- * Џo—Н‚НbmpЊь‚Ї‚Й 0ѓpѓeѓBѓ“ѓO‚·‚й.
+/** srcBppи‰І w*hгѓ‰гѓѓгѓ€гЃ®src з”»еѓЏг‚’гЂЃdstBppи‰І w*h гЃ® dstз”»еѓЏгЃ«е¤‰жЏ›гЃ™г‚‹.
+ * е‡єеЉ›гЃЇbmpеђ‘гЃ‘гЃ« 0гѓ‘гѓ†г‚Јгѓіг‚°гЃ™г‚‹.
  */
 static int tga_getPixs(
         uint8_t*        dst,
@@ -693,7 +693,7 @@ static int tga_getPixs(
         int             h,
         int             srcBpp,
         uint32_t*       clut,
-        int             ofs_dir)    ///< bit0:ѓsѓNѓZѓ‹Џ‡‚Н0=Џг‚©‚з 1=‰є‚©‚з   bit1:0=Ќ¶‚©‚з 1=‰E‚©‚з
+        int             ofs_dir)    ///< bit0:гѓ”г‚Їг‚»гѓ«й †гЃЇ0=дёЉгЃ‹г‚‰ 1=дё‹гЃ‹г‚‰   bit1:0=е·¦гЃ‹г‚‰ 1=еЏігЃ‹г‚‰.
 {
     uint8_t*        d = dst;
     const uint8_t*  s = src;
@@ -725,7 +725,7 @@ static int tga_getPixs(
     //DBG_F(("@>%d[%d] %d*%d[%d] dir=%d ofs=%d\n", dst_wb, dstBpp, w, h, srcBpp, dir, ofs));
     //if (dbgExLog_getSw()) for (int i = 0; i < 256; i++) printf("clut[%d]=%#x\n", i, ((uint32_t*)clut)[i]);
 
-    /* ‰ж‘њ‚МЊь‚«‚М’Іђ® */
+    /* з”»еѓЏгЃ®еђ‘гЃЌгЃ®иЄїж•ґ */
     if (dir & 1) {
         y0   = h-1, y1 = -1, yd = -1;
         d    = d + y0 * dst_wb;
@@ -740,8 +740,8 @@ static int tga_getPixs(
     }
     /*DBG_F(("[%d,%d,%d,%d,%d,%d, %d %d]\n", x0,y0,x1,y1,xd,yd,dpat,spat)); */
 
-    /* ‰ж‘њѓRѓsЃ[ */
-    if (dstBpp > 8) {   /* Џo—Н‚Є‘ЅђF‚М‚Ж‚« */
+    /* з”»еѓЏг‚ігѓ”гѓј */
+    if (dstBpp > 8) {   /* е‡єеЉ›гЃЊе¤љи‰ІгЃ®гЃЁгЃЌ */
         for (y = y0; y != y1; y += yd) {
             for (x = x0; x != x1; x += xd) {
                 c = tga_getPix32(s, x, srcBpp, clut,ofs);
@@ -750,7 +750,7 @@ static int tga_getPixs(
             d += dpat;
             s += spat;
         }
-    } else {            /* Џo—Н‚Є256ђF‚М‚Ж‚« */
+    } else {            /* е‡єеЉ›гЃЊ256и‰ІгЃ®гЃЁгЃЌ */
         for (y = y0; y != y1; y += yd) {
             for (x = x0; x != x1; x += xd) {
                 c = tga_getPix8(s, x, srcBpp, clut,ofs);
@@ -765,8 +765,8 @@ static int tga_getPixs(
 
 
 
-/** ѓ‰ѓ“ѓЊѓ“ѓOѓX€іЏk‚і‚к‚ЅѓfЃ[ѓ^‚М“WЉJ. dst‘¤‚Н•K‚ёѓAѓ‰ѓCѓЃѓ“ѓg‚і‚к‚Д‚ў‚й‚±‚Ж.
- * ѓsѓNѓZѓ‹’l‚Й‚В‚ў‚Д‚НЊг‚ЕЏ€—ќ‚·‚й‚М‚Е, ARGB‚©BGRA‚©‚Н‹C‚Й‚µ‚И‚­‚Д‚ж‚ў
+/** гѓ©гѓігѓ¬гѓіг‚°г‚№ењ§зё®гЃ•г‚ЊгЃџгѓ‡гѓјг‚їгЃ®е±•й–‹. dstеЃґгЃЇеї…гЃљг‚ўгѓ©г‚¤гѓЎгѓігѓ€гЃ•г‚ЊгЃ¦гЃ„г‚‹гЃ“гЃЁ.
+ * гѓ”г‚Їг‚»гѓ«еЂ¤гЃ«гЃ¤гЃ„гЃ¦гЃЇеѕЊгЃ§е‡¦зђ†гЃ™г‚‹гЃ®гЃ§, ARGBгЃ‹BGRAгЃ‹гЃЇж°—гЃ«гЃ—гЃЄгЃЏгЃ¦г‚€гЃ„
  */
 static void tga_read_decode(uint8_t *dst, const uint8_t *s, int w, int h, int bpp)
 {

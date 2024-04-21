@@ -1,6 +1,6 @@
 /**
  *  @file   PaternDither.h
- *  @brief  ƒpƒ^[ƒ“ƒfƒBƒU‚ğ{‚·
+ *  @brief  ãƒ‘ã‚¿ãƒ¼ãƒ³ãƒ‡ã‚£ã‚¶ã‚’æ–½ã™.
  *  @author Masashi KITAMURA
  */
 
@@ -16,25 +16,25 @@ public:
     PaternDither() {}
     ~PaternDither() {}
 
-    /** ‰æ‘œ‚Éƒpƒ^[ƒ“EƒfƒBƒU‚ğ{‚·Bƒpƒ^[ƒ“‚ÍBayer‚Ì‚İ.
-     * @param flgs  ƒtƒ‰ƒO
-     *          - bit1,0: 0=ƒfƒBƒU–³ 1=2x2 2=4x4 3=8x8
-     *          - bit7:   1:AG‚ÆRB‚Æ‚Åƒ}ƒgƒŠƒNƒX‚ğ‹t‚É‚·‚é 0:‚µ‚È‚¢
-     *          - bit8:   1:ƒ¿ƒvƒŒ[ƒ“‚àƒfƒBƒU‚·‚é 0:‚µ‚È‚¢
+    /** ç”»åƒã«ãƒ‘ã‚¿ãƒ¼ãƒ³ãƒ»ãƒ‡ã‚£ã‚¶ã‚’æ–½ã™ã€‚ãƒ‘ã‚¿ãƒ¼ãƒ³ã¯Bayerã®ã¿.
+     * @param flgs  ãƒ•ãƒ©ã‚°.
+     *          - bit1,0: 0=ãƒ‡ã‚£ã‚¶ç„¡ 1=2x2 2=4x4 3=8x8
+     *          - bit7:   1:AGã¨RBã¨ã§ãƒãƒˆãƒªã‚¯ã‚¹ã‚’é€†ã«ã™ã‚‹ 0:ã—ãªã„.
+     *          - bit8:   1:Î±ãƒ—ãƒ¬ãƒ¼ãƒ³ã‚‚ãƒ‡ã‚£ã‚¶ã™ã‚‹ 0:ã—ãªã„.
      */
     void conv(
-            unsigned*       dst,        ///< o—Íƒoƒbƒtƒ@
-            const unsigned* src,        ///< “ü—Íƒoƒbƒtƒ@
-            unsigned        w,          ///< ‰¡•
-            unsigned        h,          ///< c•
-            int             ditBpp,     ///< bpp ƒfƒBƒU‚ğ‚©‚¯‚½Œã‚ÌF‚Ìƒrƒbƒg”.
+            unsigned*       dst,        ///< å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡.
+            const unsigned* src,        ///< å…¥åŠ›ãƒãƒƒãƒ•ã‚¡.
+            unsigned        w,          ///< æ¨ªå¹….
+            unsigned        h,          ///< ç¸¦å¹….
+            int             ditBpp,     ///< bpp ãƒ‡ã‚£ã‚¶ã‚’ã‹ã‘ãŸå¾Œã®è‰²ã®ãƒ“ãƒƒãƒˆæ•°.
             int             flgs)
     {
         enum { R  = 0, G  = 1, B  = 2, A  = 3, };
 
         ditBpp = clamp(ditBpp, 3, 18/* 3*6 */);
 
-        //r_bit,g_bit,b_bit ‚Í—LŒøƒrƒbƒg”. 1`6. G,R,B‚Ì‡‚É‘½‚­Š„‚è“–‚Ä‚é
+        //r_bit,g_bit,b_bit ã¯æœ‰åŠ¹ãƒ“ãƒƒãƒˆæ•°. 1ï½6. G,R,Bã®é †ã«å¤šãå‰²ã‚Šå½“ã¦ã‚‹.
         int b_bit = ditBpp / 3;
         int g_bit = b_bit;
         int r_bit = g_bit;
@@ -43,7 +43,7 @@ public:
         if ((ditBpp % 3) == 2)
             ++r_bit;
 
-        // ƒpƒ^[ƒ“ƒfƒBƒU‚ğ{‚·‚½‚ß‚Ìƒe[ƒuƒ‹‚ğì¬
+        // ãƒ‘ã‚¿ãƒ¼ãƒ³ãƒ‡ã‚£ã‚¶ã‚’æ–½ã™ãŸã‚ã®ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½œæˆ.
         int revf = (flgs >> 7) & 1;
         int typ  = flgs & 3;
         int af   = (flgs>>8)&1;
@@ -72,12 +72,12 @@ public:
     }
 
 private:
-    /// ƒpƒ^[ƒ“ƒe[ƒuƒ‹‚Ìì¬.
-    /// typ  : 0=ƒfƒBƒU–³‚µ 1=2x2  2=4x4  3=8x8
-    /// mode : ptnƒfƒBƒU’l‚ÌŒvZ 0=•W€ 1:³‚Ì‚İ 2:ƒn[ƒt 3:ƒn[ƒt‰ÁZ‚Ì‚İ
+    /// ãƒ‘ã‚¿ãƒ¼ãƒ³ãƒ†ãƒ¼ãƒ–ãƒ«ã®ä½œæˆ.
+    /// typ  : 0=ãƒ‡ã‚£ã‚¶ç„¡ã— 1=2x2  2=4x4  3=8x8
+    /// mode : ptnãƒ‡ã‚£ã‚¶å€¤ã®è¨ˆç®— 0=æ¨™æº– 1:æ­£ã®ã¿ 2:ãƒãƒ¼ãƒ• 3:ãƒãƒ¼ãƒ•åŠ ç®—ã®ã¿.
     void makePtnDitherTable(unsigned char ct[8][8][256], int c_bit, int typ, int revf) {
         static const signed char dmPtn[4][8][8] = {
-            //ƒpƒ^[ƒ“ƒfƒBƒU–³‚µ
+            //ãƒ‘ã‚¿ãƒ¼ãƒ³ãƒ‡ã‚£ã‚¶ç„¡ã—.
             {
                 {0}
             }, {    //Bayer 2x2
@@ -110,7 +110,7 @@ private:
             },
         };
 
-        // ‚Ü‚¸Aw’èƒrƒbƒg”‚Ì¸“x‚Ì’l‚Ìƒe[ƒuƒ‹‚ğì‚é
+        // ã¾ãšã€æŒ‡å®šãƒ“ãƒƒãƒˆæ•°ã®ç²¾åº¦ã®å€¤ã®ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½œã‚‹.
         unsigned char    ct0[256];
         static const int msk0[] = {0x80,0xC0,0xE0,0xF0, 0xF8,0xFC,0xFE,0xFF};
         int              msk    = msk0[c_bit-1];
@@ -124,7 +124,7 @@ private:
             //x DBG_PRINTF(("%02x", k)); if (i % 16 == 15) DBG_PRINTF(("\n")); else DBG_PRINTF((" "));
         }
 
-        // ƒpƒ^[ƒ“ƒfƒBƒU‚ğ”½‰f‚µ‚½ƒe[ƒuƒ‹
+        // ãƒ‘ã‚¿ãƒ¼ãƒ³ãƒ‡ã‚£ã‚¶ã‚’åæ˜ ã—ãŸãƒ†ãƒ¼ãƒ–ãƒ«.
         const signed char (*pPtn)[8] = dmPtn[typ];
         for (int y = 0; y < 8; y++) {
             for (int x  = 0; x < 8; x++) {

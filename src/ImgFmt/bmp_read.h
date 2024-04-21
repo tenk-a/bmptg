@@ -1,9 +1,9 @@
 /**
  *  @file   bmp_read.h
- *  @brief  ƒƒ‚ƒŠã‚Ìbmp‰æ‘œ‚ğ“WŠJ‚·‚é.
+ *  @brief  ãƒ¡ãƒ¢ãƒªä¸Šã®bmpç”»åƒã‚’å±•é–‹ã™ã‚‹.
  *  @author Masashi Kitamura
  * @note
- *  ¦  “üo—Í‚ÅF”‚â‰æ‘œƒTƒCƒY‚Ìˆá‚¤ˆ³kƒf[ƒ^‚Ì“WŠJ‚É malloc&free‚ğg—p
+ *  â€»  å…¥å‡ºåŠ›ã§è‰²æ•°ã‚„ç”»åƒã‚µã‚¤ã‚ºã®é•ã†åœ§ç¸®ãƒ‡ãƒ¼ã‚¿ã®å±•é–‹ã« malloc&freeã‚’ä½¿ç”¨
  */
 #ifndef BMP_READ_H
 #define BMP_READ_H
@@ -14,21 +14,21 @@ extern "C" {
 #endif
 
 
-/// ƒƒ‚ƒŠã‚Ìbmpƒf[ƒ^‚©‚çA‰¡•Ac•Aƒrƒbƒg/ƒsƒNƒZƒ‹Aclut‚ÌF”‚ğæ“¾‚·‚é.
+/// ãƒ¡ãƒ¢ãƒªä¸Šã®bmpãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã€æ¨ªå¹…ã€ç¸¦å¹…ã€ãƒ“ãƒƒãƒˆ/ãƒ”ã‚¯ã‚»ãƒ«ã€clutã®è‰²æ•°ã‚’å–å¾—ã™ã‚‹.
 int  bmp_getHdr(const void *bmp_data, int *w_p, int *h_p, int *bpp_p, int *clutSize_p);
 
-/// ƒƒ‚ƒŠã‚Ìbmpƒf[ƒ^‚©‚çA‰¡•Ac•Aƒrƒbƒg/ƒsƒNƒZƒ‹Aclut‚ÌF”A‰æ‘œ‚Ì”ä—¦A‚ğæ“¾‚·‚é.
+/// ãƒ¡ãƒ¢ãƒªä¸Šã®bmpãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã€æ¨ªå¹…ã€ç¸¦å¹…ã€ãƒ“ãƒƒãƒˆ/ãƒ”ã‚¯ã‚»ãƒ«ã€clutã®è‰²æ•°ã€ç”»åƒã®æ¯”ç‡ã€ã‚’å–å¾—ã™ã‚‹.
 int bmp_getHdrEx(const void *bmp_data, int *wp, int *hp, int *bppp, int *clutNump, int *resolXp, int *resolYp);
 
 
-/// ƒƒ‚ƒŠã‚Ìbmpƒf[ƒ^‚©‚çAƒsƒNƒZƒ‹ƒf[ƒ^Aclut‚ğæ“¾‚·‚é. (ƒTƒCƒY‚Í—\‚ßbmp_getHdr‚Åæ“¾‚µ‚Ä—pˆÓ‚Ì‚±‚Æ)
+/// ãƒ¡ãƒ¢ãƒªä¸Šã®bmpãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã€ãƒ”ã‚¯ã‚»ãƒ«ãƒ‡ãƒ¼ã‚¿ã€clutã‚’å–å¾—ã™ã‚‹. (ã‚µã‚¤ã‚ºã¯äºˆã‚bmp_getHdrã§å–å¾—ã—ã¦ç”¨æ„ã®ã“ã¨)
 int  bmp_read(const void *bmp_data, void *dst, int widthByte, int h, int bpp, void *clut, int dir);
 
-/// ƒƒ‚ƒŠã‚Ìbmpƒf[ƒ^‚©‚çAclut ‚Ì‚İ‚ğclutSizeŒÂ‚Ü‚Åæ“¾‚·‚é. 1F‚ÍA8R8G8B8.
+/// ãƒ¡ãƒ¢ãƒªä¸Šã®bmpãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã€clut ã®ã¿ã‚’clutSizeå€‹ã¾ã§å–å¾—ã™ã‚‹. 1è‰²ã¯A8R8G8B8.
 int  bmp_getClut(const void *bmp_data, void *clut, int clutSize);
 
 
-/// bmp_getHdr‚Åæ“¾‚µ‚½‰¡•,bpp‚æ‚è‰¡•ƒoƒCƒg”‚ğŒvZ‚·‚é.
+/// bmp_getHdrã§å–å¾—ã—ãŸæ¨ªå¹…,bppã‚ˆã‚Šæ¨ªå¹…ãƒã‚¤ãƒˆæ•°ã‚’è¨ˆç®—ã™ã‚‹.
 int  bmp_width2byte(int w, int bpp, int algnByte);
 
 
@@ -40,25 +40,25 @@ int  bmp_width2byte(int w, int bpp, int algnByte);
 
 
 // ===========================================================================
-// (ã‹LŠÖ”‚Ìg—p—á)
+// (ä¸Šè¨˜é–¢æ•°ã®ä½¿ç”¨ä¾‹)
 
-// inline ‚ªw’è‚Å‚«‚éê‡.
+// inline ãŒæŒ‡å®šã§ãã‚‹å ´åˆ.
 #if (defined __cplusplus) || (defined inline) || (__STDC_VERSION__ >= 199901L) || (defined __GNUC__)
 #include <assert.h>
 
-// —\‚ß stdlib.h ‚ğinclude‚µ‚Ä‚¢‚é‚Æ‚«‚Ì‚İ—˜—p‰Â”\.
+// äºˆã‚ stdlib.h ã‚’includeã—ã¦ã„ã‚‹ã¨ãã®ã¿åˆ©ç”¨å¯èƒ½.
 #if (defined _INC_STDLIB/*VC,BCC*/) || (defined __STDLIB_H/*DMC,BCC*/) || (defined _STDLIB_H_/*GCC*/) || (defined _STDLIB_H_INCLUDED/*watcom*/)
-#include <stdlib.h>     // calloc,free‚Ì‚½‚ß.
+#include <stdlib.h>     // calloc,freeã®ãŸã‚.
 
 #if defined __cplusplus
 static inline void* bmp_readMalloc(const void *bmp_data, int *w_p, int *h_p, int *bpp_p, void* clut, int dstBpp=0, int algn=0, int dir=0);
 #endif
 
-/** bmp_data‚æ‚è‰æ‘œ‚ğ“WŠJAmalloc‚µ‚½ƒƒ‚ƒŠ‚É“ü‚ê‚Ä•Ô‚·.
- *  ¬Œ÷‚µ‚½‚ç *w_p,*h_p,*bpp_p,clut‚É‰¡•,c•,bpp,clut(4*256)‚ª“ü‚é. ¦clut‚Íclut•t‰æ‘œ‚Ì‚Ì‚İ.
- *  dstBpp ‚Í¶¬‚³‚ê‚é‰æ‘œ‚Ìbpp‚ğİ’è. 0‚È‚ç‰æ‘œ©g‚Ìbpp.            ¦F”‚ªŒ¸‚éİ’è‚Í’Pƒˆ—‚Å‘Îˆ.
- *  algn ‚Í‰¡•ƒoƒCƒg”‚ÌƒAƒ‰ƒCƒƒ“ƒg. 1,2,4,8,16‚ğ‘z’è. ’Êí‚Í1, win-bitmap—p‚È‚ç4‚ğİ’è‚Ì‚±‚Æ.
- *  dir ‚Í 0‚È‚çãƒ‰ƒCƒ“‚©‚çA1‚È‚ç‰ºƒ‰ƒCƒ“‚©‚çæ“¾.  win-bitmap—p‚È‚ç1‚ğİ’è‚Ì‚±‚Æ.
+/** bmp_dataã‚ˆã‚Šç”»åƒã‚’å±•é–‹ã€mallocã—ãŸãƒ¡ãƒ¢ãƒªã«å…¥ã‚Œã¦è¿”ã™.
+ *  æˆåŠŸã—ãŸã‚‰ *w_p,*h_p,*bpp_p,clutã«æ¨ªå¹…,ç¸¦å¹…,bpp,clut(4*256)ãŒå…¥ã‚‹. â€»clutã¯clutä»˜ç”»åƒã®æ™‚ã®ã¿.
+ *  dstBpp ã¯ç”Ÿæˆã•ã‚Œã‚‹ç”»åƒã®bppã‚’è¨­å®š. 0ãªã‚‰ç”»åƒè‡ªèº«ã®bpp.            â€»è‰²æ•°ãŒæ¸›ã‚‹è¨­å®šã¯å˜ç´”å‡¦ç†ã§å¯¾å‡¦.
+ *  algn ã¯æ¨ªå¹…ãƒã‚¤ãƒˆæ•°ã®ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆ. 1,2,4,8,16ã‚’æƒ³å®š. é€šå¸¸ã¯1, win-bitmapç”¨ãªã‚‰4ã‚’è¨­å®šã®ã“ã¨.
+ *  dir ã¯ 0ãªã‚‰ä¸Šãƒ©ã‚¤ãƒ³ã‹ã‚‰ã€1ãªã‚‰ä¸‹ãƒ©ã‚¤ãƒ³ã‹ã‚‰å–å¾—.  win-bitmapç”¨ãªã‚‰1ã‚’è¨­å®šã®ã“ã¨.
  */
 static inline void* bmp_readMalloc(const void *bmp_data, int *w_p, int *h_p, int *bpp_p, void* clut, int dstBpp, int algn, int dir)
 {
@@ -90,7 +90,7 @@ static inline void* bmp_readMalloc(const void *bmp_data, int *w_p, int *h_p, int
 #endif
 
 
-// —\‚ß stdio.h ‚ğinclude‚µ‚Ä‚¢‚é‚Æ‚«‚Ì‚İ—˜—p‰Â”\.
+// äºˆã‚ stdio.h ã‚’includeã—ã¦ã„ã‚‹ã¨ãã®ã¿åˆ©ç”¨å¯èƒ½.
 #if (defined _INC_STDIO/*VC,BCC*/) || (defined __STDIO_H/*DMC,BCC*/) || (defined _STDIO_H_) || (defined _STDIO_H_INCLUDED/*watcom*/)
 #include <stdio.h>
 
@@ -123,7 +123,7 @@ static inline void* bmp_read_file(const char *fname, int *w_p, int *h_p, int *bp
 }
 #endif
 
-#endif  // inline‚ªg‚¦‚éê‡.
+#endif  // inlineãŒä½¿ãˆã‚‹å ´åˆ.
 
 
 

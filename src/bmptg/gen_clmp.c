@@ -1,10 +1,10 @@
 /**
  *  @file   gen_clmp.c
- *  @brief  ƒZƒ‹/ƒ}ƒbƒv‰»
+ *  @brief  ã‚»ãƒ«/ãƒãƒƒãƒ—åŒ–
  *  @author Masashi Kitamura
  *  @date   2001-01-28
  *  @note
- *      Šî–{‚Í 32ƒrƒbƒgF—p‚¾‚ªACLMP_BPP_8 ‚ğ’è‹`‚µ‚ÄƒRƒ“ƒpƒCƒ‹‚·‚ê‚Î 8ƒrƒbƒgF—p‚É‚È‚éB
+ *      åŸºæœ¬ã¯ 32ãƒ“ãƒƒãƒˆè‰²ç”¨ã ãŒã€CLMP_BPP_8 ã‚’å®šç¾©ã—ã¦ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã™ã‚Œã° 8ãƒ“ãƒƒãƒˆè‰²ç”¨ã«ãªã‚‹ã€‚
  */
 
 #include "subr.h"
@@ -12,7 +12,7 @@
 #include "gen.h"
 
 
-#ifdef CLMP_BPP_8   // 8bitF”Å‚ÍAƒ}ƒNƒ‚Å‚²‚Ü‚©‚µ‚Ä¶¬
+#ifdef CLMP_BPP_8   // 8bitè‰²ç‰ˆã¯ã€ãƒã‚¯ãƒ­ã§ã”ã¾ã‹ã—ã¦ç”Ÿæˆ.
 #define pix_t       uint8_t
 #define gen_clmp    gen_clmp8
 #else
@@ -41,7 +41,7 @@ static int  cels_add(void *fnt);
 
 int gen_clmp(uint8_t **a_map, int *a_mapSz, int *a_celNum, uint8_t **a_pix, int *a_w, int *a_h, int x0, int y0, int texW, int texH, int cw, int ch, int md, int bpp, int nukiCol, int flags, void *clut, int w0, int h0)
 {
-    //int   mtFlg    = flags & 2;       // ‚ ‚Æ‚Å
+    //int   mtFlg    = flags & 2;       // ã‚ã¨ã§.
     int   t256x256Flg = (flags>>3) & 1;
     int   allNoCmpFlg = (flags>>2) & 1;
     int   nocmpFlg    = (flags>>1) & 1;
@@ -55,7 +55,7 @@ int gen_clmp(uint8_t **a_map, int *a_mapSz, int *a_celNum, uint8_t **a_pix, int 
     int w2,h2,cw2,ch2;
 
     if (cw <= 0 || cw > 4096 || ch <= 0 || ch > 4096) {
-        err_abortMsg("ƒZƒ‹ƒTƒCƒY‚ª•s³\n");
+        err_abortMsg("ã‚»ãƒ«ã‚µã‚¤ã‚ºãŒä¸æ­£\n");
         return 0;
     }
 
@@ -67,7 +67,7 @@ int gen_clmp(uint8_t **a_map, int *a_mapSz, int *a_celNum, uint8_t **a_pix, int 
         pix = genCelFuchiTex(pix, w, h, mw, mh, cw, ch);
         cw2 = cw + 2, ch2 = ch + 2;
         w2 = mw * cw2, h2 = mh * ch2;
-    } else if (w % cw || h % ch) {  // ’[”‚ª‚ ‚é‚È‚çpixƒTƒCƒY’²®
+    } else if (w % cw || h % ch) {  // ç«¯æ•°ãŒã‚ã‚‹ãªã‚‰pixã‚µã‚¤ã‚ºèª¿æ•´.
         pix = resizePixBuf(pix, w, h, mw, mh, cw, ch);
         cw2 = cw      , ch2 = ch;
         w2  = mw * cw2, h2  = mh * ch2;
@@ -75,36 +75,36 @@ int gen_clmp(uint8_t **a_map, int *a_mapSz, int *a_celNum, uint8_t **a_pix, int 
 
     tw = texW / cw2;
     if (tw <= 0) {
-        err_abortMsg("ƒeƒNƒXƒ`ƒƒƒTƒCƒY‚ªƒZƒ‹ƒTƒCƒY‚æ‚è¬‚³‚¢\n");
+        err_abortMsg("ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚µã‚¤ã‚ºãŒã‚»ãƒ«ã‚µã‚¤ã‚ºã‚ˆã‚Šå°ã•ã„\n");
         return 0;
     }
     //printf("%d, %d*%d, %d*%d, %d*%d, (%d*%d)\n", bpp, mw,mh,cw,ch,w,h,texW,texH);
 
-    /* ƒ}ƒbƒvì¬‚Ì€”õ */
+    /* ãƒãƒƒãƒ—ä½œæˆã®æº–å‚™ */
     map = (int*)callocE(4/*PIX_BYT*/, mw * mh + 64);
 
     cnumMax = mw * mh + 4;
     if (cnumMax >= CEL_NUM_MAX) {
         cnumMax = CEL_NUM_MAX;
     }
-    /* ƒ}ƒbƒv•ƒZƒ‹ƒtƒHƒ“ƒgì¬ */
+    /* ãƒãƒƒãƒ—ï¼†ã‚»ãƒ«ãƒ•ã‚©ãƒ³ãƒˆä½œæˆ */
     cels_init(cw2, ch2, md & 1, cnumMax, nukiCol, (uint32_t*)clut, nocmpFlg | (allNoCmpFlg << 1));
     cnum = cels_pix2map(pix, map, w2, h2, cw2, ch2, t256x256Flg);
     freeE(pix);
     if (cnum <= 1)
         cnum = 2;
     th = (cnum-1 + tw-1) / tw;
-    if (dbgExLog_getSw()) printf("   cel[%d*%d] map%d*%d  cel”:0x%xŒÂ\n", cw, ch, mw, mh, cnum);
+    if (dbgExLog_getSw()) printf("   cel[%d*%d] map%d*%d  celæ•°:0x%xå€‹\n", cw, ch, mw, mh, cnum);
     if (cnum <= 256 && md == 2) {
         *a_mapSz = (MAP_HDR_SZ+mw*mh*1);
     } else {
         *a_mapSz = (MAP_HDR_SZ+mw*mh*2);
     }
-    // ƒ}ƒbƒvƒf[ƒ^‚ğ®‚¦‚é
+    // ãƒãƒƒãƒ—ãƒ‡ãƒ¼ã‚¿ã‚’æ•´ãˆã‚‹.
     *a_map = (uint8_t*)callocE(1, *a_mapSz + 64);
     genMap(*a_map, map, md, bpp, cnum, mw, mh, cw, ch, w0, h0, x0, y0, fuchiTyp);
 
-    // ƒeƒNƒXƒ`ƒƒ¶¬
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ç”Ÿæˆ.
     DBG_M();
     {
         int thch2;
@@ -122,7 +122,7 @@ int gen_clmp(uint8_t **a_map, int *a_mapSz, int *a_celNum, uint8_t **a_pix, int 
     *a_pix = (uint8_t*)callocE(PIX_BYT, texW*texH);
     genTex((pix_t*)*a_pix, texW, th, cw2, ch2, cnum, cels_fntAdr(), w2,h2);
 
-    /* I—¹ˆ— */
+    /* çµ‚äº†å‡¦ç† */
     DBG_M();
     *a_celNum = cnum;
     *a_w = texW;
@@ -138,9 +138,9 @@ static void genMap(uint8_t *dst, int *map, int flags, int bpp, int cnum, int mw,
 {
     int n,x,y;
     //printf("%x,%d,%d, %d*%d, %d*%d, %d*%d, (%d,%d)\n", flags, bpp, cnum, mw,mh,cw,ch,w0,h0,x0,y0);
-    if (fuchiTyp == 0)  // ’Êí
+    if (fuchiTyp == 0)  // é€šå¸¸.
         memcpy(dst, "MAP\0", 4);
-    else                // •£—L‚èƒZƒ‹
+    else                // æ·µæœ‰ã‚Šã‚»ãƒ«.
         memcpy(dst, "MAP\1", 4);
     POKEiD(dst+0x04, 0);
     POKEiD(dst+0x08, 0);
@@ -197,7 +197,7 @@ static void genTex(pix_t *pix, int texW, int th, int cw, int ch, int cnum, const
 #if 0
 static void genTexSp(pix_t *pix, int texW, int tw, int th, int cw, int ch, int cnum, const pix_t *fnt /*, int bw, int bh*/)
 {
-    // ƒoƒCƒŠƒjƒAƒtƒBƒ‹ƒ^‘Îô‚ÅüˆÍ‚Pƒhƒbƒg•ª‘B‚µ‚½ƒZƒ‹‚ğ•~‚«‹l‚ß‚é
+    // ãƒã‚¤ãƒªãƒ‹ã‚¢ãƒ•ã‚£ãƒ«ã‚¿å¯¾ç­–ã§å‘¨å›²ï¼‘ãƒ‰ãƒƒãƒˆåˆ†å¢—æ®–ã—ãŸã‚»ãƒ«ã‚’æ•·ãè©°ã‚ã‚‹.
     int n, tx,ty,x,y, ch2=ch+2, cw2=cw+2;
 
     n = 1;
@@ -206,25 +206,25 @@ static void genTexSp(pix_t *pix, int texW, int tw, int th, int cw, int ch, int c
         for (tx = 0; tx < tw; tx++) {
             pix_t *p = pix + ty * ch2 * texW + tx * cw2;
 
-            //ã•Ó‚ÌƒRƒs[
+            //ä¸Šè¾ºã®ã‚³ãƒ”ãƒ¼.
             p[0] = fnt[0];              //p[0*texW + 0] = fnt[0*cw+0];
             for (x = 0; x < cw; x++)
                 p[1+x] = fnt[x];        //  p[0*texW + 1+x] = fnt[0*cw+x];
             p[1+cw] = fnt[cw-1];        //p[0*texW + 1+cw] = fnt[0*cw+cw-1];
 
-            //‰º•Ó‚ÌƒRƒs[
+            //ä¸‹è¾ºã®ã‚³ãƒ”ãƒ¼.
             p[(1+ch)*texW + 0] = fnt[(ch-1)*cw+0];
             for (x = 0; x < cw; x++)
                 p[(1+ch)*texW + 1+x] = fnt[(ch-1)*cw+x];
             p[(1+ch)*texW + 1+cw] = fnt[(ch-1)*cw+cw-1];
 
-            // ’†g
+            // ä¸­èº«
             for (y = 0; y < ch; y++) {
-                p[(1+y)*texW + 0] = fnt[y*cw+0];        //¶•Ó
+                p[(1+y)*texW + 0] = fnt[y*cw+0];        //å·¦è¾º.
                 for (x = 0; x < cw; x++) {
                     p[(1+y)*texW + 1+x] = fnt[y*cw+x];
                 }
-                p[(1+y)*texW + 1+cw] = fnt[y*cw+cw-1];  //‰E•Ó
+                p[(1+y)*texW + 1+cw] = fnt[y*cw+cw-1];  //å³è¾º.
             }
             if (++n >= cnum)
                 return;
@@ -313,7 +313,7 @@ static pix_t *genCelFuchiTex(pix_t *src, int srcW, int srcH, int mw, int mh, int
 
 /*---------------------------------------------------------------------------*/
 
-/// ƒZƒ‹&ƒ}ƒbƒv‰»‚Å‚ÌƒZƒ‹ƒf[ƒ^‚ÌŠÇ—
+/// ã‚»ãƒ«&ãƒãƒƒãƒ—åŒ–ã§ã®ã‚»ãƒ«ãƒ‡ãƒ¼ã‚¿ã®ç®¡ç†.
 typedef struct cels_t {
     pix_t  *fnt;
     int     num;
@@ -329,7 +329,7 @@ typedef struct cels_t {
 static cels_t cels;
 
 
-/** ƒtƒHƒ“ƒgŒŸõ—p‚É•À‚Ñ•Ï‚¦‚½ƒtƒHƒ“ƒgƒe[ƒuƒ‹‚ğì¬ */
+/** ãƒ•ã‚©ãƒ³ãƒˆæ¤œç´¢ç”¨ã«ä¸¦ã³å¤‰ãˆãŸãƒ•ã‚©ãƒ³ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½œæˆ */
 static void cels_init(int cw, int ch, int mutoumeiFlg, int numMax, int nukiCol, uint32_t *clut, int nocmpMode)
 {
     cels.num    = 1;
@@ -412,8 +412,8 @@ static int cels_pix2map(pix_t *pix, int *map, int xsz, int ysz, int cw, int ch, 
 
 
 
-/** “o˜^Ï‚İƒZƒ‹‚ÌƒtƒHƒ“ƒg‚ğ’T‚µ, Œ©‚Â‚©‚ê‚Î‚»‚Ì”Ô†‚ğA‚»‚¤‚Å‚È‚¯‚ê‚Î
- * V‹K“o˜^‚µ‚ÄA‚»‚Ì”Ô†‚ğ•Ô‚·
+/** ç™»éŒ²æ¸ˆã¿ã‚»ãƒ«ã®ãƒ•ã‚©ãƒ³ãƒˆã‚’æ¢ã—, è¦‹ã¤ã‹ã‚Œã°ãã®ç•ªå·ã‚’ã€ãã†ã§ãªã‘ã‚Œã°,
+ * æ–°è¦ç™»éŒ²ã—ã¦ã€ãã®ç•ªå·ã‚’è¿”ã™.
  */
 static int cels_add(void *fnt)
 {
@@ -424,15 +424,15 @@ static int cels_add(void *fnt)
   #endif
 
     //DBG_F(("%d, %d\n", cels.num, cels.sz1));
-    /* è”²‚«ŒŸõ */
+    /* æ‰‹æŠœãæ¤œç´¢ */
     if (cels.nocmpMode == 0) {
         for (n = 0; n < cels.num; n++) {
             if (memcmp(cels.fnt + n * cels.sz1, fnt, cels.sz1*PIX_BYT) == 0) {
-                return cels.atrs[n];    //Œ©‚Â‚©‚Á‚½‚©‚ç‚»‚Ì”Ô†‚ğ•Ô‚·
+                return cels.atrs[n];    //è¦‹ã¤ã‹ã£ãŸã‹ã‚‰ãã®ç•ªå·ã‚’è¿”ã™.
             }
         }
     }
-    /* \¬ƒsƒNƒZƒ‹‚ªA‚·‚×‚Ä”²‚«F‚©, ‚·‚×‚Ä–³“§–¾‚©A‚Ç‚¤‚©ƒ`ƒFƒbƒN */
+    /* æ§‹æˆãƒ”ã‚¯ã‚»ãƒ«ãŒã€ã™ã¹ã¦æŠœãè‰²ã‹, ã™ã¹ã¦ç„¡é€æ˜ã‹ã€ã©ã†ã‹ãƒã‚§ãƒƒã‚¯ */
     //DBG_M();
     for (n = 0; n < cels.sz1; n++) {
         c = ((pix_t*)fnt)[n];
@@ -441,13 +441,13 @@ static int cels_add(void *fnt)
           #if 0
             c = cels.clut[c];
             a = (unsigned)c >> 24;
-            if (a) {                // ƒ¿!=0
-                if (a < 0xFF) {     // ƒ¿<0xFF‚È‚Ì‚Å”¼“§–¾‚¾
+            if (a) {                // Î±!=0
+                if (a < 0xFF) {     // Î±<0xFFãªã®ã§åŠé€æ˜ã .
                     m  = 0;
                     af = 1;
                 }
                 f = 1;
-            } else {                // ƒ¿=0‚È‚Ì‚Å”²‚«F‚¾
+            } else {                // Î±=0ãªã®ã§æŠœãè‰²ã .
                 m = 0;
             }
           #else
@@ -458,29 +458,29 @@ static int cels_add(void *fnt)
         }
       #else
         a = (unsigned)c >> 24;
-        if (a) {                // ƒ¿!=0
-            if (a < 0xFF) {     // ƒ¿<0xFF‚È‚Ì‚Å”¼“§–¾‚¾
+        if (a) {                // Î±!=0
+            if (a < 0xFF) {     // Î±<0xFFãªã®ã§åŠé€æ˜ã .
                 m  = 0;
                 af = 1;
             }
             f = 1;
-        } else {                // ƒ¿=0‚È‚Ì‚Å”²‚«F‚¾
+        } else {                // Î±=0ãªã®ã§æŠœãè‰²ã .
             m = 0;
         }
       #endif
     }
 //if (dbgExLog_getSw()) printf("cels_add[%d] %d %d\n", n, f, m);
-  #if 1 // ‚·‚×‚Ä”²‚«F‚¾‚Á‚½
+  #if 1 // ã™ã¹ã¦æŠœãè‰²ã ã£ãŸ.
     if (f == 0 && (cels.nocmpMode & 2) == 0)
         return 0;
   #endif
-    /* Œ©‚Â‚©‚ç‚È‚©‚Á‚½‚Ì‚Å“o˜^ */
+    /* è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸã®ã§ç™»éŒ² */
     n = cels.num;
     if (cels.num < cels.numMax) {
         memcpy(cels.fnt + cels.num * cels.sz1, fnt, cels.sz1*PIX_BYT);
         cels.num++;
     } else {
-        err_abortMsg("ƒZƒ‹‚Ì”‚ª‘½‚­‚È‚è‚·‚¬‚Ü‚·(Å‘å %dŒÂ)\n", cels.numMax);
+        err_abortMsg("ã‚»ãƒ«ã®æ•°ãŒå¤šããªã‚Šã™ãã¾ã™(æœ€å¤§ %då€‹)\n", cels.numMax);
     }
     cels.atrs[n] = n;
     if (cels.mutoumeiFlg) {

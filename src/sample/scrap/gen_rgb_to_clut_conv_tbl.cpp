@@ -1,5 +1,5 @@
 /*
-   RGB’l‚©‚ç clut ƒCƒ“ƒfƒNƒX’l‚ğ‹‚ß‚é‚½‚ß‚Ì•ÏŠ·ƒe[ƒuƒ‹.
+   RGBå€¤ã‹ã‚‰ clut ã‚¤ãƒ³ãƒ‡ã‚¯ã‚¹å€¤ã‚’æ±‚ã‚ã‚‹ãŸã‚ã®å¤‰æ›ãƒ†ãƒ¼ãƒ–ãƒ«.
  */
 #include <stdio.h>
 #include <stdint.h>
@@ -128,7 +128,7 @@ int main() {
                 p = (p < 0) ? -1 : (p > 0) ? 1 : 0;
                 q = (q < 0) ? -1 : (q > 0) ? 1 : 0;
              #endif
-                // ‹ß‚¢F‚ğ’T‚·.
+                // è¿‘ã„è‰²ã‚’æ¢ã™.
                 unsigned k  = 0xFFFFFFFF;
                 unsigned k2 = 0xFFFFFFFF;
                 unsigned fnd = 0xffffffff;

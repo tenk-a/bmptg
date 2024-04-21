@@ -1,10 +1,10 @@
 /**
  *  @file   ConvOne.h
- *  @brief  ‰æ‘œ•ÏŠ·
+ *  @brief  ç”»åƒå¤‰æ›
  *  @author Masashi Kitamura
  *  @date   2000-??-??
  *  @note
- *      2006    bmptg.c ‚©‚ç•ª—£.
+ *      2006    bmptg.c ã‹ã‚‰åˆ†é›¢.
  */
 
 #ifndef CONVONE_H
@@ -18,16 +18,16 @@
 // Decrease Color Mode
 enum Dcm_t {
     DCM_UNKOWN      = 0,
-    DCM_FIX_JP      = 1,    // “ú–{‚Ì80”N‘ãƒpƒ\ƒRƒ“—R—ˆ‚Ì 16F,256F(G3R3B2)ŒÅ’èƒpƒŒƒbƒg.
-    DCM_FIX_WIN     = 2,    // ŒÅ’è WinƒVƒXƒeƒ€ƒpƒŒƒbƒg
-    DCM_MC_YUV      = 3,    // ƒƒfƒBƒAƒ“ƒJƒbƒg(yuv)
-    DCM_MC_RGB      = 4,    // ƒƒfƒBƒAƒ“ƒJƒbƒg(rgb)
-    DCM_HIST        = 5,    // •p“x‡ clut
-    DCM_FIX_FILE    = 6,    // ŒÅ’èŠO•” clut ƒtƒ@ƒCƒ‹
-    DCM_FIX_XTERM   = 7,    // ŒÅ’è xterm256.
-    DCM_FIX_G6R6B6C40= 8,   // ŒÅ’è rgb 6*6*6+40.
-    //DCM_FIX_OTAMESHI1= 9, // ‚¨‚µ clut
-    //DCM_FIX_OTAMESHI2= 10,    // ‚¨‚µ clut
+    DCM_FIX_JP      = 1,    // æ—¥æœ¬ã®80å¹´ä»£ãƒ‘ã‚½ã‚³ãƒ³ç”±æ¥ã® 16è‰²,256è‰²(G3R3B2)å›ºå®šãƒ‘ãƒ¬ãƒƒãƒˆ.
+    DCM_FIX_WIN     = 2,    // å›ºå®š Winã‚·ã‚¹ãƒ†ãƒ ãƒ‘ãƒ¬ãƒƒãƒˆ.
+    DCM_MC_YUV      = 3,    // ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ³ã‚«ãƒƒãƒˆ(yuv)
+    DCM_MC_RGB      = 4,    // ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ³ã‚«ãƒƒãƒˆ(rgb)
+    DCM_HIST        = 5,    // é »åº¦é † clut
+    DCM_FIX_FILE    = 6,    // å›ºå®šå¤–éƒ¨ clut ãƒ•ã‚¡ã‚¤ãƒ«.
+    DCM_FIX_XTERM   = 7,    // å›ºå®š xterm256.
+    DCM_FIX_G6R6B6C40= 8,   // å›ºå®š rgb 6*6*6+40.
+    //DCM_FIX_OTAMESHI1= 9, // ãŠè©¦ã— clut
+    //DCM_FIX_OTAMESHI2= 10,    // ãŠè©¦ã— clut
     DCM_FIX_MAX,
 };
 
@@ -50,7 +50,7 @@ public:
     int         nukiRctFlg;
     int         genMaskFlg;
     int         tone;
-    int         toneType;   // 0=rgb‘€ì, yuv-y‘€ì
+    int         toneType;   // 0=rgbæ“ä½œ, yuv-yæ“ä½œ.
     int         encMode;
     int         fullColFlg;
     int         srcBpp;
@@ -64,7 +64,7 @@ public:
         int     flg;
         int     lcr;        // 0=left 1=center 2=right
         int     umd;        // 0=up   1=mid    2=down
-        int     lcr_ex;     // 0=’Êí 1=ƒtƒ@ƒCƒ‹–¼–{‘Ì‚ÌÅŒã‚Ìˆê‚ªŠï”‚È‚ç¶‹l‚ß(l)‹ô”‚È‚ç‰E‹l‚ß(r)‚É‚·‚é
+        int     lcr_ex;     // 0=é€šå¸¸ 1=ãƒ•ã‚¡ã‚¤ãƒ«åæœ¬ä½“ã®æœ€å¾Œã®ä¸€æ™‚ãŒå¥‡æ•°ãªã‚‰å·¦è©°ã‚(l)å¶æ•°ãªã‚‰å³è©°ã‚(r)ã«ã™ã‚‹.
         int     w , h , x , y;
         int     wf, hf, xf, yf;
         int     sw, sh, sx, sy;
@@ -86,7 +86,7 @@ public:
     int         clutBpp;
     int         saveInfFile;
     int         mono;
-    int         monoNear;           // ‚Ù‚ÚƒOƒŒƒC‚È‚çƒOƒŒƒC‚Æ‚İ‚È‚·
+    int         monoNear;           // ã»ã¼ã‚°ãƒ¬ã‚¤ãªã‚‰ã‚°ãƒ¬ã‚¤ã¨ã¿ãªã™.
     int         monoChRGB;
     int         monoToAlp;
     double      monoToAlp_rate;
@@ -101,8 +101,8 @@ public:
     int         lvlY, lvlUV;
     int         quality;
     int         quality_grey;
-    int         rszN;       //ƒŠƒTƒCƒY‰ñ”
-    int         rszK[2];    //Šgk‚É—p‚¢‚éŒW” 1..
+    int         rszN;       //ãƒªã‚µã‚¤ã‚ºå›æ•°.
+    int         rszK[2];    //æ‹¡ç¸®æ™‚ã«ç”¨ã„ã‚‹ä¿‚æ•° 1..
     double      rszXpar[2];
     double      rszYpar[2];
     int         rszXsz[2];
@@ -117,21 +117,21 @@ public:
     int         filterType;
     int         bokashiCnt;
     int         bokashiAlpSikii;
-    unsigned    bokashiMergeRateRGB;    // R,G,B •Ê‚ÉƒŒ[ƒg‚ğw’è‚Å‚«‚é‚æ‚¤‚ÉƒJƒ‰[w’è‚É‚·‚é
-    unsigned    bokashiMaskGenCol1;     // ‚Ú‚©‚µ‡¬‚Å‚Ìƒ}ƒXƒNƒ¿‚ğ¶¬‚·‚é‚½‚ß‚ÌF’l1
-    unsigned    bokashiMaskGenCol2;     // ‚Ú‚©‚µ‡¬‚Å‚Ìƒ}ƒXƒNƒ¿‚ğ¶¬‚·‚é‚½‚ß‚ÌF’l1
+    unsigned    bokashiMergeRateRGB;    // R,G,B åˆ¥ã«ãƒ¬ãƒ¼ãƒˆã‚’æŒ‡å®šã§ãã‚‹ã‚ˆã†ã«ã‚«ãƒ©ãƒ¼æŒ‡å®šã«ã™ã‚‹.
+    unsigned    bokashiMaskGenCol1;     // ã¼ã‹ã—åˆæˆã§ã®ãƒã‚¹ã‚¯Î±ã‚’ç”Ÿæˆã™ã‚‹ãŸã‚ã®è‰²å€¤1
+    unsigned    bokashiMaskGenCol2;     // ã¼ã‹ã—åˆæˆã§ã®ãƒã‚¹ã‚¯Î±ã‚’ç”Ÿæˆã™ã‚‹ãŸã‚ã®è‰²å€¤1
     int         colNum;
     int         clutOfs;
     int         clutIndShft;
-    int         genAlpEx;               // ¶ã(0,0)‚ÌƒsƒNƒZƒ‹‚ğ”²‚«F‚Æ‚µ‚ÄA‰æ‘œ‚Ì4‹÷‚©‚ç”²‚«F‚Ìƒ¿‚ğ“h‚è‚Â‚Ô‚·w’è.
+    int         genAlpEx;               // å·¦ä¸Š(0,0)ã®ãƒ”ã‚¯ã‚»ãƒ«ã‚’æŠœãè‰²ã¨ã—ã¦ã€ç”»åƒã®4éš…ã‹ã‚‰æŠœãè‰²ã®Î±ã‚’å¡—ã‚Šã¤ã¶ã™æŒ‡å®š.
     char const* clutTxtName;
-    char const* exDstExt;               // Šg’£q
-    unsigned    alpMin;                 // ”¼“§–¾”ÍˆÍmin
-    unsigned    alpMax;                 // ”¼“§–¾”ÍˆÍmax
-    int         alpToCol;               // ”¼“§–¾(ƒ¿)min`max‚ÌƒsƒNƒZƒ‹‚ÉAFalpToCol‚Æƒ¿ƒuƒŒƒ“ƒh‚µ‚ÄAƒ¿’l‚ğ0xff‚É‚·‚é.
-    int         nukiumeRgb;             // ”²‚«F‚Æ‚µ‚Ä–„‚ß‚érgb’l.
-    int         alpBitForBpp8;          // A2I6‚Ì‚æ‚¤‚Èƒ¿‚ÉNƒrƒbƒgAƒCƒ“ƒfƒbƒNƒX‚ÉMƒrƒbƒg(N+M=8)‚Ì256F‰æ‘œ‚É‚·‚é. ’l‚ÍN.
-    char const* alphaPlaneFileName;     // ƒ¿ƒvƒŒ[ƒ“—p‚Ì‰æ‘œ‚ğ“Ç‚İ‚Şê‡.
+    char const* exDstExt;               // æ‹¡å¼µå­.
+    unsigned    alpMin;                 // åŠé€æ˜ç¯„å›²min
+    unsigned    alpMax;                 // åŠé€æ˜ç¯„å›²max
+    int         alpToCol;               // åŠé€æ˜(Î±)minï½maxã®ãƒ”ã‚¯ã‚»ãƒ«ã«ã€è‰²alpToColã¨Î±ãƒ–ãƒ¬ãƒ³ãƒ‰ã—ã¦ã€Î±å€¤ã‚’0xffã«ã™ã‚‹.
+    int         nukiumeRgb;             // æŠœãè‰²ã¨ã—ã¦åŸ‹ã‚ã‚‹rgbå€¤.
+    int         alpBitForBpp8;          // A2I6ã®ã‚ˆã†ãªÎ±ã«Nãƒ“ãƒƒãƒˆã€ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã«Mãƒ“ãƒƒãƒˆ(N+M=8)ã®256è‰²ç”»åƒã«ã™ã‚‹. å€¤ã¯N.
+    char const* alphaPlaneFileName;     // Î±ãƒ—ãƒ¬ãƒ¼ãƒ³ç”¨ã®ç”»åƒã‚’èª­ã¿è¾¼ã‚€å ´åˆ.
     int         startX;
     int         startY;
 
@@ -155,7 +155,7 @@ public:
 
 
 /* ------------------------------------------------------------------------ */
-/** ˆêƒtƒ@ƒCƒ‹•ÏŠ· */
+/** ä¸€ãƒ•ã‚¡ã‚¤ãƒ«å¤‰æ› */
 class ConvOne {
 public:
     ConvOne();
@@ -248,7 +248,7 @@ private:
     int             srcH_;
 
     bm_opt_t        bopt_;
-    unsigned        clut_[CLUT_NUM * 2];        ///< clut. –{—ˆ‚ÍCLUT_NUM‚¾‚ªAF”ƒJƒEƒ“ƒg‚Å—]•ª‚É”‚¦‚éì‹Æ—Ìˆæ‚Ì‚½‚ßA*2‚µ‚Ä‚¢‚é
+    unsigned        clut_[CLUT_NUM * 2];        ///< clut. æœ¬æ¥ã¯CLUT_NUMã ãŒã€è‰²æ•°ã‚«ã‚¦ãƒ³ãƒˆã§ä½™åˆ†ã«æ•°ãˆã‚‹ä½œæ¥­é ˜åŸŸã®ãŸã‚ã€*2ã—ã¦ã„ã‚‹.
 
     ConvOne_Opts    opts_;
 };

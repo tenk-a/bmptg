@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_resizeBilinear.c
- *  @brief  ƒoƒCƒŠƒjƒA–@‚ÅŠg‘åk¬.
+ *  @brief  ãƒã‚¤ãƒªãƒ‹ã‚¢æ³•ã§æ‹¡å¤§ç¸®å°.
  *  @author Masashi KITAMURA
  */
 
@@ -28,7 +28,7 @@ static void pix32_resizeBilinearSub(unsigned* dst, unsigned dstW, unsigned dstH,
 static void pix32_resizeBilinearReduc(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH);
 
 
-/** Šg‘åk¬
+/** æ‹¡å¤§ç¸®å°
  */
 int  pix32_resizeBilinear(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH)
 {
@@ -38,12 +38,12 @@ int  pix32_resizeBilinear(unsigned *dst, unsigned dstW, unsigned dstH, const uns
     }
 
     if (dstW == srcW && dstH == srcH) {
-        memcpy(dst, src, dstW*srcH*sizeof(*dst));                       // “¯‚¶ƒTƒCƒY‚È‚çƒƒ‚ƒŠƒRƒs[‚Å‚·‚Ü‚·
+        memcpy(dst, src, dstW*srcH*sizeof(*dst));                       // åŒã˜ã‚µã‚¤ã‚ºãªã‚‰ãƒ¡ãƒ¢ãƒªã‚³ãƒ”ãƒ¼ã§ã™ã¾ã™.
         return 1;
     }
 
     if ((srcW % dstW) == 0 && (srcH % dstH) == 0) {
-        pix32_resizeAveragingI(dst, dstW, dstH, src, srcW, srcH);       // ®”Š„‚è‚Å‚·‚Şê‡‚ÍA‚»‚êê—p‚Ìˆ—‚É‚µ‚ÄAŸø‚İ‚ğŒ¸‚ç‚·
+        pix32_resizeAveragingI(dst, dstW, dstH, src, srcW, srcH);       // æ•´æ•°å‰²ã‚Šã§ã™ã‚€å ´åˆã¯ã€ãã‚Œå°‚ç”¨ã®å‡¦ç†ã«ã—ã¦ã€æ»²ã¿ã‚’æ¸›ã‚‰ã™.
         return 1;
     }
     if (dstW >= srcW && dstH >= srcH)
@@ -54,7 +54,7 @@ int  pix32_resizeBilinear(unsigned *dst, unsigned dstW, unsigned dstH, const uns
 }
 
 
-/** Bilinear Šg‘å‚Ì‚İ
+/** Bilinear æ‹¡å¤§ã®ã¿
  */
 static void  pix32_resizeBilinearSub(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH)
 {
@@ -158,7 +158,7 @@ static void  pix32_resizeBilinearSub(unsigned* dst, unsigned dstW, unsigned dstH
 }
 
 
-/** Bilinear Šg‘åk¬
+/** Bilinear æ‹¡å¤§ç¸®å°
  */
 static void  pix32_resizeBilinearReduc(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH)
 {
@@ -172,7 +172,7 @@ static void  pix32_resizeBilinearReduc(unsigned* dst, unsigned dstW, unsigned ds
 
     assert(dst && dstW && dstH && src && srcW && srcH);
 
-    // Šg‘å‚µ‚½‚ ‚Æ ®””{‚Åk¬‚·‚é‚½‚ß‚Ì®””{—¦‚ğ‹‚ß‚é.
+    // æ‹¡å¤§ã—ãŸã‚ã¨ æ•´æ•°å€ã§ç¸®å°ã™ã‚‹ãŸã‚ã®æ•´æ•°å€ç‡ã‚’æ±‚ã‚ã‚‹.
     rscaleX  = (double)srcW / dstW;
     rscaleY  = (double)srcH / dstH;
     mw       = (rscaleX <= 1.0) ? 1 : (int)rscaleX + 1;

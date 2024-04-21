@@ -1,7 +1,7 @@
 /**
  *  @file   HuffmanEncode.hpp
  *  @brief  huffman encode
- *  @author Masahi Kitamura  (Original program by Haruhiko Okumura "CŒ¾Œê‚É‚æ‚éÅVƒAƒ‹ƒSƒŠƒYƒ€–“T")
+ *  @author Masahi Kitamura  (Original program by Haruhiko Okumura "Cè¨€èªã«ã‚ˆã‚‹æœ€æ–°ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ äº‹å…¸")
  */
 
 #ifndef FKS_HUFFMANENCODE_HPP
@@ -81,31 +81,31 @@ private:
 
     enum {
         BITBUF_BITS     = 8,
-        VAL_MAX         = 1 << value_bits,  ///< •¶š‚Ìí—Ş
+        VAL_MAX         = 1 << value_bits,  ///< æ–‡å­—ã®ç¨®é¡.
         VAL_MASK        = VAL_MAX - 1,
         NODE_SIZE       = VAL_MAX * 2 - 1
     };
 
 private:
-    // o—Íƒoƒbƒtƒ@
+    // å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡.
     std::uint8_t*   dstp_;
     std::uint8_t*   dstEnd_;
-    std::size_t     bitBuf_;    ///< ƒrƒbƒg“üo—Íƒoƒbƒtƒ@
-    int             putCount_;  ///< ƒrƒbƒg“üo—ÍƒJƒEƒ“ƒ^
+    std::size_t     bitBuf_;    ///< ãƒ“ãƒƒãƒˆå…¥å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡.
+    int             putCount_;  ///< ãƒ“ãƒƒãƒˆå…¥å‡ºåŠ›ã‚«ã‚¦ãƒ³ã‚¿.
     bool            compressed_;
     bool            isOver_;
     Error           errorNo_;
 
-    // —Dæ‘Ò‚¿s—ñ—pƒq[ƒv
+    // å„ªå…ˆå¾…ã¡è¡Œåˆ—ç”¨ãƒ’ãƒ¼ãƒ—.
     int             heapSize_;
     idx_t           heap_[NODE_SIZE];
 
-    // Huffman–Ø
+    // Huffmanæœ¨.
     idx_t           parent_[NODE_SIZE];
     idx_t           left_[NODE_SIZE];
     idx_t           right_[NODE_SIZE];
-    std::size_t     freq_[NODE_SIZE];       ///< Še•¶š‚ÌoŒ»•p“x
-    bool            codeBit_[VAL_MAX];      ///< •„†Œê
+    std::size_t     freq_[NODE_SIZE];       ///< å„æ–‡å­—ã®å‡ºç¾é »åº¦.
+    bool            codeBit_[VAL_MAX];      ///< ç¬¦å·èª.
     std::size_t     tableSize_;
 };
 
@@ -144,7 +144,7 @@ inline void HuffmanEncode<T,B>::putBit(unsigned bit) {
  */
 template<class T, unsigned B>
 inline void HuffmanEncode<T,B>::putbits(int n, unsigned x) {
-    #define FKS_TMP_rightBits(n, x)   ((x) & ((std::size_t(1) << (n)) - 1U))  /* x‚Ì‰Enƒrƒbƒg */
+    #define FKS_TMP_rightBits(n, x)   ((x) & ((std::size_t(1) << (n)) - 1U))  /* xã®å³nãƒ“ãƒƒãƒˆ */
     while (n >= putCount_) {
         if (dstp_ >= dstEnd_) {
             isOver_ = true;
@@ -162,7 +162,7 @@ inline void HuffmanEncode<T,B>::putbits(int n, unsigned x) {
     #undef FKS_TMP_rightBits
 }
 
-/** ƒoƒbƒtƒ@‚Ìc‚è‚ğƒtƒ‰ƒbƒVƒ…
+/** ãƒãƒƒãƒ•ã‚¡ã®æ®‹ã‚Šã‚’ãƒ•ãƒ©ãƒƒã‚·ãƒ¥.
  */
 template<class T, unsigned B>
 void HuffmanEncode<T,B>::putBitEnd() {
@@ -179,10 +179,10 @@ std::size_t HuffmanEncode<T,B>::encode(std::uint8_t* dst, std::size_t dstSize, T
         return 0;
     }
 
-    // o—Íƒoƒbƒtƒ@‰Šú‰»
+    // å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡åˆæœŸåŒ–.
     std::size_t srcBytes = srcSize * sizeof(T);
 
-    // o—Íƒoƒbƒtƒ@‰Šú‰»
+    // å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡åˆæœŸåŒ–.
     enum { HDRSZ = 8/*sizeof(std::uint64_t)*/ };
     dstp_     = dst;
     dstEnd_   = dst + dstSize;
@@ -190,12 +190,12 @@ std::size_t HuffmanEncode<T,B>::encode(std::uint8_t* dst, std::size_t dstSize, T
     putCount_ = BITBUF_BITS;
     bitBuf_   = 0;
 
-    if (src == NULL || srcSize == 0) {       // ƒ\[ƒX‚ª‚È‚¢‚©0‚È‚çI—¹
+    if (src == NULL || srcSize == 0) {       // ã‚½ãƒ¼ã‚¹ãŒãªã„ã‹0ãªã‚‰çµ‚äº†.
         FKS_L_POKE64LE(dstp_, 0);
         return HDRSZ;
     }
 
-    // •p“x‚Ì‰Šú‰»
+    // é »åº¦ã®åˆæœŸåŒ–.
     std::size_t*    freq = freq_;
     for (unsigned i  = 0; i < VAL_MAX; ++i)
         freq[i] = 0;
@@ -205,43 +205,43 @@ std::size_t HuffmanEncode<T,B>::encode(std::uint8_t* dst, std::size_t dstSize, T
     }
 
     idx_t* heap = heap_;
-    heap[1]     = 0;                            // ’·‚³0‚Ìƒtƒ@ƒCƒ‹‚É”õ‚¦‚é
+    heap[1]     = 0;                            // é•·ã•0ã®ãƒ•ã‚¡ã‚¤ãƒ«ã«å‚™ãˆã‚‹.
     heapSize_   = 0;
 
-    // —Dæ‘Ò‚¿s—ñ‚É“o˜^
+    // å„ªå…ˆå¾…ã¡è¡Œåˆ—ã«ç™»éŒ².
     for (unsigned i = 0; i < VAL_MAX; ++i) {
         if (freq[i] != 0)
             heap[++heapSize_] = i;
     }
 
     for (std::size_t i = heapSize_ / 2; i >= 1; --i)
-        downHeep(i);                        // ƒq[ƒvì‚è
+        downHeep(i);                        // ãƒ’ãƒ¼ãƒ—ä½œã‚Š.
 
     idx_t*  parent  = parent_;
     for (unsigned i = 0; i < NODE_SIZE; ++i)
-        parent[i]   = 0;                    // ”O‚Ì‚½‚ß
+        parent[i]   = 0;                    // å¿µã®ãŸã‚.
 
-    int k           = heap[1];              // ˆÈ‰º‚Ìƒ‹[ƒv‚ª1‰ñ‚àÀs‚³‚ê‚È‚¢ê‡‚É”õ‚¦‚é
-    int avail       = VAL_MAX;              // ˆÈ‰º‚Ìƒ‹[ƒv‚Åƒnƒtƒ}ƒ“–Ø‚ğì‚é
+    int k           = heap[1];              // ä»¥ä¸‹ã®ãƒ«ãƒ¼ãƒ—ãŒ1å›ã‚‚å®Ÿè¡Œã•ã‚Œãªã„å ´åˆã«å‚™ãˆã‚‹.
+    int avail       = VAL_MAX;              // ä»¥ä¸‹ã®ãƒ«ãƒ¼ãƒ—ã§ãƒãƒ•ãƒãƒ³æœ¨ã‚’ä½œã‚‹.
 
-    while (heapSize_ > 1) {                 // 2ŒÂˆÈãc‚è‚ª‚ ‚éŠÔ
-        int     i   = heap[1];              // Å¬‚Ì—v‘f‚ğæ‚èo‚·
+    while (heapSize_ > 1) {                 // 2å€‹ä»¥ä¸Šæ®‹ã‚ŠãŒã‚ã‚‹é–“.
+        int     i   = heap[1];              // æœ€å°ã®è¦ç´ ã‚’å–ã‚Šå‡ºã™.
         heap[1]     = heap[heapSize_--];
-        downHeep(1);                        // ƒq[ƒvÄ\¬
-        int     j   = heap[1];              // Ÿ‚ÉÅ¬‚Ì—v‘f‚ğæ‚èo‚·
-        k           = ++avail;              // V‚µ‚¢ß‚ğ¶¬‚·‚é
-        freq[k]    = freq[i] + freq[j];     // •p“x‚ğ‡Œv
+        downHeep(1);                        // ãƒ’ãƒ¼ãƒ—å†æ§‹æˆ.
+        int     j   = heap[1];              // æ¬¡ã«æœ€å°ã®è¦ç´ ã‚’å–ã‚Šå‡ºã™.
+        k           = ++avail;              // æ–°ã—ã„ç¯€ã‚’ç”Ÿæˆã™ã‚‹.
+        freq[k]    = freq[i] + freq[j];     // é »åº¦ã‚’åˆè¨ˆ.
         heap[1]     = k;
-        downHeep(1);                        // ‘Ò‚¿s—ñ‚É“o˜^
+        downHeep(1);                        // å¾…ã¡è¡Œåˆ—ã«ç™»éŒ².
         parent[i]   = k;
-        parent[j]   = -k;                   // –Ø‚ğì‚é
+        parent[j]   = -k;                   // æœ¨ã‚’ä½œã‚‹.
         left_[k]    = i;
-        right_[k]   = j;                    // V
+        right_[k]   = j;                    // ã€ƒ.
     }
 
-    writeTree(k);                           // –Ø‚ğo—Í
+    writeTree(k);                           // æœ¨ã‚’å‡ºåŠ›.
 
-    tableSize_  = dstp_ - dst;              // •\‚Ì‘å‚«‚³
+    tableSize_  = dstp_ - dst;              // è¡¨ã®å¤§ãã•.
 
     if (tableSize_ < srcBytes) {
         bool*   codeBit = codeBit_;
@@ -281,7 +281,7 @@ std::size_t HuffmanEncode<T,B>::encode(std::uint8_t* dst, std::size_t dstSize, T
     return bytes;
 }
 
-/** —Dæ‘Ò‚¿s—ñ‚É‘}“ü
+/** å„ªå…ˆå¾…ã¡è¡Œåˆ—ã«æŒ¿å…¥.
  */
 template<class T, unsigned B>
 void HuffmanEncode<T,B>::downHeep(std::size_t i) {
@@ -315,17 +315,17 @@ void HuffmanEncode<T,B>::downHeep(std::size_t i) {
     heap[i]     = k;
 }
 
-/** }‚ğo—Í
+/** æã‚’å‡ºåŠ›.
  */
 template<class T, unsigned B>
 void HuffmanEncode<T,B>::writeTree(unsigned i) {
-    if (i < VAL_MAX) {              // —t
+    if (i < VAL_MAX) {              // è‘‰.
         putBit(0);
-        putbits(value_bits, i);     // •¶š‚»‚Ì‚à‚Ì
-    } else {                        // ß
+        putbits(value_bits, i);     // æ–‡å­—ãã®ã‚‚ã®.
+    } else {                        // ç¯€.
         putBit(1);
-        writeTree(left_[i]);        // ¶‚Ì}
-        writeTree(right_[i]);       // ‰E‚Ì}
+        writeTree(left_[i]);        // å·¦ã®æ.
+        writeTree(right_[i]);       // å³ã®æ.
     }
 }
 

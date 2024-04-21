@@ -1,5 +1,5 @@
 /** @file intrusive_ptr.hpp
- *  @brief  boost::intrusive_ptr ‚ğ’P‘Ì‚Åg—p‚Å‚«‚é‚æ‚¤‚É‚µ‚½ƒwƒbƒ_.
+ *  @brief  boost::intrusive_ptr ã‚’å˜ä½“ã§ä½¿ç”¨ã§ãã‚‹ã‚ˆã†ã«ã—ãŸãƒ˜ãƒƒãƒ€.
  *  @note
  *  Copyright (c) 2001, 2002 Peter Dimov
  *
@@ -122,8 +122,8 @@ public:
     }
 
 
-    // p == 0 ‚â p != 0 ‚ğ•\Œ»‰Â”\‚É‚·‚é‚½‚ß‚ÌƒLƒƒƒXƒgŠÖ”
-  #ifdef NDEBUG // Œë‚Á‚Ädeleteo—ˆ‚Ä‚µ‚Ü‚¤‚ªAƒwƒ{‚¢ƒRƒ“ƒpƒCƒ‰‘Îô‚ÅNDEBUG‚ÍƒRƒŒ.
+    // p == 0 ã‚„ p != 0 ã‚’è¡¨ç¾å¯èƒ½ã«ã™ã‚‹ãŸã‚ã®ã‚­ãƒ£ã‚¹ãƒˆé–¢æ•°.
+  #ifdef NDEBUG // èª¤ã£ã¦deleteå‡ºæ¥ã¦ã—ã¾ã†ãŒã€ãƒ˜ãƒœã„ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©å¯¾ç­–ã§NDEBUGæ™‚ã¯ã‚³ãƒ¬.
     typedef T const* const* const* unspecified_bool_type;
     operator unspecified_bool_type() const { return (unspecified_bool_type)p_; }
   #elif defined(__MWERKS__)

@@ -1,66 +1,66 @@
 /**
  *  @file   mem_mac.h
- *  @brief  ƒƒ‚ƒŠƒAƒNƒZƒX‚Ì‚½‚ß‚Ìƒ}ƒNƒ
- *  @author –k‘º‰ëj    NBB00541@nifty.com
+ *  @brief  ãƒ¡ãƒ¢ãƒªã‚¢ã‚¯ã‚»ã‚¹ã®ãŸã‚ã®ãƒã‚¯ãƒ­
+ *  @author åŒ—æ‘é›…å²    NBB00541@nifty.com
  */
 
 #ifndef MEM_MAC_H
 #define MEM_MAC_H
 
-// Šî–{Œ^‚Æ‚µ‚Äuint8_t,uint16_t,uint32_t,uint64_t‚ª’è‹`‚³‚ê‚Ä‚¢‚é‚±‚Æ
+// åŸºæœ¬å‹ã¨ã—ã¦uint8_t,uint16_t,uint32_t,uint64_tãŒå®šç¾©ã•ã‚Œã¦ã„ã‚‹ã“ã¨.
 #include "def.h"
 
 
 //-------------------------------------------------------------
-// int8‚âint16‚Ì’l‚ğ‚Â‚È‚°‚½‚è‚Î‚ç‚µ‚½‚è‚·‚éƒ}ƒNƒ
+// int8ã‚„int16ã®å€¤ã‚’ã¤ãªã’ãŸã‚Šã°ã‚‰ã—ãŸã‚Šã™ã‚‹ãƒã‚¯ãƒ­.
 //-------------------------------------------------------------
 
-/// 8bit”“ñ‚Â‚ğã‰º‚É‚Â‚È‚°‚Ä16ƒrƒbƒg”‚É‚·‚é
+/// 8bitæ•°äºŒã¤ã‚’ä¸Šä¸‹ã«ã¤ãªã’ã¦16ãƒ“ãƒƒãƒˆæ•°ã«ã™ã‚‹.
 #define BB(a,b)         ((((uint8_t)(a))<<8)|(uint8_t)(b))
 
-/// 16bit”“ñ‚Â‚ğã‰º‚É‚Â‚È‚°‚Ä32ƒrƒbƒg”‚É‚·‚é
+/// 16bitæ•°äºŒã¤ã‚’ä¸Šä¸‹ã«ã¤ãªã’ã¦32ãƒ“ãƒƒãƒˆæ•°ã«ã™ã‚‹.
 #define WW(a,b)         (((uint32_t)((uint16_t)(a))<<16)|(uint16_t)(b))
 
-/// 32bit”“ñ‚Â‚ğã‰º‚É‚Â‚È‚°‚Ä64ƒrƒbƒg”‚É‚·‚é
+/// 32bitæ•°äºŒã¤ã‚’ä¸Šä¸‹ã«ã¤ãªã’ã¦64ãƒ“ãƒƒãƒˆæ•°ã«ã™ã‚‹.
 #define LL(a,b)         ((((uint64_t)(a))<<32)|(uint32_t)(b))
 
-/// 8bit”4‚Â‚ğãˆÊ‚©‚ç‡‚É‚Â‚È‚°‚Ä32ƒrƒbƒg”‚É‚·‚é
+/// 8bitæ•°4ã¤ã‚’ä¸Šä½ã‹ã‚‰é †ã«ã¤ãªã’ã¦32ãƒ“ãƒƒãƒˆæ•°ã«ã™ã‚‹.
 #define BBBB(a,b,c,d)   (((uint32_t)((uint8_t)(a))<<24)|(((uint8_t)(b))<<16)|(((uint8_t)(c))<<8)|((uint8_t)(d)))
 
 #ifdef BIG_ENDIAN
-#define CC(a,b)         BB(a,b)         ///< 2ƒoƒCƒg•¶š—ñ‚ğint16‚Æ‚µ‚Äˆµ‚Á‚½ê‡‚ÌA’è””äŠr—pƒ}ƒNƒ
-#define CCCC(a,b,c,d)   BBBB(a,b,c,d)   ///< 4ƒoƒCƒg•¶š—ñ‚ğint32‚Æ‚µ‚Äˆµ‚Á‚½ê‡‚ÌA’è””äŠr—pƒ}ƒNƒ
+#define CC(a,b)         BB(a,b)         ///< 2ãƒã‚¤ãƒˆæ–‡å­—åˆ—ã‚’int16ã¨ã—ã¦æ‰±ã£ãŸå ´åˆã®ã€å®šæ•°æ¯”è¼ƒç”¨ãƒã‚¯ãƒ­.
+#define CCCC(a,b,c,d)   BBBB(a,b,c,d)   ///< 4ãƒã‚¤ãƒˆæ–‡å­—åˆ—ã‚’int32ã¨ã—ã¦æ‰±ã£ãŸå ´åˆã®ã€å®šæ•°æ¯”è¼ƒç”¨ãƒã‚¯ãƒ­.
 #else   // LITTLE_ENDIAN
-#define CC(a,b)         BB(b,a)         ///< 2ƒoƒCƒg•¶š—ñ‚ğint16‚Æ‚µ‚Äˆµ‚Á‚½ê‡‚ÌA’è””äŠr—pƒ}ƒNƒ
-#define CCCC(a,b,c,d)   BBBB(d,c,b,a)   ///< 4ƒoƒCƒg•¶š—ñ‚ğint32‚Æ‚µ‚Äˆµ‚Á‚½ê‡‚ÌA’è””äŠr—pƒ}ƒNƒ
+#define CC(a,b)         BB(b,a)         ///< 2ãƒã‚¤ãƒˆæ–‡å­—åˆ—ã‚’int16ã¨ã—ã¦æ‰±ã£ãŸå ´åˆã®ã€å®šæ•°æ¯”è¼ƒç”¨ãƒã‚¯ãƒ­.
+#define CCCC(a,b,c,d)   BBBB(d,c,b,a)   ///< 4ãƒã‚¤ãƒˆæ–‡å­—åˆ—ã‚’int32ã¨ã—ã¦æ‰±ã£ãŸå ´åˆã®ã€å®šæ•°æ¯”è¼ƒç”¨ãƒã‚¯ãƒ­.
 #endif
 
-#define GLB(a)          ((uint8_t)(a))                      ///< a‚ğ int16Œ^‚Æ‚µ‚Ä‰ºˆÊƒoƒCƒg‚Ì’l‚ğæ“¾
-#define GHB(a)          ((uint8_t)(((uint16_t)(a))>>8))     ///< a‚ğ int16Œ^‚Æ‚µ‚ÄãˆÊƒoƒCƒg‚Ì’l‚ğæ“¾
-#define GLLB(a)         ((uint8_t)(a))                      ///< a‚ğ int32Œ^‚Æ‚µ‚ÄÅ‰ºˆÊƒoƒCƒg‚Ì’l‚ğæ“¾
-#define GLHB(a)         ((uint8_t)(((uint16_t)(a))>>8))     ///< a‚ğ int32Œ^‚Æ‚µ‚Ä‰º2ƒoƒCƒg–Ú‚Ì’l‚ğæ“¾
-#define GHLB(a)         ((uint8_t)(((uint32_t)(a))>>16))    ///< a‚ğ int32Œ^‚Æ‚µ‚Ä‰º3ƒoƒCƒg–Ú‚Ì’l‚ğæ“¾
-#define GHHB(a)         ((uint8_t)(((uint32_t)(a))>>24))    ///< a‚ğ int32Œ^‚Æ‚µ‚Ä‰º4ƒoƒCƒg–Ú‚Ì’l‚ğæ“¾
-#define GLW(a)          ((uint16_t)(a))                     ///< int32Œ^‚Æ‚µ‚Ä‚Ì a ‚Ì‰º16ƒrƒbƒg‚Ì’l‚ğæ“¾
-#define GHW(a)          ((uint16_t)(((uint32_t)(a))>>16))   ///< int32Œ^‚Æ‚µ‚Ä‚Ì a ‚Ìã16ƒrƒbƒg‚Ì’l‚ğæ“¾
+#define GLB(a)          ((uint8_t)(a))                      ///< aã‚’ int16å‹ã¨ã—ã¦ä¸‹ä½ãƒã‚¤ãƒˆã®å€¤ã‚’å–å¾—.
+#define GHB(a)          ((uint8_t)(((uint16_t)(a))>>8))     ///< aã‚’ int16å‹ã¨ã—ã¦ä¸Šä½ãƒã‚¤ãƒˆã®å€¤ã‚’å–å¾—.
+#define GLLB(a)         ((uint8_t)(a))                      ///< aã‚’ int32å‹ã¨ã—ã¦æœ€ä¸‹ä½ãƒã‚¤ãƒˆã®å€¤ã‚’å–å¾—.
+#define GLHB(a)         ((uint8_t)(((uint16_t)(a))>>8))     ///< aã‚’ int32å‹ã¨ã—ã¦ä¸‹2ãƒã‚¤ãƒˆç›®ã®å€¤ã‚’å–å¾—.
+#define GHLB(a)         ((uint8_t)(((uint32_t)(a))>>16))    ///< aã‚’ int32å‹ã¨ã—ã¦ä¸‹3ãƒã‚¤ãƒˆç›®ã®å€¤ã‚’å–å¾—.
+#define GHHB(a)         ((uint8_t)(((uint32_t)(a))>>24))    ///< aã‚’ int32å‹ã¨ã—ã¦ä¸‹4ãƒã‚¤ãƒˆç›®ã®å€¤ã‚’å–å¾—.
+#define GLW(a)          ((uint16_t)(a))                     ///< int32å‹ã¨ã—ã¦ã® a ã®ä¸‹16ãƒ“ãƒƒãƒˆã®å€¤ã‚’å–å¾—.
+#define GHW(a)          ((uint16_t)(((uint32_t)(a))>>16))   ///< int32å‹ã¨ã—ã¦ã® a ã®ä¸Š16ãƒ“ãƒƒãƒˆã®å€¤ã‚’å–å¾—.
 
 
 //-------------------------------------------------------------
-// ƒAƒ‰ƒCƒƒ“ƒg‚ğ‹C‚É‚¹‚¸Aƒƒ‚ƒŠ‚ÖƒAƒNƒZƒX‚·‚é‚½‚ß‚Ìƒ}ƒNƒ
+// ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã‚’æ°—ã«ã›ãšã€ãƒ¡ãƒ¢ãƒªã¸ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹ãŸã‚ã®ãƒã‚¯ãƒ­.
 //-------------------------------------------------------------
 
-#define PEEKB(a)        (*(const uint8_t *)(a))         ///< ƒAƒhƒŒƒX a ‚©‚ç 1ƒoƒCƒg“Ç‚İ‚Ş
-#define POKEB(a,b)      (*(uint8_t *)(a) = (b))         ///< ƒAƒhƒŒƒX a ‚É 1ƒoƒCƒg‘‚«‚Ş
+#define PEEKB(a)        (*(const uint8_t *)(a))         ///< ã‚¢ãƒ‰ãƒ¬ã‚¹ a ã‹ã‚‰ 1ãƒã‚¤ãƒˆèª­ã¿è¾¼ã‚€.
+#define POKEB(a,b)      (*(uint8_t *)(a) = (b))         ///< ã‚¢ãƒ‰ãƒ¬ã‚¹ a ã« 1ãƒã‚¤ãƒˆæ›¸ãè¾¼ã‚€.
 
-//  ƒCƒ“ƒeƒ‹/ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“Eƒf[ƒ^‚ÉƒAƒNƒZƒX‚·‚éê‡
-#if defined _M_IX86  || defined _X86_   // X86 ‚ÍAƒAƒ‰ƒCƒƒ“ƒg‚ğ‹C‚É‚·‚é•K—v‚ª‚È‚¢‚Ì‚Å’¼ÚƒAƒNƒZƒX
+//  ã‚¤ãƒ³ãƒ†ãƒ«/ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ãƒ»ãƒ‡ãƒ¼ã‚¿ã«ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹å ´åˆ.
+#if defined _M_IX86  || defined _X86_   // X86 ã¯ã€ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã‚’æ°—ã«ã™ã‚‹å¿…è¦ãŒãªã„ã®ã§ç›´æ¥ã‚¢ã‚¯ã‚»ã‚¹.
 #define PEEKiW(a)       (*(const uint16_t *)(a))
 #define PEEKiD(a)       (*(const uint32_t *)(a))
 #define PEEKiB3(s)      ((*(const uint16_t*)(s)) | ((*(const uint8_t*)((s)+2))<<16))
 #define POKEiW(a,b)     (*(uint16_t *)(a) = (b))
 #define POKEiD(a,b)     (*(uint32_t *)(a) = (b))
 #define POKEiB3(a,b)    (POKEB((a)+2, GHLB(b)), POKEiW(a,GLW(b)))
-#else                   //ƒAƒ‰ƒCƒƒ“ƒg‘Îô‚ÅA1ƒoƒCƒg‚Ã‚ÂƒAƒNƒZƒX
+#else                   //ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆå¯¾ç­–ã§ã€1ãƒã‚¤ãƒˆã¥ã¤ã‚¢ã‚¯ã‚»ã‚¹.
 #define PEEKiW(a)       ( PEEKB(a) | (PEEKB((const char *)(a)+1)<< 8) )
 #define PEEKiD(a)       ( PEEKiW(a) | (PEEKiW((const char *)(a)+2) << 16) )
 #define POKEiW(a,b)     (POKEB((a),GLB(b)), POKEB((char *)(a)+1,GHB(b)))
@@ -69,7 +69,7 @@
 #define POKEiB3(a,b)    (POKEB((a)+2, GHLB(b)), POKEB((a)+1,GLHB(b)), POKEB((a), GLLB(b)))
 #endif
 
-//      ƒ‚ƒgƒ[ƒ‰/ƒrƒbƒOƒGƒ“ƒfƒBƒAƒ“Eƒf[ƒ^‚ÉƒAƒNƒZƒX‚·‚éê‡
+//      ãƒ¢ãƒˆãƒ­ãƒ¼ãƒ©/ãƒ“ãƒƒã‚°ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ãƒ»ãƒ‡ãƒ¼ã‚¿ã«ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹å ´åˆ.
 #define PEEKmW(a)       ( (PEEKB(a)<<8) | PEEKB((const char *)(a)+1) )
 #define PEEKmD(a)       ( (PEEKmW(a)<<16) | PEEKmW((const char *)(a)+2) )
 #define PEEKmB3(s)      BBBB(0, ((const uint8_t*)(s))[0], ((const uint8_t*)(s))[1], ((const uint8_t*)(s))[2])
@@ -77,7 +77,7 @@
 #define POKEmD(a,b)     (POKEmW((a),GHW(b)), POKEmW((char *)(a)+2,GLW(b)))
 #define POKEmB3(a,b)    (POKEB((a)+0, GHLB(b)), POKEB((a)+1,GLHB(b)), POKEB((a)+2, GLLB(b)))
 
-//      ‚»‚ÌCPU‚ÌAƒfƒtƒHƒ‹ƒg‚ÌƒGƒ“ƒfƒBƒAƒ“‚ÅƒAƒNƒZƒX‚·‚éê‡(ƒoƒCƒg’PˆÊ‚ÌƒAƒhƒŒƒX‰Â”\)
+//      ãã®CPUã®ã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã§ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹å ´åˆ(ãƒã‚¤ãƒˆå˜ä½ã®ã‚¢ãƒ‰ãƒ¬ã‚¹å¯èƒ½)
 #ifdef BIG_ENDIAN
 #define PEEKW(a)        PEEKmW(a)
 #define PEEKB3(a)       PEEKmB3(a)
@@ -96,44 +96,44 @@
 
 
 //-------------------------------------------------------------
-// ƒƒ‚ƒŠEƒRƒs[ƒ}ƒNƒ. ƒAƒ‰ƒCƒƒ“ƒg‚Í—˜—pÒ‘¤‚Å‹C‚ğ‚Â‚¯‚é‚±‚Æ
+// ãƒ¡ãƒ¢ãƒªãƒ»ã‚³ãƒ”ãƒ¼ãƒã‚¯ãƒ­. ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã¯åˆ©ç”¨è€…å´ã§æ°—ã‚’ã¤ã‘ã‚‹ã“ã¨.
 //-------------------------------------------------------------
 
 #define STREND(p)           ((p)+ strlen(p))
 
-/// tyŒ^‚Ì0‚ğ ƒAƒhƒŒƒX d‚©‚ç sz/sizeof(ty)ŒÂ‘‚«‚Ş
+/// tyå‹ã®0ã‚’ ã‚¢ãƒ‰ãƒ¬ã‚¹ dã‹ã‚‰ sz/sizeof(ty)å€‹æ›¸ãè¾¼ã‚€.
 #define MEMCLR_TY(d, sz, ty) do {ty *d__ = (ty *)(d); unsigned c___ = (sz)/sizeof(ty); do {*d___++ = 0;} while(--c___);} while(0)
-#define MEMCLR(d, sz)       MEMCLR_TY(d, s, sz, uint8_t)            ///< d‚©‚ç‚ÌszƒoƒCƒg‚ğ0ƒNƒŠƒA.
-#define MEMCLR2(d, sz)      MEMCLR_TY(d, s, sz, uint16_t)           ///< d‚©‚ç‚ÌszƒoƒCƒg‚ğ0ƒNƒŠƒA. ƒAƒhƒŒƒX,ƒTƒCƒY‚Æ‚à‚É2‚Ì”{”‚Ì‚±‚ÆB
-#define MEMCLR4(d, sz)      MEMCLR_TY(d, s, sz, uint32_t)           ///< d‚©‚ç‚ÌszƒoƒCƒg‚ğ0ƒNƒŠƒA. ƒAƒhƒŒƒX,ƒTƒCƒY‚Æ‚à‚É4‚Ì”{”‚Ì‚±‚ÆB
-#define MEMCLR8(d, sz)      MEMCLR_TY(d, s, sz, uint64_t)           ///< d‚©‚ç‚ÌszƒoƒCƒg‚ğ0ƒNƒŠƒA. ƒAƒhƒŒƒX,ƒTƒCƒY‚Æ‚à‚É8‚Ì”{”‚Ì‚±‚ÆB
-#define MEMCLR16(d, sz)     MEMCLR_TY(d, s, sz, __UINT128)          ///< d‚©‚ç‚ÌszƒoƒCƒg‚ğ0ƒNƒŠƒA. ƒAƒhƒŒƒX,ƒTƒCƒY‚Æ‚à‚É16‚Ì”{”‚Ì‚±‚ÆB
+#define MEMCLR(d, sz)       MEMCLR_TY(d, s, sz, uint8_t)            ///< dã‹ã‚‰ã®szãƒã‚¤ãƒˆã‚’0ã‚¯ãƒªã‚¢.
+#define MEMCLR2(d, sz)      MEMCLR_TY(d, s, sz, uint16_t)           ///< dã‹ã‚‰ã®szãƒã‚¤ãƒˆã‚’0ã‚¯ãƒªã‚¢. ã‚¢ãƒ‰ãƒ¬ã‚¹,ã‚µã‚¤ã‚ºã¨ã‚‚ã«2ã®å€æ•°ã®ã“ã¨.
+#define MEMCLR4(d, sz)      MEMCLR_TY(d, s, sz, uint32_t)           ///< dã‹ã‚‰ã®szãƒã‚¤ãƒˆã‚’0ã‚¯ãƒªã‚¢. ã‚¢ãƒ‰ãƒ¬ã‚¹,ã‚µã‚¤ã‚ºã¨ã‚‚ã«4ã®å€æ•°ã®ã“ã¨.
+#define MEMCLR8(d, sz)      MEMCLR_TY(d, s, sz, uint64_t)           ///< dã‹ã‚‰ã®szãƒã‚¤ãƒˆã‚’0ã‚¯ãƒªã‚¢. ã‚¢ãƒ‰ãƒ¬ã‚¹,ã‚µã‚¤ã‚ºã¨ã‚‚ã«8ã®å€æ•°ã®ã“ã¨.
+#define MEMCLR16(d, sz)     MEMCLR_TY(d, s, sz, __UINT128)          ///< dã‹ã‚‰ã®szãƒã‚¤ãƒˆã‚’0ã‚¯ãƒªã‚¢. ã‚¢ãƒ‰ãƒ¬ã‚¹,ã‚µã‚¤ã‚ºã¨ã‚‚ã«16ã®å€æ•°ã®ã“ã¨.
 
 //#ifndef ZeroMemory
 //#define ZeroMemory(a,sz)  MEMCLR(a,sz)
 //#endif
 
-/// tyŒ^‚Ìs‚ğ ƒAƒhƒŒƒX d‚©‚ç sz/sizeof(ty)ŒÂ‘‚«‚Ş
+/// tyå‹ã®sã‚’ ã‚¢ãƒ‰ãƒ¬ã‚¹ dã‹ã‚‰ sz/sizeof(ty)å€‹æ›¸ãè¾¼ã‚€.
 #define MEMSET_TY(d, s, sz, ty) do {ty *d___ = (ty *)(d); ty s___  = (ty)(s);   unsigned c___ = (sz)/sizeof(ty); do {*d___++ = s___;} while(--c___);} while(0)
-#define MEMSET(d, s, sz)    MEMSET_TY(d, s, sz, uint8_t)            ///< d ‚Ö’ls‚ğszƒoƒCƒg‘‚«‚Ş.
-#define MEMSET2(d, s, sz)   MEMSET_TY(d, s, sz, uint16_t)           ///< d ‚Ö’ls‚ğsz/2ŒÂ‘‚«‚Ş. ƒAƒhƒŒƒX,ƒTƒCƒY‚Æ‚à‚É2‚Ì”{”‚Ì‚±‚ÆB
-#define MEMSET4(d, s, sz)   MEMSET_TY(d, s, sz, uint32_t)           ///< d ‚Ö’ls‚ğsz/4ŒÂ‘‚«‚Ş. ƒAƒhƒŒƒX,ƒTƒCƒY‚Æ‚à‚É4‚Ì”{”‚Ì‚±‚ÆB
-#define MEMSET8(d, s, sz)   MEMSET_TY(d, s, sz, uint64_t)           ///< d ‚Ö’ls‚ğsz/8ŒÂ‘‚«‚Ş. ƒAƒhƒŒƒX,ƒTƒCƒY‚Æ‚à‚É8‚Ì”{”‚Ì‚±‚ÆB
+#define MEMSET(d, s, sz)    MEMSET_TY(d, s, sz, uint8_t)            ///< d ã¸å€¤sã‚’szãƒã‚¤ãƒˆæ›¸ãè¾¼ã‚€.
+#define MEMSET2(d, s, sz)   MEMSET_TY(d, s, sz, uint16_t)           ///< d ã¸å€¤sã‚’sz/2å€‹æ›¸ãè¾¼ã‚€. ã‚¢ãƒ‰ãƒ¬ã‚¹,ã‚µã‚¤ã‚ºã¨ã‚‚ã«2ã®å€æ•°ã®ã“ã¨.
+#define MEMSET4(d, s, sz)   MEMSET_TY(d, s, sz, uint32_t)           ///< d ã¸å€¤sã‚’sz/4å€‹æ›¸ãè¾¼ã‚€. ã‚¢ãƒ‰ãƒ¬ã‚¹,ã‚µã‚¤ã‚ºã¨ã‚‚ã«4ã®å€æ•°ã®ã“ã¨.
+#define MEMSET8(d, s, sz)   MEMSET_TY(d, s, sz, uint64_t)           ///< d ã¸å€¤sã‚’sz/8å€‹æ›¸ãè¾¼ã‚€. ã‚¢ãƒ‰ãƒ¬ã‚¹,ã‚µã‚¤ã‚ºã¨ã‚‚ã«8ã®å€æ•°ã®ã“ã¨.
 
-/// tyŒ^‚Ìƒ|ƒCƒ“ƒ^‚Æ‚µ‚Äs‚©‚çd‚Ö sz/sizeof(ty)ŒÂƒRƒs[‚·‚é
+/// tyå‹ã®ãƒã‚¤ãƒ³ã‚¿ã¨ã—ã¦sã‹ã‚‰dã¸ sz/sizeof(ty)å€‹ã‚³ãƒ”ãƒ¼ã™ã‚‹.
 #define MEMCPY_TY_TR(d, s, sz, ty, EXPR) do {ty *d___ = (ty *)(d); ty *s___ = (ty *)(s); unsigned c___ = ((unsigned)(sz)/sizeof(ty)); do {(EXPR);} while(--c___);} while(0)
 #define MEMCPY_TY(d, s, sz, ty) MEMCPY_TY_TR(d,s,sz,ty, (*d___++ = *s___++))
-#define MEMCPY(d, s, sz)    MEMCPY_TY(d, s, sz, int8_t)         ///< s ‚©‚ç d ‚Ö szƒoƒCƒgƒRƒs[.
-#define MEMCPY2(d, s, sz)   MEMCPY_TY(d, s, sz, int16_t)            ///< s ‚©‚ç d ‚Ö szƒoƒCƒgƒRƒs[. ƒAƒhƒŒƒX,ƒTƒCƒY‚Æ‚à‚É2‚Ì”{”‚Ì‚±‚ÆB
-#define MEMCPY4(d, s, sz)   MEMCPY_TY(d, s, sz, int32_t)            ///< s ‚©‚ç d ‚Ö szƒoƒCƒgƒRƒs[. ƒAƒhƒŒƒX,ƒTƒCƒY‚Æ‚à‚É4‚Ì”{”‚Ì‚±‚ÆB
-#define MEMCPY8(d, s, sz)   MEMCPY_TY(d, s, sz, int64_t)            ///< s ‚©‚ç d ‚Ö szƒoƒCƒgƒRƒs[. ƒAƒhƒŒƒX,ƒTƒCƒY‚Æ‚à‚É8‚Ì”{”‚Ì‚±‚ÆB
-#define MEMCPY16(d, s, sz)  MEMCPY_TY(d, s, sz, __INT128)       ///< s ‚©‚ç d ‚Ö szƒoƒCƒgƒRƒs[. ƒAƒhƒŒƒX,ƒTƒCƒY‚Æ‚à‚É16‚Ì”{”‚Ì‚±‚ÆB
-///< s ‚©‚ç d ‚Ö szƒoƒCƒgƒRƒs[. ƒAƒhƒŒƒX,ƒTƒCƒY‚Æ‚à‚É32‚Ì”{”‚Ì‚±‚ÆB
+#define MEMCPY(d, s, sz)    MEMCPY_TY(d, s, sz, int8_t)         ///< s ã‹ã‚‰ d ã¸ szãƒã‚¤ãƒˆã‚³ãƒ”ãƒ¼.
+#define MEMCPY2(d, s, sz)   MEMCPY_TY(d, s, sz, int16_t)            ///< s ã‹ã‚‰ d ã¸ szãƒã‚¤ãƒˆã‚³ãƒ”ãƒ¼. ã‚¢ãƒ‰ãƒ¬ã‚¹,ã‚µã‚¤ã‚ºã¨ã‚‚ã«2ã®å€æ•°ã®ã“ã¨.
+#define MEMCPY4(d, s, sz)   MEMCPY_TY(d, s, sz, int32_t)            ///< s ã‹ã‚‰ d ã¸ szãƒã‚¤ãƒˆã‚³ãƒ”ãƒ¼. ã‚¢ãƒ‰ãƒ¬ã‚¹,ã‚µã‚¤ã‚ºã¨ã‚‚ã«4ã®å€æ•°ã®ã“ã¨.
+#define MEMCPY8(d, s, sz)   MEMCPY_TY(d, s, sz, int64_t)            ///< s ã‹ã‚‰ d ã¸ szãƒã‚¤ãƒˆã‚³ãƒ”ãƒ¼. ã‚¢ãƒ‰ãƒ¬ã‚¹,ã‚µã‚¤ã‚ºã¨ã‚‚ã«8ã®å€æ•°ã®ã“ã¨.
+#define MEMCPY16(d, s, sz)  MEMCPY_TY(d, s, sz, __INT128)       ///< s ã‹ã‚‰ d ã¸ szãƒã‚¤ãƒˆã‚³ãƒ”ãƒ¼. ã‚¢ãƒ‰ãƒ¬ã‚¹,ã‚µã‚¤ã‚ºã¨ã‚‚ã«16ã®å€æ•°ã®ã“ã¨.
+///< s ã‹ã‚‰ d ã¸ szãƒã‚¤ãƒˆã‚³ãƒ”ãƒ¼. ã‚¢ãƒ‰ãƒ¬ã‚¹,ã‚µã‚¤ã‚ºã¨ã‚‚ã«32ã®å€æ•°ã®ã“ã¨.
 #define MEMCPY32(d, s, sz)  MEMCPY_TY_TR(d, s, sz, __INT128, (*d___++ = *s___++, *d___++ = *s___++))
-///< s ‚©‚ç d ‚Ö szƒoƒCƒgƒRƒs[. ƒAƒhƒŒƒX,ƒTƒCƒY‚Æ‚à‚É64‚Ì”{”‚Ì‚±‚ÆB
+///< s ã‹ã‚‰ d ã¸ szãƒã‚¤ãƒˆã‚³ãƒ”ãƒ¼. ã‚¢ãƒ‰ãƒ¬ã‚¹,ã‚µã‚¤ã‚ºã¨ã‚‚ã«64ã®å€æ•°ã®ã“ã¨.
 #define MEMCPY64(d, s, sz)  MEMCPY_TY_TR(d, s, sz, __INT128, (*d___++ = *s___++, *d___++ = *s___++, *d___++ = *s___++, *d___++ = *s___++))
 
-/// tyŒ^‚Ìƒ|ƒCƒ“ƒ^‚Æ‚µ‚Äs‚©‚çd‚ÖŒã‚ë‚©‚ç sz/sizeof(ty)ŒÂƒRƒs[‚·‚é
+/// tyå‹ã®ãƒã‚¤ãƒ³ã‚¿ã¨ã—ã¦sã‹ã‚‰dã¸å¾Œã‚ã‹ã‚‰ sz/sizeof(ty)å€‹ã‚³ãƒ”ãƒ¼ã™ã‚‹.
 #define MEMRCPY_TY(d,s, sz, ty) do {ty *d___ = (ty *)(d); ty *s___ = (ty *)(s); unsigned c___ = ((unsigned)(sz)/sizeof(ty)); while (c___-- > 0) {d___[c___] = s___[c___]; } } while (0)
 #define MEMRCPY(d, s, sz)   MEMRCPY_TY(d, s, sz, int8_t)
 #define MEMRCPY2(d, s, sz)  MEMRCPY_TY(d, s, sz, int16_t)
@@ -144,88 +144,88 @@
 
 
 //-------------------------------------------------------------
-// ‰æ‘œˆ—Œü‚¯‚ÌAƒ}ƒNƒ
+// ç”»åƒå‡¦ç†å‘ã‘ã®ã€ãƒã‚¯ãƒ­.
 //-------------------------------------------------------------
-//  F’l argb ‚Í win‚Ìbmp/dib‚ğŠî€‚É8ƒrƒbƒg‚Ì a,r,g,b‡
-//  ¦ bpp   1ƒsƒNƒZƒ‹‚ ‚½‚è‚Ìƒrƒbƒg”
+//  è‰²å€¤ argb ã¯ winã®bmp/dibã‚’åŸºæº–ã«8ãƒ“ãƒƒãƒˆã® a,r,g,bé †.
+//  â€» bpp   1ãƒ”ã‚¯ã‚»ãƒ«ã‚ãŸã‚Šã®ãƒ“ãƒƒãƒˆæ•°.
 
-/// bpp ‚Ì ƒoƒCƒg”‚ÉŒvZ
+/// bpp ã® ãƒã‚¤ãƒˆæ•°ã«è¨ˆç®—.
 #define BPP2BYT(bpp)        (((bpp) > 24) ? 4 : ((bpp) > 16) ? 3 : ((bpp) > 8) ? 2 : 1)
 
-/// ‰¡•‚Æbpp‚æ‚èƒoƒCƒg”‚ğŒvZ
+/// æ¨ªå¹…ã¨bppã‚ˆã‚Šãƒã‚¤ãƒˆæ•°ã‚’è¨ˆç®—.
 #define WID2BYT(w,bpp)      (((w) * "\1\2\4\4\10\10\10\10\20\20\20\20\20\20\20\20\30\30\30\30\30\30\30\30\40\40\40\40\40\40\40\40"[(bpp)-1] + 7) >> 3)
 
-/// ‰¡•‚Æbpp‚æ‚èƒoƒCƒg”‚ğŒvZ.‚±‚Ì‚Æ‚«bmp“™Œü‚¯‚É4‚Ì”{”‚É‚·‚é
+/// æ¨ªå¹…ã¨bppã‚ˆã‚Šãƒã‚¤ãƒˆæ•°ã‚’è¨ˆç®—.ã“ã®ã¨ãbmpç­‰å‘ã‘ã«4ã®å€æ•°ã«ã™ã‚‹.
 #define WID2BYT4(w,bpp)     ((WID2BYT(w,bpp) + 3) & ~3)
 
-/// ƒoƒCƒg”‚Æbpp ‚æ‚è‰¡•ƒsƒNƒZƒ‹”‚ğ‹‚ß‚é
+/// ãƒã‚¤ãƒˆæ•°ã¨bpp ã‚ˆã‚Šæ¨ªå¹…ãƒ”ã‚¯ã‚»ãƒ«æ•°ã‚’æ±‚ã‚ã‚‹.
 #define BYT2WID(w,bpp)      (((bpp) > 24) ? (w)>>2 : ((bpp) > 16) ? (w)/3 : ((bpp) > 8) ? (w)>>1 : ((bpp) > 4) ? (w) : ((bpp) > 2) ? ((w)<<1) : ((bpp) > 1) ? ((w)<<2) : ((w)<<3))
 
-/// 8bit’l‚Ìa,r,g,b‚ğŒq‚°‚Ä 32bit ‚ÌF’l‚É‚·‚é
+/// 8bitå€¤ã®a,r,g,bã‚’ç¹‹ã’ã¦ 32bit ã®è‰²å€¤ã«ã™ã‚‹.
 #define ARGB(a,r,g,b)       ((((uint8_t)(a))<<24)|(((uint8_t)(r))<<16)|(((uint8_t)(g))<<8)|((uint8_t)(b)))
 
-/// argb’l’†‚Ì blue‚Ì’l‚ğæ“¾
+/// argbå€¤ä¸­ã® blueã®å€¤ã‚’å–å¾—.
 #define ARGB_B(argb)        ((uint8_t)(argb))
 
-/// argb’l’†‚Ì green‚Ì’l‚ğæ“¾
+/// argbå€¤ä¸­ã® greenã®å€¤ã‚’å–å¾—.
 #define ARGB_G(argb)        ((uint8_t)((argb)>>8))
 
-/// argb’l’†‚Ì green‚Ì’l‚ğæ“¾
+/// argbå€¤ä¸­ã® greenã®å€¤ã‚’å–å¾—.
 #define ARGB_R(argb)        ((uint8_t)((argb)>>16))
 
-/// argb’l’†‚Ì alpha‚Ì’l‚ğæ“¾
+/// argbå€¤ä¸­ã® alphaã®å€¤ã‚’å–å¾—.
 #define ARGB_A(argb)        (((uint32_t)(argb))>>24)
 
-/// argb’l‚ÌŠe’l“¯m‚ğŠ|‚¯‚Ä/256‚ÅŠ„‚é
+/// argbå€¤ã®å„å€¤åŒå£«ã‚’æ›ã‘ã¦/256ã§å‰²ã‚‹.
 #define ARGBxARGB(x,y)      BBBB((GHHB(x)*GHHB(y))>>8, GHLB(x)*(GHLB(y))>>8, GLHB(x)*(GLHB(y))>>8, GLLB(x)*(GLLB(y))>>8)
 
-/// argb’l‚Ì•À‚Ñ‚ğabgr •À‚Ñ‚É•ÏŠ·‚·‚é
+/// argbå€¤ã®ä¸¦ã³ã‚’abgr ä¸¦ã³ã«å¤‰æ›ã™ã‚‹.
 #define ARGBtoABGR(c)       (((c) & 0xFF00FF00)|((uint8_t)((c)>>16))|(((uint8_t)(c))<<16))
 
-/// a8r8g8b8‚¾‚Á‚½‚à‚Ì‚ğ a4r4g4b4 ‚É•ÏŠ·
+/// a8r8g8b8ã ã£ãŸã‚‚ã®ã‚’ a4r4g4b4 ã«å¤‰æ›.
 #define ARGB_8888to4444(c)  ((((c)>>16)&0xF000)|(((c)>>12)&0x0F00)|(((c)>>8)&0xF0)|((uint8_t)(c)>>4))
 
-/// a4r4g4b4‚¾‚Á‚½‚à‚Ì‚ğ a8r8g8b8 ‚É•ÏŠ·
+/// a4r4g4b4ã ã£ãŸã‚‚ã®ã‚’ a8r8g8b8 ã«å¤‰æ›.
 #define ARGB_4444to8888(c)  ((((c)&0xF000)<<16)|(((c)&0x0F00)<<12)|(((c)&0xF0)<<8)|((uint8_t)((c)<<4)))
 
-/// 8ƒrƒbƒg’l‚Ìa,r,g,b‚ÌŠeãˆÊ4ƒrƒbƒg‚ğŒq‚°‚Ä16ƒrƒbƒg®”‚É•ÏŠ·
+/// 8ãƒ“ãƒƒãƒˆå€¤ã®a,r,g,bã®å„ä¸Šä½4ãƒ“ãƒƒãƒˆã‚’ç¹‹ã’ã¦16ãƒ“ãƒƒãƒˆæ•´æ•°ã«å¤‰æ›.
 #define ARGB4444(a,r,g,b)   (((((a)<<8) | (g)) & 0xF0F0) | (((((r)<<8)|(b)) & 0xF0F0) >> 4))
     //#define ARGB4444(a,r,g,b) ((((a)&0xF0)<<8) | (((r)&0xF0)<<4) | ((g)&0xF0) | (((b)>>4)&0xF))
 
-/// a8r8g8b8 ‚ğ a1r5g5b5 ‚Ì16ƒrƒbƒg’l‚É•ÏŠ·
+/// a8r8g8b8 ã‚’ a1r5g5b5 ã®16ãƒ“ãƒƒãƒˆå€¤ã«å¤‰æ›.
 #define ARGB_8888to1555(c)  ((((c)>>16)&0x8000)|(((c)>>(16-7))&(0xF8<<7))|(((c)>>(8-2))&(0xF8<<2))|((uint8_t)((c)>>3)))
 
-/// a1r5g5b5 ‚ğ a8r8g8b8 ‚É•ÏŠ·
+/// a1r5g5b5 ã‚’ a8r8g8b8 ã«å¤‰æ›.
 #define ARGB_1555to8888(c)  ((((c)&0x8000)<<16)|(((c)&(0xF8<<7))<<(16-7))|(((c)&(0xF8<<2))<<(8-2))|(((uint8_t)(c)<<3)))
 
-/// 8ƒrƒbƒg’l‚Ìa,r,g,b ‚ÌãˆÊ 1,5,5,5ƒrƒbƒg‚ğæ“¾‚µ‚Ä 16ƒrƒbƒg’l‚É•ÏŠ·
+/// 8ãƒ“ãƒƒãƒˆå€¤ã®a,r,g,b ã®ä¸Šä½ 1,5,5,5ãƒ“ãƒƒãƒˆã‚’å–å¾—ã—ã¦ 16ãƒ“ãƒƒãƒˆå€¤ã«å¤‰æ›.
 #define ARGB1555(a,r,g,b)   (((a>>7)<<15)|(((r)&0xF8)<<7)|(((g)&0xF8)<<2)|(((b)>>3)&0x1f))
 
-/// 8ƒrƒbƒg’l‚Ìr,g,b ‚ÌãˆÊ r5,g6,b5ƒrƒbƒg‚ğæ“¾‚µ‚Ä 16ƒrƒbƒg’l‚É•ÏŠ·
+/// 8ãƒ“ãƒƒãƒˆå€¤ã®r,g,b ã®ä¸Šä½ r5,g6,b5ãƒ“ãƒƒãƒˆã‚’å–å¾—ã—ã¦ 16ãƒ“ãƒƒãƒˆå€¤ã«å¤‰æ›.
 #define RGB565(r,g,b)       ((((r)&0xF8)<<8)|(((g)&0xFC)<<3)|(((b)>>3)&0x1f))
 
 //#define COLORPACK(r,g,b,a)    ((((uint32_t)((a) * 255)) << 24) | (((uint32_t)((r) * 255)) << 16) | (((uint32_t)((g) * 255)) << 8) | (uint32_t)((b) * 255))
 
-#define ARGB_FA(argb)       (((uint8_t)((uint32_t)(argb)>>24))* (1/255.f))  ///< argb’l‚æ‚èAalpha‚ğ 0`1.0F‚ÌFloat’l‚Æ‚µ‚Äæ“¾
-#define ARGB_FR(argb)       (((uint8_t)((uint32_t)(argb)>>16))* (1/255.f))  ///< argb’l‚æ‚èAred  ‚ğ 0`1.0F‚ÌFloat’l‚Æ‚µ‚Äæ“¾
-#define ARGB_FG(argb)       (((uint8_t)((uint32_t)(argb)>>8)) * (1/255.f))  ///< argb’l‚æ‚èAgreen‚ğ 0`1.0F‚ÌFloat’l‚Æ‚µ‚Äæ“¾
-#define ARGB_FB(argb)       (((uint8_t)(argb))              * (1/255.f))    ///< argb’l‚æ‚èAblue ‚ğ 0`1.0F‚ÌFloat’l‚Æ‚µ‚Äæ“¾
+#define ARGB_FA(argb)       (((uint8_t)((uint32_t)(argb)>>24))* (1/255.f))  ///< argbå€¤ã‚ˆã‚Šalphaã‚’ 0ï½1.0Fã®Floatå€¤ã¨ã—ã¦å–å¾—.
+#define ARGB_FR(argb)       (((uint8_t)((uint32_t)(argb)>>16))* (1/255.f))  ///< argbå€¤ã‚ˆã‚Šred  ã‚’ 0ï½1.0Fã®Floatå€¤ã¨ã—ã¦å–å¾—.
+#define ARGB_FG(argb)       (((uint8_t)((uint32_t)(argb)>>8)) * (1/255.f))  ///< argbå€¤ã‚ˆã‚Šgreenã‚’ 0ï½1.0Fã®Floatå€¤ã¨ã—ã¦å–å¾—.
+#define ARGB_FB(argb)       (((uint8_t)(argb))              * (1/255.f))    ///< argbå€¤ã‚ˆã‚Šblue ã‚’ 0ï½1.0Fã®Floatå€¤ã¨ã—ã¦å–å¾—.
 
-#define ARGB_ALP(a)         ARGB((a),0xFF,0xFF,0xFF)                    ///< ƒ¿‚Ì‚İŠ|‚¯‡‚í‚¹‚é’è”‚ğ¶¬
-#define ARGB_DFLT           ARGB(0xFF,0xFF,0xFF,0xFF)                   ///< F‚ğŠ|‚¯‡‚í‚¹‚é‚Æ‚«‚ÌAƒfƒtƒHƒ‹ƒg’l
-#define ARGB_WHITE          ARGB(0xFF,0xFF,0xFF,0xFF)                   ///< ”’‚ÌARGB’l
-#define ARGB_BLACK          ARGB(0xFF,0x00,0x00,0x00)                   ///< •‚ÌARGB’l
+#define ARGB_ALP(a)         ARGB((a),0xFF,0xFF,0xFF)                    ///< Î±ã®ã¿æ›ã‘åˆã‚ã›ã‚‹å®šæ•°ã‚’ç”Ÿæˆ.
+#define ARGB_DFLT           ARGB(0xFF,0xFF,0xFF,0xFF)                   ///< è‰²ã‚’æ›ã‘åˆã‚ã›ã‚‹ã¨ãã®ã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤.
+#define ARGB_WHITE          ARGB(0xFF,0xFF,0xFF,0xFF)                   ///< ç™½ã®ARGBå€¤.
+#define ARGB_BLACK          ARGB(0xFF,0x00,0x00,0x00)                   ///< é»’ã®ARGBå€¤.
 
-/// PS2‚ÌABGR’l‚ğ(win‚Ì)’Êí‚ÌARGB’l‚É•ÏŠ·
+/// PS2ã®ABGRå€¤ã‚’(winã®)é€šå¸¸ã®ARGBå€¤ã«å¤‰æ›.
 #define ARGB_FROM_PS2COL(c) (((((uint32_t)(c)>>24)*255>>7)<<24)|((c)&0xFF00)|((uint8_t)((c)>>16))|(((uint8_t)(c))<<16))
 
-/// (win‚Ì)’Êí‚ÌARGB’l‚ğPS2‚ÌABGR‚É•ÏŠ·
+/// (winã®)é€šå¸¸ã®ARGBå€¤ã‚’PS2ã®ABGRã«å¤‰æ›.
 #define ARGB_TO_PS2COL(c)   (((((uint32_t)(c)>>24)*128/255)<<24)|((c)&0xFF00)|((uint8_t)((c)>>16))|(((uint8_t)(c))<<16))
 
-/// ARGB•À‚Ñ‚ğRGBA•À‚Ñ‚É•ÏŠ·
+/// ARGBä¸¦ã³ã‚’RGBAä¸¦ã³ã«å¤‰æ›.
 #define ARGB_TO_RGBA(c)     ((uint8_t)((c) >> 24)|(uint32_t)((c)<<8))
 
-/// RGBA•À‚Ñ‚ğARGB•À‚Ñ‚É•ÏŠ·
+/// RGBAä¸¦ã³ã‚’ARGBä¸¦ã³ã«å¤‰æ›.
 #define ARGB_FROM_RGBA(c)   (((uint8_t)(c) << 24)|((uint32_t)(c)>>8))
 
 

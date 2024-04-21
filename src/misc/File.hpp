@@ -1,34 +1,34 @@
 /**
   @file     File.h
-  *brief    api‚Ìƒtƒ@ƒCƒ‹ŠÖŒW‚ğƒ‰ƒbƒv‚µ‚½ƒNƒ‰ƒX‚âŠÖ”.
+  *brief    apiã®ãƒ•ã‚¡ã‚¤ãƒ«é–¢ä¿‚ã‚’ãƒ©ãƒƒãƒ—ã—ãŸã‚¯ãƒ©ã‚¹ã‚„é–¢æ•°.
   *author   Masashi Kitamura.
   *date     2004,2007
   @note
 
-  - C•W€‚ÌFILEƒx[ƒXAio.h/unistd.hƒx[ƒXAwin-APIƒx[ƒXA‚R‚Â‚ÌÀ‘•‚ª‚ ‚é.
-  - size64()‚âseek64()“™64ƒrƒbƒg’l”Å‚Í win-API”ÅˆÈŠO‚Í Œ»ó32ƒrƒbƒg’l”Å.
-  - ƒwƒbƒ_ƒtƒ@ƒCƒ‹‚Ì‚İ‚É‚·‚é‚½‚ß‚ÉA–³—‚Étemplate‰»‚µ‚ÄÀ‘•‚µ‚Ä‚¢‚é‚à‚Ì‚ª‚ ‚é.
-  - Šî–{“I‚É vc ‚Å‚Ìƒ`ƒFƒbƒN‚Ì‚İ. ‚½‚Ü‚Éwin‚Ì‘¼‚ÌƒRƒ“ƒpƒCƒ‰‚Å‚·‚é‚ª,
-    mingw‚Í‚æ‚¢‚¯‚ê‚ÇAbcc,dmc,watcom‚Í‚¢‚Ü‚¢‚¿ˆÀ’è‚µ‚Ä‚È‚¢–Í—l.
-    winˆÈŠO‚ÍA‹C‚ªŒü‚¯‚Î.
+  - Cæ¨™æº–ã®FILEãƒ™ãƒ¼ã‚¹ã€io.h/unistd.hãƒ™ãƒ¼ã‚¹ã€win-APIãƒ™ãƒ¼ã‚¹ã€ï¼“ã¤ã®å®Ÿè£…ãŒã‚ã‚‹.
+  - size64()ã‚„seek64()ç­‰64ãƒ“ãƒƒãƒˆå€¤ç‰ˆã¯ win-APIç‰ˆä»¥å¤–ã¯ ç¾çŠ¶32ãƒ“ãƒƒãƒˆå€¤ç‰ˆ.
+  - ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿ã«ã™ã‚‹ãŸã‚ã«ã€ç„¡ç†ã«templateåŒ–ã—ã¦å®Ÿè£…ã—ã¦ã„ã‚‹ã‚‚ã®ãŒã‚ã‚‹.
+  - åŸºæœ¬çš„ã« vc ã§ã®ãƒã‚§ãƒƒã‚¯ã®ã¿. ãŸã¾ã«winã®ä»–ã®ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã§ã™ã‚‹ãŒ,
+    mingwã¯ã‚ˆã„ã‘ã‚Œã©ã€bcc,dmc,watcomã¯ã„ã¾ã„ã¡å®‰å®šã—ã¦ãªã„æ¨¡æ§˜.
+    winä»¥å¤–ã¯ã€æ°—ãŒå‘ã‘ã°.
  */
 /*
-    // ’è‹`‚³‚ê‚Ä‚¢‚éƒNƒ‰ƒX•ŠÖ”‚Ìƒvƒƒgƒ^ƒCƒv. (À’è‹`‚Íinline‚ÅŒ©‚Ã‚ç‚¢‚Ì‚Å”²ˆ)
+    // å®šç¾©ã•ã‚Œã¦ã„ã‚‹ã‚¯ãƒ©ã‚¹ï¼†é–¢æ•°ã®ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—. (å®Ÿå®šç¾©ã¯inlineã§è¦‹ã¥ã‚‰ã„ã®ã§æŠœç²‹)
     class File {
     public:
-        enum RW_T { R,W,RP,WP,} // "rb", "wb", "rb+", "wb+",‚É‘Î‰.‚±‚Ì’l‚ÍÀÛ‚É‚Í0,1,2,3‚Å‚È‚­•Ê‚Ì’l.
+        enum RW_T { R,W,RP,WP,} // "rb", "wb", "rb+", "wb+",ã«å¯¾å¿œ.ã“ã®å€¤ã¯å®Ÿéš›ã«ã¯0,1,2,3ã§ãªãåˆ¥ã®å€¤.
         enum      { seek_set, seek_cur, seek_end };
         File();
         File(const char* fname, RW_T rw);
         ~File();
         bool        is_open() const;
         bool        open  (const char* fname, RW_T rw);
-        bool        open_e(const char* fname, RW_T rw);     // ƒGƒ‰[‚ª‚ ‚Á‚½‚çƒƒbƒZ[ƒWI—¹.
+        bool        open_e(const char* fname, RW_T rw);     // ã‚¨ãƒ©ãƒ¼ãŒã‚ã£ãŸã‚‰ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸çµ‚äº†.
         void        close();
         size_t      read(void *buf, size_t size);
-        size_t      read_e(void *buf, size_t size);         // ƒGƒ‰[‚ª‚ ‚Á‚½‚çƒƒbƒZ[ƒWI—¹.
+        size_t      read_e(void *buf, size_t size);         // ã‚¨ãƒ©ãƒ¼ãŒã‚ã£ãŸã‚‰ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸çµ‚äº†.
         size_t      write(const void *buf, size_t size);
-        size_t      write_e(const void *buf, size_t size);  // ƒGƒ‰[‚ª‚ ‚Á‚½‚çƒƒbƒZ[ƒWI—¹.
+        size_t      write_e(const void *buf, size_t size);  // ã‚¨ãƒ©ãƒ¼ãŒã‚ã£ãŸã‚‰ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸çµ‚äº†.
         bool        flush();
 
         size_t      seek(size_t ofs, int seekMode);
@@ -39,7 +39,7 @@
         uint64_t    size64();
 
         bool    getTime(uint64_t* pLastWrt, uint64_t* pLastAcs=0, uint64_t* pCreat=0);
-        bool    setTime(uint64_t* pLastWrt, uint64_t* pLastAcs=0, uint64_t* pCreat=0); // winŒn‚Ì‚İ.
+        bool    setTime(uint64_t* pLastWrt, uint64_t* pLastAcs=0, uint64_t* pCreat=0); // winç³»ã®ã¿.
 
         const char* fname() const;
     };
@@ -48,8 +48,8 @@
     uint64_t file_size64(const char* fname);
     bool     file_getTime(const char* fname, uint64_t* pLastWrt, uint64_t* pLastAcs=0, uint64_t* pCreat=0);
     bool     file_setTime(const char* fname, uint64_t* pLastWrt, uint64_t* pLastAcs=0, uint64_t* pCreat=0);
-    int      file_stat(const char* fname, file_stat_t* st);             // 32ƒrƒbƒg”Å‚Ì‚±‚Æ‚ª‘½‚¢.
-    int      file_utime(const char* fname, file_utimbuf_t* utimbuf);    // 32ƒrƒbƒg”Å‚Ì‚±‚Æ‚ª‘½‚¢.
+    int      file_stat(const char* fname, file_stat_t* st);             // 32ãƒ“ãƒƒãƒˆç‰ˆã®ã“ã¨ãŒå¤šã„.
+    int      file_utime(const char* fname, file_utimbuf_t* utimbuf);    // 32ãƒ“ãƒƒãƒˆç‰ˆã®ã“ã¨ãŒå¤šã„.
 
     bool     file_moveName(const char* oldName, const char* newName);
     bool     file_delete(const char* fname);
@@ -57,9 +57,9 @@
     bool     file_deleteDir(const char* fname);
     bool     file_setCurrentDir(const char* nameBuf);
     bool     file_getCurrentDir(char* nameBuf, size_t nameBufSize);
-    bool     file_getSystemDir(char* nameBuf, size_t nameBufSize);  // winŒv‚Ì‚İ.
-    bool     file_getWindowsDir(char* nameBuf, size_t nameBufSize); // winŒv‚Ì‚İ.
-    struct File_LocalTime;  // ŠÔ•ÏŠ·—p.
+    bool     file_getSystemDir(char* nameBuf, size_t nameBufSize);  // winè¨ˆã®ã¿.
+    bool     file_getWindowsDir(char* nameBuf, size_t nameBufSize); // winè¨ˆã®ã¿.
+    struct File_LocalTime;  // æ™‚é–“å¤‰æ›ç”¨.
 
     unsigned file_save(const char* name, const void* buf, unsigned byteSize);
     unsigned file_load(const char* name, VECTOR& buf);
@@ -76,7 +76,7 @@
 
 
 // ========================================================================
-// Šî–{“I‚Èinclude.
+// åŸºæœ¬çš„ãªinclude.
 #include <cstddef>
 #include <cassert>
 #include <cstdlib>
@@ -93,7 +93,7 @@
 #endif
 
 
-// open_e, read_e, write_e‚Å—áŠO‚ğ“Š‚°‚éFileEH‚ğ—LŒø‚É‚µ‚½‚¢ê‡.
+// open_e, read_e, write_eã§ä¾‹å¤–ã‚’æŠ•ã’ã‚‹FileEHã‚’æœ‰åŠ¹ã«ã—ãŸã„å ´åˆ.
 // #define MISC_FILE_USE_EH
 #if defined MISC_FILE_USE_EH
 // #include <exception>
@@ -103,18 +103,18 @@
 
 
 // ------------------------------------------------------------------------
-// ƒRƒ“ƒpƒCƒ‰•Ê‚Ì’Òåë‚ ‚í‚¹—p
-// file_size64_t ‚Í vc ‚ªuint64_t‚ğ’è‹`‚µ‚Ä‚­‚ê‚Ä‚½‚ç•s—v‚¾‚Á‚½‚Ì‚¾‚¯‚Ç...
+// ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©åˆ¥ã®è¾»è¤„ã‚ã‚ã›ç”¨.
+// file_size64_t ã¯ vc ãŒuint64_tã‚’å®šç¾©ã—ã¦ãã‚Œã¦ãŸã‚‰ä¸è¦ã ã£ãŸã®ã ã‘ã©...
 
 #if defined(_MSC_VER) || (defined(__MINGW32__) && __MSVCRT_VERSION__ >= 0x0601)
  #ifndef MISC_FILE_KIND
   #if defined _WINDOWS
-   #define MISC_FILE_KIND       2   // Win-API‚È‚çWinAPI”Å.
+   #define MISC_FILE_KIND       2   // Win-APIãªã‚‰WinAPIç‰ˆ.
   #else
-   #define MISC_FILE_KIND       0   // ƒRƒ“ƒ\[ƒ‹‚È‚ç FILE ”Å.
+   #define MISC_FILE_KIND       0   // ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ãªã‚‰ FILE ç‰ˆ.
   #endif
  #endif
- #define MISC_FILE_WIN_CC           // Win—p‚ÌƒRƒ“ƒpƒCƒ‰‚Ì(VCŒİŠ·‚ª‚‚ß)
+ #define MISC_FILE_WIN_CC           // Winç”¨ã®ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã®æ™‚(VCäº’æ›ãŒé«˜ã‚)
  #define MISC_FILE_GMTIME64(x)      _gmtime64((const __time64_t *)(x))
  #define MISC_FILE_LOCALTIME64(x)   _localtime64((const __time64_t *)(x))
  #define MISC_FILE_MKTIME64         _mktime64
@@ -133,14 +133,14 @@
  }
 
 
-#else   // (64bit”Å‚Ìstat,utime‚ª‚È‚¢ê‡) -----------
+#else   // (64bitç‰ˆã®stat,utimeãŒãªã„å ´åˆ) -----------
  #ifndef MISC_FILE_KIND
   #if defined _WINDOWS || defined(__DMC__) || defined(__BORLANDC__) || defined(__WATCOM_C__) || defined(__MINGW32__)
-   #define MISC_FILE_KIND       2   // WinAPI”Å.
+   #define MISC_FILE_KIND       2   // WinAPIç‰ˆ.
   #elif defined(__CYGWIN__)
-   #define MISC_FILE_KIND       1   // cygwin‚È‚çunix‚à‚Ç‚«‚Æ‚µ‚Ä.
+   #define MISC_FILE_KIND       1   // cygwinãªã‚‰unixã‚‚ã©ãã¨ã—ã¦.
   #else
-   #define MISC_FILE_KIND       0   // ƒRƒ“ƒ\[ƒ‹‚È‚ç FILE ”Å.
+   #define MISC_FILE_KIND       0   // ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ãªã‚‰ FILE ç‰ˆ.
   #endif
  #endif
 
@@ -166,7 +166,7 @@
     #define MISC_FILE_WIN_CC
     #define MISC_FILE_STRDUP    strdup
  #elif 0    // defined(__WATCOM_C__)            // -------------
-    // FX•s“s‡‚ ‚é‚æ‚¤‚È‚Ì‚ÅA‚ ‚«‚ç‚ß‚é.
+    // è‰²ã€…ä¸éƒ½åˆã‚ã‚‹ã‚ˆã†ãªã®ã§ã€ã‚ãã‚‰ã‚ã‚‹.
     #include <windows.h>
     #include <stdint.h>
     #define MISC_FILE_WIN_CC
@@ -192,26 +192,26 @@
 
 
 // ------------------------------------------------------------------------
-// À‘•‚Ìí—Ş•Ê‚Éinclude
+// å®Ÿè£…ã®ç¨®é¡åˆ¥ã«include
 
-#if   MISC_FILE_KIND == 2   // Win-API ‚ğg‚¤.
+#if   MISC_FILE_KIND == 2   // Win-API ã‚’ä½¿ã†æ™‚.
 
  #include <windows.h>
  #include <io.h>
 
-#else   // io.h,unistd.h”Å  stdio.h ”Å
+#else   // io.h,unistd.hç‰ˆ  stdio.h ç‰ˆ.
 
  #include <cstdio>
- #include <stdio.h>         //  ƒRƒ“ƒpƒCƒ‰‚É‚æ‚Á‚Ästd‚É“ü‚Á‚½‚è“ü‚ç‚È‚©‚Á‚½‚è‚È‚Ì‚ÅA‚ ‚«‚ç‚ß...
+ #include <stdio.h>         //  ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã«ã‚ˆã£ã¦stdã«å…¥ã£ãŸã‚Šå…¥ã‚‰ãªã‹ã£ãŸã‚Šãªã®ã§ã€ã‚ãã‚‰ã‚...
  #include <cerrno>
- #include <errno.h>         // errno‚Í•Ï”‚Å‚È‚­ƒ}ƒNƒ‚Ìê‡‚à‚ ‚è.
+ #include <errno.h>         // errnoã¯å¤‰æ•°ã§ãªããƒã‚¯ãƒ­ã®å ´åˆã‚‚ã‚ã‚Š.
  #include <ctime>
 
- #ifdef MISC_FILE_WIN_CC    //  dos,winŒnƒRƒ“ƒpƒCƒ‰‚Ì‚Æ‚«.
+ #ifdef MISC_FILE_WIN_CC    //  dos,winç³»ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã®ã¨ã.
   #include <io.h>
   #include <fcntl.h>
   #include <direct.h>
- #else                      //  linux(unixŒn)‚Ì.
+ #else                      //  linux(unixç³»)ã®æ™‚.
   #include <sys/unistd.h>
   #include <sys/fcntl.h>
  #endif
@@ -233,18 +233,18 @@ enum { FILE_MAX_PATH        = _MAX_PATH };
 enum { FILE_MAX_PATH        =  NAME_MAX > PATH_MAX ?  NAME_MAX  : PATH_MAX };
 #endif
 
-class File_NouseFname;      // ƒtƒ@ƒCƒ‹–¼‚ğ•Û‚µ‚È‚¢”Å.
-class File_UseFname;        // ƒtƒ@ƒCƒ‹–¼‚ğ•Û‚·‚é”Å.
+class File_NouseFname;      // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ä¿æŒã—ãªã„ç‰ˆ.
+class File_UseFname;        // ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ä¿æŒã™ã‚‹ç‰ˆ.
 
 template<class DMY>
-class File_ChkErrMsgExit;   // open_e, read_e, write_e‚ÅƒGƒ‰[‚ª‚ ‚Á‚½,ƒƒbƒZ[ƒW‚ğ•\¦‚µ‚ÄI—¹.
+class File_ChkErrMsgExit;   // open_e, read_e, write_eã§ã‚¨ãƒ©ãƒ¼ãŒã‚ã£ãŸæ™‚,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã—ã¦çµ‚äº†.
 
 
 
 
 /* ======================================================================== */
 /*                                                                          */
-/* (ƒoƒCƒiƒŠ)ƒtƒ@ƒCƒ‹ƒAƒNƒZƒX‚Ì‚½‚ß‚Ìƒtƒ@ƒCƒ‹ƒnƒ“ƒhƒ‹ŠÇ—ƒNƒ‰ƒX             */
+/* (ãƒã‚¤ãƒŠãƒª)ãƒ•ã‚¡ã‚¤ãƒ«ã‚¢ã‚¯ã‚»ã‚¹ã®ãŸã‚ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒ³ãƒ‰ãƒ«ç®¡ç†ã‚¯ãƒ©ã‚¹             */
 /*                                                                          */
 /* ======================================================================== */
 
@@ -260,14 +260,14 @@ class FileT : public NAME, public ERR {
   #endif
 
 public:
-    // ƒI[ƒvƒ“ƒ‚[ƒh. fopen‚Ì rb,rb+,wb,wb+‘Š“–‚Ì‚İ.
+    // ã‚ªãƒ¼ãƒ—ãƒ³ãƒ¢ãƒ¼ãƒ‰. fopenã® rb,rb+,wb,wb+ç›¸å½“ã®ã¿.
     enum RW_T { R=0, W=1, RP=2, WP=3 };
 
     FileT();
     FileT(const char* fname, RW_T rw);
     ~FileT() { this->close(); }
 
-    /// ƒI[ƒvƒ“‚µ‚Ä‚¢‚é‚©”Û‚©.
+    /// ã‚ªãƒ¼ãƒ—ãƒ³ã—ã¦ã„ã‚‹ã‹å¦ã‹.
     bool    is_open() const;
 
     bool open  (const char* fname, RW_T rw);
@@ -277,48 +277,48 @@ public:
 
     void close();
 
-    /// “Ç‚İ‚İ.
+    /// èª­ã¿è¾¼ã¿.
     std::size_t read(void *buf, std::size_t size);
     std::size_t read_e(void *buf, std::size_t size) {
         return ERR::checkRead( this->read(buf, size), size, NAME::fname() );
     }
 
-    /// ‘‚«‚İ.
+    /// æ›¸ãè¾¼ã¿.
     std::size_t write(const void *buf, std::size_t size);
     std::size_t write_e(const void *buf, std::size_t size) {
         return ERR::checkWrite( this->write(buf, size), size, NAME::fname() );
     }
 
-    /// ƒoƒbƒtƒ@ƒŠƒ“ƒO“à—e‚ğƒtƒ‰ƒbƒVƒ….
+    /// ãƒãƒƒãƒ•ã‚¡ãƒªãƒ³ã‚°å†…å®¹ã‚’ãƒ•ãƒ©ãƒƒã‚·ãƒ¥.
     bool        flush();
 
     enum { seek_set, seek_cur, seek_end };
 
-    /// w’è‚ÌˆÊ’u‚Öƒtƒ@ƒCƒ‹ƒ|ƒCƒ“ƒ^‚ğˆÚ“®.
+    /// æŒ‡å®šã®ä½ç½®ã¸ãƒ•ã‚¡ã‚¤ãƒ«ãƒã‚¤ãƒ³ã‚¿ã‚’ç§»å‹•.
     std::size_t     seek(std::size_t ofs, int seekMode);
     file_size64_t   seek64(file_size64_t ofs, int seekMode);
 
-    /// Œ»İˆÊ’u‚ğ•Ô‚·.
+    /// ç¾åœ¨ä½ç½®ã‚’è¿”ã™.
     std::size_t     tell();
     file_size64_t   tell64();
 
-    /// ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ÌƒoƒCƒg”‚ğ•Ô‚·. Às‚µ‚½Œã‚ÍseekˆÊ’u‚Í•s’è‚Æ‚·‚é.
+    /// ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã®ãƒã‚¤ãƒˆæ•°ã‚’è¿”ã™. å®Ÿè¡Œã—ãŸå¾Œã¯seekä½ç½®ã¯ä¸å®šã¨ã™ã‚‹.
     std::size_t size();
     file_size64_t size64();
 
-    /// ŠÔ‚Ìæ“¾. ¦ Win-API ‚Æ‚Íˆø”‚ª‹t‡‚È‚Ì‚Å’ˆÓ.
+    /// æ™‚é–“ã®å–å¾—. â€» Win-API ã¨ã¯å¼•æ•°ãŒé€†é †ãªã®ã§æ³¨æ„.
     bool    getTime(file_size64_t* pLastWrt, file_size64_t* pLastAcs=0, file_size64_t* pCreat=0);
 
   #if MISC_FILE_KIND == 2 || defined MISC_FILE_FUTIME
-    /// ŠÔ‚Ìİ’è. ¦ Win-API ‚Æ‚Íˆø”‚ª‹t‡‚È‚Ì‚Å’ˆÓ.
-    /// win-api”ÅˆÈŠO‚ÍApCreat‚Í–³‹‚·‚é‚Ì‚Å’ˆÓ.
-    /// ƒRƒ“ƒpƒCƒ‰‚ªfutime‚ğ–¢ƒTƒ|[ƒg‚Ìê‡‚Í‘S‚­ƒ_ƒ~[‚È‚Ì‚Å’ˆÓ.
+    /// æ™‚é–“ã®è¨­å®š. â€» Win-API ã¨ã¯å¼•æ•°ãŒé€†é †ãªã®ã§æ³¨æ„.
+    /// win-apiç‰ˆä»¥å¤–ã¯ã€pCreatã¯ç„¡è¦–ã™ã‚‹ã®ã§æ³¨æ„.
+    /// ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ãŒfutimeã‚’æœªã‚µãƒãƒ¼ãƒˆã®å ´åˆã¯å…¨ããƒ€ãƒŸãƒ¼ãªã®ã§æ³¨æ„.
     bool    setTime(file_size64_t* pLastWrt, file_size64_t* pLastAcs=0, file_size64_t* pCreat=0);
   #endif
 
 
 public:
- #if MISC_FILE_KIND == 2    // Win-API”Å‚ÌÀ‘•‚Ì‚İ.
+ #if MISC_FILE_KIND == 2    // Win-APIç‰ˆã®å®Ÿè£…ã®ã¿.
     HANDLE   handle() const { return handle_; }
     unsigned winFileType() { return (unsigned)::GetFileType(handle_); }
 
@@ -334,13 +334,13 @@ public:
                 PSECURITY_ATTRIBUTES psa=0, DWORD createDisposition=OPEN_EXISTING,
                 DWORD flagsAndAttr =FILE_ATTRIBUTE_NORMAL, HANDLE hTemplate=0);
 
- #elif MISC_FILE_KIND == 1      // io.h, unistd.h ”Å‚Ì‚İ.
+ #elif MISC_FILE_KIND == 1      // io.h, unistd.h ç‰ˆã®ã¿.
     int handle() const { return handle_; }
 
-    /** ƒI[ƒvƒ“.
+    /** ã‚ªãƒ¼ãƒ—ãƒ³.
      *  flags   O_RDONLY, O_WRONLY, O_RDWR,   O_CREAT,O_EXCL, O_TRUNC, O_APPEND,
      *          O_DIRECT, O_DIRECTORY, O_ASYNC, O_SYNC, O_NOATIME, O_NOFOLLOW, O_NONBLOCK, O_NDELAY...
-     *  mode    ì¬‚ÌƒAƒNƒZƒX‹–‰Â(ƒp[ƒ~ƒbƒVƒ‡ƒ“) (—á: 0766 ‚Æ‚©)
+     *  mode    ä½œæˆæ™‚ã®ã‚¢ã‚¯ã‚»ã‚¹è¨±å¯(ãƒ‘ãƒ¼ãƒŸãƒƒã‚·ãƒ§ãƒ³) (ä¾‹: 0766 ã¨ã‹)
      */
     bool open(const char* fname, int flags, int mode);
     bool open_e(const char* fname, unsigned flags, int mode);
@@ -351,12 +351,12 @@ public:
     int utime(file_utimbuf_t* utimbuf);
    #endif
 
- #else                      // FILE Œn‚ÌÀ‘•‚Ì‚İ.
+ #else                      // FILE ç³»ã®å®Ÿè£…ã®ã¿.
     std::FILE*       fp()       { return fp_; }
     const std::FILE* fp() const { return fp_; }
 
-    // FileT•Ï”‚Éstdin,stdout,stderr ‚ğİ’è‚·‚é‚½‚ß‚É—pˆÓ.
-    // ƒfƒXƒgƒ‰ƒNƒ^‚Åclose‚·‚é‚Ì‚Å•K—v‚È‚çÄ“xNULL‚ğİ’è‚·‚é•K—v‚ª‚ ‚é.
+    // FileTå¤‰æ•°ã«stdin,stdout,stderr ã‚’è¨­å®šã™ã‚‹ãŸã‚ã«ç”¨æ„.
+    // ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§closeã™ã‚‹ã®ã§å¿…è¦ãªã‚‰å†åº¦NULLã‚’è¨­å®šã™ã‚‹å¿…è¦ãŒã‚ã‚‹.
     void    setFp(std::FILE* fp) { fp_ = fp; }
     bool    open_e(const char* fname, const char *mode);
     bool    open(const char* fname, const char *mode);
@@ -387,7 +387,7 @@ public:
 
 #if MISC_FILE_KIND == 2
 // -------------------------------------------------------------------------
-// Windows-API ”Å‚ÌÀ‘•
+// Windows-API ç‰ˆã®å®Ÿè£….
 // -------------------------------------------------------------------------
 
 
@@ -503,7 +503,7 @@ file_size64_t   FileT<E,N>::tell64() {
 
 
 
-// size()‚ğÀs‚µ‚½Œã‚ÍseekˆÊ’u‚Í•s’è‚Æ‚·‚é.
+// size()ã‚’å®Ÿè¡Œã—ãŸå¾Œã¯seekä½ç½®ã¯ä¸å®šã¨ã™ã‚‹.
 template<class E, class N>
 std::size_t FileT<E,N>::size() {
     assert(handle_ != INVALID_HANDLE_VALUE);
@@ -522,7 +522,7 @@ file_size64_t FileT<E,N>::size64() {
 
 
 
-// ŠÔ‚Ìæ“¾.  ¦ Win-API ‚Æ‚Íˆø”‚ª‹t‡‚È‚Ì‚Å’ˆÓ.
+// æ™‚é–“ã®å–å¾—.  â€» Win-API ã¨ã¯å¼•æ•°ãŒé€†é †ãªã®ã§æ³¨æ„.
 template<class E, class N>
 bool    FileT<E,N>::getTime(file_size64_t* pLastWrt, file_size64_t* pLastAcs, file_size64_t* pCreat) {
     assert(handle_ != INVALID_HANDLE_VALUE);
@@ -531,7 +531,7 @@ bool    FileT<E,N>::getTime(file_size64_t* pLastWrt, file_size64_t* pLastAcs, fi
 
 
 
-// ŠÔ‚Ìİ’è.  ¦ Win-API ‚Æ‚Íˆø”‚ª‹t‡‚È‚Ì‚Å’ˆÓ.
+// æ™‚é–“ã®è¨­å®š.  â€» Win-API ã¨ã¯å¼•æ•°ãŒé€†é †ãªã®ã§æ³¨æ„.
 template<class E, class N>
 bool    FileT<E,N>::setTime(file_size64_t* pLastWrt, file_size64_t* pLastAcs, file_size64_t* pCreat) {
     assert(handle_ != INVALID_HANDLE_VALUE);
@@ -568,7 +568,7 @@ bool FileT<E,N>::open(
         this->close();
     N::setFname(fname);
     if (fname == 0)
-        fname = "";     // NULL‚¾‚Æƒnƒ“ƒO‚·‚éŠÂ‹«‚à‚ ‚é‚ªopen‚ğ‚µ‚È‚¢‚Æerrno‚ªİ’è‚³‚ê‚È‚¢‚Ì‚Å‘ã—p.
+        fname = "";     // NULLã ã¨ãƒãƒ³ã‚°ã™ã‚‹ç’°å¢ƒã‚‚ã‚ã‚‹ãŒopenã‚’ã—ãªã„ã¨errnoãŒè¨­å®šã•ã‚Œãªã„ã®ã§ä»£ç”¨.
     handle_ = ::CreateFileA((PCSTR)fname, access, share, psa, createDisposition, flagsAndAttr, hTemplate);
     return handle_ != INVALID_HANDLE_VALUE;
 }
@@ -576,9 +576,9 @@ bool FileT<E,N>::open(
 
 
 
-#elif MISC_FILE_KIND == 1       // linux‚Ègcc‚ğ‘z’è.
+#elif MISC_FILE_KIND == 1       // linuxãªgccã‚’æƒ³å®š.
 // -------------------------------------------------------------------------
-// unistd.h(io.h) ƒx[ƒX. gcc(linuxŠÂ‹«)Œü.
+// unistd.h(io.h) ãƒ™ãƒ¼ã‚¹. gcc(linuxç’°å¢ƒ)å‘.
 // -------------------------------------------------------------------------
 
 
@@ -650,7 +650,7 @@ std::size_t FileT<E,N>::write(const void *buf, std::size_t size) {
 
 template<class E, class N> inline
 bool    FileT<E,N>::flush() {
-    // ƒ_ƒ~[.
+    // ãƒ€ãƒŸãƒ¼.
     return true;
 }
 
@@ -690,7 +690,7 @@ file_size64_t   FileT<E,N>::tell64() {
 
 
 
-// size()‚ğÀs‚µ‚½Œã‚ÍseekˆÊ’u‚Í•s’è‚Æ‚·‚é.
+// size()ã‚’å®Ÿè¡Œã—ãŸå¾Œã¯seekä½ç½®ã¯ä¸å®šã¨ã™ã‚‹.
 template<class E, class N>
 std::size_t   FileT<E,N>::size() {
     file_stat_t st; return this->stat(&st)==0 ? (std::size_t)st.st_size : 0;
@@ -705,7 +705,7 @@ file_size64_t FileT<E,N>::size64() {
 
 
 
-/// ŠÔ‚Ìæ“¾. ’l‚ÍƒVƒXƒeƒ€‚ÉˆË‘¶.
+/// æ™‚é–“ã®å–å¾—. å€¤ã¯ã‚·ã‚¹ãƒ†ãƒ ã«ä¾å­˜.
 template<class E, class N>
 bool    FileT<E,N>::getTime(file_size64_t* pLastWrt, file_size64_t* pLastAcs, file_size64_t* pCreat) {
     file_stat_t st;
@@ -721,7 +721,7 @@ bool    FileT<E,N>::getTime(file_size64_t* pLastWrt, file_size64_t* pLastAcs, fi
 
 
 #if defined MISC_FILE_FUTIME
-/// ŠÔ‚Ìİ’è. pCreat‚Í–³‹‚·‚é‚Ì‚Å’ˆÓ!.
+/// æ™‚é–“ã®è¨­å®š. pCreatã¯ç„¡è¦–ã™ã‚‹ã®ã§æ³¨æ„!.
 template<class E, class N>
 bool    FileT<E,N>::setTime(file_size64_t* pLastWrt, file_size64_t* pLastAcs, file_size64_t* /*pCreat*/) {
     file_utimbuf_t  utimbuf;
@@ -740,10 +740,10 @@ bool FileT<E,N>::open_e(const char* fname, unsigned flags, int mode) {
 }
 
 
-/** ƒI[ƒvƒ“.
+/** ã‚ªãƒ¼ãƒ—ãƒ³.
  *  flags   O_RDONLY, O_WRONLY, O_RDWR,   O_CREAT,O_EXCL, O_TRUNC, O_APPEND,
  *          O_DIRECT, O_DIRECTORY, O_ASYNC, O_SYNC, O_NOATIME, O_NOFOLLOW, O_NONBLOCK, O_NDELAY...
- *  mode    ì¬‚ÌƒAƒNƒZƒX‹–‰Â(ƒp[ƒ~ƒbƒVƒ‡ƒ“) (—á: 0766 ‚Æ‚©)
+ *  mode    ä½œæˆæ™‚ã®ã‚¢ã‚¯ã‚»ã‚¹è¨±å¯(ãƒ‘ãƒ¼ãƒŸãƒƒã‚·ãƒ§ãƒ³) (ä¾‹: 0766 ã¨ã‹)
  */
 template<class E, class N>
 bool FileT<E,N>::open(const char* fname, int flags, int mode) {
@@ -751,7 +751,7 @@ bool FileT<E,N>::open(const char* fname, int flags, int mode) {
         this->close();
     N::setFname(fname);
     if (fname == 0)
-        fname = "";     // FILE‚Æˆá‚¢errno‚Éİ’è‚³‚ê‚é‚©‚Í•s–¾‚¾‚ªAˆê‰open‚µ‚Æ‚­‚½‚ß‚É""‰».
+        fname = "";     // FILEã¨é•ã„errnoã«è¨­å®šã•ã‚Œã‚‹ã‹ã¯ä¸æ˜ã ãŒã€ä¸€å¿œopenã—ã¨ããŸã‚ã«""åŒ–.
     handle_ = ::open(fname, flags, mode);
     //x printf("open%d %s %#x %#x\n", handle_, fname, flags, mode);
     return handle_ >= 0;
@@ -779,9 +779,9 @@ int FileT<E,N>::utime(file_utimbuf_t* utimbuf) {
 
 
 
-#else   // stdio.h ”Å
+#else   // stdio.h ç‰ˆ.
 // -------------------------------------------------------------------------
-// •W€ Cƒ‰ƒCƒuƒ‰ƒŠ(FILE)”Å.
+// æ¨™æº– Cãƒ©ã‚¤ãƒ–ãƒ©ãƒª(FILE)ç‰ˆ.
 // -------------------------------------------------------------------------
 
 
@@ -865,7 +865,7 @@ std::size_t     FileT<E,N>::tell() {
 
 
 
-// FILE”Å‚Å‚Í 64ƒrƒbƒgƒTƒCƒY‚ÌƒV[ƒN‚Í”ñ‘Î‰. 32ƒrƒbƒg‚Åˆ—.
+// FILEç‰ˆã§ã¯ 64ãƒ“ãƒƒãƒˆã‚µã‚¤ã‚ºã®ã‚·ãƒ¼ã‚¯ã¯éå¯¾å¿œ. 32ãƒ“ãƒƒãƒˆã§å‡¦ç†.
 template<class E, class N>
 file_size64_t   FileT<E,N>::seek64(file_size64_t ofs, int seekMode) {
     assert(ofs <= (file_size64_t)0xFFFFFFFFU);
@@ -874,7 +874,7 @@ file_size64_t   FileT<E,N>::seek64(file_size64_t ofs, int seekMode) {
 
 
 
-// FILE”Å‚Å‚Í 64ƒrƒbƒgƒTƒCƒY‚Ìtell()‚Í”ñ‘Î‰. 32ƒrƒbƒg‚Åˆ—.
+// FILEç‰ˆã§ã¯ 64ãƒ“ãƒƒãƒˆã‚µã‚¤ã‚ºã®tell()ã¯éå¯¾å¿œ. 32ãƒ“ãƒƒãƒˆã§å‡¦ç†.
 template<class E, class N>
 file_size64_t   FileT<E,N>::tell64() {
     return tell();
@@ -882,7 +882,7 @@ file_size64_t   FileT<E,N>::tell64() {
 
 
 
-// size()‚ğÀs‚µ‚½Œã‚ÍseekˆÊ’u‚Í•s’è‚Æ‚·‚é.
+// size()ã‚’å®Ÿè¡Œã—ãŸå¾Œã¯seekä½ç½®ã¯ä¸å®šã¨ã™ã‚‹.
 template<class E, class N>
 std::size_t FileT<E,N>::size() {
     assert(fp_);
@@ -912,7 +912,7 @@ file_size64_t   FileT<E,N>::size64() {
 
 
 
-/// ŠÔ‚Ìæ“¾. ’l‚ÍƒVƒXƒeƒ€‚ÉˆË‘¶.
+/// æ™‚é–“ã®å–å¾—. å€¤ã¯ã‚·ã‚¹ãƒ†ãƒ ã«ä¾å­˜.
 template<class E, class N>
 bool    FileT<E,N>::getTime(file_size64_t* pLastWrt, file_size64_t* pLastAcs, file_size64_t* pCreat) {
     file_stat_t st;
@@ -928,7 +928,7 @@ bool    FileT<E,N>::getTime(file_size64_t* pLastWrt, file_size64_t* pLastAcs, fi
 
 
 #if defined MISC_FILE_FUTIME
-/// ŠÔ‚Ìİ’è. pCreat‚Í–³‹‚·‚é‚Ì‚Å’ˆÓ!.
+/// æ™‚é–“ã®è¨­å®š. pCreatã¯ç„¡è¦–ã™ã‚‹ã®ã§æ³¨æ„!.
 template<class E, class N>
 bool    FileT<E,N>::setTime(file_size64_t* pLastWrt, file_size64_t* pLastAcs, file_size64_t* pCreat) {
     pCreat;
@@ -953,7 +953,7 @@ bool FileT<E,N>::open(const char* fname, const char *mode) {
     if (fp_ != 0)
         this->close();
     N::setFname(fname);
-    // fname=NULL‚ÍƒGƒ‰[. errno‚Éİ’è‚·‚é‚½‚ßfopen‚·‚é‚ªnull‚¾‚Æƒnƒ“ƒO‚à‚ ‚è‚¦‚·‚Ì‚Å""‰».
+    // fname=NULLã¯ã‚¨ãƒ©ãƒ¼. errnoã«è¨­å®šã™ã‚‹ãŸã‚fopenã™ã‚‹ãŒnullã ã¨ãƒãƒ³ã‚°ã‚‚ã‚ã‚Šãˆã™ã®ã§""åŒ–.
     if (fname == 0)
         fname = "";
     fp_ = std::fopen(fname, mode);
@@ -971,7 +971,7 @@ void    FileT<E,N>::rewind() {
 
 template<class E, class N>
 bool    FileT<E,N>::eof()   {
-  #if defined _MSC_VER || defined __BORLANDC__  // ƒ}ƒNƒ‚ä‚¦std‚É‚È‚¢
+  #if defined _MSC_VER || defined __BORLANDC__  // ãƒã‚¯ãƒ­ã‚†ãˆstdã«ãªã„.
     return fp_ == 0 || feof(fp_) != 0;
   #else
     return fp_ == 0 || std::feof(fp_) != 0;
@@ -983,7 +983,7 @@ bool    FileT<E,N>::eof()   {
 template<class E, class N>
 bool    FileT<E,N>::error() {
     assert(fp_);
-  #if defined _MSC_VER || defined __BORLANDC__  // ƒ}ƒNƒ‚ä‚¦std‚É‚È‚¢
+  #if defined _MSC_VER || defined __BORLANDC__  // ãƒã‚¯ãƒ­ã‚†ãˆstdã«ãªã„.
     return ferror(fp_) != 0;
   #else
     return std::ferror(fp_) != 0;
@@ -1056,13 +1056,13 @@ int FileT<E,N>::utime(file_utimbuf_t* utimbuf) {
 
 
 // ========================================================================
-// ƒGƒ‰[ƒƒbƒZ[ƒWŠÖŒW.
+// ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸é–¢ä¿‚.
 // ========================================================================
 
 
-/// ’¼‘O‚ÌƒGƒ‰[‚ğ•Ô‚·.
+/// ç›´å‰ã®ã‚¨ãƒ©ãƒ¼ã‚’è¿”ã™.
 inline int file_lastError() {
-  #if MISC_FILE_KIND == 2   // Win-APIƒAƒvƒŠ‚Ì.
+  #if MISC_FILE_KIND == 2   // Win-APIã‚¢ãƒ—ãƒªã®æ™‚.
     return (unsigned)::GetLastError();
   #else
     return errno;
@@ -1070,18 +1070,18 @@ inline int file_lastError() {
 }
 
 
-/** ’¼‘O‚ÌƒGƒ‰[‚ÌƒƒbƒZ[ƒW•¶š—ñ‚ğbuf‚É“ü‚ê‚Ä•Ô‚·.
- *  buf‚ªNULL‚È‚çstd::strdup‚µ‚Ä‚»‚ÌƒAƒhƒŒƒX‚ğ•Ô‚·.
+/** ç›´å‰ã®ã‚¨ãƒ©ãƒ¼ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸æ–‡å­—åˆ—ã‚’bufã«å…¥ã‚Œã¦è¿”ã™.
+ *  bufãŒNULLãªã‚‰std::strdupã—ã¦ãã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’è¿”ã™.
  */
 template<typename CHR_T>
 char* file_lastErrorStr(CHR_T* buf, std::size_t bufSize=0) {
-  #if MISC_FILE_KIND == 2   // Win-APIƒAƒvƒŠ‚Ì.
+  #if MISC_FILE_KIND == 2   // Win-APIã‚¢ãƒ—ãƒªã®æ™‚.
     LPVOID lpMsgBuf;
     ::FormatMessageA(
         FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
         NULL,
         ::GetLastError(),
-        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Šù’è‚ÌŒ¾Œê
+        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // æ—¢å®šã®è¨€èª.
         (LPTSTR)&lpMsgBuf,
         0,
         NULL
@@ -1120,12 +1120,12 @@ char* file_lastErrorStr(CHR_T* buf, std::size_t bufSize=0) {
 
 
 // ========================================================================
-// File‚Ìƒƒ“ƒo[ŠÖ” ???_e ‚Å‚ÌƒGƒ‰[ƒ`ƒFƒbƒN—pƒNƒ‰ƒX.
+// Fileã®ãƒ¡ãƒ³ãƒãƒ¼é–¢æ•° ???_e ã§ã®ã‚¨ãƒ©ãƒ¼ãƒã‚§ãƒƒã‚¯ç”¨ã‚¯ãƒ©ã‚¹.
 // ========================================================================
 
 
 //----------------------------------------------------
-// ƒGƒ‰[‚ª‚ ‚Á‚½‚çƒƒbƒZ[ƒW‚ğo‚µ‚Äexit()‚·‚é”Å(ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“—p).
+// ã‚¨ãƒ©ãƒ¼ãŒã‚ã£ãŸã‚‰ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å‡ºã—ã¦exit()ã™ã‚‹ç‰ˆ(ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ç”¨).
 
 
 template<class DMY=void>
@@ -1186,10 +1186,10 @@ void File_ChkErrMsgExit<T>::errorMsg(const char* fname, const char* msg) {
 
 template<class T>
 void File_ChkErrMsgExit<T>::errorPuts(const char *s) {
-  #if MISC_FILE_KIND == 2   // Win-APIƒAƒvƒŠ‚Ì.
+  #if MISC_FILE_KIND == 2   // Win-APIã‚¢ãƒ—ãƒªã®æ™‚.
     DWORD sz;
     ::WriteConsole(::GetStdHandle(STD_OUTPUT_HANDLE), s, std::strlen(s), &sz, NULL);
-  #elif MISC_FILE_KIND == 1 // io.h,unistd.h”Å.
+  #elif MISC_FILE_KIND == 1 // io.h,unistd.hç‰ˆ.
     ::write(2, s, std::strlen(s) );
   #else
     std::fputs(s, stderr);
@@ -1200,7 +1200,7 @@ void File_ChkErrMsgExit<T>::errorPuts(const char *s) {
 
 
 //----------------------------------------------------
-// open_e,read_e,write_e‚ÅAƒGƒ‰[‚ª‚ ‚Á‚½‚ç—áŠO‚ğ“Š‚°‚é”Å.
+// open_e,read_e,write_eã§ã€ã‚¨ãƒ©ãƒ¼ãŒã‚ã£ãŸã‚‰ä¾‹å¤–ã‚’æŠ•ã’ã‚‹ç‰ˆ.
 
 #if defined MISC_FILE_USE_EH
 
@@ -1263,11 +1263,11 @@ private:
 
 
 // ========================================================================
-// ƒtƒ@ƒCƒ‹–¼‚ğ•Û‚·‚é‚©‚µ‚È‚¢‚©‚Ì‘I‘ğ—pƒNƒ‰ƒX
+// ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ä¿æŒã™ã‚‹ã‹ã—ãªã„ã‹ã®é¸æŠç”¨ã‚¯ãƒ©ã‚¹.
 // ========================================================================
 
 
-/// ƒtƒ@ƒCƒ‹–¼‚ğ•Û‚µ‚È‚¢ê‡—p.
+/// ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ä¿æŒã—ãªã„å ´åˆç”¨.
 class File_NouseFname {
 public:
     const char* fname() const { return ""; }
@@ -1279,7 +1279,7 @@ protected:
 
 
 
-/// ƒtƒ@ƒCƒ‹–¼‚ğ•Û‚·‚éê‡.
+/// ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ä¿æŒã™ã‚‹å ´åˆ.
 class File_UseFname {
 public:
     File_UseFname() : fname_(0) {;}
@@ -1311,7 +1311,7 @@ private:
 
 
 // ========================================================================
-// ÀÛ‚ÉFileT‚ğƒfƒtƒHƒ‹ƒg‚Åg‚¤‚Ì–¼‚ğtypedef‚Åİ’è.
+// å®Ÿéš›ã«FileTã‚’ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ä½¿ã†æ™‚ã®åã‚’typedefã§è¨­å®š.
 // ========================================================================
 
 
@@ -1326,13 +1326,13 @@ typedef FileT<File_ChkErrThrow>     FileEH;
 
 
 // ========================================================================
-// ƒfƒBƒŒƒNƒgƒŠEƒGƒ“ƒgƒŠŠÖŒW.
+// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãƒ»ã‚¨ãƒ³ãƒˆãƒªé–¢ä¿‚.
 // ========================================================================
 
 
-/// ƒtƒ@ƒCƒ‹–¼‚Ì•ÏX.ƒpƒXˆÚ“®.  •Ô’l0:ok  •‰:ƒGƒ‰[. Ú×‚Ífile_lastError()‚©‚çæ“¾.
+/// ãƒ•ã‚¡ã‚¤ãƒ«åã®å¤‰æ›´.ãƒ‘ã‚¹ç§»å‹•.  è¿”å€¤0:ok  è² :ã‚¨ãƒ©ãƒ¼. è©³ç´°ã¯file_lastError()ã‹ã‚‰å–å¾—.
 inline int file_rename(const char* oldName, const char* newName) {
-  #if MISC_FILE_KIND == 2   // Win-APIƒAƒvƒŠ‚Ì.
+  #if MISC_FILE_KIND == 2   // Win-APIã‚¢ãƒ—ãƒªã®æ™‚.
     return ::MoveFile( oldName, newName ) ? 0 : -1;
   #else
     return ::rename( oldName, newName );
@@ -1340,9 +1340,9 @@ inline int file_rename(const char* oldName, const char* newName) {
 }
 
 
-/// ƒtƒ@ƒCƒ‹íœ.     •Ô’l0:ok  •‰:ƒGƒ‰[. Ú×‚Ífile_lastError()‚©‚çæ“¾.
+/// ãƒ•ã‚¡ã‚¤ãƒ«å‰Šé™¤.     è¿”å€¤0:ok  è² :ã‚¨ãƒ©ãƒ¼. è©³ç´°ã¯file_lastError()ã‹ã‚‰å–å¾—.
 inline int file_remove(const char* fname) {
-  #if MISC_FILE_KIND == 2   // Win-APIƒAƒvƒŠ‚Ì.
+  #if MISC_FILE_KIND == 2   // Win-APIã‚¢ãƒ—ãƒªã®æ™‚.
     return ::DeleteFile( fname ) ? 0 : -1;
   #else
     return ::remove(fname);
@@ -1350,9 +1350,9 @@ inline int file_remove(const char* fname) {
 }
 
 
-/// ƒfƒBƒŒƒNƒgƒŠì¬.   •Ô’l0:ok  •‰:ƒGƒ‰[. Ú×‚Ífile_lastError()‚©‚çæ“¾.
+/// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªä½œæˆ.   è¿”å€¤0:ok  è² :ã‚¨ãƒ©ãƒ¼. è©³ç´°ã¯file_lastError()ã‹ã‚‰å–å¾—.
 inline int file_mkdir(const char* fname) {
-  #if MISC_FILE_KIND == 2   // Win-APIƒAƒvƒŠ‚Ì.
+  #if MISC_FILE_KIND == 2   // Win-APIã‚¢ãƒ—ãƒªã®æ™‚.
     return ::CreateDirectory( fname, NULL ) ? 0 : -1;
   #elif defined(MISC_FILE_WIN_CC)
     return ::_mkdir(fname);
@@ -1362,9 +1362,9 @@ inline int file_mkdir(const char* fname) {
 }
 
 
-/// ƒfƒBƒŒƒNƒgƒŠíœ.     •Ô’l0:ok  •‰:ƒGƒ‰[. Ú×‚Ífile_lastError()‚©‚çæ“¾.
+/// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå‰Šé™¤.     è¿”å€¤0:ok  è² :ã‚¨ãƒ©ãƒ¼. è©³ç´°ã¯file_lastError()ã‹ã‚‰å–å¾—.
 inline int file_rmdir(const char* fname) {
-  #if MISC_FILE_KIND == 2   // Win-APIƒAƒvƒŠ‚Ì.
+  #if MISC_FILE_KIND == 2   // Win-APIã‚¢ãƒ—ãƒªã®æ™‚.
     return ::RemoveDirectory( fname ) ? 0 : -1;
   #elif defined(MISC_FILE_WIN_CC)
     return ::_rmdir(fname);
@@ -1374,9 +1374,9 @@ inline int file_rmdir(const char* fname) {
 }
 
 
-/// ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚Ìİ’è.   •Ô’l0:ok  •‰:ƒGƒ‰[. Ú×‚Ífile_lastError()‚©‚çæ“¾.
+/// ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®è¨­å®š.   è¿”å€¤0:ok  è² :ã‚¨ãƒ©ãƒ¼. è©³ç´°ã¯file_lastError()ã‹ã‚‰å–å¾—.
 inline int file_chdir(const char* fname) {
-  #if MISC_FILE_KIND == 2   // Win-APIƒAƒvƒŠ‚Ì.
+  #if MISC_FILE_KIND == 2   // Win-APIã‚¢ãƒ—ãƒªã®æ™‚.
     return ::SetCurrentDirectory(fname) ? 0 : -1;
   #else
     return ::chdir(fname);
@@ -1384,9 +1384,9 @@ inline int file_chdir(const char* fname) {
 }
 
 
-/// ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚Ìæ“¾.   •Ô’l nameBuf‚ğ•Ô‚·. ¸”s‚µ‚½‚çNULL‚ğ•Ô‚·.
+/// ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®å–å¾—.   è¿”å€¤ nameBufã‚’è¿”ã™. å¤±æ•—ã—ãŸã‚‰NULLã‚’è¿”ã™.
 inline char* file_getcwd(char* nameBuf, std::size_t nameBufSize) {
-  #if MISC_FILE_KIND == 2   // Win-APIƒAƒvƒŠ‚Ì.
+  #if MISC_FILE_KIND == 2   // Win-APIã‚¢ãƒ—ãƒªã®æ™‚.
     return ::GetCurrentDirectory(nameBufSize, nameBuf) ? nameBuf : 0;
   #else
     return ::getcwd(nameBuf, nameBufSize);
@@ -1403,9 +1403,9 @@ STRING& file_getcwd(STRING& name) {
 }
 
 
-#if MISC_FILE_KIND == 2 // Win-APIƒAƒvƒŠ‚Ì.
+#if MISC_FILE_KIND == 2 // Win-APIã‚¢ãƒ—ãƒªã®æ™‚.
 
-/// ƒVƒXƒeƒ€ƒfƒBƒŒƒNƒgƒŠ‚Ìæ“¾.   •Ô’l0:ok  •‰:ƒGƒ‰[. Ú×‚Ífile_lastError()‚©‚çæ“¾.
+/// ã‚·ã‚¹ãƒ†ãƒ ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®å–å¾—.   è¿”å€¤0:ok  è² :ã‚¨ãƒ©ãƒ¼. è©³ç´°ã¯file_lastError()ã‹ã‚‰å–å¾—.
 inline int file_getSystemDir(char* nameBuf, std::size_t nameBufSize) {
     return ::GetSystemDirectory(nameBuf, nameBufSize) ? 0 : -1;
 }
@@ -1419,7 +1419,7 @@ STRING& file_getSystemDir(STRING& name) {
 }
 
 
-/// windowsƒfƒBƒŒƒNƒgƒŠ‚Ìæ“¾.    •Ô’l0:ok  •‰:ƒGƒ‰[. Ú×‚Ífile_lastError()‚©‚çæ“¾.
+/// windowsãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®å–å¾—.    è¿”å€¤0:ok  è² :ã‚¨ãƒ©ãƒ¼. è©³ç´°ã¯file_lastError()ã‹ã‚‰å–å¾—.
 inline int file_getWindowsDir(char* nameBuf, std::size_t nameBufSize) {
     return ::GetWindowsDirectory(nameBuf, nameBufSize) ? 0 : -1;
 }
@@ -1435,8 +1435,8 @@ STRING& file_getWindowsDir(STRING& name) {
 
 
 
-/** ƒtƒ‹ƒpƒX¶¬.
- *  fullName=NULL‚È‚çmalloc‚µ‚½ƒAƒhƒŒƒX‚ğ•Ô‚·. ƒGƒ‰[‚ª‚ ‚ê‚ÎNULL‚ğ•Ô‚·.
+/** ãƒ•ãƒ«ãƒ‘ã‚¹ç”Ÿæˆ.
+ *  fullName=NULLãªã‚‰mallocã—ãŸã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’è¿”ã™. ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Œã°NULLã‚’è¿”ã™.
  */
 template<typename CHR_T>
 inline char* file_fullpath(CHR_T* fullName, const CHR_T* path, std::size_t fullNameSize)
@@ -1484,10 +1484,10 @@ STRING& file_fullpath(STRING& fullName, const char* path)
 
 
 // ========================================================================
-// ƒtƒ@ƒCƒ‹î•ñŠÖŒW.
+// ãƒ•ã‚¡ã‚¤ãƒ«æƒ…å ±é–¢ä¿‚.
 // ========================================================================
 
-/// ƒtƒ@ƒCƒ‹‚Ì‘®«‚ğ•ÏX.
+/// ãƒ•ã‚¡ã‚¤ãƒ«ã®å±æ€§ã‚’å¤‰æ›´.
 inline int file_chmod(const char* fname, unsigned mod) {
   #if defined(MISC_FILE_WIN_CC)
     return ::_chmod(fname, mod);
@@ -1498,7 +1498,7 @@ inline int file_chmod(const char* fname, unsigned mod) {
 
 
 
-/// ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ğ•Ô‚·.
+/// ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã‚’è¿”ã™.
 inline std::size_t file_size(const char* fname) {
     File file;
     if (file.open(fname, File::R))
@@ -1508,9 +1508,9 @@ inline std::size_t file_size(const char* fname) {
 
 
 
-/// uint64_tŒ^‚Åƒtƒ@ƒCƒ‹ƒTƒCƒY‚ğ•Ô‚·.
+/// uint64_tå‹ã§ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã‚’è¿”ã™.
 inline file_size64_t  file_size64(const char* fname) {
-  #if MISC_FILE_KIND == 2   // Win-APIƒAƒvƒŠ‚Ì.
+  #if MISC_FILE_KIND == 2   // Win-APIã‚¢ãƒ—ãƒªã®æ™‚.
     File file;
     return (file.open(fname, File::R)) ? file.size64() : 0;
   #else
@@ -1522,15 +1522,15 @@ inline file_size64_t  file_size64(const char* fname) {
 
 
 // ========================================================================
-// ƒtƒ@ƒCƒ‹ŠÔŠÖŒW.
+// ãƒ•ã‚¡ã‚¤ãƒ«æ™‚é–“é–¢ä¿‚.
 // ========================================================================
 
-/** ƒtƒ@ƒCƒ‹‚Ì“ú•t‚ğæ“¾.
- *  win-api”Å‚Í64ƒrƒbƒg’l‚È‚Ì‚Å file_stat()‚æ‚è‚±‚¿‚ç‚ğ—˜—p‚Ì‚±‚Æ.
+/** ãƒ•ã‚¡ã‚¤ãƒ«ã®æ—¥ä»˜ã‚’å–å¾—.
+ *  win-apiç‰ˆã¯64ãƒ“ãƒƒãƒˆå€¤ãªã®ã§ file_stat()ã‚ˆã‚Šã“ã¡ã‚‰ã‚’åˆ©ç”¨ã®ã“ã¨.
  */
 inline bool file_getTime(const char* fname, file_size64_t* pLastWrt, file_size64_t* pLastAcs=0, file_size64_t* pCreat=0) {
   #if MISC_FILE_KIND == 2 || defined MISC_FILE_FUTIME
-    // win‚Í FindFirst‚ğg‚Á‚ÄÀ‘•‰Â”\‚¾‚ªA–Ê“|‚È‚ñ‚Åfile‚É”C‚·.
+    // winã¯ FindFirstã‚’ä½¿ã£ã¦å®Ÿè£…å¯èƒ½ã ãŒã€é¢å€’ãªã‚“ã§fileã«ä»»ã™.
     File    file;
     return file.open(fname, File::R) && file.getTime(pLastWrt, pLastAcs, pCreat);
   #else
@@ -1546,8 +1546,8 @@ inline bool file_getTime(const char* fname, file_size64_t* pLastWrt, file_size64
 }
 
 
-/** ƒtƒ@ƒCƒ‹‚Ì“ú•t‚ğİ’è.
- *  win-api”Å‚Í64ƒrƒbƒg’l‚È‚Ì‚Å file_utime()‚æ‚è‚±‚¿‚ç‚ğ—˜—p‚Ì‚±‚Æ.
+/** ãƒ•ã‚¡ã‚¤ãƒ«ã®æ—¥ä»˜ã‚’è¨­å®š.
+ *  win-apiç‰ˆã¯64ãƒ“ãƒƒãƒˆå€¤ãªã®ã§ file_utime()ã‚ˆã‚Šã“ã¡ã‚‰ã‚’åˆ©ç”¨ã®ã“ã¨.
  */
 inline bool file_setTime(const char* fname, file_size64_t* pLastWrt, file_size64_t* pLastAcs=0, file_size64_t* pCreat=0) {
   #if MISC_FILE_KIND == 2 || defined MISC_FILE_FUTIME
@@ -1564,7 +1564,7 @@ inline bool file_setTime(const char* fname, file_size64_t* pLastWrt, file_size64
 
 
 
-/// ƒtƒ@ƒCƒ‹‚ÌŠÔ‚ğƒ[ƒJƒ‹ŠÔ‚Ì”NŒ“úš•ª•b‚É•ÏŠ·.
+/// ãƒ•ã‚¡ã‚¤ãƒ«ã®æ™‚é–“ã‚’ãƒ­ãƒ¼ã‚«ãƒ«æ™‚é–“ã®å¹´æœˆæ—¥å­—åˆ†ç§’ã«å¤‰æ›.
 struct File_LocalTime {
     File_LocalTime() { std::memset(this,0,sizeof(*this)); }
     File_LocalTime(unsigned y, unsigned mo, unsigned d,
@@ -1576,7 +1576,7 @@ struct File_LocalTime {
     void set(unsigned y, unsigned mo, unsigned d, unsigned h=0, unsigned mi=0, unsigned s=0, unsigned ms=0) {
         this->year          = (unsigned short)y,
         this->month         = (unsigned short)mo,
-        this->dayOfWeek     = 0;        // “K“–.
+        this->dayOfWeek     = 0;        // é©å½“.
         this->day           = (unsigned short)d,
         this->hour          = (unsigned short)h,
         this->minute        = (unsigned short)mi,
@@ -1584,23 +1584,23 @@ struct File_LocalTime {
         this->milliSecond   = (unsigned short)ms;
     }
 
-    // ƒ[ƒJƒ‹ŠÔ‚Ì‚à‚Ì‚ğ•ÏŠ·‚µ‚ÄAƒtƒ@ƒCƒ‹‚ÌŠÔî•ñ‚É‚µ‚Äæ“¾.
+    // ãƒ­ãƒ¼ã‚«ãƒ«æ™‚é–“ã®ã‚‚ã®ã‚’å¤‰æ›ã—ã¦ã€ãƒ•ã‚¡ã‚¤ãƒ«ã®æ™‚é–“æƒ…å ±ã«ã—ã¦å–å¾—.
     file_size64_t getTime() const { return getTime(0); }
 
-    // ƒtƒ@ƒCƒ‹‚ÌŠÔ‚ğAƒ[ƒJƒ‹ŠÔ‚É•ÏŠ·‚µ‚Äİ’è.
+    // ãƒ•ã‚¡ã‚¤ãƒ«ã®æ™‚é–“ã‚’ã€ãƒ­ãƒ¼ã‚«ãƒ«æ™‚é–“ã«å¤‰æ›ã—ã¦è¨­å®š.
     bool setTime(file_size64_t tim) { return setTime(tim, 0); }
 
-    /// ƒtƒ@ƒCƒ‹‚ÌŠÔ‚ğAƒ[ƒJƒ‹ŠÔ‚É•ÏŠ·‚¹‚¸‚Éİ’è.
-    /// getGmTime() ‚Í—pˆÓ‚µ‚È‚¢‚Ì‚Å’ˆÓI
+    /// ãƒ•ã‚¡ã‚¤ãƒ«ã®æ™‚é–“ã‚’ã€ãƒ­ãƒ¼ã‚«ãƒ«æ™‚é–“ã«å¤‰æ›ã›ãšã«è¨­å®š.
+    /// getGmTime() ã¯ç”¨æ„ã—ãªã„ã®ã§æ³¨æ„!
     bool setGmTime(file_size64_t tim) { return setGmTime(tim, 0); }
 
 
-private:    // ƒwƒbƒ_‚É’u‚­ˆ×‚Éƒeƒ“ƒvƒŒ[ƒg‰».
+private:    // ãƒ˜ãƒƒãƒ€ã«ç½®ãç‚ºã«ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆåŒ–.
     template<typename DMY_T> file_size64_t  getTime(DMY_T) const;
     template<typename DMY_T> bool           setTime(file_size64_t tim, DMY_T);
     template<typename DMY_T> bool           setGmTime(file_size64_t tim, DMY_T);
 
-public: // ƒƒ“ƒo[•Ï”‚ÍŒöŠJ.  // è”²‚«‚Åwin‚É‡‚í‚¹‚é.
+public: // ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°ã¯å…¬é–‹.  // æ‰‹æŠœãã§winã«åˆã‚ã›ã‚‹.
     unsigned short      year;
     unsigned short      month;
     unsigned short      dayOfWeek;
@@ -1613,7 +1613,7 @@ public: // ƒƒ“ƒo[•Ï”‚ÍŒöŠJ.  // è”²‚«‚Åwin‚É‡‚í‚¹‚é.
 
 
 
-/// ƒ[ƒJƒ‹ŠÔ‚Ì‚à‚Ì‚ğ•ÏŠ·‚µ‚ÄAƒtƒ@ƒCƒ‹‚ÌŠÔî•ñ‚É‚µ‚Äæ“¾.
+/// ãƒ­ãƒ¼ã‚«ãƒ«æ™‚é–“ã®ã‚‚ã®ã‚’å¤‰æ›ã—ã¦ã€ãƒ•ã‚¡ã‚¤ãƒ«ã®æ™‚é–“æƒ…å ±ã«ã—ã¦å–å¾—.
 template<typename DMY_T>
 file_size64_t File_LocalTime::getTime(DMY_T) const {
   #if MISC_FILE_KIND == 2 //|| defined(MISC_FILE_WIN_CC)
@@ -1625,14 +1625,14 @@ file_size64_t File_LocalTime::getTime(DMY_T) const {
   #else
     /*struct*/ std::tm tb;
     tb.tm_year          = this->year;
-    tb.tm_mon           = this->month - (this->month > 0);  // -1 ‚Å‚æ‚¢‚ªA–œ‚ªˆêmonth=0‚¾‚Á‚½‚Ì‚½‚ß‚É‚¿‚å‚Á‚ÆƒK[ƒh.
-    tb.tm_wday          = this->dayOfWeek;  // T‚Ì’†‚Ì“ú”.
+    tb.tm_mon           = this->month - (this->month > 0);  // -1 ã§ã‚ˆã„ãŒã€ä¸‡ãŒä¸€month=0ã ã£ãŸæ™‚ã®ãŸã‚ã«ã¡ã‚‡ã£ã¨ã‚¬ãƒ¼ãƒ‰.
+    tb.tm_wday          = this->dayOfWeek;  // é€±ã®ä¸­ã®æ—¥æ•°.
     tb.tm_mday          = this->day;
     tb.tm_hour          = this->hour;
     tb.tm_min           = this->minute;
     tb.tm_sec           = this->second;
-    tb.tm_yday          = 0;                // ”NŠÔ’†‚Ì“ú”
-    tb.tm_isdst         = 0;                // ƒTƒ}[ƒ^ƒCƒ€
+    tb.tm_yday          = 0;                // å¹´é–“ä¸­ã®æ—¥æ•°.
+    tb.tm_isdst         = 0;                // ã‚µãƒãƒ¼ã‚¿ã‚¤ãƒ .
    #if defined MISC_FILE_MKTIME64
     file_size64_t   t   = MISC_FILE_MKTIME64(&tb);
    #else
@@ -1644,7 +1644,7 @@ file_size64_t File_LocalTime::getTime(DMY_T) const {
 
 
 
-// ƒtƒ@ƒCƒ‹‚ÌŠÔ‚ğAƒ[ƒJƒ‹ŠÔ‚É•ÏŠ·‚µ‚Äİ’è.
+// ãƒ•ã‚¡ã‚¤ãƒ«ã®æ™‚é–“ã‚’ã€ãƒ­ãƒ¼ã‚«ãƒ«æ™‚é–“ã«å¤‰æ›ã—ã¦è¨­å®š.
 template<typename DMY_T>
 bool File_LocalTime::setTime(file_size64_t tim, DMY_T) {
   #if MISC_FILE_KIND == 2 //|| defined(MISC_FILE_WIN_CC)
@@ -1674,8 +1674,8 @@ bool File_LocalTime::setTime(file_size64_t tim, DMY_T) {
 
 
 
-/// ƒtƒ@ƒCƒ‹‚ÌŠÔ‚ğAƒ[ƒJƒ‹ŠÔ‚É•ÏŠ·‚¹‚¸‚Éİ’è.
-/// getGmTime() ‚Í—pˆÓ‚µ‚È‚¢‚Ì‚Å’ˆÓI
+/// ãƒ•ã‚¡ã‚¤ãƒ«ã®æ™‚é–“ã‚’ã€ãƒ­ãƒ¼ã‚«ãƒ«æ™‚é–“ã«å¤‰æ›ã›ãšã«è¨­å®š.
+/// getGmTime() ã¯ç”¨æ„ã—ãªã„ã®ã§æ³¨æ„!
 template<typename DMY_T>
 bool File_LocalTime::setGmTime(file_size64_t tim, DMY_T) {
   #if MISC_FILE_KIND == 2 //|| defined(MISC_FILE_WIN_CC)
@@ -1706,11 +1706,11 @@ bool File_LocalTime::setGmTime(file_size64_t tim, DMY_T) {
 
 
 // ========================================================================
-// ƒ[ƒhEƒZ[ƒu.
+// ãƒ­ãƒ¼ãƒ‰ãƒ»ã‚»ãƒ¼ãƒ–.
 // ========================================================================
 
 
-/** ƒtƒ@ƒCƒ‹EƒZ[ƒu.
+/** ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ã‚»ãƒ¼ãƒ–.
  */
 template<typename CHR_T>
 unsigned file_save(const CHR_T* name, const void* buf, unsigned byteSize)
@@ -1724,7 +1724,7 @@ unsigned file_save(const CHR_T* name, const void* buf, unsigned byteSize)
 }
 
 
-/** ƒtƒ@ƒCƒ‹EƒZ[ƒu.
+/** ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ã‚»ãƒ¼ãƒ–.
  */
 template<typename VECTOR>
 unsigned file_save(const char* name, const VECTOR& vec)
@@ -1740,7 +1740,7 @@ unsigned file_save(const char* name, const VECTOR& vec)
 
 
 
-/** ƒtƒ@ƒCƒ‹Eƒ[ƒh
+/** ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ­ãƒ¼ãƒ‰
  */
 template<class VECTOR>
 unsigned file_load(const char* name, VECTOR& buf)
@@ -1755,7 +1755,7 @@ unsigned file_load(const char* name, VECTOR& buf)
 
 
 
-/** ƒtƒ@ƒCƒ‹Eƒ[ƒh.
+/** ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ­ãƒ¼ãƒ‰.
  */
 template<typename CHR_T>
 unsigned file_load(const CHR_T* name, void* buf, unsigned byteSize)
@@ -1770,7 +1770,7 @@ unsigned file_load(const CHR_T* name, void* buf, unsigned byteSize)
 
 
 
-/** ƒtƒ@ƒCƒ‹Eƒ[ƒh.
+/** ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ­ãƒ¼ãƒ‰.
  */
 template<typename CHR_T>
 void* file_loadAlloc(const CHR_T* name, std::size_t* pSize=0)
@@ -1783,7 +1783,7 @@ void* file_loadAlloc(const CHR_T* name, std::size_t* pSize=0)
     std::size_t l = file.size();
     if (l == 0)
         l = 1;
-  #if MISC_FILE_KIND == 2   // Win-APIƒAƒvƒŠ‚Ì.
+  #if MISC_FILE_KIND == 2   // Win-APIã‚¢ãƒ—ãƒªã®æ™‚.
     void* m = ::LocalAlloc(LMEM_FIXED, l);
   #else
     void* m = std::malloc( l );
@@ -1803,10 +1803,10 @@ void* file_loadAlloc(const CHR_T* name, std::size_t* pSize=0)
 
 
 
-/** file_loadAlloc‚Åæ“¾‚µ‚½ƒ|ƒCƒ“ƒ^‚ğfree‚·‚é.
+/** file_loadAllocã§å–å¾—ã—ãŸãƒã‚¤ãƒ³ã‚¿ã‚’freeã™ã‚‹.
  */
 inline void file_loadFree(void* p) {
-  #if MISC_FILE_KIND == 2   // Win-APIƒAƒvƒŠ‚Ì.
+  #if MISC_FILE_KIND == 2   // Win-APIã‚¢ãƒ—ãƒªã®æ™‚.
     ::LocalFree(p);
   #else
     std::free(p);
@@ -1815,11 +1815,11 @@ inline void file_loadFree(void* p) {
 
 
 
-/** ƒtƒ@ƒCƒ‹‚ÌƒRƒs[.
+/** ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚³ãƒ”ãƒ¼.
  */
 template<typename CHR_T>
 bool file_copy(const CHR_T* srcName, const CHR_T* dstName) {
-  #if MISC_FILE_KIND == 2   // Win-APIƒAƒvƒŠ‚Ì.
+  #if MISC_FILE_KIND == 2   // Win-APIã‚¢ãƒ—ãƒªã®æ™‚.
     return ::CopyFile(srcName, dstName, false) != 0;
   #else
     File    src;

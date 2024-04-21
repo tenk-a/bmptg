@@ -1,6 +1,6 @@
 /**
  *  @file   DecreaseColorT2.h
- *  @brief  Œ¸Fˆ—. •p“xƒJƒEƒ“ƒg‚µ‚Ä‘½‚¢‚à‚Ì‡. ”²F‘Î‰”Å.
+ *  @brief  æ¸›è‰²å‡¦ç†. é »åº¦ã‚«ã‚¦ãƒ³ãƒˆã—ã¦å¤šã„ã‚‚ã®é †. æŠœè‰²å¯¾å¿œç‰ˆ.
  *  @author Masashi KITAMURA
  */
 
@@ -20,7 +20,7 @@
 
 
 
-/// Œ¸Fˆ—. 32ƒrƒbƒgF‰æ‚ğ8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+/// æ¸›è‰²å‡¦ç†. 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
 template<class A=void>
 class DecreaseColor {
 public:
@@ -43,8 +43,8 @@ private:
 
 private:
     struct Hst {
-      #if defined _WIN32                // vc‚Éstdint.h‚ª‚È‚¢‚Ì‚Å‚»‚Ì‘Îô.
-        typedef unsigned __int64 sum_t; // winŒnƒRƒ“ƒpƒCƒ‰‚ÍvcŒİŠ·‚ÅŒÃ‚­‚©‚ç__int64‚ª‚ ‚é.
+      #if defined _WIN32                // vcã«stdint.hãŒãªã„ã®ã§ãã®å¯¾ç­–.
+        typedef unsigned __int64 sum_t; // winç³»ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã¯vcäº’æ›ã§å¤ãã‹ã‚‰__int64ãŒã‚ã‚‹.
       #else
         typedef uint64_t         sum_t;
       #endif
@@ -63,7 +63,7 @@ private:
 
 
 
-/// 32ƒrƒbƒgF‰æ‚ğ8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+/// 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
 template<class A>
 bool DecreaseColor<A>::conv(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, unsigned* pClut, unsigned clutSize)
 {
@@ -99,10 +99,10 @@ bool DecreaseColor<A>::conv(unsigned char* pDst, const unsigned* pSrc, unsigned 
         h->b += b;
     }
 
-    // ‘½‚¢ƒ‚ƒm‚©‚çclutSizeŒÂ‚ğ‘Io(æ“ª‚ÉˆÚ“®).
+    // å¤šã„ãƒ¢ãƒã‹ã‚‰clutSizeå€‹ã‚’é¸å‡º(å…ˆé ­ã«ç§»å‹•).
     std::nth_element( &pHst[top], &pHst[clutSize], &pHst[NUM], std::less<Hst>() );
 
-    // ‘½‚¢‚à‚Ì‚©‚çF‚ğæ“¾.
+    // å¤šã„ã‚‚ã®ã‹ã‚‰è‰²ã‚’å–å¾—.
     std::memset(pClut, 0, clutSize*sizeof(pClut[0]));
     unsigned n = 0;
     for (unsigned j = 0; j < clutSize; ++j) {
@@ -117,19 +117,19 @@ bool DecreaseColor<A>::conv(unsigned char* pDst, const unsigned* pSrc, unsigned 
         pClut[n] = argb(a,r,g,b);
         ++n;
     }
-    // ÀÛ‚Ég—p‚³‚ê‚Ä‚¢‚éclut”‚ğ‹‚ß‚é.
-    if (n < 2)  // ‚½‚¾‚µÅ’á2F‚Íg‚¤‚±‚Æ‚É.
+    // å®Ÿéš›ã«ä½¿ç”¨ã•ã‚Œã¦ã„ã‚‹clutæ•°ã‚’æ±‚ã‚ã‚‹.
+    if (n < 2)  // ãŸã ã—æœ€ä½2è‰²ã¯ä½¿ã†ã“ã¨ã«.
         n = 2;
     clutSize = n;
 
-    // clut‚ğˆÃ‚¢‚à‚Ì‡‚É•À‚×’¼‚·.
+    // clutã‚’æš—ã„ã‚‚ã®é †ã«ä¸¦ã¹ç›´ã™.
     std::sort( &pClut[top], &pClut[clutSize] );
 
-    // Œ»ó‚Ìclut‚ÅA‚·‚×‚Ä‚ÌƒsƒNƒZƒ‹‚ğclutSizeF‰».
-    // F‘I‘ğ‚ÌğŒ‚Æ‚µ‚ÄA
-    //   - a,r,g,b‚Ì’l‚ª‹ß‚¢ƒ‚ƒm(F“¯m‚Ì·‚ª¬‚³‚¢ƒ‚ƒm)
-    //   - 1F“à‚Ìr,g,b‚Ì‹P“x‚Ì‘å¬ŠÖŒW‚ªA‹ß‚¢ƒ‚ƒm
-    // ‚ğƒ`ƒFƒbƒN.
+    // ç¾çŠ¶ã®clutã§ã€ã™ã¹ã¦ã®ãƒ”ã‚¯ã‚»ãƒ«ã‚’clutSizeè‰²åŒ–.
+    // è‰²é¸æŠã®æ¡ä»¶ã¨ã—ã¦ã€
+    //   - a,r,g,bã®å€¤ãŒè¿‘ã„ãƒ¢ãƒ(è‰²åŒå£«ã®å·®ãŒå°ã•ã„ãƒ¢ãƒ)
+    //   - 1è‰²å†…ã®r,g,bã®è¼åº¦ã®å¤§å°é–¢ä¿‚ãŒã€è¿‘ã„ãƒ¢ãƒ
+    // ã‚’ãƒã‚§ãƒƒã‚¯.
     std::memset(pHst, 0, sizeof(Hst) * clutSize);
     for (unsigned j = 0; j < w * h; ++j) {
         unsigned c  = pSrc[j];
@@ -142,7 +142,7 @@ bool DecreaseColor<A>::conv(unsigned char* pDst, const unsigned* pSrc, unsigned 
         int      q  = b - g;
 
         unsigned ii = 0;
-        if (a >= MIN_A) {   // “§–¾ˆÈŠO‚ÌƒsƒNƒZƒ‹‚¾‚Á‚½‚Æ‚«.
+        if (a >= MIN_A) {   // é€æ˜ä»¥å¤–ã®ãƒ”ã‚¯ã‚»ãƒ«ã ã£ãŸã¨ã.
             a = 0xff;
             unsigned k = 0xFFFFFFFF;
             for (unsigned i = 0; i < clutSize; ++i) {
@@ -173,7 +173,7 @@ bool DecreaseColor<A>::conv(unsigned char* pDst, const unsigned* pSrc, unsigned 
         }
         pDst[j] = ii;
 
-        // g—p”‚âF’l‚Ì‡Œv.
+        // ä½¿ç”¨æ•°ã‚„è‰²å€¤ã®åˆè¨ˆ.
         Hst* t = &pHst[ ii ];
         ++t->num;
         t->a  = a;
@@ -182,7 +182,7 @@ bool DecreaseColor<A>::conv(unsigned char* pDst, const unsigned* pSrc, unsigned 
         t->b += b;
     }
 
-    // clut‚ÌŠeF‚ğÀÛ‚ÌƒsƒNƒZƒ‹‚ÌF‚Ì•½‹Ï‚É‚·‚é.
+    // clutã®å„è‰²ã‚’å®Ÿéš›ã®ãƒ”ã‚¯ã‚»ãƒ«ã®è‰²ã®å¹³å‡ã«ã™ã‚‹.
     for (unsigned i = 0; i < clutSize; ++i) {
         const Hst*  t    = &pHst[i];
         unsigned    n    = t->num;

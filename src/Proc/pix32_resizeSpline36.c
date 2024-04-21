@@ -1,10 +1,10 @@
 /**
  *  @file   pix32_resizeSpline36.c
- *  @brief  spline-36 ‚ÅŠg‘åk¬.
+ *  @brief  spline-36 ã§æ‹¡å¤§ç¸®å°.
  *  @author Masashi KITAMURA
  *  @note
  *      http://www.rainorshine.asia/2015/10/12/post2602.html
- *      ‚ğQl
+ *      ã‚’å‚è€ƒ
  */
 
 #include "pix32_resizeSpline36.h"
@@ -34,11 +34,11 @@ typedef double          sum_t;
 
 static void pix32_resizeSpline36Sub(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH);
 
-#if 1   // k¬‚É‰æ‘f•½‹Ï–@‚ğ—p‚¢‚éƒo[ƒWƒ‡ƒ“
+#if 1   // ç¸®å°ã«ç”»ç´ å¹³å‡æ³•ã‚’ç”¨ã„ã‚‹ãƒãƒ¼ã‚¸ãƒ§ãƒ³.
 static void pix32_resizeSpline36Reduc(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH);
 
 
-/** Šg‘åk¬
+/** æ‹¡å¤§ç¸®å°.
  */
 int  pix32_resizeSpline36(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH, int hasAlpha)
 {
@@ -48,20 +48,20 @@ int  pix32_resizeSpline36(unsigned *dst, unsigned dstW, unsigned dstH, const uns
     }
 
     if (dstW == srcW && dstH == srcH) {
-        memcpy(dst, src, dstW*srcH*sizeof(*dst));                       // “¯‚¶ƒTƒCƒY‚È‚çƒƒ‚ƒŠƒRƒs[‚Å‚·‚Ü‚·
+        memcpy(dst, src, dstW*srcH*sizeof(*dst));                       // åŒã˜ã‚µã‚¤ã‚ºãªã‚‰ãƒ¡ãƒ¢ãƒªã‚³ãƒ”ãƒ¼ã§ã™ã¾ã™.
         return 1;
     }
 
     if ((srcW % dstW) == 0 && (srcH % dstH) == 0) {
-        pix32_resizeAveragingI(dst, dstW, dstH, src, srcW, srcH);       // ®”Š„‚è‚Å‚·‚Şê‡‚ÍA‚»‚êê—p‚Ìˆ—‚É‚µ‚ÄAŸø‚İ‚ğŒ¸‚ç‚·
+        pix32_resizeAveragingI(dst, dstW, dstH, src, srcW, srcH);       // æ•´æ•°å‰²ã‚Šã§ã™ã‚€å ´åˆã¯ã€ãã‚Œå°‚ç”¨ã®å‡¦ç†ã«ã—ã¦ã€æ»²ã¿ã‚’æ¸›ã‚‰ã™.
         return 1;
     }
-    if (dstW >= srcW && dstH >= srcH)   // Šg‘å‚Ì‚İ
+    if (dstW >= srcW && dstH >= srcH)   // æ‹¡å¤§ã®ã¿.
         pix32_resizeSpline36Sub(dst, dstW, dstH, src, srcW, srcH);
-    else                                // Šg‘åk¬
+    else                                // æ‹¡å¤§ç¸®å°.
         pix32_resizeSpline36Reduc(dst, dstW, dstH, src, srcW, srcH);
 
-    if (hasAlpha)   // ƒ¿ƒ`ƒƒƒ“ƒlƒ‹•”•ª‚ÍƒoƒCƒŠƒjƒA‚Åˆ—
+    if (hasAlpha)   // Î±ãƒãƒ£ãƒ³ãƒãƒ«éƒ¨åˆ†ã¯ãƒã‚¤ãƒªãƒ‹ã‚¢ã§å‡¦ç†.
         pix32_resizeBilinearAlpha(dst, dstW, dstH, src, srcW, srcH);
 
     return 1;
@@ -69,7 +69,7 @@ int  pix32_resizeSpline36(unsigned *dst, unsigned dstW, unsigned dstH, const uns
 
 #define NO_ALP
 
-/** spline-36 Šg‘å‚Ì‚İ
+/** spline-36 æ‹¡å¤§ã®ã¿
  */
 static void  pix32_resizeSpline36Sub(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH)
 {
@@ -123,8 +123,8 @@ static void  pix32_resizeSpline36Sub(unsigned* dst, unsigned dstW, unsigned dstH
                         double   weiX = CALC_WEI(lenX);
                         double   weiY = CALC_WEI(lenY);
                         sum_t    wei  = DBL_TO_SUM(weiX * weiY);
-                     #else  //ÀŒ±: http://koujinz.cocolog-nifty.com/blog/2009/05/post-d4b2.html ‚ğQl.
-                            // X Y ‚²‚Æ‚Å‚È‚­’¼ü‹——£‚Åweight‚ğ‹‚ß‚éê‡. (ƒVƒƒ[ƒvƒlƒX‚ªŒø‚¢‚½‚æ‚¤‚È‰æ‚É‚È‚é)
+                     #else  //å®Ÿé¨“: http://koujinz.cocolog-nifty.com/blog/2009/05/post-d4b2.html ã‚’å‚è€ƒ.
+                            // X Y ã”ã¨ã§ãªãç›´ç·šè·é›¢ã§weightã‚’æ±‚ã‚ã‚‹å ´åˆ. (ã‚·ãƒ£ãƒ¼ãƒ—ãƒã‚¹ãŒåŠ¹ã„ãŸã‚ˆã†ãªç”»ã«ãªã‚‹)
                         double   len  = sqrt(lenX*lenX + lenY*lenY);
                         sum_t    wei  = DBL_TO_SUM(CALC_WEI(len));
                      #endif
@@ -198,7 +198,7 @@ static void  pix32_resizeSpline36Sub(unsigned* dst, unsigned dstW, unsigned dstH
 }
 
 
-/** spline-36 Šg‘åk¬
+/** spline-36 æ‹¡å¤§ç¸®å°
  */
 static void  pix32_resizeSpline36Reduc(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH)
 {
@@ -212,7 +212,7 @@ static void  pix32_resizeSpline36Reduc(unsigned* dst, unsigned dstW, unsigned ds
 
     assert(dst && dstW && dstH && src && srcW && srcH);
 
-    // Šg‘å‚µ‚½‚ ‚Æ ®””{‚Åk¬‚·‚é‚½‚ß‚Ì®””{—¦‚ğ‹‚ß‚é.
+    // æ‹¡å¤§ã—ãŸã‚ã¨ æ•´æ•°å€ã§ç¸®å°ã™ã‚‹ãŸã‚ã®æ•´æ•°å€ç‡ã‚’æ±‚ã‚ã‚‹.
     rscaleX  = (double)srcW / dstW;
     rscaleY  = (double)srcH / dstH;
     mw       = (rscaleX <= 1.0) ? 1 : (int)rscaleX + 1;
@@ -327,9 +327,9 @@ static void  pix32_resizeSpline36Reduc(unsigned* dst, unsigned dstW, unsigned ds
     }
 }
 
-#else   // k¬‚àspline36‚Ås‚¤ê‡
+#else   // ç¸®å°ã‚‚spline36ã§è¡Œã†å ´åˆ.
 
-/** Šg‘åk¬
+/** æ‹¡å¤§ç¸®å°.
  */
 int  pix32_resizeSpline36(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH)
 {
@@ -339,12 +339,12 @@ int  pix32_resizeSpline36(unsigned *dst, unsigned dstW, unsigned dstH, const uns
     }
 
     if (dstW == srcW && dstH == srcH) {
-        memcpy(dst, src, dstW*srcH*sizeof(*dst));                       // “¯‚¶ƒTƒCƒY‚È‚çƒƒ‚ƒŠƒRƒs[‚Å‚·‚Ü‚·
+        memcpy(dst, src, dstW*srcH*sizeof(*dst));                       // åŒã˜ã‚µã‚¤ã‚ºãªã‚‰ãƒ¡ãƒ¢ãƒªã‚³ãƒ”ãƒ¼ã§ã™ã¾ã™.
         return 1;
     }
 
     if ((srcW % dstW) == 0 && (srcH % dstH) == 0) {
-        pix32_resizeAveragingI(dst, dstW, dstH, src, srcW, srcH);       // ®”Š„‚è‚Å‚·‚Şê‡‚ÍA‚»‚êê—p‚Ìˆ—‚É‚µ‚ÄAŸø‚İ‚ğŒ¸‚ç‚·
+        pix32_resizeAveragingI(dst, dstW, dstH, src, srcW, srcH);       // æ•´æ•°å‰²ã‚Šã§ã™ã‚€å ´åˆã¯ã€ãã‚Œå°‚ç”¨ã®å‡¦ç†ã«ã—ã¦ã€æ»²ã¿ã‚’æ¸›ã‚‰ã™.
         return 1;
     }
     pix32_resizeSpline36Sub(dst, dstW, dstH, src, srcW, srcH);

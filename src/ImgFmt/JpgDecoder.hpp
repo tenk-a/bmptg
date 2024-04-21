@@ -1,34 +1,34 @@
 /**
  *  @file JpgDecoder.hpp
- *  @brief  ƒƒ‚ƒŠã‚Ìjpg‰æ‘œƒf[ƒ^‚ğ“WŠJ‚·‚é.
+ *  @brief  ãƒ¡ãƒ¢ãƒªä¸Šã®jpgç”»åƒãƒ‡ãƒ¼ã‚¿ã‚’å±•é–‹ã™ã‚‹.
  *  @author Masashi KITAMURA
  *  @note
- *      - Independent JPEG Group‚Ìlibjpeg.lib‚ğ—p‚¢‚Ä‚¢‚Ü‚·B
+ *      - Independent JPEG Groupã®libjpeg.libã‚’ç”¨ã„ã¦ã„ã¾ã™ã€‚
  *
- *      - g‚¢•û
- *          - setData(binData,size) ‚Åƒƒ‚ƒŠ[ã‚Ìjpgƒf[ƒ^‚ğİ’è‚µA
- *            ‚»‚ÌŒã read()‚·‚ê‚Îmalloc‚µ‚½ƒƒ‚ƒŠ‚É24ƒrƒbƒgF‰æ‘œ‚ğ“¾‚é.
- *          - ‚ ‚é‚¢‚ÍsetData()Œã, ƒTƒCƒYwidthByte()*height() ˆÈã‚Ìƒƒ‚ƒŠ‚ğ
- *            ŒÄ‚ÑŒ³‚Å—pˆÓ‚µ‚Äread(pix, ...)‚ğg‚¤.
+ *      - ä½¿ã„æ–¹
+ *          - setData(binData,size) ã§ãƒ¡ãƒ¢ãƒªãƒ¼ä¸Šã®jpgãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã—ã€
+ *            ãã®å¾Œ read()ã™ã‚Œã°mallocã—ãŸãƒ¡ãƒ¢ãƒªã«24ãƒ“ãƒƒãƒˆè‰²ç”»åƒã‚’å¾—ã‚‹.
+ *          - ã‚ã‚‹ã„ã¯setData()å¾Œ, ã‚µã‚¤ã‚ºwidthByte()*height() ä»¥ä¸Šã®ãƒ¡ãƒ¢ãƒªã‚’
+ *            å‘¼ã³å…ƒã§ç”¨æ„ã—ã¦read(pix, ...)ã‚’ä½¿ã†.
  */
 #ifndef JPGDECODER_HPP
 #define JPGDECODER_HPP
 
-#include <cstdlib>      // calloc‚ğƒwƒbƒ_‚Åg—p‚·‚é‚½‚ß.
+#include <cstdlib>      // callocã‚’ãƒ˜ãƒƒãƒ€ã§ä½¿ç”¨ã™ã‚‹ãŸã‚.
 #include <cassert>
 #include <string.h>
 #include <memory.h>
 
 
 
-/// ƒƒ‚ƒŠã‚Ìjpg‰æ‘œƒf[ƒ^‚ğ“WŠJ‚·‚é. (libjpeg.lib‚Ìƒ‰ƒbƒp[)
+/// ãƒ¡ãƒ¢ãƒªä¸Šã®jpgç”»åƒãƒ‡ãƒ¼ã‚¿ã‚’å±•é–‹ã™ã‚‹. (libjpeg.libã®ãƒ©ãƒƒãƒ‘ãƒ¼)
 class JpgDecoder {
 public:
     JpgDecoder();
     ~JpgDecoder();
     JpgDecoder(const void* binData, unsigned binDataSize, bool thumbnail=false);
 
-    /// “à•”‚ÅŠm•Û‚µ‚Ä‚¢‚éƒƒ‚ƒŠ‚ğŠJ•ú.
+    /// å†…éƒ¨ã§ç¢ºä¿ã—ã¦ã„ã‚‹ãƒ¡ãƒ¢ãƒªã‚’é–‹æ”¾.
     void        release();
 
     static bool isSupported(const void* data) {
@@ -44,25 +44,25 @@ public:
       #endif
     }
 
-    /// ƒƒ‚ƒŠã‚Ìjpgƒf[ƒ^‚ğİ’è. ƒ|ƒCƒ“ƒ^‚ğ•Û‚·‚é‚¾‚¯‚È‚Ì‚Åread()‚ğI‚¦‚é‘O‚ÉbinData‚ğ”j‰ó‚µ‚È‚¢‚±‚Æ.
+    /// ãƒ¡ãƒ¢ãƒªä¸Šã®jpgãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®š. ãƒã‚¤ãƒ³ã‚¿ã‚’ä¿æŒã™ã‚‹ã ã‘ãªã®ã§read()ã‚’çµ‚ãˆã‚‹å‰ã«binDataã‚’ç ´å£Šã—ãªã„ã“ã¨.
     bool        setData(const void* binData, unsigned binDataSize, bool thumbnail=false);
 
-    unsigned    bpp()        const { return bpp_; }             ///< ƒrƒbƒg/ƒsƒNƒZƒ‹. 24‚Ì‚İ.
-    unsigned    width()      const;                             ///< ‰¡•.
-    unsigned    height()     const;                             ///< c•.
-    unsigned    widthByte()  const { return width()*bpp_>>3; }  ///< ‰¡ƒoƒCƒg”.
-    unsigned    widthByte(unsigned algn) const;                 ///< algnƒoƒCƒg‚ÉƒAƒ‰ƒCƒƒ“ƒgÏ‚Ì‰¡•.
+    unsigned    bpp()        const { return bpp_; }             ///< ãƒ“ãƒƒãƒˆ/ãƒ”ã‚¯ã‚»ãƒ«. 24ã®ã¿.
+    unsigned    width()      const;                             ///< æ¨ªå¹….
+    unsigned    height()     const;                             ///< ç¸¦å¹….
+    unsigned    widthByte()  const { return width()*bpp_>>3; }  ///< æ¨ªãƒã‚¤ãƒˆæ•°.
+    unsigned    widthByte(unsigned algn) const;                 ///< algnãƒã‚¤ãƒˆã«ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆæ¸ˆã®æ¨ªå¹….
 
     unsigned    imageByte()  const { return widthByte() * height(); }
 
-    /// pix ‚É24ƒrƒbƒgF‰æ‘œ‚ğ“WŠJ‚·‚é. ƒTƒCƒY‚Í0‚¾‚ÆƒfƒtƒHƒ‹ƒg‚Ì‚Ü‚Ü. dir‚Í0‚ª¶ã‚©‚ç1‚È‚ç¶‰º‚©‚ç.
+    /// pix ã«24ãƒ“ãƒƒãƒˆè‰²ç”»åƒã‚’å±•é–‹ã™ã‚‹. ã‚µã‚¤ã‚ºã¯0ã ã¨ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã¾ã¾. dirã¯0ãŒå·¦ä¸Šã‹ã‚‰1ãªã‚‰å·¦ä¸‹ã‹ã‚‰.
     bool        read(void* pix, unsigned widByt=0, unsigned hei=0, unsigned dir=0);
 
-    /// malloc ‚µ‚½ƒƒ‚ƒŠ‚É‰æ‘œ‚ğ“ü‚ê‚Ä•Ô‚·.
+    /// malloc ã—ãŸãƒ¡ãƒ¢ãƒªã«ç”»åƒã‚’å…¥ã‚Œã¦è¿”ã™.
     void*       read(unsigned widAlgn=1, unsigned dir=0);
 
-    unsigned    originalWidth() const { return originalWidth_; }    // thumbnailw’è‚ÌŒ³ƒTƒCƒY
-    unsigned    originalHeight() const { return originalHeight_; }  // thumbnailw’è‚ÌŒ³ƒTƒCƒY
+    unsigned    originalWidth() const { return originalWidth_; }    // thumbnailæŒ‡å®šæ™‚ã®å…ƒã‚µã‚¤ã‚º.
+    unsigned    originalHeight() const { return originalHeight_; }  // thumbnailæŒ‡å®šæ™‚ã®å…ƒã‚µã‚¤ã‚º.
 
     unsigned const* clut() const { return gray_clut_; }
 
@@ -81,7 +81,7 @@ private:
 
 
 
-/** algnƒoƒCƒg‚ÉƒAƒ‰ƒCƒƒ“ƒgÏ‚İ‚Ì‰¡•ƒoƒCƒg”‚ğ•Ô‚·.
+/** algnãƒã‚¤ãƒˆã«ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆæ¸ˆã¿ã®æ¨ªå¹…ãƒã‚¤ãƒˆæ•°ã‚’è¿”ã™.
  */
 inline unsigned     JpgDecoder::widthByte(unsigned algn) const {
     assert( algn == 1 || algn == 2 || algn == 4 || algn == 8 || algn == 16 );

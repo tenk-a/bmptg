@@ -1,5 +1,5 @@
-// rgb <=> yuv �ϊ��ł̌덷������F.
-// r8g8b8 �ɑ΂� yuv �e11bit�ȏ�Ȃ� �덷�Ȃ��Ȃ�͗l
+// rgb <=> yuv 変換での誤差具合を視認.
+// r8g8b8 に対し yuv 各11bit以上なら 誤差なくなる模様,
 #include <stdio.h>
 
 #ifndef PIX32_CLAMP

@@ -1,6 +1,6 @@
 /**
  *  @file   beta.h
- *  @brief  ¶ƒoƒCƒiƒŠ‚Ì¶¬BƒpƒŒƒbƒg–³‚µ. “Ç‚İ‚İŒn‚Í–¢‘Î‰
+ *  @brief  ç”Ÿãƒã‚¤ãƒŠãƒªã®ç”Ÿæˆã€‚ãƒ‘ãƒ¬ãƒƒãƒˆç„¡ã—. èª­ã¿è¾¼ã¿ç³»ã¯æœªå¯¾å¿œ
  *  @author Masashi Kitamura
  */
 #ifndef BETA_H

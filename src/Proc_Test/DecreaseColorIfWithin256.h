@@ -1,6 +1,6 @@
 /**
  *  @file   DecreaseColorIfWithin256.h
- *  @brief  32ƒrƒbƒgF‰æ‚ÌF”‚ª256F(w’èF”)‚Éû‚Ü‚é‚È‚çA256F‰æ‚É•ÏŠ·.
+ *  @brief  32ãƒ“ãƒƒãƒˆè‰²ç”»ã®è‰²æ•°ãŒ256è‰²(æŒ‡å®šè‰²æ•°)ã«åã¾ã‚‹ãªã‚‰ã€256è‰²ç”»ã«å¤‰æ›.
  *  @author Masashi KITAMURA
  */
 
@@ -14,7 +14,7 @@
 #include <cassert>
 
 
-/** 32ƒrƒbƒgF‰æ‚ÌF”‚ª256F(w’èF”)‚Éû‚Ü‚é‚È‚çA256F‰æ‚É•ÏŠ·. û‚Ü‚ç‚È‚¢ê‡‚Í•ÏŠ·‚µ‚È‚¢.
+/** 32ãƒ“ãƒƒãƒˆè‰²ç”»ã®è‰²æ•°ãŒ256è‰²(æŒ‡å®šè‰²æ•°)ã«åã¾ã‚‹ãªã‚‰ã€256è‰²ç”»ã«å¤‰æ›. åã¾ã‚‰ãªã„å ´åˆã¯å¤‰æ›ã—ãªã„.
  */
 template<class DMY=void>
 class DecreaseColorIfWithin256 {
@@ -35,7 +35,7 @@ private:
 
 
 
-/// F”‚ğƒJƒEƒ“ƒg‚·‚é. ƒ`ƒFƒbƒN‚Ì‚½‚ß‚É1F—]•ª‚É•K—v‚ÅAclut‚Ìƒƒ‚ƒŠ‚Í clutSize+1 Šm•Û‚µ‚Ä‚¨‚­‚±‚Æ.
+/// è‰²æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹. ãƒã‚§ãƒƒã‚¯ã®ãŸã‚ã«1è‰²ä½™åˆ†ã«å¿…è¦ã§ã€clutã®ãƒ¡ãƒ¢ãƒªã¯ clutSize+1 ç¢ºä¿ã—ã¦ãŠãã“ã¨.
 template<class DMY>
 unsigned DecreaseColorIfWithin256<DMY>::countColor(const unsigned* pSrc, unsigned w, unsigned h, unsigned* pClut, unsigned clutSize, bool transf)
 {
@@ -51,13 +51,13 @@ unsigned DecreaseColorIfWithin256<DMY>::countColor(const unsigned* pSrc, unsigne
 
 
 
-/** 32ƒrƒbƒgF‰æ‚ÌF”‚ª256F(w’èF”)‚Éû‚Ü‚é‚È‚çA256F‰æ‚É•ÏŠ·. û‚Ü‚ç‚È‚¢ê‡‚Í•ÏŠ·‚µ‚È‚¢.
+/** 32ãƒ“ãƒƒãƒˆè‰²ç”»ã®è‰²æ•°ãŒ256è‰²(æŒ‡å®šè‰²æ•°)ã«åã¾ã‚‹ãªã‚‰ã€256è‰²ç”»ã«å¤‰æ›. åã¾ã‚‰ãªã„å ´åˆã¯å¤‰æ›ã—ãªã„.
  */
 template<class DMY>
 bool DecreaseColorIfWithin256<DMY>::conv(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, unsigned* pClut, unsigned clutSize, bool transf)
 {
-    /// ÀÛ‚ÌF”‚ªAclutSizeˆÈ“à‚Éû‚Ü‚é‚©‚ğƒ`ƒFƒbƒN.
-    unsigned clut[256+1];       // ˆêŒÂ—]•ª‚ÉŠm•Û.
+    /// å®Ÿéš›ã®è‰²æ•°ãŒã€clutSizeä»¥å†…ã«åã¾ã‚‹ã‹ã‚’ãƒã‚§ãƒƒã‚¯.
+    unsigned clut[256+1];       // ä¸€å€‹ä½™åˆ†ã«ç¢ºä¿.
     unsigned num = 0;
     if (clutSize > 256)
         clutSize = 256;
@@ -66,7 +66,7 @@ bool DecreaseColorIfWithin256<DMY>::conv(unsigned char* pDst, const unsigned* pS
     if (num > clutSize)
         return false;
 
-    // clut“à‚Éû‚Ü‚éF”‚¾‚Á‚½ê‡.
+    // clutå†…ã«åã¾ã‚‹è‰²æ•°ã ã£ãŸå ´åˆ.
     std::memcpy(pClut    , clut, num*sizeof(pClut[0]));
     if (num < clutSize)
         std::memset(pClut+num, 0, (clutSize-num)*sizeof(pClut[0]));
@@ -77,7 +77,7 @@ bool DecreaseColorIfWithin256<DMY>::conv(unsigned char* pDst, const unsigned* pS
 
 
 
-/** ®—ñ‚³‚ê‚½ƒe[ƒuƒ‹’†‚Åkey‚ª‚ ‚éˆÊ’u(”Ô†:0 ` num-1)‚ğ•Ô‚·. ‚È‚¯‚ê‚ÎAnum‚ğ•Ô‚·.
+/** æ•´åˆ—ã•ã‚ŒãŸãƒ†ãƒ¼ãƒ–ãƒ«ä¸­ã§keyãŒã‚ã‚‹ä½ç½®(ç•ªå·:0 ï½ num-1)ã‚’è¿”ã™. ãªã‘ã‚Œã°ã€numã‚’è¿”ã™.
  */
 template<class DMY>
 template<typename T>
@@ -100,8 +100,8 @@ unsigned DecreaseColorIfWithin256<DMY>::binary_find_tbl_n(T* tbl, unsigned num, 
 
 
 
-/** ƒe[ƒuƒ‹pTbl‚É’lkey‚ğ’Ç‰Á. ”ÍˆÍƒ`ƒFƒbƒN‚Í—\‚ßs‚Á‚Ä‚¢‚é‚±‚Æ‘O’ñ.
- *  @return ƒe[ƒuƒ‹’†‚Ìkey‚ÌˆÊ’u.
+/** ãƒ†ãƒ¼ãƒ–ãƒ«pTblã«å€¤keyã‚’è¿½åŠ . ç¯„å›²ãƒã‚§ãƒƒã‚¯ã¯äºˆã‚è¡Œã£ã¦ã„ã‚‹ã“ã¨å‰æ.
+ *  @return ãƒ†ãƒ¼ãƒ–ãƒ«ä¸­ã®keyã®ä½ç½®.
  */
 template<class DMY>
 template<typename T>
@@ -117,19 +117,19 @@ unsigned DecreaseColorIfWithin256<DMY>::binary_insert_tbl_n(T* pTbl, unsigned& r
             ++mid;
             low = mid;
         } else {
-            return mid; /* “¯‚¶‚à‚Ì‚ª‚İ‚Â‚©‚Á‚½‚Ì‚Å’Ç‰Á‚µ‚È‚¢ */
+            return mid; /* åŒã˜ã‚‚ã®ãŒã¿ã¤ã‹ã£ãŸã®ã§è¿½åŠ ã—ãªã„ */
         }
     }
 
-    // V‹K“o˜^
+    // æ–°è¦ç™»éŒ²
     ++rNum;
 
-    // “o˜^‰ÓŠ‚Ìƒƒ‚ƒŠ‚ğ‹ó‚¯‚é
+    // ç™»éŒ²ç®‡æ‰€ã®ãƒ¡ãƒ¢ãƒªã‚’ç©ºã‘ã‚‹
     for (hi = rNum; --hi > mid;) {
         pTbl[hi] = pTbl[hi-1];
     }
 
-    // “o˜^
+    // ç™»éŒ²
     pTbl[mid] = key;
     return mid;
 }

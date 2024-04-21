@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_kyuv.h
- *  @brief  rgb <=> yuv •ÏŠ·
+ *  @brief  rgb <=> yuv å¤‰æ›
  *  @author Masashi KITAMURA
  */
 
@@ -8,7 +8,7 @@
 #include "def.h"
 
 
-/** rgb‰æ‘œ‚ğ yuv ‚É•ÏŠ·. o—ÍƒTƒCƒY‚ª“ü—ÍƒTƒCƒY‚æ‚è‘å‚«‚¯‚ê‚ÎA•Ó‚ÌƒsƒNƒZƒ‹‚ğƒRƒs[‚µ‚Ä–„‚ß‚é.
+/** rgbç”»åƒã‚’ yuv ã«å¤‰æ›. å‡ºåŠ›ã‚µã‚¤ã‚ºãŒå…¥åŠ›ã‚µã‚¤ã‚ºã‚ˆã‚Šå¤§ãã‘ã‚Œã°ã€è¾ºã®ãƒ”ã‚¯ã‚»ãƒ«ã‚’ã‚³ãƒ”ãƒ¼ã—ã¦åŸ‹ã‚ã‚‹.
  */
 void pix32_kyuvFromRgb(pix32_kyuv_t *dst, unsigned dstW, unsigned dstH, unsigned ofsX, unsigned ofsY, unsigned const* src, unsigned srcW, unsigned srcH)
 {

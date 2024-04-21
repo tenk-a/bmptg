@@ -1,6 +1,6 @@
 /**
  *  @file gen.c
- *  @brief  ƒsƒNƒZƒ‹ƒf[ƒ^‚ÌƒTƒCƒY’²®ƒRƒs[“™
+ *  @brief  ãƒ”ã‚¯ã‚»ãƒ«ãƒ‡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚ºèª¿æ•´ã‚³ãƒ”ãƒ¼ç­‰.
  *  @author Masashi Kitamura
  *  @date   199?
  */
@@ -10,7 +10,7 @@
 #include "pix_subr.h"
 #include "gen.h"
 
-// dmc v8.41 ‚Å mem_mac.h ‚Ì”Å‚¾‚ÆA—•ss‚ÈƒGƒ‰[(ƒRƒ“ƒpƒCƒ‰‚ÌƒoƒO)‚É‚È‚é‚Ì‚ÅA‚»‚Ì‰ñ”ğ
+// dmc v8.41 ã§ mem_mac.h ã®ç‰ˆã ã¨ã€ç†ä¸å°½ãªã‚¨ãƒ©ãƒ¼(ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã®ãƒã‚°)ã«ãªã‚‹ã®ã§ã€ãã®å›é¿.
 #undef MEMSET4
 #define MEMSET4(d, s, sz)   do {int  *d__ = (int *)(d); int c__ = (unsigned)(sz)>>2; do { *d__++ = (int) (s); } while(--c__); } while (0)
 
@@ -18,7 +18,7 @@
 
 // ===========================================================================
 
-/// w’èƒTƒCƒY‚Ì‰æ‘œ—Ìˆæ‚ÉApix‚ğ‹éŒ`“]‘—‚·‚é
+/// æŒ‡å®šã‚µã‚¤ã‚ºã®ç”»åƒé ˜åŸŸã«ã€pixã‚’çŸ©å½¢è»¢é€ã™ã‚‹.
 void gen_newSizePix8(
     uint8_t **a_pix,
     int   *a_w  , int *a_h,
@@ -52,7 +52,7 @@ void gen_newSizePix8(
 }
 
 
-/// w’èƒTƒCƒY‚Ì‰æ‘œ—Ìˆæ‚ÉApix‚ğ‹éŒ`“]‘—‚·‚é
+/// æŒ‡å®šã‚µã‚¤ã‚ºã®ç”»åƒé ˜åŸŸã«ã€pixã‚’çŸ©å½¢è»¢é€ã™ã‚‹.
 void gen_newSizePix32(
     uint8_t **a_pix,
     int   *a_w  , int *a_h,
@@ -85,7 +85,7 @@ void gen_newSizePix32(
 }
 
 
-/// w’èƒhƒbƒg’PˆÊ‚ÌƒTƒCƒY‚É‡‚í‚¹’¼‚·
+/// æŒ‡å®šãƒ‰ãƒƒãƒˆå˜ä½ã®ã‚µã‚¤ã‚ºã«åˆã‚ã›ç›´ã™.
 void gen_celSz8(uint8_t **a_pix, int *a_w, int *a_h, int celW, int celH, int colKey)
 {
     int sw = *a_w;
@@ -97,7 +97,7 @@ void gen_celSz8(uint8_t **a_pix, int *a_w, int *a_h, int celW, int celH, int col
         return;
     w = ((sw + celW-1) / celW) * celW;
     h = ((sh + celH-1) / celH) * celH;
-    if (dbgExLog_getSw()) printf("\t‰æ‘œ‚ğ %d*%d ‚É•ÏX‚µ‚Ü‚·\n", w, h);
+    if (dbgExLog_getSw()) printf("\tç”»åƒã‚’ %d*%d ã«å¤‰æ›´ã—ã¾ã™.\n", w, h);
     p  = (uint8_t*)callocE(1, w * h + 16);
     if (colKey != -1)
         memset(p, colKey, w*h+16);
@@ -109,7 +109,7 @@ void gen_celSz8(uint8_t **a_pix, int *a_w, int *a_h, int celW, int celH, int col
 }
 
 
-/// w’èƒhƒbƒg’PˆÊ‚ÌƒTƒCƒY‚É‡‚í‚¹’¼‚·
+/// æŒ‡å®šãƒ‰ãƒƒãƒˆå˜ä½ã®ã‚µã‚¤ã‚ºã«åˆã‚ã›ç›´ã™.
 void gen_celSz32(uint8_t **a_pix, int *a_w, int *a_h, int celW, int celH, int colKey)
 {
     int sw = *a_w;
@@ -121,7 +121,7 @@ void gen_celSz32(uint8_t **a_pix, int *a_w, int *a_h, int celW, int celH, int co
         return;
     w = ((sw + celW-1) / celW) * celW;
     h = ((sh + celH-1) / celH) * celH;
-    if (dbgExLog_getSw()) printf("\t‰æ‘œ‚ğ %d*%d ‚É•ÏX‚µ‚Ü‚·\n", w, h);
+    if (dbgExLog_getSw()) printf("\tç”»åƒã‚’ %d*%d ã«å¤‰æ›´ã—ã¾ã™.\n", w, h);
     p  = (uint8_t*)callocE(4, w * h + 16);
     if (colKey != -1)
         MEMSET4(p, colKey, 4*(w*h+16));
@@ -134,7 +134,7 @@ void gen_celSz32(uint8_t **a_pix, int *a_w, int *a_h, int celW, int celH, int co
 
 
 
-/// ”²‚«F‚É‚æ‚é‹éŒ`—Ìˆæ‚Ìk¬
+/// æŠœãè‰²ã«ã‚ˆã‚‹çŸ©å½¢é ˜åŸŸã®ç¸®å°.
 void gen_nukiRect8(uint8_t **a_pix, int *a_w, int *a_h, int *a_x, int *a_y, int celW, int celH, int nukiClut, int grdMd)
 {
     int sw = *a_w;
@@ -146,10 +146,10 @@ void gen_nukiRect8(uint8_t **a_pix, int *a_w, int *a_h, int *a_x, int *a_y, int 
     uint8_t *p;
 
     w = sw, h = sh;
-    pix_getRectWithoutColKey(src, (unsigned)sw, (unsigned)sh, (uint8_t)nukiClut, &x, &y, &w, &h);   // ”²‚«F”Ô†‚Å‹éŒ`ƒTƒCƒY‚ğ‹‚ß‚é
+    pix_getRectWithoutColKey(src, (unsigned)sw, (unsigned)sh, (uint8_t)nukiClut, &x, &y, &w, &h);   // æŠœãè‰²ç•ªå·ã§çŸ©å½¢ã‚µã‚¤ã‚ºã‚’æ±‚ã‚ã‚‹.
     if (celW && celH) {
         if ((grdMd&1) == 0) {
-            pix_gridRect(celW,celH, &x,&y, &w,&h);                  // ƒOƒŠƒbƒh’PˆÊ‚É’¼‚·
+            pix_gridRect(celW,celH, &x,&y, &w,&h);                  // ã‚°ãƒªãƒƒãƒ‰å˜ä½ã«ç›´ã™.
         } else {
             w = ((w + celW-1) / celW) * celW;
             h = ((h + celH-1) / celH) * celH;
@@ -165,7 +165,7 @@ void gen_nukiRect8(uint8_t **a_pix, int *a_w, int *a_h, int *a_x, int *a_y, int 
     }
 
     if (x || y || w < sw || h < sh) {
-        if (dbgExLog_getSw()) printf("\t‰æ‘œ‚ğ(%d,%d) %d*%d ‚É•ÏX‚µ‚Ü‚·\n", x,y, w,h);
+        if (dbgExLog_getSw()) printf("\tç”»åƒã‚’(%d,%d) %d*%d ã«å¤‰æ›´ã—ã¾ã™.\n", x,y, w,h);
         p = (uint8_t*)callocE(1, w * h);
         //pix32_copyRect(p, w, h, 0,0, src, sw, sh, x, y, w, h);
         pix8_copyRect(p, w, h, 0,0, src, sw, sh, x, y, w, h);
@@ -179,7 +179,7 @@ void gen_nukiRect8(uint8_t **a_pix, int *a_w, int *a_h, int *a_x, int *a_y, int 
 }
 
 
-/// ”²‚«F‚É‚æ‚é‹éŒ`—Ìˆæ‚Ìk¬
+/// æŠœãè‰²ã«ã‚ˆã‚‹çŸ©å½¢é ˜åŸŸã®ç¸®å°.
 void gen_nukiRect32(uint8_t **a_pix, int *a_w, int *a_h, int *a_x, int *a_y, int celW, int celH, int grdMd)
 {
     int     sw = *a_w;
@@ -191,10 +191,10 @@ void gen_nukiRect32(uint8_t **a_pix, int *a_w, int *a_h, int *a_x, int *a_y, int
     uint8_t *src = *a_pix;
     uint8_t *p;
 
-    pix32_getAlpRect((unsigned*)src, sw, sh, &x, &y, &w, &h);               // ƒ¿î•ñ‚Å‹éŒ`ƒTƒCƒY‚ğ‹‚ß‚é
+    pix32_getAlpRect((unsigned*)src, sw, sh, &x, &y, &w, &h);   // Î±æƒ…å ±ã§çŸ©å½¢ã‚µã‚¤ã‚ºã‚’æ±‚ã‚ã‚‹.
     if (celW && celH) {
         if ((grdMd&1) == 0) {
-            pix_gridRect(celW,celH, &x,&y, &w,&h);              // ƒOƒŠƒbƒh’PˆÊ‚É’¼‚·
+            pix_gridRect(celW,celH, &x,&y, &w,&h);              // ã‚°ãƒªãƒƒãƒ‰å˜ä½ã«ç›´ã™.
         } else {
             w = ((w + celW-1) / celW) * celW;
             h = ((h + celH-1) / celH) * celH;
@@ -210,7 +210,7 @@ void gen_nukiRect32(uint8_t **a_pix, int *a_w, int *a_h, int *a_x, int *a_y, int
     }
 
     if (x || y || w < sw || h < sh) {
-        if (dbgExLog_getSw()) printf("\t‰æ‘œ‚ğ(%d,%d) %d*%d ‚É•ÏX‚µ‚Ü‚·\n", x,y, w,h);
+        if (dbgExLog_getSw()) printf("\tç”»åƒã‚’(%d,%d) %d*%d ã«å¤‰æ›´ã—ã¾ã™.\n", x,y, w,h);
         p = (uint8_t*)callocE(4, w * h);
         pix32_copyRect(p, w, h, 0,0, src, sw, sh, x, y, w, h);
         *a_x += x;

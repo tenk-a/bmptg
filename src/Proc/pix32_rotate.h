@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_rotate.h
- *  @brief  ‰æ‘œ‚ğ”CˆÓŠp‚Å‰ñ“].
+ *  @brief  ç”»åƒã‚’ä»»æ„è§’ã§å›è»¢.
  *  @author Masashi KITAMURA
  */
 
@@ -9,11 +9,11 @@
 
 #include "def.h"
 
-/// ‰æ‘œ‚ğ‰ñ“]‚µ‚½Œ‹‰Ê‚ÌV‹K‰æ‘œ‚Ìî•ñ
+/// ç”»åƒã‚’å›è»¢ã—ãŸçµæœã®æ–°è¦ç”»åƒã®æƒ…å ±.
 typedef struct pix32_rotate_dst_t {
-    uint32_t*   mallocMem;          ///< ‰æ‘œ. malloc‚³‚ê‚½ƒƒ‚ƒŠ
-    uint32_t    w;                  ///< ‰¡•
-    uint32_t    h;                  ///< c•
+    uint32_t*   mallocMem;          ///< ç”»åƒ. mallocã•ã‚ŒãŸãƒ¡ãƒ¢ãƒª.
+    uint32_t    w;                  ///< æ¨ªå¹….
+    uint32_t    h;                  ///< ç¸¦å¹….
 } pix32_rotate_dst_t;
 
 #if defined __cplusplus
@@ -24,21 +24,21 @@ int  pix32_rotateBilinear(pix32_rotate_dst_t* dst, const unsigned *src, unsigned
 int  pix32_rotateBicubic(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol, int hasAlpha);
 int  pix32_rotateSpline36(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol, int hasAlpha);
 
-/// ‚·‚Å‚É‰ñ“]Ï‚İ‚Ì‰æ‘œ‚Ìƒ¿ƒ`ƒƒƒ“ƒlƒ‹‚¾‚¯ƒoƒCƒŠƒjƒA‚Åİ’è‚µ’¼‚·‚½‚ß‚Ìƒ‹[ƒ`ƒ“
+/// ã™ã§ã«å›è»¢æ¸ˆã¿ã®ç”»åƒã®Î±ãƒãƒ£ãƒ³ãƒãƒ«ã ã‘ãƒã‚¤ãƒªãƒ‹ã‚¢ã§è¨­å®šã—ç›´ã™ãŸã‚ã®ãƒ«ãƒ¼ãƒãƒ³.
 int  pix32_rotateBilinearAlpha(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol);
 #if defined __cplusplus
 }
 #endif
 
 
-/** ‰æ‘œ‚Ì‰ñ“].
- * @param dst   o—Í‰æ‘œ
- * @param src   “ü—Í‰æ‘œ
- * @param srcW  “ü—Í‰¡•
- * @param srcH  “ü—Íc•
- * @param rot   ‰E‚Ö‚Ì‰ñ“]Šp“x
- * @param dcol  ”ÍˆÍŠO‚ÌŒ„ŠÔ‚ªo—ˆ‚½‚É–„‚ß‚éF
- * @param type  •ÏŠ·‚Ìí—Ş: 0,1=ƒoƒCƒŠƒjƒA 2=ƒoƒCƒLƒ…[ƒrƒbƒN 3,4=Spline36
+/** ç”»åƒã®å›è»¢.
+ * @param dst   å‡ºåŠ›ç”»åƒ.
+ * @param src   å…¥åŠ›ç”»åƒ.
+ * @param srcW  å…¥åŠ›æ¨ªå¹….
+ * @param srcH  å…¥åŠ›ç¸¦å¹….
+ * @param rot   å³ã¸ã®å›è»¢è§’åº¦.
+ * @param dcol  ç¯„å›²å¤–ã®éš™é–“ãŒå‡ºæ¥ãŸæ™‚ã«åŸ‹ã‚ã‚‹è‰².
+ * @param type  å¤‰æ›ã®ç¨®é¡: 0,1=ãƒã‚¤ãƒªãƒ‹ã‚¢ 2=ãƒã‚¤ã‚­ãƒ¥ãƒ¼ãƒ“ãƒƒã‚¯ 3,4=Spline36
  */
 inline int  pix32_rotate(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol, int hasAlpha, int type)
 {
@@ -55,8 +55,8 @@ inline int  pix32_rotate(pix32_rotate_dst_t* dst, const unsigned *src, unsigned 
 
 #if 0
 // ===========================================================================
-// C++Œü
-// image(), witdh(),height(),bpp() ‚ğƒƒ“ƒo[‚É‚Â‰æ‘œƒNƒ‰ƒX‚ğ‘€ì.
+// C++å‘.
+// image(), witdh(),height(),bpp() ã‚’ãƒ¡ãƒ³ãƒãƒ¼ã«æŒã¤ç”»åƒã‚¯ãƒ©ã‚¹ã‚’æ“ä½œ.
 
 #if defined __cplusplus
 

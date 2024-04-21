@@ -1,9 +1,9 @@
 /**
  *  @file   ReduceColorHist.h
- *  @brief  “K“–‚É•p“x”‚¦‚½‚è‚µ‚Ä‚ÌŒ¸F.
+ *  @brief  é©å½“ã«é »åº¦æ•°ãˆãŸã‚Šã—ã¦ã®æ¸›è‰².
  *  @author Masashi KITAMURA
  *  @note
- *      ‚¢‚ë‚¢‚ë”j’]‚µ‚Ä‚é‚¯‚ÇA‚Æ‚è‚ ‚¦‚¸“®‚¢‚Ä‚é‚Ì‚Åc‚·.
+ *      ã„ã‚ã„ã‚ç ´ç¶»ã—ã¦ã‚‹ã‘ã©ã€ã¨ã‚Šã‚ãˆãšå‹•ã„ã¦ã‚‹ã®ã§æ®‹ã™.
  */
 
 #ifndef REDUCECOLORHIST_H
@@ -15,14 +15,14 @@
 
 
 
-/// “K“–‚É•p“x”‚¦‚½‚è‚µ‚Ä‚ÌŒ¸Fˆ—.
+/// é©å½“ã«é »åº¦æ•°ãˆãŸã‚Šã—ã¦ã®æ¸›è‰²å‡¦ç†.
 class ReduceColorHist {
 public:
     ReduceColorHist() {; }
     ~ReduceColorHist(){;}
 
-    /** clut‰»Œü‚¯‚ÉA‰æ‘œ‚ÌF”‚ğcolNum‚É‚È‚é‚Ü‚ÅƒJƒEƒ“ƒg.
-     *  clut0‚ªw’è‚³‚ê‚Ä‚¢‚½‚çAF‚ğ“ü‚ê‚Ä•Ô‚·.
+    /** clutåŒ–å‘ã‘ã«ã€ç”»åƒã®è‰²æ•°ã‚’colNumã«ãªã‚‹ã¾ã§ã‚«ã‚¦ãƒ³ãƒˆ.
+     *  clut0ãŒæŒ‡å®šã•ã‚Œã¦ã„ãŸã‚‰ã€è‰²ã‚’å…¥ã‚Œã¦è¿”ã™.
      */
     static unsigned countColor(const unsigned *pix, unsigned w, unsigned h, unsigned colNum=257, bool transparentFlg=false, unsigned* clut0=NULL) {
         //
@@ -33,7 +33,7 @@ public:
 
         unsigned n = 0;
 
-        if (transparentFlg) // 0”Ô‚É“§–¾F‚ğ•K‚¸Š„‚è“–‚Ä‚éê‡.
+        if (transparentFlg) // 0ç•ªã«é€æ˜è‰²ã‚’å¿…ãšå‰²ã‚Šå½“ã¦ã‚‹å ´åˆ.
             n = 1;
 
         for (unsigned i = 0; i < w * h && n < colNum; ++i) {
@@ -46,8 +46,8 @@ public:
     }
 
 
-    /** 32ƒrƒbƒgF‚ğ clut ‚É]‚Á‚Ä‹ß‚¢F‚É’uŠ·. ƒ¿‚à’Pƒ”äŠr.
-     *  ¦ 32ƒrƒbƒgF‰æ‚ªAÀÛ‚É‚ÍclutSizeFˆÈ“à‚Ìê‡‚Ì•ÏŠ·‚Ì‚½‚ß‚É—pˆÓ.
+    /** 32ãƒ“ãƒƒãƒˆè‰²ã‚’ clut ã«å¾“ã£ã¦è¿‘ã„è‰²ã«ç½®æ›. Î±ã‚‚å˜ç´”æ¯”è¼ƒ.
+     *  â€» 32ãƒ“ãƒƒãƒˆè‰²ç”»ãŒã€å®Ÿéš›ã«ã¯clutSizeè‰²ä»¥å†…ã®å ´åˆã®å¤‰æ›ã®ãŸã‚ã«ç”¨æ„.
      */
     static void convPix32to8(unsigned char *dst, unsigned *src, int w, int h, unsigned *clut, unsigned clutSize) {
         unsigned *s     = (unsigned*)src;
@@ -75,15 +75,15 @@ public:
 
 
 
-    /** 32ƒrƒbƒgF‚ğ clut ‚É]‚Á‚Ä‹ß‚¢F‚É’uŠ·.
-     *  ƒ¿‚ÍA”²‚«F‚PF‚Ì‚İl—¶. minA‚Ìã‰º‚ÅA•s“§–¾A“§–¾A‚Ì‚Ç‚¿‚ç‚©‚É‹­§B
-     *  ¦ ReduceColorMC‚Åƒ¿‘Î‰‚µ‚½‚Ì‚ÅA‚±‚¿‚ç‚ÍA’Pƒ‚Èˆ—‚Ì‚İ‚ÉB
+    /** 32ãƒ“ãƒƒãƒˆè‰²ã‚’ clut ã«å¾“ã£ã¦è¿‘ã„è‰²ã«ç½®æ›.
+     *  Î±ã¯ã€æŠœãè‰²ï¼‘è‰²ã®ã¿è€ƒæ…®. minAã®ä¸Šä¸‹ã§ã€ä¸é€æ˜ã€é€æ˜ã€ã®ã©ã¡ã‚‰ã‹ã«å¼·åˆ¶ã€‚
+     *  â€» ReduceColorMCã§Î±å¯¾å¿œã—ãŸã®ã§ã€ã“ã¡ã‚‰ã¯ã€å˜ç´”ãªå‡¦ç†ã®ã¿ã«ã€‚
      */
     static int convPix32to8_na(unsigned char *dst, unsigned *src, int w, int h, unsigned *clut, unsigned clutSize, unsigned clutOfs, int minA) {
         unsigned *s     = (unsigned*)src;
         unsigned char  *d     = (unsigned char*)dst;
 
-        // “§–¾(ƒ¿)‚ªclut‚É‚ ‚é‚©’T‚·.
+        // é€æ˜(Î±)ãŒclutã«ã‚ã‚‹ã‹æ¢ã™.
         unsigned indA   = 0;
         unsigned n;
         for (n = 0; n < clutSize; ++n) {
@@ -93,17 +93,17 @@ public:
             }
         }
 
-        bool no_transparent = (n == clutSize);  // “§–¾‚ª‚È‚©‚Á‚½‚©‚Ç‚¤‚©
+        bool no_transparent = (n == clutSize);  // é€æ˜ãŒãªã‹ã£ãŸã‹ã©ã†ã‹
 
         for (n = 0; n < w * h; ++n) {
             unsigned ii = indA;
             unsigned c  = s[n];
             unsigned a  = ARGB_A(c);
-            if (a > minA || no_transparent) {   // “§–¾ˆÈŠO‚ÌƒsƒNƒZƒ‹‚¾‚Á‚½‚Æ‚«.
+            if (a > minA || no_transparent) {   // é€æ˜ä»¥å¤–ã®ãƒ”ã‚¯ã‚»ãƒ«ã ã£ãŸã¨ã.
                 unsigned k = 0xFFFFFFFF;
                 for (unsigned i = clutOfs; i < clutSize; ++i) {
                     unsigned    ic = clut[i];
-                    if (ARGB_A(ic) <= minA) // clut‚Ìƒ¿‚ª“§–¾‚È‚çA‚»‚ê‚Í‘ÎÛŠOI
+                    if (ARGB_A(ic) <= minA) // clutã®Î±ãŒé€æ˜ãªã‚‰ã€ãã‚Œã¯å¯¾è±¡å¤–ï¼
                         continue;
                     int         r = ARGB_R(ic) - ARGB_R(c);
                     int         g = ARGB_G(ic) - ARGB_G(c);
@@ -121,7 +121,7 @@ public:
     }
 
 
-    /** ƒfƒtƒHƒ‹ƒgƒpƒŒƒbƒg‚Ìì¬.
+    /** ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ‘ãƒ¬ãƒƒãƒˆã®ä½œæˆ.
      * bpp : 3,4,6,8   typ : 0=jpn 1=pcat/win
      */
     void getPcDfltClut(void *clut0, int bpp, int typ) {
@@ -211,7 +211,7 @@ public:
 
 
 
-    /** Œ¸F
+    /** æ¸›è‰²
      */
     int getClut(const void *pix0, int w, int h, void *clut0, int clutNum, int alpFlg, int minA) {
         //
@@ -236,12 +236,12 @@ public:
         if (dbgExLog_getSw()) printf("dicol_getClut %d*%d clutNum:%d alpFlg:%d\n", w, h, clutNum, ctop);
         //if (dbgExLog_getSw()) for (i = 0; i < clutNum; i++) printf("clut[%d]=%#x\n", i, clut[i]);
         DBG_M();
-        if (clutNum < 2) {  // 2F–¢–‚Íˆ—‚Å‚«‚Ë[
-            ERR_PRINTF(("2F–¢–‚É‚ÍŒ¸F‚Å‚«‚È‚¢\n"));
+        if (clutNum < 2) {  // 2è‰²æœªæº€ã¯å‡¦ç†ã§ãã­ãƒ¼
+            ERR_PRINTF(("2è‰²æœªæº€ã«ã¯æ¸›è‰²ã§ããªã„\n"));
             return 0;
         }
 
-        // ‚Ü‚¸A‘f‚ÌF”‚ğƒJƒEƒ“ƒg
+        // ã¾ãšã€ç´ ã®è‰²æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆ
         DBG_M();
         //memset(clut, 0x00, (sizeof clut[0]) * clutNum);
         for (i = 0; i < clutNum; ++i)
@@ -253,19 +253,19 @@ public:
 
         DBG_PRINTF(("getClut: wh:%d,%d  clutNum:%d alpFlg:%d  colNum=%d\n", w,h, clutNum, ctop, cn));
 
-        // ”²‚«Fƒ`ƒFƒbƒN
+        // æŠœãè‰²ãƒã‚§ãƒƒã‚¯
         DBG_M();
 
-        if (cn <= clutNum) {    // Œ³‚æ‚è clutNum ˆÈ‰º‚ÌF”‚¾‚Á‚½.
+        if (cn <= clutNum) {    // å…ƒã‚ˆã‚Š clutNum ä»¥ä¸‹ã®è‰²æ•°ã ã£ãŸ.
             rc = 0x101;
             memcpy(clut, clutTmp, sizeof(unsigned)*clutNum);
-            DBG_PRINTF(("Œ³‚æ‚è%dFˆÈ‰º‚ÌF”(%d)‚È‚Ì‚Å‹l‚ß‡‚í‚¹‚é‚¾‚¯\n",clutNum, cn));
+            DBG_PRINTF(("å…ƒã‚ˆã‚Š%dè‰²ä»¥ä¸‹ã®è‰²æ•°(%d)ãªã®ã§è©°ã‚åˆã‚ã›ã‚‹ã ã‘\n",clutNum, cn));
             goto RET;
         }
 
         //
         enum {LB=5, LN = 1<<LB, LM=LN-1, LR=8-LB};
-        // ì‹Æƒƒ‚ƒŠŠm•Û
+        // ä½œæ¥­ãƒ¡ãƒ¢ãƒªç¢ºä¿
         col64   = (unsigned*)callocE(sizeof(unsigned),64);
         hst64   = (unsigned*)callocE(sizeof(unsigned),64);
         col64b  = (unsigned*)callocE(sizeof(unsigned),64);
@@ -273,18 +273,18 @@ public:
         hst     = (unsigned(*)[2])callocE(2*sizeof(unsigned), LN*LN*LN+4);
         DBG_M();
 
-        // ŠeƒsƒNƒZƒ‹‚Ì”‚ğ”‚¦‚é
+        // å„ãƒ”ã‚¯ã‚»ãƒ«ã®æ•°ã‚’æ•°ãˆã‚‹
         for (i = 0; i < w*h; i++) {
             c = pix[i];
-            if ((int)((unsigned)c >> 24) >= minA) {     // ƒ¿ >= m(0 or 1 or 0xf0) ‚ª¬—§‚·‚ê‚Î
+            if ((int)((unsigned)c >> 24) >= minA) {     // Î± >= m(0 or 1 or 0xf0) ãŒæˆç«‹ã™ã‚Œã°
                 c = (((c>>(16+LR))&LM)<<LB) | (((c>>(8+LR))&LM)<<(2*LB)) | ((c>>LR)&LM);
                 hst[c][0]++;
             }
         }
         DBG_M();
 
-        // Šî–{F”‚ğ‘I‚Ô
-        if ((clutNum-ctop) < 8) { // 2`7F‚È‚ç”Z’W‚É‚·‚é
+        // åŸºæœ¬è‰²æ•°ã‚’é¸ã¶
+        if ((clutNum-ctop) < 8) { // 2ï½7è‰²ãªã‚‰æ¿ƒæ·¡ã«ã™ã‚‹
             int d,y,iy=0xff, my=0;
             for (i = 0; i < LN*LN*LN; i++) {
                 c = hst[i][0];
@@ -308,7 +308,7 @@ public:
             goto RET;
 
         } else if ((clutNum-ctop) < 64) {
-            // 8`63F‚ÌŒ¸F‚È‚ç‚ÎA‚Ü‚¸Šî–{ 8F‚ğ‘I‚Ô
+            // 8ï½63è‰²ã®æ¸›è‰²ãªã‚‰ã°ã€ã¾ãšåŸºæœ¬ 8è‰²ã‚’é¸ã¶
             unsigned sr[8],sg[8],sb[8],sm[8];
             DBG_M();
             for (i = 0; i < 8; i++)
@@ -341,7 +341,7 @@ public:
             DBG_M();
 
         } else {
-            // 64FˆÈã‚Ö‚ÌŒ¸F‚È‚ç‚ÎA‚Ü‚¸Šî–{ 64F‚ğ‘I‚Ô
+            // 64è‰²ä»¥ä¸Šã¸ã®æ¸›è‰²ãªã‚‰ã°ã€ã¾ãšåŸºæœ¬ 64è‰²ã‚’é¸ã¶
             cn = ctop;
             for (i = 0; i < LN*LN*LN; i++) {
                 hst[i][1] = i;
@@ -360,7 +360,7 @@ public:
                 }
             }
             DBG_M();
-            // F”‚ª clutNumˆÈ‰º‚µ‚©‚È‚¯‚ê‚ÎA‚»‚Ì‚Ü‚Üclut‰»
+            // è‰²æ•°ãŒ clutNumä»¥ä¸‹ã—ã‹ãªã‘ã‚Œã°ã€ãã®ã¾ã¾clutåŒ–
             if (cn <= clutNum) {
                 DBG_M();
                 for (i = ctop; i < cn; i++) {
@@ -376,7 +376,7 @@ public:
             }
             DBG_M();
 
-            // clutƒe[ƒuƒ‹‚É“o˜^
+            // clutãƒ†ãƒ¼ãƒ–ãƒ«ã«ç™»éŒ²
             cn = ctop;
             for (i = 0; i < 64; i++) {
                 if (hst64[i]) {
@@ -389,7 +389,7 @@ public:
                 }
             }
             DBG_M();
-            if ((clutNum-ctop) >= 196) {    // 196FˆÈã‚ ‚é‚È‚çA‘æ“ñŒó•â‚à“o˜^‚µ‚¿‚á‚¤
+            if ((clutNum-ctop) >= 196) {    // 196è‰²ä»¥ä¸Šã‚ã‚‹ãªã‚‰ã€ç¬¬äºŒå€™è£œã‚‚ç™»éŒ²ã—ã¡ã‚ƒã†
                 for (i = 0; i < 64; i++) {
                     if (hst64b[i]) {
                         c = col64b[i];
@@ -404,15 +404,15 @@ public:
             DBG_M();
         }
 
-        // clut‚ª‚·‚×‚Ä–„‚Ü‚Á‚Ä‚¢‚½‚çI—¹
+        // clutãŒã™ã¹ã¦åŸ‹ã¾ã£ã¦ã„ãŸã‚‰çµ‚äº†
         if (cn >= clutNum) {
             rc = clutNum;
             goto RET;
         }
 
         DBG_M();
-        // •p“x‚Ì‚‚¢‡‚É•À‚×‚ÄAc‚è‚ÌF‚ğ‘I‚Ô
-        qsort(hst, LN*LN*LN, sizeof(hst[0]), dicol_cmp1);   // ‘½‚¢‚à‚Ì‡‚É•À‚×‚é
+        // é »åº¦ã®é«˜ã„é †ã«ä¸¦ã¹ã¦ã€æ®‹ã‚Šã®è‰²ã‚’é¸ã¶
+        qsort(hst, LN*LN*LN, sizeof(hst[0]), dicol_cmp1);   // å¤šã„ã‚‚ã®é †ã«ä¸¦ã¹ã‚‹
 
         DBG_M();
         for (; cn < clutNum; cn++) {
@@ -424,7 +424,7 @@ public:
         }
 
       RET:
-        // I—¹
+        // çµ‚äº†
         qsort(clut+ctop, clutNum - ctop, 4, clutSortCmp);
         DBG_M();
 
@@ -440,13 +440,13 @@ public:
 
 private:
 
-    /// 8bit”4‚Â‚ğãˆÊ‚©‚ç‡‚É‚Â‚È‚°‚Ä32ƒrƒbƒg”‚É‚·‚é
+    /// 8bitæ•°4ã¤ã‚’ä¸Šä½ã‹ã‚‰é †ã«ã¤ãªã’ã¦32ãƒ“ãƒƒãƒˆæ•°ã«ã™ã‚‹
     static unsigned argb(unsigned char a, unsigned char r, unsigned char g, unsigned char b) {
         return (a << 24) | (r << 16) | (g << 8) | (b);
     }
 
 
-    /** clut ‚Ìƒ\[ƒg‚Ì‚½‚ß‚Ì”äŠrŠÖ” */
+    /** clut ã®ã‚½ãƒ¼ãƒˆã®ãŸã‚ã®æ¯”è¼ƒé–¢æ•° */
     static int __cdecl clutSortCmp(const void *a0, const void *b0)
     {
         unsigned a = *(unsigned *)a0;
@@ -459,7 +459,7 @@ private:
     }
 
 
-    /// Œ¸F‚Å•p“x‚Ì‚‚¢ƒ‚ƒm‡‚É•À‚×‚é‚½‚ß‚Ì”äŠrŠÖ”
+    /// æ¸›è‰²ã§é »åº¦ã®é«˜ã„ãƒ¢ãƒé †ã«ä¸¦ã¹ã‚‹ãŸã‚ã®æ¯”è¼ƒé–¢æ•°
     static int __cdecl dicol_cmp1(const void *a0, const void *b0)
     {
         const unsigned *a = (unsigned*)a0;
@@ -478,8 +478,8 @@ private:
 
 
 
-    /** ƒe[ƒuƒ‹pTbl‚É’lkey‚ğ’Ç‰Á. ”ÍˆÍƒ`ƒFƒbƒN‚Í—\‚ßs‚Á‚Ä‚¢‚é‚±‚Æ‘O’ñI
-     *  @return ƒe[ƒuƒ‹’†‚Ìkey‚ÌˆÊ’u.
+    /** ãƒ†ãƒ¼ãƒ–ãƒ«pTblã«å€¤keyã‚’è¿½åŠ . ç¯„å›²ãƒã‚§ãƒƒã‚¯ã¯äºˆã‚è¡Œã£ã¦ã„ã‚‹ã“ã¨å‰æï¼
+     *  @return ãƒ†ãƒ¼ãƒ–ãƒ«ä¸­ã®keyã®ä½ç½®.
      */
     template<typename T>
     static unsigned insert_tbl_n(T pTbl[], unsigned& rNum, const T& key) {
@@ -494,19 +494,19 @@ private:
                 ++mid;
                 low = mid;
             } else {
-                return mid; /* “¯‚¶‚à‚Ì‚ª‚İ‚Â‚©‚Á‚½‚Ì‚Å’Ç‰Á‚µ‚È‚¢ */
+                return mid; /* åŒã˜ã‚‚ã®ãŒã¿ã¤ã‹ã£ãŸã®ã§è¿½åŠ ã—ãªã„ */
             }
         }
 
-        // V‹K“o˜^
+        // æ–°è¦ç™»éŒ²
         ++rNum;
 
-        // “o˜^‰ÓŠ‚Ìƒƒ‚ƒŠ‚ğ‹ó‚¯‚é
+        // ç™»éŒ²ç®‡æ‰€ã®ãƒ¡ãƒ¢ãƒªã‚’ç©ºã‘ã‚‹
         for (hi = rNum; --hi > mid;) {
             pTbl[hi] = pTbl[hi-1];
         }
 
-        // “o˜^
+        // ç™»éŒ²
         pTbl[mid] = key;
         return mid;
     }

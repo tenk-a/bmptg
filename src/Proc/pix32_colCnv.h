@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_colConv.h
- *  @brief  32ƒrƒbƒgF‰æ‘œ‚ÌAFŠÖŒW‚Ì•ÏŠ·.
+ *  @brief  32ãƒ“ãƒƒãƒˆè‰²ç”»åƒã®ã€è‰²é–¢ä¿‚ã®å¤‰æ›.
  *  @author Masashi KITAMURA
  */
 #ifndef PIX32_COLCNV_H
@@ -8,15 +8,15 @@
 
 
 
-#ifndef PIX32_ARGB  // a,r,g,bŒ‹‡••ª‰ğƒ}ƒNƒ
+#ifndef PIX32_ARGB  // a,r,g,bçµåˆï¼†åˆ†è§£ãƒã‚¯ãƒ­.
 
-/// 8bit’l‚Ìa,r,g,b‚ğŒq‚°‚Ä 32bit ‚ÌF’l‚É‚·‚é
+/// 8bitå€¤ã®a,r,g,bã‚’ç¹‹ã’ã¦ 32bit ã®è‰²å€¤ã«ã™ã‚‹.
 #define PIX32_ARGB(a,r,g,b)     ((((unsigned char)(a))<<24)|(((unsigned char)(r))<<16)|(((unsigned char)(g))<<8)|((unsigned char)(b)))
 
-#define PIX32_GET_B(argb)       ((unsigned char)(argb))         ///< argb’l’†‚Ì blue‚Ì’l‚ğæ“¾
-#define PIX32_GET_G(argb)       ((unsigned char)((argb)>>8))    ///< argb’l’†‚Ì green‚Ì’l‚ğæ“¾
-#define PIX32_GET_R(argb)       ((unsigned char)((argb)>>16))   ///< argb’l’†‚Ì green‚Ì’l‚ğæ“¾
-#define PIX32_GET_A(argb)       (((unsigned)(argb))>>24)        ///< argb’l’†‚Ì alpha‚Ì’l‚ğæ“¾
+#define PIX32_GET_B(argb)       ((unsigned char)(argb))         ///< argbå€¤ä¸­ã® blueã®å€¤ã‚’å–å¾—.
+#define PIX32_GET_G(argb)       ((unsigned char)((argb)>>8))    ///< argbå€¤ä¸­ã® greenã®å€¤ã‚’å–å¾—.
+#define PIX32_GET_R(argb)       ((unsigned char)((argb)>>16))   ///< argbå€¤ä¸­ã® greenã®å€¤ã‚’å–å¾—.
+#define PIX32_GET_A(argb)       (((unsigned)(argb))>>24)        ///< argbå€¤ä¸­ã® alphaã®å€¤ã‚’å–å¾—.
 
 #endif
 
@@ -27,9 +27,9 @@
 #include "pix32_kyuv.h"
 
 
-/// pix32_swapARGB ‚Å‚Ì•ÏŠ·w’è”Ô†.
+/// pix32_swapARGB ã§ã®å¤‰æ›æŒ‡å®šç•ªå·.
 enum PIX32_SWAPARGB {
-    // Œ»İ‚Ì‰æ‘œ‚ªARGB‡‚Æ‚µ‚ÄA•À‚Ñ‚ğ•Ï‚¦‚½‚¢ê‡‚Éw’è.
+    // ç¾åœ¨ã®ç”»åƒãŒARGBé †ã¨ã—ã¦ã€ä¸¦ã³ã‚’å¤‰ãˆãŸã„å ´åˆã«æŒ‡å®š.
     PIX32_SWAP_TO_ARGB =  0,
     PIX32_SWAP_TO_RAGB =  1,
     PIX32_SWAP_TO_AGRB =  2,
@@ -55,8 +55,8 @@ enum PIX32_SWAPARGB {
     PIX32_SWAP_TO_GBRA = 22,
     PIX32_SWAP_TO_BGRA = 23,
 
-    // Œ»İ‚Ì‰æ‘œ‚ÌA,R,G,B‚Ì‡‚ğw’è‚µ‚ÄA•ÏŠ·‚ÌŒ‹‰Ê ARGB‡‚É‚µ‚½‚¢ê‡.
-    // ¦ ƒoƒO‚Á‚Ä‚é‚©‚à...
+    // ç¾åœ¨ã®ç”»åƒã®A,R,G,Bã®é †ã‚’æŒ‡å®šã—ã¦ã€å¤‰æ›ã®çµæœ ARGBé †ã«ã—ãŸã„å ´åˆ.
+    // â€» ãƒã‚°ã£ã¦ã‚‹ã‹ã‚‚...
     PIX32_SWAP_FROM_ARGB =  0,
     PIX32_SWAP_FROM_RAGB =  6,
     PIX32_SWAP_FROM_AGRB =  2,
@@ -85,13 +85,13 @@ enum PIX32_SWAPARGB {
 
 
 
-/** F‚Ìargb‚Ì‡‚ğ•À‚Ñ‘Ö‚¦‚é
+/** è‰²ã®argbã®é †ã‚’ä¸¦ã³æ›¿ãˆã‚‹.
  */
 inline void pix32_swapARGB(unsigned *pix, unsigned w, unsigned h, PIX32_SWAPARGB rotNo)
 {
     enum { B=0,G=1,R=2,A=3};
     static const char tbl[][4] = {
-      // b g r a        //      mem     little endian’l(ƒvƒƒOƒ‰ƒ€’†‚Í‚±‚¿‚ç)
+      // b g r a        //      mem     little endianå€¤(ãƒ—ãƒ­ã‚°ãƒ©ãƒ ä¸­ã¯ã“ã¡ã‚‰)
         {B,G,R,A,},     // 0    bgra    argb
         {B,G,A,R,},     // 1    bgar    ragb
         {B,R,G,A,},     // 2    brga    agrb
@@ -116,7 +116,7 @@ inline void pix32_swapARGB(unsigned *pix, unsigned w, unsigned h, PIX32_SWAPARGB
         {A,G,R,B,},     //21    agrb    brga
         {A,R,B,G,},     //22    arbg    gbra
         {A,R,G,B,},     //23    argb    bgra
-        // ª‚Ìƒe[ƒuƒ‹“à‚ÌA,R,G,B‚ÍˆÓ–¡‚Æ‚µ‚Ä‚Í”’l‚Ì‚Ù‚¤‚ª‚æ‚¢‚ªA
+        // â†‘ã®ãƒ†ãƒ¼ãƒ–ãƒ«å†…ã®A,R,G,Bã¯æ„å‘³ã¨ã—ã¦ã¯æ•°å€¤ã®ã»ã†ãŒã‚ˆã„ãŒ,
     };
     unsigned char   *p = (unsigned char*)pix;
     const char      *t = tbl[rotNo];
@@ -139,7 +139,7 @@ inline void pix32_swapARGB(unsigned *pix, unsigned w, unsigned h, PIX32_SWAPARGB
 
 
 
-/** ‰æ‘œ‚Ì—LŒøƒrƒbƒg”‚ğ•ÏX‚·‚é.(r,g,bŠiƒrƒbƒg‚Ì‰ºˆÊ‚ğ0ƒNƒŠƒA‚·‚é)
+/** ç”»åƒã®æœ‰åŠ¹ãƒ“ãƒƒãƒˆæ•°ã‚’å¤‰æ›´ã™ã‚‹.(r,g,bæ ¼ãƒ“ãƒƒãƒˆã®ä¸‹ä½ã‚’0ã‚¯ãƒªã‚¢ã™ã‚‹)
  */
 inline void pix32_bppChg(unsigned *pix, unsigned w, unsigned h, unsigned colBit, bool zeroHosei=true)
 {
@@ -180,8 +180,8 @@ inline void pix32_bppChg(unsigned *pix, unsigned w, unsigned h, unsigned colBit,
         c &= 0xFFFFFF;
         if (c) {
             c = c & colBitMsk;
-            if (c == 0 && a && zeroHosei) { // 0‚Ì•â³‚ğ‚·‚é‚Æ‚«.
-                // F0‚ÅAƒ¿‚ª‚ ‚é‚Æ‚«A0‚Å‚È‚¢ˆê”ÔˆÃ‚¢(Â)F‚ğİ’è
+            if (c == 0 && a && zeroHosei) { // 0ã®è£œæ­£ã‚’ã™ã‚‹ã¨ã.
+                // è‰²0ã§ã€Î±ãŒã‚ã‚‹ã¨ãã€0ã§ãªã„ä¸€ç•ªæš—ã„(é’)è‰²ã‚’è¨­å®š.
                 c = colZeroPtn;
             }
         }
@@ -193,7 +193,7 @@ inline void pix32_bppChg(unsigned *pix, unsigned w, unsigned h, unsigned colBit,
 
 
 
-/** ‰æ‘œ‚É ƒ¿î•ñ‚ª‚ ‚é‚©? (‘S‚Äƒ¿=0‚©‘S‚Äƒ¿=0xff‚È‚çƒ¿î•ñ–³‚µ)
+/** ç”»åƒã« Î±æƒ…å ±ãŒã‚ã‚‹ã‹? (å…¨ã¦Î±=0ã‹å…¨ã¦Î±=0xffãªã‚‰Î±æƒ…å ±ç„¡ã—)
  */
 inline int pix32_isUseAlpha(const unsigned *p, unsigned w, unsigned h)
 {
@@ -214,7 +214,7 @@ inline int pix32_isUseAlpha(const unsigned *p, unsigned w, unsigned h)
 
 
 
-/** ƒ¿’l‚ª‘S‚Ä0‚©?
+/** Î±å€¤ãŒå…¨ã¦0ã‹?
  */
 inline int pix32_isAlphaAllZero(const unsigned *pix, unsigned w, unsigned h)
 {
@@ -229,7 +229,7 @@ inline int pix32_isAlphaAllZero(const unsigned *pix, unsigned w, unsigned h)
 
 
 
-/** “ü—Í‚Ìƒ¿‚ğ 0ƒNƒŠƒA
+/** å…¥åŠ›ã®Î±ã‚’ 0ã‚¯ãƒªã‚¢.
  */
 inline void pix32_clearAlpha(unsigned *pix, unsigned w, unsigned h, unsigned a)
 {
@@ -245,7 +245,7 @@ inline void pix32_clearAlpha(unsigned *pix, unsigned w, unsigned h, unsigned a)
 
 
 
-/** ”²‚«F‚Ìƒ¿î•ñ‚ğ 0‚É.
+/** æŠœãè‰²ã®Î±æƒ…å ±ã‚’ 0ã«.
  */
 inline void pix32_clearAlphaOfColKey(unsigned* pix, unsigned w, unsigned h, unsigned colKey)
 {
@@ -259,7 +259,7 @@ inline void pix32_clearAlphaOfColKey(unsigned* pix, unsigned w, unsigned h, unsi
     }
 }
 
-/** ƒ¿=0‚ÌRGB‚ğ0ƒNƒŠƒA
+/** Î±=0ã®RGBã‚’0ã‚¯ãƒªã‚¢.
  */
 inline void pix32_clearColorIfAlpha0(unsigned *pix, unsigned w, unsigned h)
 {
@@ -276,7 +276,7 @@ inline void pix32_clearColorIfAlpha0(unsigned *pix, unsigned w, unsigned h)
 }
 
 
-/** “ü—Í‚Ìƒ¿‚ğ”½“]‚·‚é•K—v‚ª‚ ‚é‚Æ‚«
+/** å…¥åŠ›ã®Î±ã‚’åè»¢ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ã¨ã.
  */
 inline void pix32_revAlpha(unsigned* pix, unsigned w, unsigned h)
 {
@@ -295,7 +295,7 @@ inline void pix32_revAlpha(unsigned* pix, unsigned w, unsigned h)
 
 
 
-/** ”²‚«F‚Íƒ¿=0‚ÉA‚»‚êˆÈŠO‚Íƒ¿=0xFF‚É‚·‚é.
+/** æŠœãè‰²ã¯Î±=0ã«ã€ãã‚Œä»¥å¤–ã¯Î±=0xFFã«ã™ã‚‹.
  */
 inline void pix32_genColKeyToAlpha(unsigned *pix, unsigned w, unsigned h, unsigned colKey)
 {
@@ -313,7 +313,7 @@ inline void pix32_genColKeyToAlpha(unsigned *pix, unsigned w, unsigned h, unsign
 
 
 #if 0
-/** RGB‚æ‚èƒ‚ƒmƒNƒ’l‚ğ‹‚ßA‚»‚ê‚ğƒ¿‚Æ‚·‚é.
+/** RGBã‚ˆã‚Šãƒ¢ãƒã‚¯ãƒ­å€¤ã‚’æ±‚ã‚ã€ãã‚Œã‚’Î±ã¨ã™ã‚‹.
  */
 inline void pix32_monoToAlpha(unsigned *pix, unsigned w, unsigned h)
 {
@@ -335,7 +335,7 @@ inline void pix32_monoToAlpha(unsigned *pix, unsigned w, unsigned h)
 #endif
 
 
-/** RGB‚æ‚èƒ‚ƒmƒNƒ’l‚ğ‹‚ßA‚»‚ê‚ğƒ¿‚Æ‚·‚é.
+/** RGBã‚ˆã‚Šãƒ¢ãƒã‚¯ãƒ­å€¤ã‚’æ±‚ã‚ã€ãã‚Œã‚’Î±ã¨ã™ã‚‹.
  */
 inline void pix32_monoToAlpha(unsigned *pix, unsigned w, unsigned h, double ratio, int ofs)
 {
@@ -363,7 +363,7 @@ inline void pix32_monoToAlpha(unsigned *pix, unsigned w, unsigned h, double rati
 
 
 
-/** ƒ‚ƒmƒNƒ‚É•ÏŠ·.
+/** ãƒ¢ãƒã‚¯ãƒ­ã«å¤‰æ›.
  */
 inline void pix32_toMono(unsigned *pix, unsigned w, unsigned h)
 {
@@ -385,7 +385,7 @@ inline void pix32_toMono(unsigned *pix, unsigned w, unsigned h)
 
 
 
-/** R,G,B,A‚¢‚¸‚ê‚©‚Ìƒ`ƒƒƒ“ƒlƒ‹‚ğ—p‚¢‚Äƒ‚ƒmƒNƒ‚É•ÏŠ·.
+/** R,G,B,Aã„ãšã‚Œã‹ã®ãƒãƒ£ãƒ³ãƒãƒ«ã‚’ç”¨ã„ã¦ãƒ¢ãƒã‚¯ãƒ­ã«å¤‰æ›.
  */
 inline void pix32_chARGBtoMono(unsigned *pix, unsigned w, unsigned h, int ch)
 {
@@ -404,7 +404,7 @@ inline void pix32_chARGBtoMono(unsigned *pix, unsigned w, unsigned h, int ch)
 
 
 
-/** Fcol‚ÌŠeARGB’l‚ğAƒsƒNƒZƒ‹‚ÌŠeARGB‚ÌŠeX‚Éæ‚¸‚é.
+/** è‰²colã®å„ARGBå€¤ã‚’ã€ãƒ”ã‚¯ã‚»ãƒ«ã®å„ARGBã®å„ã€…ã«ä¹—ãšã‚‹.
  */
 inline void pix32_colMul(unsigned *pix, unsigned w, unsigned h, unsigned col)
 {
@@ -433,7 +433,7 @@ inline void pix32_colMul(unsigned *pix, unsigned w, unsigned h, unsigned col)
 
 
 
-/** R,G,B,A ŠeX‚ğ“ñæ
+/** R,G,B,A å„ã€…ã‚’äºŒä¹—.
  */
 inline void pix32_colChSquare(unsigned *pix, unsigned w, unsigned h)
 {
@@ -457,7 +457,7 @@ inline void pix32_colChSquare(unsigned *pix, unsigned w, unsigned h)
 
 
 
-/** ratio=0.0`1.0 ‚Ì—¦‚ÅA‰æ‘f(rgb)‚ÌŠe’l‚ğ•ÏX.
+/** ratio=0.0ï½1.0 ã®ç‡ã§ã€ç”»ç´ (rgb)ã®å„å€¤ã‚’å¤‰æ›´.
  */
 inline void pix32_changeRgbTone(unsigned *pix, unsigned w, unsigned h, double ratio) {
     unsigned size = w * h;
@@ -479,7 +479,7 @@ inline void pix32_changeRgbTone(unsigned *pix, unsigned w, unsigned h, double ra
 
 
 
-/** ratio=0.0`1.0 ‚Ì—¦‚ÅA‰æ‘f(yuv)‚Ì‹P“x(y)‚Ì‚İ‚ğ•ÏX.
+/** ratio=0.0ï½1.0 ã®ç‡ã§ã€ç”»ç´ (yuv)ã®è¼åº¦(y)ã®ã¿ã‚’å¤‰æ›´.
  */
 inline void pix32_changeTone(unsigned *pix, unsigned w, unsigned h, double ratio) {
     unsigned size = w * h;
@@ -503,7 +503,7 @@ inline void pix32_changeTone(unsigned *pix, unsigned w, unsigned h, double ratio
 
 
 
-/** ƒsƒNƒZƒ‹‚ÌFcol‚ÌŠeARGB’l‚ğAƒsƒNƒZƒ‹‚ÌŠeARGB‚ÌŠeX‚Éæ‚¸‚é.
+/** ãƒ”ã‚¯ã‚»ãƒ«ã®è‰²colã®å„ARGBå€¤ã‚’ã€ãƒ”ã‚¯ã‚»ãƒ«ã®å„ARGBã®å„ã€…ã«ä¹—ãšã‚‹.
  */
 inline void pix32_argbScale(unsigned *pix, unsigned w, unsigned h, double argb[4])
 {
@@ -528,7 +528,7 @@ inline void pix32_argbScale(unsigned *pix, unsigned w, unsigned h, double argb[4
 
 
 
-/** ƒsƒNƒZƒ‹‚ÌFcol‚ÌŠeARGB’l‚ğAƒsƒNƒZƒ‹‚ÌŠeARGB‚ÌŠeX‚Éæ‚¸‚é.
+/** ãƒ”ã‚¯ã‚»ãƒ«ã®è‰²colã®å„ARGBå€¤ã‚’ã€ãƒ”ã‚¯ã‚»ãƒ«ã®å„ARGBã®å„ã€…ã«ä¹—ãšã‚‹.
  */
 inline void pix32_ayuvScale(unsigned *pix, unsigned w, unsigned h, double ratio[4])
 {
@@ -557,7 +557,7 @@ inline void pix32_ayuvScale(unsigned *pix, unsigned w, unsigned h, double ratio[
 
 
 
-/** ƒ¿î•ñ‚ğƒ‚ƒmƒNƒ‰æ‘œ‰».
+/** Î±æƒ…å ±ã‚’ãƒ¢ãƒã‚¯ãƒ­ç”»åƒåŒ–.
  */
 inline void pix32_alphaToRGB(unsigned *pix, unsigned w, unsigned h)
 {
@@ -574,8 +574,8 @@ inline void pix32_alphaToRGB(unsigned *pix, unsigned w, unsigned h)
 
 
 
-/** ƒ¿=0‚ÍF000‚ÉAƒ¿1`254 (minA,maxA] ‚ÌƒsƒNƒZƒ‹‚Íˆø”‚ÌFrgb‚Æƒ¿ƒuƒŒƒ“ƒh‚µ‚Äƒ¿=0xff‚Ì‰æ‘œ‚É•ÏŠ·.
- *  (•£”¼“§–¾—L‚è‚ÌƒoƒXƒgƒAƒbƒv‰æ‘œ‚ğA“§–¾•s“§–¾‚Ì‚İ‰æ‘œ‚É•ÏŠ·‚·‚é—p)
+/** Î±=0ã¯è‰²000ã«ã€Î±1ï½254 (minA,maxA] ã®ãƒ”ã‚¯ã‚»ãƒ«ã¯å¼•æ•°ã®è‰²rgbã¨Î±ãƒ–ãƒ¬ãƒ³ãƒ‰ã—ã¦Î±=0xffã®ç”»åƒã«å¤‰æ›.
+ *  (æ·µåŠé€æ˜æœ‰ã‚Šã®ãƒã‚¹ãƒˆã‚¢ãƒƒãƒ—ç”»åƒã‚’ã€é€æ˜ä¸é€æ˜ã®ã¿ç”»åƒã«å¤‰æ›ã™ã‚‹ç”¨)
  */
 inline void pix32_alphaBlendByColor(unsigned* pix, unsigned w, unsigned h, unsigned rgb, unsigned nukiumeRgb=0, unsigned minA=0, unsigned maxA=255)
 {
@@ -609,8 +609,8 @@ inline void pix32_alphaBlendByColor(unsigned* pix, unsigned w, unsigned h, unsig
 
 
 // ===========================================================================
-// C++Œü
-// image(), witdh(),height(),bpp() ‚ğƒƒ“ƒo[‚É‚Â‰æ‘œƒNƒ‰ƒX‚ğ‘€ì.
+// C++å‘.
+// image(), witdh(),height(),bpp() ã‚’ãƒ¡ãƒ³ãƒãƒ¼ã«æŒã¤ç”»åƒã‚¯ãƒ©ã‚¹ã‚’æ“ä½œ.
 
 #if defined __cplusplus
 

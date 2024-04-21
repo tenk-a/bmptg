@@ -6,7 +6,7 @@
 #define PIX_SUBR_H
 
 
-/** ƒOƒŠƒbƒhƒTƒCƒY gw*gh ‚Æ‚µ‚ÄAƒOƒŠƒbƒh‚É‡‚¤‚æ‚¤‚É‹éŒ`ƒTƒCƒY‚ğ’²® */
+/** ã‚°ãƒªãƒƒãƒ‰ã‚µã‚¤ã‚º gw*gh ã¨ã—ã¦ã€ã‚°ãƒªãƒƒãƒ‰ã«åˆã†ã‚ˆã†ã«çŸ©å½¢ã‚µã‚¤ã‚ºã‚’èª¿æ•´ */
 inline void pix_gridRect(int width, int height, int *x_p, int *y_p, int *w_p, int *h_p)
 {
     if (width > 1) {
@@ -27,11 +27,11 @@ inline void pix_gridRect(int width, int height, int *x_p, int *y_p, int *w_p, in
 
 
 #if defined __cplusplus
-// ‰º‹L‚ÍAƒsƒNƒZƒ‹‚ğ‚ ‚ç‚í‚·Œ^‚ğtemplate‚Å—^‚¦‚Ä‚¢‚éˆÈŠO‚ÍA‚Ù‚ÚCƒ‹[ƒ`ƒ“‚Ì‚Ü‚Ü.
+// ä¸‹è¨˜ã¯ã€ãƒ”ã‚¯ã‚»ãƒ«ã‚’ã‚ã‚‰ã‚ã™å‹ã‚’templateã§ä¸ãˆã¦ã„ã‚‹ä»¥å¤–ã¯ã€ã»ã¼Cãƒ«ãƒ¼ãƒãƒ³ã®ã¾ã¾.
 
 
 
-/** ”wŒiFcolKeyˆÈŠO‚Ì•”•ª‚ª“ü‚éÅ¬‚Ì‹éŒ`‚ğ‹‚ß‚é.
+/** èƒŒæ™¯è‰²colKeyä»¥å¤–ã®éƒ¨åˆ†ãŒå…¥ã‚‹æœ€å°ã®çŸ©å½¢ã‚’æ±‚ã‚ã‚‹.
  */
 template<typename pix_t>
 int pix_getRectWithoutColKey(pix_t *pix, unsigned width, unsigned height, pix_t colKey
@@ -60,13 +60,13 @@ int pix_getRectWithoutColKey(pix_t *pix, unsigned width, unsigned height, pix_t 
         }
     }
 
-    if (x0 == 0x7fffffff || x1 == -0x7fffffff) {    /* ”wŒiF‚Ì‚İ‚Ì‚Æ‚« */
+    if (x0 == 0x7fffffff || x1 == -0x7fffffff) {    /* èƒŒæ™¯è‰²ã®ã¿ã®ã¨ã */
         *w_p = 0;
         *h_p = 0;
         *x_p = 0;
         *y_p = 0;
     } else {
-      #if 1 // •K‚¸•£‚Pƒhƒbƒg‚É”²‚«‚¢‚ë‚ª‚ ‚é‚æ‚¤‚É’²®
+      #if 1 // å¿…ãšæ·µï¼‘ãƒ‰ãƒƒãƒˆã«æŠœãã„ã‚ãŒã‚ã‚‹ã‚ˆã†ã«èª¿æ•´.
         if (fuchi1) {
             x0--, y0--, x1++, y1++;
             if (x0 < 0) x0 = 0;
@@ -86,7 +86,7 @@ int pix_getRectWithoutColKey(pix_t *pix, unsigned width, unsigned height, pix_t 
 
 
 
-/// ‰æ‘œ‚Ì¶‰E”½“]
+/// ç”»åƒã®å·¦å³åè»¢.
 template<typename pix_t>
 inline void pix_revX(pix_t* pix, unsigned w, unsigned h) {
     unsigned wb = w * sizeof(pix_t);
@@ -105,7 +105,7 @@ inline void pix_revX(pix_t* pix, unsigned w, unsigned h) {
 
 
 
-/// ‰æ‘œ‚Ìã‰º”½“]
+/// ç”»åƒã®ä¸Šä¸‹åè»¢.
 template<typename pix_t>
 inline void pix_revY(pix_t* pix, unsigned w, unsigned h) {
     int         wb = w * sizeof(pix_t);
@@ -126,7 +126,7 @@ inline void pix_revY(pix_t* pix, unsigned w, unsigned h) {
 
 
 
-/// ‰æ‘œ‚Ì180‹”½“]
+/// ç”»åƒã®180Â°åè»¢.
 template<typename pix_t>
 inline void pix_revXY(pix_t* pix, unsigned w, unsigned h) {
     unsigned    wb = w * sizeof(pix_t);
@@ -155,8 +155,8 @@ inline void pix_revXY(pix_t* pix, unsigned w, unsigned h) {
 
 
 
-/** ã‰º¶‰E”½“]‚·‚é
- *  dir: bit0:x”½“]   bit1:y”½“]
+/** ä¸Šä¸‹å·¦å³åè»¢ã™ã‚‹
+ *  dir: bit0:xåè»¢   bit1:yåè»¢
  */
 template<typename pix_t>
 inline void pix_revXY(pix_t *pix, unsigned w, unsigned h, unsigned dir)
@@ -169,7 +169,7 @@ inline void pix_revXY(pix_t *pix, unsigned w, unsigned h, unsigned dir)
 }
 
 
-/** ¶90‹‰ñ“].
+/** å·¦90Â°å›è»¢.
  */
 template<typename pix_t>
 inline void pix_rotL90(pix_t *dst, const pix_t* src, unsigned w, unsigned h)
@@ -184,7 +184,7 @@ inline void pix_rotL90(pix_t *dst, const pix_t* src, unsigned w, unsigned h)
 
 
 
-/** ‰E90‹‰ñ“].
+/** å³90Â°å›è»¢.
  */
 template<typename pix_t>
 inline void pix_rotR90(pix_t *dst, const pix_t* src, unsigned w, unsigned h)
@@ -199,8 +199,8 @@ inline void pix_rotR90(pix_t *dst, const pix_t* src, unsigned w, unsigned h)
 
 
 
-/** ƒsƒNƒZƒ‹’l‚ğ’Pƒ‚Éƒrƒbƒg”½“].
- *  (‚Q’l‰æ‘œŒü‚¯‚É—pˆÓA‚¾‚¯‚ÇA‘¼‚ÌƒrƒbƒgF‚Å‚à)
+/** ãƒ”ã‚¯ã‚»ãƒ«å€¤ã‚’å˜ç´”ã«ãƒ“ãƒƒãƒˆåè»¢.
+ *  (ï¼’å€¤ç”»åƒå‘ã‘ã«ç”¨æ„ã€ã ã‘ã©ã€ä»–ã®ãƒ“ãƒƒãƒˆè‰²ã§ã‚‚)
  */
 template<typename pix_t>
 void pix_bitCom(pix_t *pix, int w, int h)
@@ -230,8 +230,8 @@ void pix_bitCom(pix_t *pix, int w, int h)
 #if defined __cplusplus
 
 
-/** ”wŒiFcolKeyˆÈŠO‚Ì•”•ª‚ª“ü‚éÅ¬‚Ì‹éŒ`‚ğ‹‚ß‚é.
- *  ”äŠr—pƒtƒ@ƒ“ƒNƒ^‚ğg‚¤”Å
+/** èƒŒæ™¯è‰²colKeyä»¥å¤–ã®éƒ¨åˆ†ãŒå…¥ã‚‹æœ€å°ã®çŸ©å½¢ã‚’æ±‚ã‚ã‚‹.
+ *  æ¯”è¼ƒç”¨ãƒ•ã‚¡ãƒ³ã‚¯ã‚¿ã‚’ä½¿ã†ç‰ˆ
  */
 template<typename pix_t, class IsKey>
 int pix_getRectWithoutCmpKey(pix_t *pix, unsigned width, unsigned height
@@ -261,13 +261,13 @@ int pix_getRectWithoutCmpKey(pix_t *pix, unsigned width, unsigned height
         }
     }
 
-    if (x0 == 0x7fffffff) {     /* ”wŒiF‚Ì‚İ‚Ì‚Æ‚« */
+    if (x0 == 0x7fffffff) {     /* èƒŒæ™¯è‰²ã®ã¿ã®ã¨ã */
         *w_p = 0;
         *h_p = 0;
         *x_p = 0;
         *y_p = 0;
     } else {
-      #if 1 // •K‚¸•£‚Pƒhƒbƒg‚É”²‚«F‚ª‚ ‚é‚æ‚¤‚É’²®
+      #if 1 // å¿…ãšæ·µï¼‘ãƒ‰ãƒƒãƒˆã«æŠœãè‰²ãŒã‚ã‚‹ã‚ˆã†ã«èª¿æ•´.
         if (fuchi1) {
             x0--, y0--, x1++, y1++;
             if (x0 < 0) x0 = 0;
@@ -286,15 +286,15 @@ int pix_getRectWithoutCmpKey(pix_t *pix, unsigned width, unsigned height
 
 
 
-/// clut‰æ‚Ì”²‚«F‚ğƒtƒ‹ƒJƒ‰[‚Åw’è‚µ‚½‚¢ê‡—p.
+/// clutç”»ã®æŠœãè‰²ã‚’ãƒ•ãƒ«ã‚«ãƒ©ãƒ¼ã§æŒ‡å®šã—ãŸã„å ´åˆç”¨.
 struct Pix_Cmp_Alpha0 {
-    // ƒ¿=0‚È‚çtrue‚ğ•Ô‚·.
+    // Î±=0ãªã‚‰trueã‚’è¿”ã™.
     bool operator()(unsigned argb) const {
         return (argb & 0xFF000000) == 0;
     }
 };
 
-/** ƒ¿î•ñ‚ª0ˆÈŠO‚Ì‹éŒ`‚ğ‹‚ß‚é.
+/** Î±æƒ…å ±ãŒ0ä»¥å¤–ã®çŸ©å½¢ã‚’æ±‚ã‚ã‚‹.
  */
 inline int pix32_getAlpRect(unsigned* pix, unsigned width, int height, int *x_p, int *y_p, int *w_p, int *h_p, bool fuchi1=false)
 {
@@ -303,12 +303,12 @@ inline int pix32_getAlpRect(unsigned* pix, unsigned width, int height, int *x_p,
 
 
 
-/// clut‰æ‚Ì”²‚«F‚ğƒtƒ‹ƒJƒ‰[‚Åw’è‚µ‚½‚¢ê‡—p.
+/// clutç”»ã®æŠœãè‰²ã‚’ãƒ•ãƒ«ã‚«ãƒ©ãƒ¼ã§æŒ‡å®šã—ãŸã„å ´åˆç”¨.
 struct Pix_Cmp_Rgb_ClutNo {
     Pix_Cmp_Rgb_ClutNo(const unsigned* clut, unsigned colKeyRGB)
         : clut_(clut), colKeyRGB_(colKeyRGB & 0xFFFFFF) {;}
 
-    // ”²‚«F‚Æ“¯‚¶‚È‚ç‚Îtrue‚ğ•Ô‚·.
+    // æŠœãè‰²ã¨åŒã˜ãªã‚‰ã°trueã‚’è¿”ã™.
     bool operator()(unsigned clutNo) const {
         return colKeyRGB_ == (clut_[ clutNo ] & 0xFFFFFF);
     }
@@ -319,7 +319,7 @@ private:
 };
 
 
-/** 8bitF‚Ì‰æ‚ÅAFcolKeyRGB‚ª”²‚«F‚Æ‚µ‚ÄA”²‚«FˆÈŠO‚Ì‹éŒ`‚ğ‹‚ß‚é.
+/** 8bitè‰²ã®ç”»ã§ã€è‰²colKeyRGBãŒæŠœãè‰²ã¨ã—ã¦ã€æŠœãè‰²ä»¥å¤–ã®çŸ©å½¢ã‚’æ±‚ã‚ã‚‹.
  */
 inline int pix8_getRectWithoutColKeyRGB(unsigned char *pix, unsigned width, unsigned height
                 , unsigned* clut, unsigned  colKeyRGB, int *x_p, int *y_p, int *w_p, int *h_p, bool fuchi1=false)

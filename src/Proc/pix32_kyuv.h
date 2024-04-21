@@ -1,10 +1,10 @@
 /**
  *  @file   pix32_kyuv.h
- *  @brief  rgb <=> yuv •ÏŠ·
+ *  @brief  rgb <=> yuv å¤‰æ›.
  *  @author Masashi KITAMURA
  *  @note
- *      r,g,b ‚Í Še8bit‘O’ñ.
- *      pix32_kyuv_t ‚Í rgb<=>yuv•ÏŠ·‚ÅŒë·‚ªo‚È‚¢‚æ‚¤‚É y,u,vŠe 13ƒrƒbƒg(‘OŒã)‚É‚µ‚Äˆµ‚¤‚½‚ß‚ÌŒ^(short * 4);
+ *      r,g,b ã¯ å„8bitå‰æ.
+ *      pix32_kyuv_t ã¯ rgb<=>yuvå¤‰æ›ã§èª¤å·®ãŒå‡ºãªã„ã‚ˆã†ã« y,u,vå„ 13ãƒ“ãƒƒãƒˆ(å‰å¾Œ)ã«ã—ã¦æ‰±ã†ãŸã‚ã®å‹(short * 4);
  */
 
 #ifndef PIX32_KYUV_H
@@ -12,34 +12,34 @@
 
 
 #ifndef PIX32_ARGB
-/// 8bit’l‚Ìa,r,g,b‚ğŒq‚°‚Ä 32bit ‚ÌF’l‚É‚·‚é
+/// 8bitå€¤ã®a,r,g,bã‚’ç¹‹ã’ã¦ 32bit ã®è‰²å€¤ã«ã™ã‚‹.
 #define PIX32_ARGB(a,r,g,b)     ((((unsigned char)(a))<<24)|(((unsigned char)(r))<<16)|(((unsigned char)(g))<<8)|((unsigned char)(b)))
 
-#define PIX32_GET_B(argb)       ((unsigned char)(argb))         ///< argb’l’†‚Ì blue‚Ì’l‚ğæ“¾
-#define PIX32_GET_G(argb)       ((unsigned char)((argb)>>8))    ///< argb’l’†‚Ì green‚Ì’l‚ğæ“¾
-#define PIX32_GET_R(argb)       ((unsigned char)((argb)>>16))   ///< argb’l’†‚Ì green‚Ì’l‚ğæ“¾
-#define PIX32_GET_A(argb)       (((unsigned)(argb))>>24)        ///< argb’l’†‚Ì alpha‚Ì’l‚ğæ“¾
+#define PIX32_GET_B(argb)       ((unsigned char)(argb))         ///< argbå€¤ä¸­ã® blueã®å€¤ã‚’å–å¾—.
+#define PIX32_GET_G(argb)       ((unsigned char)((argb)>>8))    ///< argbå€¤ä¸­ã® greenã®å€¤ã‚’å–å¾—.
+#define PIX32_GET_R(argb)       ((unsigned char)((argb)>>16))   ///< argbå€¤ä¸­ã® greenã®å€¤ã‚’å–å¾—.
+#define PIX32_GET_A(argb)       (((unsigned)(argb))>>24)        ///< argbå€¤ä¸­ã® alphaã®å€¤ã‚’å–å¾—.
 #endif
 
 #ifndef PIX32_CLAMP
 #define PIX32_CLAMP(c,mi,ma)    (((c) < (mi)) ? (mi) : ((ma) < (c)) ? (ma) : (c))
 #endif
 
-// r,g,b’l‚©‚ç Šey,u,v ‚ğ‹‚ß ŒW”‚ğŠ|‚¯‚éƒ}ƒNƒ. (Š„Z‚æ‚èæ‚ÉŠ|Z‚ğ‚µ‚½‚¢‚½‚ßAƒ}ƒNƒ‚ÉŒW”‚àŠÜ‚ß‚Ä‚¢‚é)
+// r,g,bå€¤ã‹ã‚‰ å„y,u,v ã‚’æ±‚ã‚ ä¿‚æ•°ã‚’æ›ã‘ã‚‹ãƒã‚¯ãƒ­. (å‰²ç®—ã‚ˆã‚Šå…ˆã«æ›ç®—ã‚’ã—ãŸã„ãŸã‚ã€ãƒã‚¯ãƒ­ã«ä¿‚æ•°ã‚‚å«ã‚ã¦ã„ã‚‹)
 #ifndef PIX32_RGB_TO_YUV_Y_x_VAL
 #define PIX32_RGB_TO_YUV_Y_x_VAL(aR__, aG__, aB__, Val__)   ((Val__) * (38444U * (aG__) + 19589U * (aR__) +  7503U * (aB__)               ) / 65536)
 #define PIX32_RGB_TO_YUV_U_x_VAL(aR__, aG__, aB__, Val__)   ((Val__) * (-21709 * (aG__) + -11059 * (aR__) +  32768 * (aB__) +  255*65536/2) / 65536)
 #define PIX32_RGB_TO_YUV_V_x_VAL(aR__, aG__, aB__, Val__)   ((Val__) * (-27439 * (aG__) +  32768 * (aR__) +  -5329 * (aB__) +  255*65536/2) / 65536)
 #endif
 
-// y,u,v’l‚©‚ç Šer,g,b ‚ğ‹‚ß‚éƒ}ƒNƒ. u,v‚Í —\‚ß -128 ‚µ‚Ä‚ ‚é‚±‚Æ.
+// y,u,vå€¤ã‹ã‚‰ å„r,g,b ã‚’æ±‚ã‚ã‚‹ãƒã‚¯ãƒ­. u,vã¯ äºˆã‚ -128 ã—ã¦ã‚ã‚‹ã“ã¨.
 #ifndef PIX32_YUV_TO_RGB_G
 #define PIX32_YUV_TO_RGB_G(kY__, kU__, kV__)                (((int)( 65536 * (kY__) + -22554 * (kU__) + -46802 * (kV__)) + 65536 / 2) >> 16)
 #define PIX32_YUV_TO_RGB_R(kY__, kU__, kV__)                (((int)( 65536 * (kY__)                   +  91881 * (kV__)) + 65536 / 2) >> 16)
 #define PIX32_YUV_TO_RGB_B(kY__, kU__, kV__)                (((int)( 65536 * (kY__) + 116130 * (kU__)                  ) + 65536 / 2) >> 16)
 #endif
 
-// •¡”yuv‰æ‘f‡Œv‚Ì•½‹Ï‚ğ rgb ’l‚É‚·‚éƒ}ƒNƒ.
+// è¤‡æ•°yuvç”»ç´ åˆè¨ˆã®å¹³å‡ã‚’ rgb å€¤ã«ã™ã‚‹ãƒã‚¯ãƒ­.
 #define PIX32_RGB_FROM_TOTAL_YUV(dstRgba__, srcKY__, srcKU__, srcKV__, srcA__, totalSz__, TYPE__) do { \
         TYPE__  wkY__   = (srcKY__) / (totalSz__);                          \
         TYPE__  wkU__   = (srcKU__) / (totalSz__) - 128;                    \
@@ -55,25 +55,25 @@
         (dstRgba__) = PIX32_ARGB(iA__,iR__,iG__,iB__);                      \
     } while (0)
 
-/// y,u,v Še 13bit(‘OŒã)‚É‚µ‚½’l‚ğ•Û‚·‚é‚½‚ß‚ÌŒ^. (—ªÌkyuv).
+/// y,u,v å„ 13bit(å‰å¾Œ)ã«ã—ãŸå€¤ã‚’ä¿æŒã™ã‚‹ãŸã‚ã®å‹. (ç•¥ç§°kyuv).
 typedef union pix32_kyuv_t {
     //uint64_t  pack;
     short       at[4];      // [0-2] y,u,v 0.. K*255. [3] a 0..255
 } pix32_kyuv_t;
 
 enum {
-    PIX32_KYUV_BIT     = 13,      // 11 .. 14 ‚ğ‘z’è (8..10 bit‚¾‚Ærgb‚É–ß‚·‚ÌŒë·‚ª‚¨‚«‚â‚·‚¢)
+    PIX32_KYUV_BIT     = 13,      // 11 .. 14 ã‚’æƒ³å®š (8..10 bitã ã¨rgbã«æˆ»ã™æ™‚ã®èª¤å·®ãŒãŠãã‚„ã™ã„)
     PIX32_KYUV_MAX     = (1 << PIX32_KYUV_BIT) - 1,
     PIX32_KYUV_SHIFT_K = PIX32_KYUV_BIT - 8,
     PIX32_KYUV_MUL_K   = 1 << PIX32_KYUV_SHIFT_K,
 };
 
-// r,g,b’l‚©‚ç 13bit(‘OŒã) ‚È y,u,v’l‚ğ‹‚ß‚éƒ}ƒNƒ
+// r,g,bå€¤ã‹ã‚‰ 13bit(å‰å¾Œ) ãª y,u,vå€¤ã‚’æ±‚ã‚ã‚‹ãƒã‚¯ãƒ­.
 #define PIX32_RGB_TO_KYUV_Y(aR__, aG__, aB__)       ((PIX32_KYUV_MUL_K * 38444U * (aG__) + PIX32_KYUV_MUL_K * 19589U * (aR__) +  PIX32_KYUV_MUL_K * 7503U * (aB__)                                ) >> 16)
 #define PIX32_RGB_TO_KYUV_U(aR__, aG__, aB__)       ((PIX32_KYUV_MUL_K * -21709 * (aG__) + PIX32_KYUV_MUL_K * -11059 * (aR__) +  PIX32_KYUV_MUL_K * 32768 * (aB__) +  PIX32_KYUV_MUL_K*255*65536/2) >> 16)
 #define PIX32_RGB_TO_KYUV_V(aR__, aG__, aB__)       ((PIX32_KYUV_MUL_K * -27439 * (aG__) + PIX32_KYUV_MUL_K *  32768 * (aR__) +  PIX32_KYUV_MUL_K * -5329 * (aB__) +  PIX32_KYUV_MUL_K*255*65536/2) >> 16)
 
-// 13bit(‘OŒã) ‚È y,u,v’l‚©‚ç r,g,b’l‚ğ‹‚ß‚éƒ}ƒNƒ
+// 13bit(å‰å¾Œ) ãª y,u,vå€¤ã‹ã‚‰ r,g,bå€¤ã‚’æ±‚ã‚ã‚‹ãƒã‚¯ãƒ­.
 #define PIX32_KYUV_TO_RGB_G(kY__, kU__, kV__)       (((int)( 65536 * (kY__) + -22554 * (kU__) + -46802 * (kV__)) + PIX32_KYUV_MUL_K * 65536 / 2) >> (PIX32_KYUV_SHIFT_K + 16))
 #define PIX32_KYUV_TO_RGB_R(kY__, kU__, kV__)       (((int)( 65536 * (kY__)                   +  91881 * (kV__)) + PIX32_KYUV_MUL_K * 65536 / 2) >> (PIX32_KYUV_SHIFT_K + 16))
 #define PIX32_KYUV_TO_RGB_B(kY__, kU__, kV__)       (((int)( 65536 * (kY__) + 116130 * (kU__)                  ) + PIX32_KYUV_MUL_K * 65536 / 2) >> (PIX32_KYUV_SHIFT_K + 16))
@@ -82,7 +82,7 @@ enum {
 #define PIX32_KYUV_V_TO_Cr(v)                       ((v) - 128 * PIX32_KYUV_MUL_K)
 
 
-/// kyuv ’l‚ğ rgb ’l‚É•ÏŠ·‚µ‚Ä‘ã“ü‚·‚éƒ}ƒNƒ. (Œë·‚Ìˆµ‚¢‚Ì‚½‚ßŒvZ’†‚Åg‚¤•Ï”‚ÌŒ^‚ğˆø”‚Åw’è)
+/// kyuv å€¤ã‚’ rgb å€¤ã«å¤‰æ›ã—ã¦ä»£å…¥ã™ã‚‹ãƒã‚¯ãƒ­. (èª¤å·®ã®æ‰±ã„ã®ãŸã‚è¨ˆç®—ä¸­ã§ä½¿ã†å¤‰æ•°ã®å‹ã‚’å¼•æ•°ã§æŒ‡å®š)
 #define PIX32_RGB_FROM_KYUV(dstRgba__, srcKY__, srcKU__, srcKV__, srcA__, TYPE__) do {  \
         TYPE__  iKY__ = (srcKY__);                              \
         TYPE__  iKU__ = (srcKU__) - PIX32_KYUV_MUL_K * 128;     \
@@ -96,7 +96,7 @@ enum {
         (dstRgba__) = PIX32_ARGB((srcA__),iR__,iG__,iB__);      \
     } while (0)
 
-/// •¡”kyuv‰æ‘f‡Œv‚Ì•½‹Ï‚ğ rgb ’l‚É•ÏŠ·‚µ‚Ä‘ã“ü‚·‚éƒ}ƒNƒ. (Œë·‚Ìˆµ‚¢‚Ì‚½‚ßŒvZ’†‚Åg‚¤•Ï”‚ÌŒ^‚ğˆø”‚Åw’è)
+/// è¤‡æ•°kyuvç”»ç´ åˆè¨ˆã®å¹³å‡ã‚’ rgb å€¤ã«å¤‰æ›ã—ã¦ä»£å…¥ã™ã‚‹ãƒã‚¯ãƒ­. (èª¤å·®ã®æ‰±ã„ã®ãŸã‚è¨ˆç®—ä¸­ã§ä½¿ã†å¤‰æ•°ã®å‹ã‚’å¼•æ•°ã§æŒ‡å®š)
 #define PIX32_RGB_FROM_TOTAL_KYUV(dstRgba__, srcKY__, srcKU__, srcKV__, srcA__, totalSz__, TYPE__) do { \
         TYPE__  dblY__  = (srcKY__) / (totalSz__);                          \
         TYPE__  dblU__  = (srcKU__) / (totalSz__) - PIX32_KYUV_MUL_K * 128; \
@@ -118,7 +118,7 @@ extern "C" {
 
 void    pix32_kyuvFromRgb(pix32_kyuv_t *dst, unsigned dstW, unsigned dstH, unsigned ofsX, unsigned ofsY, const unsigned *src, unsigned srcW, unsigned srcH);
 
-/// ratio=0.0`1.0 ‚Ì—¦‚ÅA‰æ‘œ‚Ì‹P“x‚ğ•ÏX.
+/// ratio=0.0ï½1.0 ã®ç‡ã§ã€ç”»åƒã®è¼åº¦ã‚’å¤‰æ›´.
 void    pix32_changeTone(unsigned *pix, unsigned w, unsigned h, double ratio);
 
 

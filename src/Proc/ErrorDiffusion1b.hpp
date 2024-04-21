@@ -77,21 +77,21 @@ public:
 
  #if 0
     struct Opt {
-        unsigned char   type;   // 0=ƒfƒBƒU–³ 1=2x2 2=4x4 3=8x8.
+        unsigned char   type;   // 0=ãƒ‡ã‚£ã‚¶ç„¡ 1=2x2 2=4x4 3=8x8.
         bool            mono;
-        bool            errDif; // Œë·ŠgU 1:‚·‚é 0:‚µ‚È‚¢.
-        bool            edRev;  // Œë·ŠgU‚Å‹ô”—ñ”½“] 1:‚·‚é. 0:‚µ‚È‚¢.
-        bool            ditRev; // AG‚ÆRB‚Æ‚Åƒ}ƒgƒŠƒNƒX‚ğ‹t‚É 1:‚·‚é 0:‚µ‚È‚¢.
+        bool            errDif; // èª¤å·®æ‹¡æ•£ 1:ã™ã‚‹ 0:ã—ãªã„.
+        bool            edRev;  // èª¤å·®æ‹¡æ•£ã§å¶æ•°åˆ—åè»¢ 1:ã™ã‚‹. 0:ã—ãªã„.
+        bool            ditRev; // AGã¨RBã¨ã§ãƒãƒˆãƒªã‚¯ã‚¹ã‚’é€†ã« 1:ã™ã‚‹ 0:ã—ãªã„.
         //Opt() : type(0), alpha(false), ditRev(false), edRev(false) {}
     };
  #endif
     bool conv(
-            unsigned*       dst,        ///< o—Íƒoƒbƒtƒ@
-            const unsigned* src,        ///< “ü—Íƒoƒbƒtƒ@
-            unsigned        w,          ///< ‰¡•
-            unsigned        h,          ///< c•
+            unsigned*       dst,        ///< å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡.
+            const unsigned* src,        ///< å…¥åŠ›ãƒãƒƒãƒ•ã‚¡.
+            unsigned        w,          ///< æ¨ªå¹….
+            unsigned        h,          ///< ç¸¦å¹….
             unsigned        ditTyp,
-            const unsigned* tones,      ///< ŠK’²”. tones[3]
+            const unsigned* tones,      ///< éšèª¿æ•°. tones[3]
             unsigned        dpp
             //int           flgs
     ) {
@@ -101,7 +101,7 @@ public:
         if (buf == NULL)
             return false;
         memset(buf, 0, w * h * sizeof(Pix));
-        bool errDif = (ditTyp & 0x1000) == 0;   // noErrDif ƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚È‚¯‚ê‚ÎŒë·ŠgU‚·‚é.
+        bool errDif = (ditTyp & 0x1000) == 0;   // noErrDif ãƒ•ãƒ©ã‚°ãŒç«‹ã£ã¦ã„ãªã‘ã‚Œã°èª¤å·®æ‹¡æ•£ã™ã‚‹.
         bool mono   = (ditTyp & 0x100) != 0;
         bool xterm  = (ditTyp & 0x10) != 0;
         for (unsigned i = 0; i < 3; ++i)
@@ -127,7 +127,7 @@ public:
         ditTyp &= 3;
         //ditTyp = clamp(ditTyp, 0, 3);
         static const short dmPtn[4][8][8] = {
-            {       // ƒpƒ^[ƒ“ƒfƒBƒU–³‚µ.
+            {       // ãƒ‘ã‚¿ãƒ¼ãƒ³ãƒ‡ã‚£ã‚¶ç„¡ã—.
                 { 128, 128, 128, 128, 128, 128, 128, 128, },
                 { 128, 128, 128, 128, 128, 128, 128, 128, },
                 { 128, 128, 128, 128, 128, 128, 128, 128, },

@@ -1,10 +1,10 @@
 /**
  *  @file   intrusive_ptr_ref_count.hpp
- *  @brief  intrusive_ptr‚Åw‚·ƒNƒ‰ƒX‚ÌQÆƒJƒEƒ“ƒ^À‘•—pƒNƒ‰ƒX(Œp³‚µ‚Äg‚¤)
+ *  @brief  intrusive_ptrã§æŒ‡ã™ã‚¯ãƒ©ã‚¹ã®å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿å®Ÿè£…ç”¨ã‚¯ãƒ©ã‚¹(ç¶™æ‰¿ã—ã¦ä½¿ã†)
  *  @note
- *  -   delete (T*)this; ‚ª‚¿‚á‚ñ‚ÆÀs‚Å‚«‚é‚æ‚¤‚ÉŒp³‚·‚é•K—v‚ª‚ ‚é.
- *      ¨ intrusive_ptr_ref_count<T,C>‚ğŒp³‚Ì1”Ô–Ú‚É‚·‚é.
- *  -   delete‚ÅŠJ•ú‚·‚é‚Ì‚ÅAnew‚ÅŠm•Û‚³‚ê‚é•K—v‚ ‚é
+ *  -   delete (T*)this; ãŒã¡ã‚ƒã‚“ã¨å®Ÿè¡Œã§ãã‚‹ã‚ˆã†ã«ç¶™æ‰¿ã™ã‚‹å¿…è¦ãŒã‚ã‚‹.
+ *      â†’ intrusive_ptr_ref_count<T,C>ã‚’ç¶™æ‰¿ã®1ç•ªç›®ã«ã™ã‚‹.
+ *  -   deleteã§é–‹æ”¾ã™ã‚‹ã®ã§ã€newã§ç¢ºä¿ã•ã‚Œã‚‹å¿…è¦ã‚ã‚‹
  */
 #ifndef INTRUSIVE_PTR_REF_COUNT_HPP_INCLUDED
 #define INTRUSIVE_PTR_REF_COUNT_HPP_INCLUDED
@@ -19,7 +19,7 @@
 #include <cassert>
 #endif
 
-/// ’Êí‚Ìnew ‚É‘Î‚·‚é delete
+/// é€šå¸¸ã®new ã«å¯¾ã™ã‚‹ delete
 template<class T>
 struct intrusive_ptr_ref_count_default_deleter {
     void operator()(T* p) {
@@ -27,7 +27,7 @@ struct intrusive_ptr_ref_count_default_deleter {
     }
 };
 
-/// ’Êí‚Ìnew[] ‚É‘Î‚·‚é delete
+/// é€šå¸¸ã®new[] ã«å¯¾ã™ã‚‹ delete
 template<class T>
 struct intrusive_ptr_ref_count_default_array_deleter {
     void operator()(T* p) {
@@ -35,7 +35,7 @@ struct intrusive_ptr_ref_count_default_array_deleter {
     }
 };
 
-/// intrusive_ptr‚Åw‚·ƒNƒ‰ƒX‚ÌQÆƒJƒEƒ“ƒ^À‘•—pƒNƒ‰ƒX(Œp³‚µ‚Äg‚¤)
+/// intrusive_ptrã§æŒ‡ã™ã‚¯ãƒ©ã‚¹ã®å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿å®Ÿè£…ç”¨ã‚¯ãƒ©ã‚¹(ç¶™æ‰¿ã—ã¦ä½¿ã†)
 template< class T, class D=intrusive_ptr_ref_count_default_deleter<T>, typename C=unsigned>
 class intrusive_ptr_ref_count : private D {
 public:

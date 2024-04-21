@@ -1,6 +1,6 @@
 /**
  *  @file pix32_bokashi.h
- *  @brief  32ƒrƒbƒgF‰æ‚ğ‚Ú‚©‚·.
+ *  @brief  32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’ã¼ã‹ã™.
  *  @author Masashi KITAMURA
  */
 #ifndef PIX32_BOKASHI
@@ -10,28 +10,28 @@
 #include <string.h>
 
 
-#ifndef PIX32_ARGB   // a,r,g,bŒ‹‡••ª‰ğƒ}ƒNƒ
+#ifndef PIX32_ARGB   // a,r,g,bçµåˆï¼†åˆ†è§£ãƒã‚¯ãƒ­.
 
-/// 8bit’l‚Ìa,r,g,b‚ğŒq‚°‚Ä 32bit ‚ÌF’l‚É‚·‚é
+/// 8bitå€¤ã®a,r,g,bã‚’ç¹‹ã’ã¦ 32bit ã®è‰²å€¤ã«ã™ã‚‹.
 #define PIX32_ARGB(a,r,g,b)     ((((unsigned char)(a))<<24)|(((unsigned char)(r))<<16)|(((unsigned char)(g))<<8)|((unsigned char)(b)))
 
-#define PIX32_GET_B(argb)       ((unsigned char)(argb))         ///< argb’l’†‚Ì blue‚Ì’l‚ğæ“¾
-#define PIX32_GET_G(argb)       ((unsigned char)((argb)>>8))    ///< argb’l’†‚Ì green‚Ì’l‚ğæ“¾
-#define PIX32_GET_R(argb)       ((unsigned char)((argb)>>16))   ///< argb’l’†‚Ì green‚Ì’l‚ğæ“¾
-#define PIX32_GET_A(argb)       (((unsigned)(argb))>>24)        ///< argb’l’†‚Ì alpha‚Ì’l‚ğæ“¾
+#define PIX32_GET_B(argb)       ((unsigned char)(argb))         ///< argbå€¤ä¸­ã® blueã®å€¤ã‚’å–å¾—.
+#define PIX32_GET_G(argb)       ((unsigned char)((argb)>>8))    ///< argbå€¤ä¸­ã® greenã®å€¤ã‚’å–å¾—.
+#define PIX32_GET_R(argb)       ((unsigned char)((argb)>>16))   ///< argbå€¤ä¸­ã® greenã®å€¤ã‚’å–å¾—.
+#define PIX32_GET_A(argb)       (((unsigned)(argb))>>24)        ///< argbå€¤ä¸­ã® alphaã®å€¤ã‚’å–å¾—.
 
 #endif
 
 
 
 
-/** “K“–‚É‚Ú‚©‚µ‰æ‘œ‚É•ÏŠ·
+/** é©å½“ã«ã¼ã‹ã—ç”»åƒã«å¤‰æ›.
  */
 inline void pix32_bokashi1(unsigned *dst, const unsigned *src, int w, int h)
 {
     unsigned y;
 
-    // ã•Ó‚Æ‰º•Ó‚Í‚»‚Ì‚Ü‚ÜƒRƒs[(è”²‚«)
+    // ä¸Šè¾ºã¨ä¸‹è¾ºã¯ãã®ã¾ã¾ã‚³ãƒ”ãƒ¼(æ‰‹æŠœã)
     memcpy(dst, src, w*sizeof(unsigned));
     memcpy(&dst[(h-1)*w], &src[(h-1)*w], w*sizeof(unsigned));
 
@@ -40,7 +40,7 @@ inline void pix32_bokashi1(unsigned *dst, const unsigned *src, int w, int h)
         unsigned        *pd  = dst + (y*w);
         const unsigned  *ps  = src + (y*w);
 
-        *pd++ = *ps++;          // ¶•Ó‚Í‚»‚Ì‚Ü‚Ü(è”²‚«)
+        *pd++ = *ps++;          // å·¦è¾ºã¯ãã®ã¾ã¾(æ‰‹æŠœã)
 
         for (x = 1; x < w-1U; ++x) {
             //x enum { K0 =  4, K1 =  2, K2 =  1 };     // total=16
@@ -159,20 +159,20 @@ inline void pix32_bokashi1(unsigned *dst, const unsigned *src, int w, int h)
             ++pd;
             ++ps;
         }
-        *pd++ = *ps++;          // ‰E•Ó‚Í‚»‚Ì‚Ü‚Ü(è”²‚«)
+        *pd++ = *ps++;          // å³è¾ºã¯ãã®ã¾ã¾(æ‰‹æŠœã)
     }
 }
 
 
 
 
-/** ƒ¿ 0..thre ‚ÌƒsƒNƒZƒ‹•t‹ß‚¾‚¯‚Ú‚©‚µ•ÏŠ·
+/** Î± 0..thre ã®ãƒ”ã‚¯ã‚»ãƒ«ä»˜è¿‘ã ã‘ã¼ã‹ã—å¤‰æ›
  */
 inline void pix32_bokashiAlpLtEqThreshold(unsigned *dst, const unsigned *src, int w, int h, int thre)
 {
     unsigned y;
 
-    // ã•Ó‚Æ‰º•Ó‚Í‚»‚Ì‚Ü‚ÜƒRƒs[(è”²‚«)
+    // ä¸Šè¾ºã¨ä¸‹è¾ºã¯ãã®ã¾ã¾ã‚³ãƒ”ãƒ¼(æ‰‹æŠœã)
     memcpy(dst, src, w*sizeof(unsigned));
     memcpy(&dst[(h-1)*w], &src[(h-1)*w], w*sizeof(unsigned));
 
@@ -181,7 +181,7 @@ inline void pix32_bokashiAlpLtEqThreshold(unsigned *dst, const unsigned *src, in
         unsigned        *pd  = dst + (y*w);
         const unsigned  *ps  = src + (y*w);
 
-        *pd++ = *ps++;          // ¶•Ó‚Í‚»‚Ì‚Ü‚Ü(è”²‚«)
+        *pd++ = *ps++;          // å·¦è¾ºã¯ãã®ã¾ã¾(æ‰‹æŠœã)
 
         for (x = 1; x < w-1U; ++x) {
             //x enum { K0 =  4, K1 =  2, K2 =  1 };     // total=16
@@ -313,7 +313,7 @@ inline void pix32_bokashiAlpLtEqThreshold(unsigned *dst, const unsigned *src, in
             ++pd;
             ++ps;
         }
-        *pd++ = *ps++;          // ‰E•Ó‚Í‚»‚Ì‚Ü‚Ü(è”²‚«)
+        *pd++ = *ps++;          // å³è¾ºã¯ãã®ã¾ã¾(æ‰‹æŠœã)
     }
 }
 
@@ -322,7 +322,7 @@ inline void pix32_bokashiAlpLtEqThreshold(unsigned *dst, const unsigned *src, in
 
 
 
-/**ƒoƒXƒgƒAƒbƒv‚È‚Ç‚ÅA‰‚ğƒ¿‚Å‚Ú‚©‚µ‚½‰æ‘œ‚ğ¶¬‚·‚é. ŠÈˆÕˆ—
+/**ãƒã‚¹ãƒˆã‚¢ãƒƒãƒ—ãªã©ã§ã€ç¸ã‚’Î±ã§ã¼ã‹ã—ãŸç”»åƒã‚’ç”Ÿæˆã™ã‚‹. ç°¡æ˜“å‡¦ç†
  */
 inline void pix32_alpBokasi(unsigned *pix, unsigned wid, unsigned hei, int dmy_sikii)
 {
@@ -343,7 +343,7 @@ inline void pix32_alpBokasi(unsigned *pix, unsigned wid, unsigned hei, int dmy_s
     #define DK(x,y,kk,k)    {if (R(x,y) && PIX32_GET_A(P(x,y))) {int c_ = P(x,y); kk += K(c_) - k;}}
     (void)dmy_sikii;
 
-    // ƒ¿=0,c=0‚ÌƒsƒNƒZƒ‹‚É—×Ú‚·‚é‰æ‘œ‚Ìƒ¿’l‚ğ’²®
+    // Î±=0,c=0ã®ãƒ”ã‚¯ã‚»ãƒ«ã«éš£æ¥ã™ã‚‹ç”»åƒã®Î±å€¤ã‚’èª¿æ•´.
     //for (y = 0; y < h; ++y) {
     for (y = 1; y < h-1; ++y) {
         //for (x = 0; x < w; ++x) {
@@ -352,8 +352,8 @@ inline void pix32_alpBokasi(unsigned *pix, unsigned wid, unsigned hei, int dmy_s
             c = pix[n];
             k = K(c);
             a = PIX32_GET_A(c);
-            if (a == 0) {       // ƒ}ƒXƒN‚Å”²‚«F‚Ì‚Æ‚±‚ë‚ğ
-                pix[n] = 0;     // ƒ\[ƒX‚à”²‚«F‚É‚·‚éB
+            if (a == 0) {       // ãƒã‚¹ã‚¯ã§æŠœãè‰²ã®ã¨ã“ã‚ã‚’,
+                pix[n] = 0;     // ã‚½ãƒ¼ã‚¹ã‚‚æŠœãè‰²ã«ã™ã‚‹.
             } else {
                 m =(  A(x-1,y-1)*1 + A(x,y-1)*1 + A(x+1,y-1)*1
                     + A(x-1,y  )*1 + A(x,y  )*1 + A(x+1,y  )*1
@@ -400,8 +400,8 @@ inline void pix32_alpBokasi(unsigned *pix, unsigned wid, unsigned hei, int dmy_s
 
 
 // ===========================================================================
-// C++Œü
-// image(), witdh(),height(),bpp() ‚ğƒƒ“ƒo[‚É‚Â‰æ‘œƒNƒ‰ƒX‚ğ‘€ì.
+// C++å‘
+// image(), witdh(),height(),bpp() ã‚’ãƒ¡ãƒ³ãƒãƒ¼ã«æŒã¤ç”»åƒã‚¯ãƒ©ã‚¹ã‚’æ“ä½œ.
 
 #if defined __cplusplus
 

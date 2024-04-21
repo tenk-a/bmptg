@@ -1,11 +1,11 @@
 /**
  *  @file   DecreaseColorMC2.h
- *  @brief  ƒƒfƒBƒAƒ“ƒJƒbƒg‚ÈŒ¸F. YUV”Å
+ *  @brief  ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ³ã‚«ãƒƒãƒˆãªæ¸›è‰². YUVç‰ˆ
  *  @author Masashi KITAMURA
  *  @note
  *      http://www.h6.dion.ne.jp/~j_moto/html/program_myfo01.html
- *      ‚Ìƒ\[ƒX‚ğ‰ü‘¢‚µ‚½‚à‚Ì....‚µ‚½Œã‚ÉAyuv”Å‚Ì‚¿‚á‚ñ‚Æ‚µ‚½
- *      program_myfo03.html‚ª‚ ‚Á‚½‚±‚Æ‚É‹C‚Ã‚­on_
+ *      ã®ã‚½ãƒ¼ã‚¹ã‚’æ”¹é€ ã—ãŸã‚‚ã®....ã—ãŸå¾Œã«ã€yuvç‰ˆã®ã¡ã‚ƒã‚“ã¨ã—ãŸ
+ *      program_myfo03.htmlãŒã‚ã£ãŸã“ã¨ã«æ°—ã¥ãon_
  *
  */
 
@@ -18,31 +18,31 @@
 #include <algorithm>
 
 
-/// clut”Ô†‚ğ˜A”Ô‚Å‚È‚­AƒXƒ^ƒbƒN‚É—­‚ß‚½‚à‚Ì‚ğo‚µ“ü‚ê‚µ‚ÄŠ„‚è“–‚Ä‚é.
+/// clutç•ªå·ã‚’é€£ç•ªã§ãªãã€ã‚¹ã‚¿ãƒƒã‚¯ã«æºœã‚ãŸã‚‚ã®ã‚’å‡ºã—å…¥ã‚Œã—ã¦å‰²ã‚Šå½“ã¦ã‚‹.
 #define DECREASECOLORMC_USE_MUBERSTK
 
 
 
-/// ƒƒfƒBƒAƒ“ƒJƒbƒg‚ÈŒ¸F•ÏŠ·.
+/// ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ³ã‚«ãƒƒãƒˆãªæ¸›è‰²å¤‰æ›.
 template<typename DMY=unsigned>
 class DecreaseColor {
 public:
     DecreaseColor();
     ~DecreaseColor();
 
-    /// •ÏŠ·.
+    /// å¤‰æ›.
     bool conv(unsigned char* dstPic, const unsigned* srcPic, unsigned w, unsigned h, unsigned* dstClut, unsigned clutSize);
 
-    /// ƒ¿‚ÉŠÖ‚·‚éİ’è. Àƒf[ƒ^‚ÉA”¼“§–¾‚ª‚È‚¢ê‡‚ÍalpNum=1(”²‚«F‚Ì‚İ)‚Æ‚µ‚Äˆµ‚¤.
+    /// Î±ã«é–¢ã™ã‚‹è¨­å®š. å®Ÿãƒ‡ãƒ¼ã‚¿ã«ã€åŠé€æ˜ãŒãªã„å ´åˆã¯alpNum=1(æŠœãè‰²ã®ã¿)ã¨ã—ã¦æ‰±ã†.
     void setAlphaParam(int alpNum, unsigned alpBit=0, unsigned minA=0, unsigned maxA=255);
 
-    /// ƒ¿‚ÉŠÖ‚·‚éİ’è. Àƒf[ƒ^‚É”¼“§–¾‚ª‚È‚¢‚Æ‚«‚Å‚à •K‚¸alpNum•ª‚Í‚»‚ê‚æ‚¤‚Æ‚·‚é.
+    /// Î±ã«é–¢ã™ã‚‹è¨­å®š. å®Ÿãƒ‡ãƒ¼ã‚¿ã«åŠé€æ˜ãŒãªã„ã¨ãã§ã‚‚ å¿…ãšalpNumåˆ†ã¯ãã‚Œã‚ˆã†ã¨ã™ã‚‹.
     void forceSetAlphaEnv(int alpNum, unsigned alpBit=0, unsigned minA=0, unsigned maxA=255);
 
-    /// ’†ŠÔ’l‚ğ‹‚ß‚é‚Ì‚Ég‚¤ƒpƒ‰ƒ[ƒ^. b’è.
+    /// ä¸­é–“å€¤ã‚’æ±‚ã‚ã‚‹ã®ã«ä½¿ã†ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿. æš«å®š.
     void setCalcMidParam(unsigned calcMidMode=1, float ratioLenY=1.2f, float ratioLenU=1.f, float ratioLenV=1.f);
 
-    /// on ‚Å YUV‚Å‚È‚­ RGB‚Åˆ—‚·‚é.
+    /// on ã§ YUVã§ãªã RGBã§å‡¦ç†ã™ã‚‹.
     void setModeRGB(bool sw);
 
 private:
@@ -110,50 +110,50 @@ private:
 private:
     typedef unsigned char pixDat_int_t;
 
-    /// ˆ—’†‚ÌƒsƒNƒZƒ‹ƒf[ƒ^. rgbƒ‚[ƒh‚Å‚ÍAb,r,g,a‡.
+    /// å‡¦ç†ä¸­ã®ãƒ”ã‚¯ã‚»ãƒ«ãƒ‡ãƒ¼ã‚¿. rgbãƒ¢ãƒ¼ãƒ‰ã§ã¯ã€b,r,g,aé †.
     struct pixDat_t {
         pixDat_int_t    v;
         pixDat_int_t    u;
         pixDat_int_t    y;
         unsigned char   a;
-        unsigned char   no;                 ///< ˆ—‚ÌƒOƒ‹[ƒv”Ô†(‚Ù‚ÚF”Ô†‚Æ‚È‚é..‚ª–¢g—pF‚ª‚ ‚é‚Æ‚Ã‚ê‚é)
-        unsigned char   idx;                ///< F”Ô†(–¢g—pF‚ğ‚Â‚ß‚éˆ—‚Ì‚½‚ß‚É—pˆÓ)
+        unsigned char   no;                 ///< å‡¦ç†ã®ã‚°ãƒ«ãƒ¼ãƒ—ç•ªå·(ã»ã¼è‰²ç•ªå·ã¨ãªã‚‹..ãŒæœªä½¿ç”¨è‰²ãŒã‚ã‚‹ã¨ã¥ã‚Œã‚‹)
+        unsigned char   idx;                ///< è‰²ç•ªå·(æœªä½¿ç”¨è‰²ã‚’ã¤ã‚ã‚‹å‡¦ç†ã®ãŸã‚ã«ç”¨æ„)
     };
 
-    /// clut‚ğ¶¬‚·‚é‚Ì‚Ég‚¤.
+    /// clutã‚’ç”Ÿæˆã™ã‚‹ã®ã«ä½¿ã†.
     struct clutDat_t {
-        double      a;                      ///< a‚Ì‡Œv.
-        double      y;                      ///< y‚Ì‡Œv.
-        double      u;                      ///< u‚Ì‡Œv.
-        double      v;                      ///< v‚Ì‡Œv.
-        double      num;                    ///< ƒsƒNƒZƒ‹‡Œv.
+        double      a;                      ///< aã®åˆè¨ˆ.
+        double      y;                      ///< yã®åˆè¨ˆ.
+        double      u;                      ///< uã®åˆè¨ˆ.
+        double      v;                      ///< vã®åˆè¨ˆ.
+        double      num;                    ///< ãƒ”ã‚¯ã‚»ãƒ«åˆè¨ˆ.
     };
 
-    unsigned*       clut_;                  ///< Œ¸H‚µ‚½Œ‹‰Ê‚Ìclut.
-    pix8_t*         dstPic_;                ///< Œ¸FŒ‹‰Ê‚ğ“ü‚ê‚éƒoƒbƒtƒ@. NULL‚¾‚Æo—Í‚¹‚¸(clut‚Ì‚İ‚Ìæ“¾).
-    pixDat_t*       pixDat_;                ///< ˆ—’†‚ÌƒsƒNƒZƒ‹ƒf[ƒ^.
-    const pix32_t*  srcPic_;                ///< Œ³‚ÌƒsƒNƒZƒ‹ƒf[ƒ^.
-    unsigned        w_;                     ///< ‰¡•
-    unsigned        h_;                     ///< c•
-    unsigned        size_;                  ///< ƒsƒNƒZƒ‹‡Œv
-    unsigned        clutTop_;               ///< clut‚ÌŠJn”Ô†.
-    unsigned        clutSize_;              ///< clut”.
+    unsigned*       clut_;                  ///< æ¸›é£Ÿã—ãŸçµæœã®clut.
+    pix8_t*         dstPic_;                ///< æ¸›è‰²çµæœã‚’å…¥ã‚Œã‚‹ãƒãƒƒãƒ•ã‚¡. NULLã ã¨å‡ºåŠ›ã›ãš(clutã®ã¿ã®å–å¾—æ™‚).
+    pixDat_t*       pixDat_;                ///< å‡¦ç†ä¸­ã®ãƒ”ã‚¯ã‚»ãƒ«ãƒ‡ãƒ¼ã‚¿.
+    const pix32_t*  srcPic_;                ///< å…ƒã®ãƒ”ã‚¯ã‚»ãƒ«ãƒ‡ãƒ¼ã‚¿.
+    unsigned        w_;                     ///< æ¨ªå¹…
+    unsigned        h_;                     ///< ç¸¦å¹…
+    unsigned        size_;                  ///< ãƒ”ã‚¯ã‚»ãƒ«åˆè¨ˆ
+    unsigned        clutTop_;               ///< clutã®é–‹å§‹ç•ªå·.
+    unsigned        clutSize_;              ///< clutæ•°.
 
-    unsigned        ratioLenA_;             ///< ƒ¿‚ğˆ—‚·‚é‚©‚Ç‚¤‚©‚É—p‚¢‚éB0 or 1‚Æ‚µ‚Äg—pB
-    bool            forceAlpNum_;           ///< ‹­§“I‚ÉalpNum•ª‚ğ•K‚¸“§–¾F‚Æ‚µ‚Äˆµ‚¤(Œ‹‰Ê g—p‚µ‚È‚¢”Ô†‚É‚È‚é)
-    int             alpNum_;                ///< ƒ¿•tcolor‚É‚·‚éF”
-    unsigned        minA_;                  ///< ‚±‚êˆÈ‰º‚Ì‚Æ‚«‚ÍA“§–¾(ƒ¿=0)‚É‚·‚é
-    unsigned        maxA_;                  ///< ‚±‚êˆÈã‚Ì‚Æ‚«‚ÍA•s“§–¾(ƒ¿=0xff)‚É‚·‚é
+    unsigned        ratioLenA_;             ///< Î±ã‚’å‡¦ç†ã™ã‚‹ã‹ã©ã†ã‹ã«ç”¨ã„ã‚‹ã€‚0 or 1ã¨ã—ã¦ä½¿ç”¨ã€‚
+    bool            forceAlpNum_;           ///< å¼·åˆ¶çš„ã«alpNumåˆ†ã‚’å¿…ãšé€æ˜è‰²ã¨ã—ã¦æ‰±ã†(çµæœ ä½¿ç”¨ã—ãªã„ç•ªå·ã«ãªã‚‹)
+    int             alpNum_;                ///< Î±ä»˜colorã«ã™ã‚‹è‰²æ•°
+    unsigned        minA_;                  ///< ã“ã‚Œä»¥ä¸‹ã®ã¨ãã¯ã€é€æ˜(Î±=0)ã«ã™ã‚‹
+    unsigned        maxA_;                  ///< ã“ã‚Œä»¥ä¸Šã®ã¨ãã¯ã€ä¸é€æ˜(Î±=0xff)ã«ã™ã‚‹
 
-    // ’†ŠÔ’l‚ğ‹‚ß‚é‚Ì‚É—p‚¢‚éƒpƒ‰ƒ[ƒ^
-    float           ratioLenY_;             ///< Y,U,V‚Ì‘I‘ğ‚É‚¨‚¢‚ÄA—\‚ß Y‚ğratioLenY_”{‚µ‚Ä‚©‚ç”äŠr.
-    float           ratioLenU_;             ///< Y,U,V‚Ì‘I‘ğ‚É‚¨‚¢‚ÄA—\‚ß U‚ğratioLenU_”{‚µ‚Ä‚©‚ç”äŠr.
-    float           ratioLenV_;             ///< Y,U,V‚Ì‘I‘ğ‚É‚¨‚¢‚ÄA—\‚ß V‚ğratioLenV_”{‚µ‚Ä‚©‚ç”äŠr.
-    unsigned        calcMidMode_;           ///< 0‚¾‚Æ’Pƒ‚É(min+max)/2  1‚¾‚ÆƒsƒNƒZƒ‹”½‰f.
-    //x unsigned    midDif_;                ///< max-min>=2*dif‚ğ–‚½‚·‚ÉAƒsƒNƒZƒ‹”‚ğ”½‰f‚µ‚Ä’†‰›’l‚ğæ“¾.
-    //x float       ratioMidSiz_;           ///< ‚±‚ÌŠ„‡‚ğ‘S‘Ì‚ÌƒsƒNƒZƒ‹”‚ÉŠ|‚¯‚½Œ‹‰Ê‚æ‚è‚àA‘½‚¢ê‡‚ÉƒsƒNƒZƒ‹”‚ğ”½‰f‚µ‚Ä’†‰›’l‚ğæ“¾.
+    // ä¸­é–“å€¤ã‚’æ±‚ã‚ã‚‹ã®ã«ç”¨ã„ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+    float           ratioLenY_;             ///< Y,U,Vã®é¸æŠã«ãŠã„ã¦ã€äºˆã‚ Yã‚’ratioLenY_å€ã—ã¦ã‹ã‚‰æ¯”è¼ƒ.
+    float           ratioLenU_;             ///< Y,U,Vã®é¸æŠã«ãŠã„ã¦ã€äºˆã‚ Uã‚’ratioLenU_å€ã—ã¦ã‹ã‚‰æ¯”è¼ƒ.
+    float           ratioLenV_;             ///< Y,U,Vã®é¸æŠã«ãŠã„ã¦ã€äºˆã‚ Vã‚’ratioLenV_å€ã—ã¦ã‹ã‚‰æ¯”è¼ƒ.
+    unsigned        calcMidMode_;           ///< 0ã ã¨å˜ç´”ã«(min+max)/2  1ã ã¨ãƒ”ã‚¯ã‚»ãƒ«åæ˜ .
+    //x unsigned    midDif_;                ///< max-min>=2*difã‚’æº€ãŸã™æ™‚ã«ã€ãƒ”ã‚¯ã‚»ãƒ«æ•°ã‚’åæ˜ ã—ã¦ä¸­å¤®å€¤ã‚’å–å¾—.
+    //x float       ratioMidSiz_;           ///< ã“ã®å‰²åˆã‚’å…¨ä½“ã®ãƒ”ã‚¯ã‚»ãƒ«æ•°ã«æ›ã‘ãŸçµæœã‚ˆã‚Šã‚‚ã€å¤šã„å ´åˆã«ãƒ”ã‚¯ã‚»ãƒ«æ•°ã‚’åæ˜ ã—ã¦ä¸­å¤®å€¤ã‚’å–å¾—.
 
-    bool            modeRGB_;               ///< YUV‚Å‚È‚­GRB‚ğ—p‚¢‚é
+    bool            modeRGB_;               ///< YUVã§ãªãGRBã‚’ç”¨ã„ã‚‹
 
     unsigned        transparentNo_;
     unsigned        alpTopNo_;
@@ -195,7 +195,7 @@ DecreaseColor<DMY>::DecreaseColor() {
     //x ratioMidSiz_= 0;
     setCalcMidParam();
 
-    ratioLenA_   = 0;       // ƒ¿‚ğŒ¸Fˆ—‚Ì‘ÎÛ‚É‚·‚é‚©‚Ç‚¤‚©‚ğİ’è‚·‚é‚Ì‚É—p‚¢‚Ä‚¢‚é.
+    ratioLenA_   = 0;       // Î±ã‚’æ¸›è‰²å‡¦ç†ã®å¯¾è±¡ã«ã™ã‚‹ã‹ã©ã†ã‹ã‚’è¨­å®šã™ã‚‹ã®ã«ç”¨ã„ã¦ã„ã‚‹.
     setAlphaParam(-1);
 }
 
@@ -211,38 +211,38 @@ DecreaseColor<DMY>::~DecreaseColor() {
 
 
 
-/// •ÏŠ·.
+/// å¤‰æ›.
 template<typename DMY>
 bool DecreaseColor<DMY>::conv(pix8_t* dstPic, const pix32_t* srcPic, unsigned w, unsigned h, unsigned* dstClut, unsigned clutSize) {
-    // ‰Šú‰»
+    // åˆæœŸåŒ–
     int alpNum = 0;
     if (init(dstPic, srcPic, w, h, dstClut, clutSize, &alpNum) == false)
         return false;
 
-    if (alpBit_ > 0) {      // AnIm ‚ÈƒsƒNƒZƒ‹‚É‚·‚é‚Ì‚ÅƒCƒ“ƒfƒbƒNƒX‚ğmƒrƒbƒg•ª‚É‚·‚é.
+    if (alpBit_ > 0) {      // AnIm ãªãƒ”ã‚¯ã‚»ãƒ«ã«ã™ã‚‹ã®ã§ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’mãƒ“ãƒƒãƒˆåˆ†ã«ã™ã‚‹.
         assert(alpBit_ < 8);
         unsigned cnum = 1 << (8 - alpBit_);
         clutSize      = (clutSize < cnum) ? clutSize : cnum;
-        alpNum        = (alpNum > 0);   // ƒCƒ“ƒfƒbƒNƒX’†‚Íƒ¿‚È‚µA‚¯‚ÇA”²‚«Fw’è‚Í”½‰fB
+        alpNum        = (alpNum > 0);   // ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä¸­ã¯Î±ãªã—ã€ã‘ã©ã€æŠœãè‰²æŒ‡å®šã¯åæ˜ ã€‚
     }
 
-    // ƒ¿ƒvƒŒ[ƒ“‚Ìˆ—.
+    // Î±ãƒ—ãƒ¬ãƒ¼ãƒ³ã®å‡¦ç†.
     if (alpNum > 1) {
         ratioLenA_ = 1;
-        convMain(alpTopNo_, alpNum-1);              // “§–¾F‚Íˆ—Ï‚Æ‚µ‚Ä‚P‚Â‚¸‚ç‚·
+        convMain(alpTopNo_, alpNum-1);              // é€æ˜è‰²ã¯å‡¦ç†æ¸ˆã¨ã—ã¦ï¼‘ã¤ãšã‚‰ã™
     }
 
-    // ƒƒfƒBƒAƒ“ƒJƒbƒg‚ÈŒ¸Fˆ—
+    // ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ³ã‚«ãƒƒãƒˆãªæ¸›è‰²å‡¦ç†
     ratioLenA_ = 0;
     convMain(normNo_, clutSize-alpNum);
 
-    // clut‚ğì¬‚·‚é
+    // clutã‚’ä½œæˆã™ã‚‹
     makeClut(alpNum);
 
-    // clut‚ğ—p‚¢‚ÄA24bitF‚ğ256F(clutSizeF)‚ÉŒ¸F.
+    // clutã‚’ç”¨ã„ã¦ã€24bitè‰²ã‚’256è‰²(clutSizeè‰²)ã«æ¸›è‰².
     makeDstPic();
 
-    // ŠJ•ú
+    // é–‹æ”¾
     delete pixDat_;
     pixDat_ = 0;
     return true;
@@ -250,15 +250,15 @@ bool DecreaseColor<DMY>::conv(pix8_t* dstPic, const pix32_t* srcPic, unsigned w,
 
 
 
-/** ƒ¿‚ÉŠÖ‚·‚éİ’è. Àƒf[ƒ^‚ÉA”¼“§–¾‚ª‚È‚¢ê‡‚ÍalpNum=1(”²‚«F‚Ì‚İ)‚Æ‚µ‚Äˆµ‚¤.
- *  @param  alpNum      ”¼“§–¾F‚Ég‚¤F”.
- *  @param  minA        ‚±‚êˆÈ‰º‚Í“§–¾F‚Æ‚·‚é
- *  @param  maxA        ‚±‚êˆÈã‚Í•s“§–¾‚Æ‚·‚é
+/** Î±ã«é–¢ã™ã‚‹è¨­å®š. å®Ÿãƒ‡ãƒ¼ã‚¿ã«ã€åŠé€æ˜ãŒãªã„å ´åˆã¯alpNum=1(æŠœãè‰²ã®ã¿)ã¨ã—ã¦æ‰±ã†.
+ *  @param  alpNum      åŠé€æ˜è‰²ã«ä½¿ã†è‰²æ•°.
+ *  @param  minA        ã“ã‚Œä»¥ä¸‹ã¯é€æ˜è‰²ã¨ã™ã‚‹
+ *  @param  maxA        ã“ã‚Œä»¥ä¸Šã¯ä¸é€æ˜ã¨ã™ã‚‹
  */
 template<typename DMY>
 void DecreaseColor<DMY>::setAlphaParam(int alpNum, unsigned alpBit, unsigned minA, unsigned maxA) {
     forceAlpNum_ = false;
-  #if 1 // –Úæ‚ÌŒë·ƒoƒO‚ğ‘Îô
+  #if 1 // ç›®å…ˆã®èª¤å·®ãƒã‚°ã‚’å¯¾ç­–
     if (minA < 1)
         minA = 1;
     if (maxA > 255-1)
@@ -270,17 +270,17 @@ void DecreaseColor<DMY>::setAlphaParam(int alpNum, unsigned alpBit, unsigned min
     maxA_    = maxA;
 
     alpBit_  = alpBit;
-    if (alpBit > 0)     // ƒ¿ƒrƒbƒg‚ğŠm•Û‚·‚éê‡‚ÍAƒCƒ“ƒfƒbƒNƒX’†‚Íƒ¿‚È‚µ(‚½‚¾‚µA”²‚«Fw’è‚Í”½‰f)
+    if (alpBit > 0)     // Î±ãƒ“ãƒƒãƒˆã‚’ç¢ºä¿ã™ã‚‹å ´åˆã¯ã€ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä¸­ã¯Î±ãªã—(ãŸã ã—ã€æŠœãè‰²æŒ‡å®šã¯åæ˜ )
         alpNum_ = (alpNum != 0);
     // invariant();
 }
 
 
 
-/** ƒ¿‚ÉŠÖ‚·‚éİ’è. Àƒf[ƒ^‚É”¼“§–¾‚ª‚È‚¢‚Æ‚«‚Å‚à •K‚¸alpNum•ª‚Í‚»‚ê‚æ‚¤‚Æ‚·‚é.
- *  @param  alpNum      ”¼“§–¾F‚Ég‚¤F”.
- *  @param  minA        ‚±‚êˆÈ‰º‚Í“§–¾F‚Æ‚·‚é
- *  @param  maxA        ‚±‚êˆÈã‚Í•s“§–¾‚Æ‚·‚é
+/** Î±ã«é–¢ã™ã‚‹è¨­å®š. å®Ÿãƒ‡ãƒ¼ã‚¿ã«åŠé€æ˜ãŒãªã„ã¨ãã§ã‚‚ å¿…ãšalpNumåˆ†ã¯ãã‚Œã‚ˆã†ã¨ã™ã‚‹.
+ *  @param  alpNum      åŠé€æ˜è‰²ã«ä½¿ã†è‰²æ•°.
+ *  @param  minA        ã“ã‚Œä»¥ä¸‹ã¯é€æ˜è‰²ã¨ã™ã‚‹
+ *  @param  maxA        ã“ã‚Œä»¥ä¸Šã¯ä¸é€æ˜ã¨ã™ã‚‹
  */
 template<typename DMY>
 void DecreaseColor<DMY>::forceSetAlphaEnv(int alpNum, unsigned alpBit, unsigned minA, unsigned maxA) {
@@ -290,28 +290,28 @@ void DecreaseColor<DMY>::forceSetAlphaEnv(int alpNum, unsigned alpBit, unsigned 
 
 
 
-/** ’†ŠÔ’l‚ğ‹‚ß‚é‚Ì‚Ég‚¤ƒpƒ‰ƒ[ƒ^. b’èd—l.
- *  “K“–‚ÈŒvZ‚È‚Ì‚ÅAˆÓ–¡‚Í‚í‚©‚è‚É‚­‚¢...söŒë‚·‚é—p.
+/** ä¸­é–“å€¤ã‚’æ±‚ã‚ã‚‹ã®ã«ä½¿ã†ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿. æš«å®šä»•æ§˜.
+ *  é©å½“ãªè¨ˆç®—ãªã®ã§ã€æ„å‘³ã¯ã‚ã‹ã‚Šã«ãã„...è©¦è¡ŒéŒ¯èª¤ã™ã‚‹ç”¨.
  */
 template<typename DMY>
 void DecreaseColor<DMY>::setCalcMidParam(unsigned calcMidMode, float ratioLenY, float ratioLenU, float ratioLenV)
 {
-    calcMidMode_ = calcMidMode;             // 0‚¾‚Æ’Pƒ‚É(min+max)/2  1‚¾‚ÆƒsƒNƒZƒ‹”½‰f.
-    ratioLenY_   = ratioLenY;               // Y,U,V‚Ì‘I‘ğ‚É‚¨‚¢‚ÄA—\‚ß Y‚ğratioLenY_”{‚·‚é
+    calcMidMode_ = calcMidMode;             // 0ã ã¨å˜ç´”ã«(min+max)/2  1ã ã¨ãƒ”ã‚¯ã‚»ãƒ«åæ˜ .
+    ratioLenY_   = ratioLenY;               // Y,U,Vã®é¸æŠã«ãŠã„ã¦ã€äºˆã‚ Yã‚’ratioLenY_å€ã™ã‚‹
     ratioLenU_   = ratioLenU;
     ratioLenV_   = ratioLenV;
-    //x midDif_      = midDif;              // max-min>=2*dif‚ğ–‚½‚·‚ÉAƒsƒNƒZƒ‹”‚ğ”½‰f‚µ‚Ä’†‰›’l‚ğæ“¾.
-    //x ratioMidSiz_ = ratioMidSiz;         // ‚±‚ÌŠ„‡‚ğ‘S‘Ì‚ÌƒsƒNƒZƒ‹”‚ÉŠ|‚¯‚½Œ‹‰Ê‚æ‚è‚àA‘½‚¢ê‡‚ÉƒsƒNƒZƒ‹”‚ğ”½‰f‚µ‚Ä’†‰›’l‚ğæ“¾.
+    //x midDif_      = midDif;              // max-min>=2*difã‚’æº€ãŸã™æ™‚ã«ã€ãƒ”ã‚¯ã‚»ãƒ«æ•°ã‚’åæ˜ ã—ã¦ä¸­å¤®å€¤ã‚’å–å¾—.
+    //x ratioMidSiz_ = ratioMidSiz;         // ã“ã®å‰²åˆã‚’å…¨ä½“ã®ãƒ”ã‚¯ã‚»ãƒ«æ•°ã«æ›ã‘ãŸçµæœã‚ˆã‚Šã‚‚ã€å¤šã„å ´åˆã«ãƒ”ã‚¯ã‚»ãƒ«æ•°ã‚’åæ˜ ã—ã¦ä¸­å¤®å€¤ã‚’å–å¾—.
 }
 
 
 
-/** on ‚Å YUV‚Å‚È‚­ RGB‚Åˆ—‚·‚é. ¦ G‚ÍY, R‚ÍU, B‚ÍV‚ğg—p.
+/** on ã§ YUVã§ãªã RGBã§å‡¦ç†ã™ã‚‹. â€» Gã¯Y, Rã¯U, Bã¯Vã‚’ä½¿ç”¨.
  */
 template<typename DMY>
 void DecreaseColor<DMY>::setModeRGB(bool sw) {
     modeRGB_ = sw;
-    if (sw) // RGB‚Ì‚Æ‚«‚ÍA•p“x‚ğg‚¤ƒ‚[ƒh‚É‚µAY(G)‚ğ1”{‚É‚µ‚Ä‚¨‚­.
+    if (sw) // RGBã®ã¨ãã¯ã€é »åº¦ã‚’ä½¿ã†ãƒ¢ãƒ¼ãƒ‰ã«ã—ã€Y(G)ã‚’1å€ã«ã—ã¦ãŠã.
         setCalcMidParam(1, 1.0f, 1.0f, 1.0f);
     else
         setCalcMidParam();
@@ -320,10 +320,10 @@ void DecreaseColor<DMY>::setModeRGB(bool sw) {
 
 
 
-/// ¡‰ñ‚Ì‰Šú‰».
+/// ä»Šå›ã®åˆæœŸåŒ–.
 template<typename DMY>
 bool DecreaseColor<DMY>::init(pix8_t* dstPic, const pix32_t* srcPic, unsigned w, unsigned h, unsigned* dstClut, unsigned clutSize, int* pAlpNum) {
-    // ‚Æ‚è‚ ‚¦‚¸Aƒpƒ‰ƒ[ƒ^‚Íˆê’Ê‚èT‚¦‚Ä‚¨‚­.
+    // ã¨ã‚Šã‚ãˆãšã€ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¯ä¸€é€šã‚Šæ§ãˆã¦ãŠã.
     srcPic_   = srcPic;
     dstPic_   = dstPic;
     clut_     = dstClut;
@@ -332,7 +332,7 @@ bool DecreaseColor<DMY>::init(pix8_t* dstPic, const pix32_t* srcPic, unsigned w,
     h_        = h;
     size_     = w * h;
 
-    // ˆø”ƒ`ƒFƒbƒN
+    // å¼•æ•°ãƒã‚§ãƒƒã‚¯
     if (srcPic == 0)
         return false;
     if (size_ == 0)
@@ -342,12 +342,12 @@ bool DecreaseColor<DMY>::init(pix8_t* dstPic, const pix32_t* srcPic, unsigned w,
     if (clutSize < 2 || clutSize > 256)
         return false;
 
-    // ì‹Æƒƒ‚ƒŠŠm•Û
+    // ä½œæ¥­ãƒ¡ãƒ¢ãƒªç¢ºä¿
     pixDat_  = new pixDat_t[ size_ ];
     if (pixDat_ == 0)
         return false;
 
-    // ƒsƒNƒZƒ‹rgb‚ğyuv‚É•ÏŠ·‚µ‚Äì‹Æƒƒ‚ƒŠ‚ğ€”õ.
+    // ãƒ”ã‚¯ã‚»ãƒ«rgbã‚’yuvã«å¤‰æ›ã—ã¦ä½œæ¥­ãƒ¡ãƒ¢ãƒªã‚’æº–å‚™.
     for (unsigned i = 0; i < size_; ++i) {
         pix32_t c       = srcPic[i];
         int     a       = argb_a(c);
@@ -380,7 +380,7 @@ bool DecreaseColor<DMY>::init(pix8_t* dstPic, const pix32_t* srcPic, unsigned w,
 
 
 
-/// ƒ¿‚Ìó‘Ô‚ğƒ`ƒFƒbƒN•”½‰f
+/// Î±ã®çŠ¶æ…‹ã‚’ãƒã‚§ãƒƒã‚¯ï¼†åæ˜ 
 ///
 template<typename DMY>
 int DecreaseColor<DMY>::checkAlp()
@@ -392,9 +392,9 @@ int DecreaseColor<DMY>::checkAlp()
     int         minA    = (int)minA_;
     int         maxA    = (int)maxA_;
 
-    // ƒ¿‚Í‰½F—p‚¢‚é‚©A‚ğ—\‚ßİ’è
+    // Î±ã¯ä½•è‰²ç”¨ã„ã‚‹ã‹ã€ã‚’äºˆã‚è¨­å®š
     int  alpNum   = alpNum_;
-    if (alpNum < 0) {   // “K“–‚Éƒ¿”‚ğİ’è.
+    if (alpNum < 0) {   // é©å½“ã«Î±æ•°ã‚’è¨­å®š.
         if (clutSize_ < 32) {
             alpNum = 1;
         } else {
@@ -413,7 +413,7 @@ int DecreaseColor<DMY>::checkAlp()
             ++alpChk[a];
         }
 
-        // ƒ¿ƒ`ƒFƒbƒN.
+        // Î±ãƒã‚§ãƒƒã‚¯.
         unsigned    tra     = 0;
         unsigned    blend   = 0;
         unsigned    beta    = 0;
@@ -428,12 +428,12 @@ int DecreaseColor<DMY>::checkAlp()
         }
 
         //x alpMode_     = (blend) ? ALPMODE_BLEND : (tra) ? ALPMODE_TRANSPARENT : ALPMODE_NONE;
-        // ‹­§“I‚Éƒ¿clut‚ğ—pˆÓ‚·‚é‚Ì‚Å‚È‚¯‚ê‚ÎÀƒf[ƒ^‚Ìó‘Ô‚ğ”½‰f.
+        // å¼·åˆ¶çš„ã«Î±clutã‚’ç”¨æ„ã™ã‚‹ã®ã§ãªã‘ã‚Œã°å®Ÿãƒ‡ãƒ¼ã‚¿ã®çŠ¶æ…‹ã‚’åæ˜ .
         if (forceAlpNum_ == false && alpNum > 0) {
             if (blend == 0) {
-                //x if (tra == 0)   // “§–¾”¼“§–¾‚ªÀƒf[ƒ^‚É‚È‚¯‚ê‚ÎAI‚í‚è
+                //x if (tra == 0)   // é€æ˜åŠé€æ˜ãŒå®Ÿãƒ‡ãƒ¼ã‚¿ã«ãªã‘ã‚Œã°ã€çµ‚ã‚ã‚Š
                 //x     return 0;
-                alpNum = (tra != 0);        // Àƒf[ƒ^‚É”¼“§–¾‚ª‚È‚¢‚È‚çA”²‚«F‚¾‚¯.
+                alpNum = (tra != 0);        // å®Ÿãƒ‡ãƒ¼ã‚¿ã«åŠé€æ˜ãŒãªã„ãªã‚‰ã€æŠœãè‰²ã ã‘.
             }
         }
     }
@@ -443,7 +443,7 @@ int DecreaseColor<DMY>::checkAlp()
         transparentNo_ = numberStk_.pop();
         alpTopNo_      = transparentNo_;
         if (alpNum > 1)
-            alpTopNo_ = numberStk_.pop();   // ‰Šú’l‚Ìİ’è‚ÅA•K‚¸ 1‚ğ•Ô‚µ‚Ä‚é‚Ì‘O’ñ.
+            alpTopNo_ = numberStk_.pop();   // åˆæœŸå€¤ã®è¨­å®šã§ã€å¿…ãš 1ã‚’è¿”ã—ã¦ã‚‹ã®å‰æ.
     }
     normNo_         = numberStk_.pop();
   #else
@@ -454,16 +454,16 @@ int DecreaseColor<DMY>::checkAlp()
 
     for (pixDat = &pixDat_[0]; pixDat != pixEnd; ++pixDat) {
         int a  =  pixDat->a;
-        if (a  <= minA && alpNum > 0) {             // “§–¾
+        if (a  <= minA && alpNum > 0) {             // é€æ˜
             pixDat->no = transparentNo_;
             pixDat->a  = 0;
 
-        } else if (a < maxA && alpNum > 1) {        // ”¼“§–¾
+        } else if (a < maxA && alpNum > 1) {        // åŠé€æ˜
             pixDat->no = alpTopNo_;
 
-        } else {                                    // •s“§–¾
+        } else {                                    // ä¸é€æ˜
             pixDat->no = normNo_;
-            if (alpBit_ == 0)                       // ƒ¿ƒrƒbƒg‚Ìw’è‚Ì‚È‚¢‚Í•s“§–¾‚Æ‚µ‚Ä0xff‚Éİ’è.
+            if (alpBit_ == 0)                       // Î±ãƒ“ãƒƒãƒˆã®æŒ‡å®šã®ãªã„æ™‚ã¯ä¸é€æ˜ã¨ã—ã¦0xffã«è¨­å®š.
                 pixDat->a  = 0xff;
         }
     }
@@ -473,14 +473,14 @@ int DecreaseColor<DMY>::checkAlp()
 
 
 
-/// ’†ŠÔ’l‚ğ‹‚ß‚é
+/// ä¸­é–“å€¤ã‚’æ±‚ã‚ã‚‹
 ///
 template<typename DMY> inline
 unsigned DecreaseColor<DMY>::calcMid(unsigned minVal, unsigned maxVal, unsigned val, unsigned total) const {
-    if (calcMidMode_ == 0) {    // ’Pƒ‚ÉŠ„‚é
+    if (calcMidMode_ == 0) {    // å˜ç´”ã«å‰²ã‚‹
         return (minVal + maxVal + 1) / 2;
 
-    } else {    // ƒsƒNƒZƒ‹”‚ğ”½‰f
+    } else {    // ãƒ”ã‚¯ã‚»ãƒ«æ•°ã‚’åæ˜ 
         unsigned mid = val / total;
         mid += (mid <= minVal);
         return mid;
@@ -489,19 +489,19 @@ unsigned DecreaseColor<DMY>::calcMid(unsigned minVal, unsigned maxVal, unsigned 
 
 
 
-/// ƒƒfƒBƒAƒ“ƒJƒbƒg‚ÈŒ¸F‚ÌƒƒCƒ“ˆ—. Ä‹AÀs.
-/// @param  no      æ“ª”Ô†
-/// @param  num     ˆ—‚·‚é”Ô†‚Ì”ÍˆÍ/”.
+/// ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ³ã‚«ãƒƒãƒˆãªæ¸›è‰²ã®ãƒ¡ã‚¤ãƒ³å‡¦ç†. å†å¸°å®Ÿè¡Œ.
+/// @param  no      å…ˆé ­ç•ªå·
+/// @param  num     å‡¦ç†ã™ã‚‹ç•ªå·ã®ç¯„å›²/æ•°.
 ///
 template<typename DMY>
 int DecreaseColor<DMY>::convMain(int no, int num) {
     //x printf("%d:%d\n", no, num);
-    // ŒÄ‚Î‚ê‚½’iŠK‚Å pixDat_[].no ‚É‚Í no ‚ªİ’è‚³‚ê‚Ä‚¢‚éB
-    // ‚Ì‚ÅAnum ‚ª2ˆÈã‚È‚¢‚Æ•ªŠ„‚ÌˆÓ–¡‚ª‚È‚¢‚Ì‚ÅA–¢–‚È‚ç‚©‚¦‚éB
+    // å‘¼ã°ã‚ŒãŸæ®µéšã§ pixDat_[].no ã«ã¯ no ãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹ã€‚
+    // ã®ã§ã€num ãŒ2ä»¥ä¸Šãªã„ã¨åˆ†å‰²ã®æ„å‘³ãŒãªã„ã®ã§ã€æœªæº€ãªã‚‰ã‹ãˆã‚‹ã€‚
     if (num < 2)
         return num;
 
-    // ‚Ü‚¸‘ÎÛ‚Æ‚È‚éƒsƒNƒZƒ‹‚ğ‚P‚Â’T‚·
+    // ã¾ãšå¯¾è±¡ã¨ãªã‚‹ãƒ”ã‚¯ã‚»ãƒ«ã‚’ï¼‘ã¤æ¢ã™
     pixDat_t*   pixEnd = &pixDat_[size_];
     pixDat_t*   pixDat = &pixDat_[0];
     if (no != pixDat->no) {
@@ -510,12 +510,12 @@ int DecreaseColor<DMY>::convMain(int no, int num) {
         } while (pixDat != pixEnd && no != pixDat->no);
     }
 
-    // ‘ÎÛ‚Æ‚È‚éƒsƒNƒZƒ‹‚ª–³‚©‚Á‚½...
+    // å¯¾è±¡ã¨ãªã‚‹ãƒ”ã‚¯ã‚»ãƒ«ãŒç„¡ã‹ã£ãŸ...
     if (pixDat == pixEnd) {
         return 0;
     }
 
-    // ‚Æ‚è‚ ‚¦‚¸‚ÌAa,y,u,v”ÍˆÍ‚ğİ’è. ¦ rgbƒ‚[ƒh‚Å‚Ía,g,r,b‚É‘Š“–.
+    // ã¨ã‚Šã‚ãˆãšã®ã€a,y,u,vç¯„å›²ã‚’è¨­å®š. â€» rgbãƒ¢ãƒ¼ãƒ‰ã§ã¯a,g,r,bã«ç›¸å½“.
     unsigned    minA = pixDat->a;
     unsigned    maxA = minA;
     unsigned    minY = pixDat->y;
@@ -557,18 +557,18 @@ int DecreaseColor<DMY>::convMain(int no, int num) {
         }
     } while (pixDat != pixEnd);
 
-    int lenA = (maxA - minA) * ratioLenA_;      // ƒ¿‚ğˆ—‚·‚é‚©‚Ç‚¤‚©‚ÍAratioLenA_‚ª1(ˆÈã)‚Å‚·‚éA0‚Å‚µ‚È‚¢.
+    int lenA = (maxA - minA) * ratioLenA_;      // Î±ã‚’å‡¦ç†ã™ã‚‹ã‹ã©ã†ã‹ã¯ã€ratioLenA_ãŒ1(ä»¥ä¸Š)ã§ã™ã‚‹ã€0ã§ã—ãªã„.
     int lenY = (int)((maxY - minY) * ratioLenY_);
     int lenU = (int)((maxU - minU) * ratioLenU_);
     int lenV = (int)((maxV - minV) * ratioLenV_);
 
-    // ‹——£‚ª‚È‚¢‚Á‚Ä‚±‚Æ‚Í‚·‚Å‚É‚PF‚Ì‚İ‚È‚ñ‚ÅA•ªŠ„‚Å‚«‚È‚¢‚Ì‚Å‹A‚é.
+    // è·é›¢ãŒãªã„ã£ã¦ã“ã¨ã¯ã™ã§ã«ï¼‘è‰²ã®ã¿ãªã‚“ã§ã€åˆ†å‰²ã§ããªã„ã®ã§å¸°ã‚‹.
     if (sum <= 1 || (lenA == 0 && lenY == 0 && lenU == 0 && lenV == 0))
-        return num;     // ¡‰ñ‚Ìˆ—‚ğ‚·‚é’iŠK‚Åno”Ô‚ªnumŒÂİ’è‚³‚ê‚Ä‚é‚Ì‚ÅA‚»‚Ì‚Ü‚Ünum‚ğ•Ô‚·.
+        return num;     // ä»Šå›ã®å‡¦ç†ã‚’ã™ã‚‹æ®µéšã§noç•ªãŒnumå€‹è¨­å®šã•ã‚Œã¦ã‚‹ã®ã§ã€ãã®ã¾ã¾numã‚’è¿”ã™.
 
     int mode;
-    // ˆê”ÔA•‚ª‚ ‚é•”•ª‚ğ‘I‘ğ‚·‚é
-    // “¯‚¶’l‚Ìê‡‚Í A,Y,U,V‚Ì‡‚É‘I‘ğ‚³‚ê‚é
+    // ä¸€ç•ªã€å¹…ãŒã‚ã‚‹éƒ¨åˆ†ã‚’é¸æŠã™ã‚‹
+    // åŒã˜å€¤ã®å ´åˆã¯ A,Y,U,Vã®é †ã«é¸æŠã•ã‚Œã‚‹
     if (ratioLenA_ && lenA >= lenY) {
         if (lenA >= lenU)
             mode = (lenA >= lenV) ? 3 : 0;
@@ -596,8 +596,8 @@ int DecreaseColor<DMY>::convMain(int no, int num) {
         mid = calcMid(minV, maxV, sumV, sum);
         for (pixDat = &pixDat_[0]; pixDat != pixEnd; ++pixDat) {
             if (pixDat->no == no) {
-                pixDat->no = (pixDat->v < mid) ? (++c1, no1) : (++c2, no2);         // ˆÃ‚¢•û‚©‚çˆ—
-                //pixDat->no = (pixDat->v >= mid) ? (++c1, no1) : (++c2, no2);      // –¾‚é‚¢•û‚©‚çˆ—
+                pixDat->no = (pixDat->v < mid) ? (++c1, no1) : (++c2, no2);         // æš—ã„æ–¹ã‹ã‚‰å‡¦ç†
+                //pixDat->no = (pixDat->v >= mid) ? (++c1, no1) : (++c2, no2);      // æ˜ã‚‹ã„æ–¹ã‹ã‚‰å‡¦ç†
             }
         }
         break;
@@ -627,7 +627,7 @@ int DecreaseColor<DMY>::convMain(int no, int num) {
         for (pixDat = &pixDat_[0]; pixDat != pixEnd; ++pixDat) {
             if (pixDat->no == no) {
                 pixDat->no = (pixDat->a < mid) ? (++c1, no1) : (++c2, no2);
-                //x pixDat->no = (pixDat->a > mid) ? (++c1, no1) : (++c2, no2); // ‚±‚Á‚¿‚¾‚ÆŒë•ÏŠ·‚ª”­¶‚·‚é...
+                //x pixDat->no = (pixDat->a > mid) ? (++c1, no1) : (++c2, no2); // ã“ã£ã¡ã ã¨èª¤å¤‰æ›ãŒç™ºç”Ÿã™ã‚‹...
             }
         }
         break;
@@ -636,10 +636,10 @@ int DecreaseColor<DMY>::convMain(int no, int num) {
         assert(0);
     }
 
-    // •ªŠ„‚µ‚½‚¯‚ÇA‚PƒsƒNƒZƒ‹‚à‚È‚©‚Á‚½ê‡.
+    // åˆ†å‰²ã—ãŸã‘ã©ã€ï¼‘ãƒ”ã‚¯ã‚»ãƒ«ã‚‚ãªã‹ã£ãŸå ´åˆ.
     if (c1 == 0) {
       #ifdef DECREASECOLORMC_USE_MUBERSTK
-        numberStk_.push(no1);   // ”Ô†‚ğ–¢g—p‚É‚·‚é.
+        numberStk_.push(no1);   // ç•ªå·ã‚’æœªä½¿ç”¨ã«ã™ã‚‹.
       #endif
         num1 = 0;
     }
@@ -650,7 +650,7 @@ int DecreaseColor<DMY>::convMain(int no, int num) {
     }
   #endif
 
-    // Ä‹A
+    // å†å¸°
     if (num1 > 1) {
         num1 = convMain(no1, num1);
     }
@@ -723,12 +723,12 @@ void DecreaseColor<DMY>::makeClut(int alpNum) {
         ++pixDat;
     }
 
-    // clutSize_ŒÂ‚Ìclut‚ğì¬‚·‚é
+    // clutSize_å€‹ã®clutã‚’ä½œæˆã™ã‚‹
     assert(clutSize_ >= 0 && clutSize_ <= 256);
-    if (alpBit_ == 0) {     // •’Ê‚ÌŒ¸F.
+    if (alpBit_ == 0) {     // æ™®é€šã®æ¸›è‰².
         std::memcpy(clut_, clut, sizeof(unsigned) * clutSize_);
     } else {
-        // ƒ¿NiM ‚ÈƒsƒNƒZƒ‹—p‚Ìclut‚ğì‚é.
+        // Î±NiM ãªãƒ”ã‚¯ã‚»ãƒ«ç”¨ã®clutã‚’ä½œã‚‹.
         assert(0 < alpBit_ && alpBit_ < 8);
         unsigned    alpBit  = alpBit_;
         unsigned    indBit  = 8 - alpBit;
@@ -739,7 +739,7 @@ void DecreaseColor<DMY>::makeClut(int alpNum) {
         for (unsigned a = 0; a < alpCnt; ++a) {
             unsigned    aa  = 0xFF * a / (alpCnt-1);
             for (unsigned i = 0; i < cnum; ++i) {
-                if (n >= clutSize_)                 // ”O‚Ì‚½‚ßƒ`ƒFƒbƒN.
+                if (n >= clutSize_)                 // å¿µã®ãŸã‚ãƒã‚§ãƒƒã‚¯.
                     goto EXIT_LOOP;
                 clut_[n] = argb(aa,0,0,0) | (clut[i] & 0xFFffFF);
                 ++n;
@@ -775,23 +775,23 @@ unsigned DecreaseColor<DMY>::ayuv_to_argb(unsigned a, unsigned y0, unsigned u0, 
 
 
 
-/// Œ¸F‚µ‚½ƒsƒNƒZƒ‹ƒf[ƒ^‚ğ¶¬
+/// æ¸›è‰²ã—ãŸãƒ”ã‚¯ã‚»ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’ç”Ÿæˆ
 ///
 template<typename DMY>
 void DecreaseColor<DMY>::makeDstPic() {
     pix8_t      *dstPic = dstPic_;
     if (dstPic == 0)
-        return;     // clutì¬‚¾‚¯‚Ì‚Æ‚«‚Ínull‚¾‚©‚çA‚©‚¦‚é
+        return;     // clutä½œæˆã ã‘ã®ã¨ãã¯nullã ã‹ã‚‰ã€ã‹ãˆã‚‹
 
     if (alpBit_ == 0) {
         pixDat_t    *pixDat = &pixDat_[0];
         for (unsigned i = 0; i < size_; ++i) {
-            //x *dstPic++  = pixDat->no;    // ‚²‚­A’Pƒ‚ÉƒƒfƒBƒAƒ“ƒJƒbƒg‚µ‚½‚Æ‚«‚Ì”Ô†‚ğ‚»‚Ì‚Ü‚ÜƒsƒNƒZƒ‹’l‚Æ‚·‚é.
+            //x *dstPic++  = pixDat->no;    // ã”ãã€å˜ç´”ã«ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ³ã‚«ãƒƒãƒˆã—ãŸã¨ãã®ç•ªå·ã‚’ãã®ã¾ã¾ãƒ”ã‚¯ã‚»ãƒ«å€¤ã¨ã™ã‚‹.
             *dstPic++  = pixDat->idx;
             ++pixDat;
         }
     } else {
-        // ƒsƒNƒZƒ‹’†‚Éƒ¿ƒrƒbƒg‚ğŠm•Û‚µ‚Ä‚éê‡.
+        // ãƒ”ã‚¯ã‚»ãƒ«ä¸­ã«Î±ãƒ“ãƒƒãƒˆã‚’ç¢ºä¿ã—ã¦ã‚‹å ´åˆ.
         unsigned    indBit  = 8 - alpBit_;
         unsigned    indNum  = 1 << indBit;
         unsigned    alpMsk  = ~(indNum - 1);

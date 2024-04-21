@@ -1,9 +1,9 @@
 /**
  *  @file   fks_file_time.c
- *  @brief  ƒtƒ@ƒCƒ‹ŠÔ‚Ìæ“¾Eİ’è.
+ *  @brief  ãƒ•ã‚¡ã‚¤ãƒ«æ™‚é–“ã®å–å¾—ãƒ»è¨­å®š.
  *  @author tenk* (Masashi Kitamura)
  *  @note
- *  -   win ‚Æ linux(unix)Œn‚ğ‘ÎÛ(‘z’è).
+ *  -   win ã¨ linux(unix)ç³»ã‚’å¯¾è±¡(æƒ³å®š).
  */
 
 #include <stddef.h>
@@ -20,7 +20,7 @@
  #pragma warning(disable:4189)
 #endif
 
-/** ƒtƒ@ƒCƒ‹‚ÌŠÔ‚Ìæ“¾. ¬Œ÷‚µ‚½‚ç 0, ¸‘Ô‚µ‚½‚ç•‰‚ğ•Ô‚·.
+/** ãƒ•ã‚¡ã‚¤ãƒ«ã®æ™‚é–“ã®å–å¾—. æˆåŠŸã—ãŸã‚‰ 0, å¤±æ…‹ã—ãŸã‚‰è² ã‚’è¿”ã™.
  */
 int fks_fileTimeGet(char const* fname, fks_file_time_t* pCreat, fks_file_time_t* pLastAcs, fks_file_time_t* pLastWrt) {
     HANDLE h;
@@ -35,7 +35,7 @@ int fks_fileTimeGet(char const* fname, fks_file_time_t* pCreat, fks_file_time_t*
     return -1;
 }
 
-/** ƒtƒ@ƒCƒ‹‚ÌŠÔ‚Ìİ’è. ¬Œ÷‚µ‚½‚ç 0, ¸‘Ô‚µ‚½‚ç•‰‚ğ•Ô‚·.
+/** ãƒ•ã‚¡ã‚¤ãƒ«ã®æ™‚é–“ã®è¨­å®š. æˆåŠŸã—ãŸã‚‰ 0, å¤±æ…‹ã—ãŸã‚‰è² ã‚’è¿”ã™.
  */
 int fks_fileTimeSet(char const* fname, fks_file_time_t const* pCreat, fks_file_time_t const* pLastAcs, fks_file_time_t const* pLastWrt) {
     HANDLE h;
@@ -52,7 +52,7 @@ int fks_fileTimeSet(char const* fname, fks_file_time_t const* pCreat, fks_file_t
     return -1;
 }
 
-/** å‚Éƒtƒ@ƒCƒ‹ŠÔ‘€ì‚Æ•¹—p‚·‚éŒü‚¯‚ÉAŒ»İŠÔ‚ğæ“¾‚·‚é
+/** ä¸»ã«ãƒ•ã‚¡ã‚¤ãƒ«æ™‚é–“æ“ä½œã¨ä½µç”¨ã™ã‚‹å‘ã‘ã«ã€ç¾åœ¨æ™‚é–“ã‚’å–å¾—ã™ã‚‹
  */
 fks_file_time_t fks_fileTimeFromCurrentTime() {
     fks_file_time_t t = 0;
@@ -62,8 +62,8 @@ fks_file_time_t fks_fileTimeFromCurrentTime() {
 
 #else   // linux(unix) //----------------------------------------------------
 
-#define _LARGEFILE64_SOURCE        // include‡”Ô‚ğ‹C‚ğ‚Â‚¯‚È‚¢‚Ææ‚Áæ‚ê‚È‚¢...
-#define _FILE_OFFSET_BITS  64      // include‡”Ô‚ğ‹C‚ğ‚Â‚¯‚È‚¢‚Ææ‚Áæ‚ê‚È‚¢...
+#define _LARGEFILE64_SOURCE        // includeé †ç•ªã‚’æ°—ã‚’ã¤ã‘ãªã„ã¨ä¹—ã£å–ã‚Œãªã„...
+#define _FILE_OFFSET_BITS  64      // includeé †ç•ªã‚’æ°—ã‚’ã¤ã‘ãªã„ã¨ä¹—ã£å–ã‚Œãªã„...
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -71,7 +71,7 @@ fks_file_time_t fks_fileTimeFromCurrentTime() {
 
 #define USEC_OF_1SEC            1000000
 
-/** ƒtƒ@ƒCƒ‹‚ÌŠÔ‚Ìæ“¾. ¬Œ÷‚µ‚½‚ç 0, ¸‘Ô‚µ‚½‚ç•‰‚ğ•Ô‚·.
+/** ãƒ•ã‚¡ã‚¤ãƒ«ã®æ™‚é–“ã®å–å¾—. æˆåŠŸã—ãŸã‚‰ 0, å¤±æ…‹ã—ãŸã‚‰è² ã‚’è¿”ã™.
  */
 int fks_fileTimeGet(char const* fname, fks_file_time_t* pCreat, fks_file_time_t* pLastAcs, fks_file_time_t* pLastWrt) {
     struct stat st;
@@ -86,7 +86,7 @@ int fks_fileTimeGet(char const* fname, fks_file_time_t* pCreat, fks_file_time_t*
     return rc;
 }
 
-/** ƒtƒ@ƒCƒ‹‚ÌŠÔ‚Ìİ’è. ¬Œ÷‚µ‚½‚ç 0, ¸‘Ô‚µ‚½‚ç•‰‚ğ•Ô‚·.
+/** ãƒ•ã‚¡ã‚¤ãƒ«ã®æ™‚é–“ã®è¨­å®š. æˆåŠŸã—ãŸã‚‰ 0, å¤±æ…‹ã—ãŸã‚‰è² ã‚’è¿”ã™.
  */
 int fks_fileTimeSet(char const* fname, fks_file_time_t const* pCreat, fks_file_time_t const* pLastAcs, fks_file_time_t const* pLastWrt) {
     struct timeval tv[2];
@@ -118,7 +118,7 @@ int fks_fileTimeSet(char const* fname, fks_file_time_t const* pCreat, fks_file_t
     return utimes(fname, tv);
 }
 
-/** å‚Éƒtƒ@ƒCƒ‹ŠÔ‘€ì‚Æ•¹—p‚·‚éŒü‚¯‚ÉAŒ»İŠÔ‚ğæ“¾‚·‚é
+/** ä¸»ã«ãƒ•ã‚¡ã‚¤ãƒ«æ™‚é–“æ“ä½œã¨ä½µç”¨ã™ã‚‹å‘ã‘ã«ã€ç¾åœ¨æ™‚é–“ã‚’å–å¾—ã™ã‚‹
  */
 fks_file_time_t fks_fileTimeFromCurrentTime() {
     struct timeval t;

@@ -1,6 +1,6 @@
 /**
  *  @file   pix8.h
- *  @biref  8ƒrƒbƒgF‰æ‘œ‚ğ‚¢‚ë‚¢‚ë•ÏŠ·
+ *  @biref  8ãƒ“ãƒƒãƒˆè‰²ç”»åƒã‚’ã„ã‚ã„ã‚å¤‰æ›
  *  @author Masashi Kitamura
  *  @date   2000
  */
@@ -13,19 +13,19 @@ extern "C" {
 
 void pix8_copyRect(void *dst, int dstW, int dstH, int dstX, int dstY, void *src, int srcW, int srcH, int rctX, int rctY, int rctW, int rctH);
 
-/// src‰æ‘œ(‰¡•srcW)‚Ì‹éŒ`(rctW*rctH)‚ğdst‰æ‘œ(‰¡•dstW)‚ÉƒRƒs[
+/// srcç”»åƒ(æ¨ªå¹…srcW)ã®çŸ©å½¢(rctW*rctH)ã‚’dstç”»åƒ(æ¨ªå¹…dstW)ã«ã‚³ãƒ”ãƒ¼.
 void pix8_copyWH(void *dst, int dstW, void *src, int srcW, int rctW, int rctH);
 
-/// ’Pƒ‚ÈŠg‘å
+/// å˜ç´”ãªæ‹¡å¤§
 void pix8_resize(uint8_t *pix2, unsigned rszW, unsigned rszH, const uint8_t *pix, unsigned w, unsigned h);
 
-/// src‰æ‘œ’†‚É bpp ‚Ì”ÍˆÍŠO‚É‚È‚é”Ô†‚ª‚ ‚é‚©ƒ`ƒFƒbƒN. ‚ ‚ê‚Î•‰”‚ğ•Ô‚·.
+/// srcç”»åƒä¸­ã« bpp ã®ç¯„å›²å¤–ã«ãªã‚‹ç•ªå·ãŒã‚ã‚‹ã‹ãƒã‚§ãƒƒã‚¯. ã‚ã‚Œã°è² æ•°ã‚’è¿”ã™.
 int pix8_hasPixOutOfIdx(uint8_t const* src, int w, int h, int idx);
 
-//x /// ”wŒiFˆÈŠO‚ªg‚Á‚Ä‚¢‚é‹éŒ`‚ğ‹‚ß‚éB”²‚«F‚ÍƒCƒ“ƒfƒbƒNƒXEƒJƒ‰[
+//x /// èƒŒæ™¯è‰²ä»¥å¤–ãŒä½¿ã£ã¦ã„ã‚‹çŸ©å½¢ã‚’æ±‚ã‚ã‚‹ã€‚æŠœãè‰²ã¯ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒ»ã‚«ãƒ©ãƒ¼.
 //x int pix8_getNukiRectI(void *pix0, int xsz, int ysz, int nukiClut, int *x_p, int *y_p, int *w_p, int *h_p);
 
-//x /// ”wŒiFˆÈŠO‚ªg‚Á‚Ä‚¢‚é‹éŒ`‚ğ‹‚ß‚é. ”²‚«F‚Íƒtƒ‹ƒJƒ‰[
+//x /// èƒŒæ™¯è‰²ä»¥å¤–ãŒä½¿ã£ã¦ã„ã‚‹çŸ©å½¢ã‚’æ±‚ã‚ã‚‹. æŠœãè‰²ã¯ãƒ•ãƒ«ã‚«ãƒ©ãƒ¼.
 //x int pix8_getNukiRectF(void *pix0, int xsz, int ysz, int *clut, int nukiClut, int *x_p, int *y_p, int *w_p, int *h_p);
 
 //x int pix8_gridRect(int gw, int gh, int *x_p, int *y_p, int *w_p, int *h_p);

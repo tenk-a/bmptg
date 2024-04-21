@@ -18,12 +18,12 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    // bmp‚ðƒtƒ@ƒCƒ‹‚©‚ç“Çž.
-    // o—Íbpp=0‚Å“ü—Í‚É“¯‚¶. ‰¡•ƒAƒ‰ƒCƒƒ“ƒg‚Í4‚Ì‚Ü‚Ü‚É‚µ‚Ä‚¨‚­.
+    // bmpã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰èª­è¾¼.
+    // å‡ºåŠ›bpp=0ã§å…¥åŠ›ã«åŒã˜. æ¨ªå¹…ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã¯4ã®ã¾ã¾ã«ã—ã¦ãŠã.
     pix = bmp_read_file(src_name, &w, &h, &bpp, clut, 0, 4, 0);
     if (pix) {
-        int width_byte = bmp_width2byte(w, bpp, 4); // “ü—Í‰æ‘œ‚Ì‰¡•ƒoƒCƒg”.
-        int dst_bpp    = bpp <=8 ? 8 : bpp;         // tga‚Í2F16F‚ª–³‚¢‚Ì‚Å256F‚É.
+        int width_byte = bmp_width2byte(w, bpp, 4); // å…¥åŠ›ç”»åƒã®æ¨ªå¹…ãƒã‚¤ãƒˆæ•°.
+        int dst_bpp    = bpp <=8 ? 8 : bpp;         // tgaã¯2è‰²16è‰²ãŒç„¡ã„ã®ã§256è‰²ã«.
         tga_write_file(dst_name, w, h, dst_bpp, pix, width_byte, bpp, clut, 0);
         free(pix);
     }

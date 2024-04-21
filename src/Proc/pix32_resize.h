@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_resize.h
- *  @brief  ƒoƒCƒŠƒjƒAƒTƒ“ƒvƒŠƒ“ƒO‚ÅŠg‘åk¬.
+ *  @brief  ãƒã‚¤ãƒªãƒ‹ã‚¢ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ã§æ‹¡å¤§ç¸®å°.
  *  @author Masashi KITAMURA
  */
 
@@ -13,14 +13,14 @@
 #include "pix32_resizeSpline36.h"
 #include "pix32_resizeLanczos3.h"
 
-/** ‰æ‘œ‚ÌŠg‘åk¬
- * @param dst   o—Í‰æ‘œ
- * @param dstW  o—Í‰¡•
- * @param dstH  o—Íc•
- * @param src   “ü—Í‰æ‘œ
- * @param srcW  “ü—Í‰¡•
- * @param srcH  “ü—Íc•
- * @param type  •ÏŠ·‚Ìí—Ş: 0,1=ƒoƒCƒŠƒjƒA 2=ƒoƒCƒLƒ…[ƒrƒbƒN 3,4=Spline36
+/** ç”»åƒã®æ‹¡å¤§ç¸®å°
+ * @param dst   å‡ºåŠ›ç”»åƒ
+ * @param dstW  å‡ºåŠ›æ¨ªå¹…
+ * @param dstH  å‡ºåŠ›ç¸¦å¹…
+ * @param src   å…¥åŠ›ç”»åƒ
+ * @param srcW  å…¥åŠ›æ¨ªå¹…
+ * @param srcH  å…¥åŠ›ç¸¦å¹…
+ * @param type  å¤‰æ›ã®ç¨®é¡: 0,1=ãƒã‚¤ãƒªãƒ‹ã‚¢ 2=ãƒã‚¤ã‚­ãƒ¥ãƒ¼ãƒ“ãƒƒã‚¯ 3,4=Spline36
  */
 inline void pix32_resize(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH, int type, int hasAlpha)
 {
@@ -35,8 +35,8 @@ inline void pix32_resize(unsigned *dst, unsigned dstW, unsigned dstH, const unsi
 }
 
 // ===========================================================================
-// C++Œü
-// image(), witdh(),height(),bpp() ‚ğƒƒ“ƒo[‚É‚Â‰æ‘œƒNƒ‰ƒX‚ğ‘€ì.
+// C++å‘.
+// image(), witdh(),height(),bpp() ã‚’ãƒ¡ãƒ³ãƒãƒ¼ã«æŒã¤ç”»åƒã‚¯ãƒ©ã‚¹ã‚’æ“ä½œ.
 
 #if defined __cplusplus
 

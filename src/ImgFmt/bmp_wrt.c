@@ -1,6 +1,6 @@
 /**
  *  @file   bmp_wrt.c
- *  @brief  BMP ‰æ‘œƒf[ƒ^o—Í
+ *  @brief  BMP ç”»åƒãƒ‡ãƒ¼ã‚¿å‡ºåŠ›
  *  @author Masashi Kitamura
  *  @date   199?
  *  @note
@@ -12,7 +12,7 @@
 
 
 /*--------------------------------------------------------------------------*/
-/* ƒRƒ“ƒpƒCƒ‹ŠÂ‹«‚Ì’Òåë‚ ‚í‚¹. */
+/* ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ç’°å¢ƒã®è¾»è¤„ã‚ã‚ã›. */
 
 
 #if (defined _MSC_VER) || (defined __BORLANDC__ && __BORLANDC__ <= 0x0551)
@@ -34,20 +34,20 @@ typedef unsigned       uint32_t;
 
 #define BBBB(a,b,c,d)   ((((uint8_t)(a))<<24)+(((uint8_t)(b))<<16)+(((uint8_t)(c))<<8)+((uint8_t)(d)))
 
-/* ƒoƒCƒg’PˆÊ‚ÌƒAƒhƒŒƒX‚©‚ç’l‚ğæ‚èo‚·ƒƒ‚ƒŠƒAƒNƒZƒX—pƒ}ƒNƒ */
+/* ãƒã‚¤ãƒˆå˜ä½ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‹ã‚‰å€¤ã‚’å–ã‚Šå‡ºã™ãƒ¡ãƒ¢ãƒªã‚¢ã‚¯ã‚»ã‚¹ç”¨ãƒã‚¯ãƒ­ */
 #define PEEKB(a)        (*(const uint8_t *)(a))
 
-#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__   // X86 ‚ÍAƒAƒ‰ƒCƒƒ“ƒg‚ğ‹C‚É‚·‚é•K—v‚ª‚È‚¢‚Ì‚Å’¼ÚƒAƒNƒZƒX
+#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__   // X86 ã¯ã€ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã‚’æ°—ã«ã™ã‚‹å¿…è¦ãŒãªã„ã®ã§ç›´æ¥ã‚¢ã‚¯ã‚»ã‚¹.
 #define PEEKiW(a)       (*(const uint16_t *)(a))
 #define PEEKiD(a)       (*(const uint32_t *)(a))
 #define POKEiD(a,b)     (*(uint32_t *)(a) = (b))
 #else
 #define PEEKiW(a)       ( PEEKB(a) | (PEEKB((const char *)(a)+1)<< 8) )
 #define PEEKiD(a)       ( PEEKiW(a) | (PEEKiW((const char *)(a)+2) << 16) )
-#define GLB(a)          ((uint8_t)(a))                  ///< a‚ğ int16Œ^‚Æ‚µ‚Ä‰ºˆÊƒoƒCƒg‚Ì’l‚ğæ“¾
-#define GHB(a)          ((uint8_t)(((uint16_t)(a))>>8))     ///< a‚ğ int16Œ^‚Æ‚µ‚ÄãˆÊƒoƒCƒg‚Ì’l‚ğæ“¾
-#define GLW(a)          ((uint16_t)(a))                 ///< int32Œ^‚Æ‚µ‚Ä‚Ì a ‚Ì‰º16ƒrƒbƒg‚Ì’l‚ğæ“¾
-#define GHW(a)          ((uint16_t)(((uint32_t)(a))>>16))   ///< int32Œ^‚Æ‚µ‚Ä‚Ì a ‚Ìã16ƒrƒbƒg‚Ì’l‚ğæ“¾
+#define GLB(a)          ((uint8_t)(a))                  ///< aã‚’ int16å‹ã¨ã—ã¦ä¸‹ä½ãƒã‚¤ãƒˆã®å€¤ã‚’å–å¾—.
+#define GHB(a)          ((uint8_t)(((uint16_t)(a))>>8))     ///< aã‚’ int16å‹ã¨ã—ã¦ä¸Šä½ãƒã‚¤ãƒˆã®å€¤ã‚’å–å¾—.
+#define GLW(a)          ((uint16_t)(a))                 ///< int32å‹ã¨ã—ã¦ã® a ã®ä¸‹16ãƒ“ãƒƒãƒˆã®å€¤ã‚’å–å¾—.
+#define GHW(a)          ((uint16_t)(((uint32_t)(a))>>16))   ///< int32å‹ã¨ã—ã¦ã® a ã®ä¸Š16ãƒ“ãƒƒãƒˆã®å€¤ã‚’å–å¾—.
 #define POKEB(a,b)      (*(uint8_t *)(a) = (b))
 #define POKEiW(a,b)     (POKEB((a),GLB(b)), POKEB((char *)(a)+1,GHB(b)))
 #define POKEiD(a,b)     (POKEiW((a),GLW(b)), POKEiW((char *)(a)+2,GHW(b)))
@@ -65,13 +65,13 @@ typedef unsigned       uint32_t;
 
 
 /*--------------------------------------------------------------------------*/
-/* o—Í‚Ì‚½‚ß‚Ì‘‚«‚±‚İˆ—(ƒGƒ“ƒfƒBƒAƒ“‘Îô)                               */
+/* å‡ºåŠ›ã®ãŸã‚ã®æ›¸ãã“ã¿å‡¦ç†(ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³å¯¾ç­–)                               */
 
 
-#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__   // X86 ‚ÍAƒAƒ‰ƒCƒƒ“ƒg‚ğ‹C‚É‚·‚é•K—v‚ª‚È‚¢‚Ì‚Å’¼ÚƒAƒNƒZƒX
-// ”Ä—p‚Å‚Í‚È‚­A‚±‚Ìƒtƒ@ƒCƒ‹‚Ì‚İ‚Å—LŒø‚Èƒ}ƒNƒB
-// ˆø” a ‚Í•K‚¸uint8_t*Œ^•Ï”‚Ö‚Ìƒ|ƒCƒ“ƒ^‚Å‚ ‚é‚±‚Æ!
-// mput_b3()‚Ì c ‚Í•›ì—p‚Ì‚È‚¢’l‚Å‚ ‚é‚±‚ÆI
+#if defined _M_IX86 || defined _X86_ || defined _M_AMD64 || defined __amd64__   // X86 ã¯ã€ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã‚’æ°—ã«ã™ã‚‹å¿…è¦ãŒãªã„ã®ã§ç›´æ¥ã‚¢ã‚¯ã‚»ã‚¹.
+// æ±ç”¨ã§ã¯ãªãã€ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿ã§æœ‰åŠ¹ãªãƒã‚¯ãƒ­.
+// å¼•æ•° a ã¯å¿…ãšuint8_t*å‹å¤‰æ•°ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã§ã‚ã‚‹ã“ã¨!
+// mput_b3()ã® c ã¯å‰¯ä½œç”¨ã®ãªã„å€¤ã§ã‚ã‚‹ã“ã¨!
 
 #define mput_b1(a, c)       (*((*a)++) = (c))
 #define mput_b2(a, c)       (*(uint16_t*)(*a) = (c),  (*a) += 2)
@@ -88,7 +88,7 @@ typedef unsigned       uint32_t;
 
 static inline void mput_b1(uint8_t **a, int c)
 {
-    // 1ƒoƒCƒgƒƒ‚ƒŠ‘‚«‚±‚İ
+    // 1ãƒã‚¤ãƒˆãƒ¡ãƒ¢ãƒªæ›¸ãã“ã¿.
     uint8_t *d = (uint8_t*)*a;
     //DBG_F(("b1:%x  %02x\n", d, c));
     *d++ = (uint8_t)c;
@@ -97,7 +97,7 @@ static inline void mput_b1(uint8_t **a, int c)
 
 static inline void mput_b2(uint8_t **a, int c)
 {
-    // 2ƒoƒCƒgƒƒ‚ƒŠ‘‚«‚±‚İ
+    // 2ãƒã‚¤ãƒˆãƒ¡ãƒ¢ãƒªæ›¸ãã“ã¿
     uint8_t *d = (uint8_t*)*a;
     //DBG_F(("b2:%x  %04x\n", d, c));
     *d++ = (uint8_t)c;
@@ -108,7 +108,7 @@ static inline void mput_b2(uint8_t **a, int c)
 /*
 static inline void mput_b3(uint8_t **a, int c)
 {
-    // 3ƒoƒCƒgƒƒ‚ƒŠ‘‚«‚±‚İ
+    // 3ãƒã‚¤ãƒˆãƒ¡ãƒ¢ãƒªæ›¸ãã“ã¿.
     uint8_t *d = (uint8_t*)*a;
     //DBG_F(("b3:%x  %06x\n", d, c));
     *d++ = (uint8_t)c;
@@ -120,7 +120,7 @@ static inline void mput_b3(uint8_t **a, int c)
 
 static inline void mput_b4(uint8_t **a, int c)
 {
-    // 4ƒoƒCƒgƒƒ‚ƒŠ‘‚«‚±‚İ
+    // 4ãƒã‚¤ãƒˆãƒ¡ãƒ¢ãƒªæ›¸ãã“ã¿.
     uint8_t *d = (uint8_t*)*a;
     //DBG_F(("b4:%x  %08x\n", d, c));
     *d++ = (uint8_t)c;
@@ -175,7 +175,7 @@ int  bmp_writeEx(void *bmp_data, int w, int h, int dstBpp, const void *src, int 
     uint8_t     *bm     = (uint8_t*)bmp_data;
     uint8_t     *d      = bm;
     uint32_t    *clut   = (uint32_t*)clut0;
-    //int       cm      = (dir & 0x80) ? 8 : 0; // ˆ³kƒ‚[ƒh‚Í–¢‘Î‰
+    //int       cm      = (dir & 0x80) ? 8 : 0; // åœ§ç¸®ãƒ¢ãƒ¼ãƒ‰ã¯æœªå¯¾å¿œ.
     //int       dn      = BPP2BYT(dstBpp);
     int         sn      = BPP2BYT(srcBpp);
     int         c;
@@ -189,30 +189,30 @@ int  bmp_writeEx(void *bmp_data, int w, int h, int dstBpp, const void *src, int 
 
     //DBG_F(("dstBpp = %d dir=%x dr=%x\n",dstBpp,dir,dr));
 
-    /* ƒwƒbƒ_ì¬ */
+    /* ãƒ˜ãƒƒãƒ€ä½œæˆ */
     mput_b1(&d, 'B');
     mput_b1(&d, 'M');
     c = BMP_TOP_HDR_SZ + 40;
-    mput_b4(&d, c);                         /* 2/2  ƒtƒ@ƒCƒ‹ƒTƒCƒY */
-    mput_b4(&d, 0);                         /* 6/6  —\–ñ */
+    mput_b4(&d, c);                         /* 2/2  ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚º */
+    mput_b4(&d, 0);                         /* 6/6  äºˆç´„ */
     if (dstBpp <= 8)
         c = BMP_TOP_HDR_SZ + 40 + (1<<dstBpp)*4;
     else
         c = BMP_TOP_HDR_SZ + 40;
-    mput_b4(&d, c);                         /*  a/10 ƒsƒNƒZƒ‹Eƒf[ƒ^‚Ö‚ÌƒIƒtƒZƒbƒg */
-    mput_b4(&d, 40);                        /*  e/14 ƒwƒbƒ_ƒTƒCƒY */
+    mput_b4(&d, c);                         /*  a/10 ãƒ”ã‚¯ã‚»ãƒ«ãƒ»ãƒ‡ãƒ¼ã‚¿ã¸ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ */
+    mput_b4(&d, 40);                        /*  e/14 ãƒ˜ãƒƒãƒ€ã‚µã‚¤ã‚º */
     mput_b4(&d, w);                         /* 12/18 width */
     mput_b4(&d, h);                         /* 16/22 height */
-    mput_b2(&d, 1);                         /* 1a/26 ƒvƒŒ[ƒ“”. must be 1 */
+    mput_b2(&d, 1);                         /* 1a/26 ãƒ—ãƒ¬ãƒ¼ãƒ³æ•°. must be 1 */
     mput_b2(&d, dstBpp);                    /* 1c/28 bits per pixel */
-    mput_b4(&d, 0);                         /* 1e/30 ˆ³kƒ‚[ƒh. –³ˆ³k‚È‚ç0 */
-    mput_b4(&d, 0);                         /* 22/34 ˆ³kƒf[ƒ^ƒTƒCƒY. –³ˆ³k‚È‚ç0 */
+    mput_b4(&d, 0);                         /* 1e/30 åœ§ç¸®ãƒ¢ãƒ¼ãƒ‰. ç„¡åœ§ç¸®ãªã‚‰0 */
+    mput_b4(&d, 0);                         /* 22/34 åœ§ç¸®ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚º. ç„¡åœ§ç¸®ãªã‚‰0 */
     mput_b4(&d, rslX);                      /* 26/38 x resolution */
     mput_b4(&d, rslY);                      /* 2a/42 y resolution */
-    mput_b4(&d, 0);                         /* 2e/46 clut‚Ì”. 2,4,8ƒrƒbƒgF‚Å‚Í‚±‚Ì’l‚ÉŠÖŒW‚È‚­1<<nF‚ ‚é. •’Ê 0‚Å‚æ‚¢ */
-    mput_b4(&d, 0);                         /* 32/50 d—v‚ÈF‚Ì”cc•’Ê–³‹‚·‚éƒf[ƒ^. •’Ê 0‚Å‚æ‚¢. */
+    mput_b4(&d, 0);                         /* 2e/46 clutã®æ•°. 2,4,8ãƒ“ãƒƒãƒˆè‰²ã§ã¯ã“ã®å€¤ã«é–¢ä¿‚ãªã1<<nè‰²ã‚ã‚‹. æ™®é€š 0ã§ã‚ˆã„ */
+    mput_b4(&d, 0);                         /* 32/50 é‡è¦ãªè‰²ã®æ•°â€¦â€¦æ™®é€šç„¡è¦–ã™ã‚‹ãƒ‡ãƒ¼ã‚¿. æ™®é€š 0ã§ã‚ˆã„. */
                                             /* 36/54 */
-    /* ƒpƒŒƒbƒg¶¬ --------------- */
+    /* ãƒ‘ãƒ¬ãƒƒãƒˆç”Ÿæˆ --------------- */
     if (dstBpp <= 8) {
         if (srcBpp > 8 || clut == NULL) {
             clut = clut1;
@@ -227,7 +227,7 @@ int  bmp_writeEx(void *bmp_data, int w, int h, int dstBpp, const void *src, int 
         }
     }
 
-    //–³ˆ³k
+    //ç„¡åœ§ç¸®.
     hdrSz = (int)(d - bm);
     bmp_putPixs(d, w, h, dstBpp, (uint8_t*)src, src_wb, srcBpp, clut, dir);
     d += WID2BYT4(w, dstBpp) * h;
@@ -240,10 +240,10 @@ int  bmp_writeEx(void *bmp_data, int w, int h, int dstBpp, const void *src, int 
                 i = bmp_encodeRle4(m, bm+hdrSz, w, h);
             else
                 i = bmp_encodeRle8(m, bm+hdrSz, w, h);
-            if (hdrSz+i < n) {  // ˆ³k‚³‚ê‚Ä‚½‚ç
+            if (hdrSz+i < n) {  // åœ§ç¸®ã•ã‚Œã¦ãŸã‚‰.
                 memcpy(bm+hdrSz, m, i);
-                POKEiD(bm+0x1e, 1);         /*1e ˆ³kƒ‚[ƒh. –³ˆ³k‚È‚ç0 */
-                POKEiD(bm+0x22, i);         /*22 ˆ³kƒf[ƒ^ƒTƒCƒY. –³ˆ³k‚È‚ç0 */
+                POKEiD(bm+0x1e, 1);         /*1e åœ§ç¸®ãƒ¢ãƒ¼ãƒ‰. ç„¡åœ§ç¸®ãªã‚‰0 */
+                POKEiD(bm+0x22, i);         /*22 åœ§ç¸®ãƒ‡ãƒ¼ã‚¿ã‚µã‚¤ã‚º. ç„¡åœ§ç¸®ãªã‚‰0 */
                 n = hdrSz + i;
             }
             free(m);
@@ -262,15 +262,15 @@ static void bmp_getDfltClut(int bpp, uint32_t *clut)
 
     if (clut == NULL)
         return;
-    if (bpp == 1) {         // •”’
+    if (bpp == 1) {         // é»’ç™½.
         clut[0] = 0;
         clut[1] = 0xFFFFFF;
-    } else if (bpp == 4) {  // ’PF”Z’W
+    } else if (bpp == 4) {  // å˜è‰²æ¿ƒæ·¡.
         for (i = 0; i < 16; i++) {
             c = (i << 4) | i;
             clut[i] = BBBB(0, c,c,c);
         }
-    } else {                // TOWNS‚â88VAŒn‚Ì G3R3B2
+    } else {                // TOWNSã‚„88VAç³»ã® G3R3B2
         for (i = 0; i < 256; i++)
             clut[i] = BBBB(0, (i&0x1C)<<3, (i&0xE0), (i&3)<<6);
     }
@@ -351,7 +351,7 @@ static inline uint8_t *bmp_putPix32(uint8_t *d, int c, int bpp)
 {
     int r,g,b,a;
 
-    if (bpp == 15) {    // 15‚Íƒ¿1bit‚ ‚è‚Æ‚µ‚Äˆµ‚¤
+    if (bpp == 15) {    // 15ã¯Î±1bitã‚ã‚Šã¨ã—ã¦æ‰±ã†.
         a = (c >> 24) ? 0x8000 : 0;
         r = (uint8_t)(c >> 16);
         g = (uint8_t)(c >>  8);
@@ -415,7 +415,7 @@ static inline int bmp_getPix32(const uint8_t *s, int x, int bpp, uint32_t *clut,
 
 
 
-/// 256F‚ÌƒsƒNƒZƒ‹‚É‚µ‚Äæ“¾B‘½F‚Ì 256F‰»‚Í G3R3B2 Œ`®‚Ö‚ÌŠÈˆÕ•ÏŠ·.
+/// 256è‰²ã®ãƒ”ã‚¯ã‚»ãƒ«ã«ã—ã¦å–å¾—ã€‚å¤šè‰²ã® 256è‰²åŒ–ã¯ G3R3B2 å½¢å¼ã¸ã®ç°¡æ˜“å¤‰æ›.
 static inline int bmp_getPix8(const uint8_t *s, int x, int bpp, uint32_t *dmy_clut, int ofs)
 {
     int c,r,g,b;
@@ -452,7 +452,7 @@ static inline int bmp_getPix8(const uint8_t *s, int x, int bpp, uint32_t *dmy_cl
 }
 
 
-// 16FƒsƒNƒZƒ‹‚É‚µ‚Äæ“¾B‘½F‚Ì 16F‰»‚Í ƒ‚ƒmƒNƒ‚Ö‚ÌŠÈˆÕ•ÏŠ·.
+// 16è‰²ãƒ”ã‚¯ã‚»ãƒ«ã«ã—ã¦å–å¾—ã€‚å¤šè‰²ã® 16è‰²åŒ–ã¯ ãƒ¢ãƒã‚¯ãƒ­ã¸ã®ç°¡æ˜“å¤‰æ›.
 static inline int bmp_getPix42(const uint8_t *s, int x, int bpp, uint32_t *dmy_clut, int ofs)
 {
     int c,r,g,b, m = (1<<bpp)-1, j=12-bpp;
@@ -524,8 +524,8 @@ static int bmp_getPix1(const uint8_t *s, int x, int bpp, uint32_t *dmy_clut, int
 }
 
 
-/** srcBppF w*hƒhƒbƒg‚Ìsrc ‰æ‘œ‚ğAdstBppF w*h ‚Ì dst‰æ‘œ‚É•ÏŠ·‚·‚é.
- * dir : bit0:ƒsƒNƒZƒ‹‡‚Í0=ã‚©‚ç 1=‰º‚©‚ç   bit1:0=¶‚©‚ç 1=‰E‚©‚ç
+/** srcBppè‰² w*hãƒ‰ãƒƒãƒˆã®src ç”»åƒã‚’ã€dstBppè‰² w*h ã® dstç”»åƒã«å¤‰æ›ã™ã‚‹.
+ * dir : bit0:ãƒ”ã‚¯ã‚»ãƒ«é †ã¯0=ä¸Šã‹ã‚‰ 1=ä¸‹ã‹ã‚‰   bit1:0=å·¦ã‹ã‚‰ 1=å³ã‹ã‚‰.
  */
 static int bmp_putPixs(uint8_t *dst, int dst_w, int h, int dstBpp, const uint8_t *src, int src_wb, int srcBpp, uint32_t *clut, int dir)
 {
@@ -549,7 +549,7 @@ static int bmp_putPixs(uint8_t *dst, int dst_w, int h, int dstBpp, const uint8_t
     //  }
     DBG_F(("spat=%d, dpat=%d, w=%d, dst_wb=%d, srcBpp=%d, dstBpp=%d\n", spat, dpat, w, dst_wb, srcBpp,dstBpp));
 
-    // ‰æ‘œ‚ÌŒü‚«‚Ì’²®
+    // ç”»åƒã®å‘ãã®èª¿æ•´.
     d   = (uint8_t *)dst;
     s   = (const uint8_t *)src;
     y0  = 0, y1 = h, yd = +1;
@@ -560,8 +560,8 @@ static int bmp_putPixs(uint8_t *dst, int dst_w, int h, int dstBpp, const uint8_t
     }
     //DBG_F(("[%d, %d, %d, %d]\n", y0,y1,yd,dpat));
 
-    // ‰æ‘œƒRƒs[
-    if (dstBpp > 8) {   // o—Í‚ª‘½F‚Ì‚Æ‚«
+    // ç”»åƒã‚³ãƒ”ãƒ¼.
+    if (dstBpp > 8) {   // å‡ºåŠ›ãŒå¤šè‰²ã®ã¨ã.
         for (y = y0; y != y1; y += yd) {
             for (x = 0; x < w; x ++) {
                 c = bmp_getPix32(s, x, srcBpp, clut,ofs);
@@ -570,7 +570,7 @@ static int bmp_putPixs(uint8_t *dst, int dst_w, int h, int dstBpp, const uint8_t
             d += dpat;
             s += spat;
         }
-    } else if (dstBpp > 4) {    // o—Í‚ª256F‚Ì‚Æ‚«
+    } else if (dstBpp > 4) {    // å‡ºåŠ›ãŒ256è‰²ã®ã¨ã.
         for (y = y0; y != y1; y += yd) {
             for (x = 0; x < w; x ++) {
                 c = bmp_getPix8(s, x, srcBpp, clut,ofs);
@@ -579,7 +579,7 @@ static int bmp_putPixs(uint8_t *dst, int dst_w, int h, int dstBpp, const uint8_t
             d += dpat;
             s += spat;
         }
-    } else if (dstBpp > 2) {    // o—Í‚ª 16F‚Ì‚Æ‚«
+    } else if (dstBpp > 2) {    // å‡ºåŠ›ãŒ 16è‰²ã®ã¨ã.
         for (y = y0; y != y1; y += yd) {
             for (x = 0; x < w; x ++) {
                 c = (uint8_t)(bmp_getPix42(s, x, srcBpp, clut,ofs) << 4);
@@ -590,7 +590,7 @@ static int bmp_putPixs(uint8_t *dst, int dst_w, int h, int dstBpp, const uint8_t
             d += dpat;
             s += spat;
         }
-    } else if (dstBpp > 1) {    // o—Í‚ª 4F‚Ì‚Æ‚«
+    } else if (dstBpp > 1) {    // å‡ºåŠ›ãŒ 4è‰²ã®ã¨ã.
         for (y = y0; y != y1; y += yd) {
             for (x = 0; x < w; x ++) {
                 c = bmp_getPix42(s, x, srcBpp, clut,ofs) << 6;
@@ -602,7 +602,7 @@ static int bmp_putPixs(uint8_t *dst, int dst_w, int h, int dstBpp, const uint8_t
             d += dpat;
             s += spat;
         }
-    } else {    // o—Í‚ª 2F‚Ì‚Æ‚«
+    } else {    // å‡ºåŠ›ãŒ 2è‰²ã®ã¨ã.
         for (y = y0; y != y1; y += yd) {
             for (x = 0; x < w; x ++) {
                 c = bmp_getPix1(s, x, srcBpp, clut,ofs) << 7;
@@ -637,7 +637,7 @@ static void bmp_encodeRle8(uint8_t *dst, const uint8_t *src, int w, int h)
 
 
 //----------------------------------------------------------------------
-// ˆ³k•â•
+// åœ§ç¸®è£œåŠ©.
 //----------------------------------------------------------------------
 
 int bmp_chkDstBpp(int bpp)
@@ -651,7 +651,7 @@ int bmp_chkDstBpp(int bpp)
 }
 
 
-/** ‰æ‘œƒtƒ@ƒCƒ‹ƒf[ƒ^‚ğì‚é‚Ì‚É•K—v‚Èƒƒ‚ƒŠƒTƒCƒY‚ğ•Ô‚·
+/** ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’ä½œã‚‹ã®ã«å¿…è¦ãªãƒ¡ãƒ¢ãƒªã‚µã‚¤ã‚ºã‚’è¿”ã™.
  */
 int bmp_encodeWorkSize(int w, int h, int bpp)
 {

@@ -1,6 +1,6 @@
 /**
  *  @file   perfcnt.h
- *  @brief  ŠÔŒv‘ªŠÖŒW(Perfomance Counter)
+ *  @brief  æ™‚é–“è¨ˆæ¸¬é–¢ä¿‚(Perfomance Counter)
  *  @author tenk*
  */
 #ifndef PERFCNT_H
@@ -18,14 +18,14 @@ typedef unsigned long long  PerfCnt_t;
 static inline PerfCnt_t     PerfCnt_get()    { struct rusage t; getrusage(RUSAGE_SELF, &t); return t.ru_utime.tv_sec * 1000000ULL + t.ru_utime.tv_usec; }
 #define                     PerfCnt_per_sec()   1000000ULL
 
-#else   // •W€ƒ‰ƒCƒuƒ‰ƒŠ.
+#else   // æ¨™æº–ãƒ©ã‚¤ãƒ–ãƒ©ãƒª.
 #include <ctime.h>
 typedef       clock_t       PerfCnt_t;
 static inline PerfCnt_t     PerfCnt_get()    { return clock();   }
 #define                     PerfCnt_per_sec()   CLOCKS_PER_SEC
 #endif
 
-// •‚“®¬”“_‚ÅŒ‹‰Ê‚ª—~‚µ‚¢ê‡‚ÍAˆø”‚Ì‚Ù‚¤‚ÅŒ^‚ğ double ‚È‚è‚È‚ñ‚È‚è‚É‚µ‚Ä‚¨‚­‚±‚Æ.
+// æµ®å‹•å°æ•°ç‚¹ã§çµæœãŒæ¬²ã—ã„å ´åˆã¯ã€å¼•æ•°ã®ã»ã†ã§å‹ã‚’ double ãªã‚Šãªã‚“ãªã‚Šã«ã—ã¦ãŠãã“ã¨.
 #define PERFCNT_TO_SEC(t)       ((t) / PerfCnt_per_sec())
 #define PERFCNT_TO_MILLI_SEC(t) ((t) * PerfCnt_t(1000) / PerfCnt_per_sec())
 #define PERFCNT_TO_MICRO_SEC(t) ((t) * PerfCnt_t(1000000) / PerfCnt_per_sec())

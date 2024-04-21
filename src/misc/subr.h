@@ -1,6 +1,6 @@
 /**
  *  @file   subr.h
- *  @biref  ŠeíG‘½‚Èƒ‹[ƒ`ƒ“ŒQ
+ *  @biref  å„ç¨®é›‘å¤šãªãƒ«ãƒ¼ãƒãƒ³ç¾¤.
  *  @author Masashi Kitamura
  *  @date   199?-??-??
  */
@@ -22,7 +22,7 @@ extern "C" {
 #endif
 
 /*--------------------------------------------------------------------------*/
-/* •¶š—ñ‘€ì“™ */
+/* æ–‡å­—åˆ—æ“ä½œç­‰ */
 
 #define ISKANJI(c)      (((unsigned char)(c) >= 0x81 && (unsigned char)(c) <= 0x9F) || ((unsigned char)(c) >= 0xE0 && (unsigned char)(c) <= 0xFC))
 #define ISKANJI2(c)     ((unsigned char)(c) >= 0x40 && (unsigned char)(c) <= 0xfc && (c) != 0x7f)
@@ -34,18 +34,18 @@ extern "C" {
 
 //x void *memSearch(const void *area0, int asiz, const void *ptn0, int ptnlen);
 
-/// •¶š—ñƒŠƒXƒg
+/// æ–‡å­—åˆ—ãƒªã‚¹ãƒˆ.
 typedef struct slist_t {
-    struct slist_t  *link;  ///< Ÿ‚Ö‚ÌƒŠƒ“ƒN
-    char            *s;     ///< •¶š—ñ
+    struct slist_t  *link;  ///< æ¬¡ã¸ã®ãƒªãƒ³ã‚¯.
+    char            *s;     ///< æ–‡å­—åˆ—.
 } slist_t;
 
 slist_t *slist_add(slist_t **root, char *s);
 void     slist_free(slist_t **root);
 
 
-//x int Vsprintf(char *dst, const char *fmt, void *args);   /* ‚È‚º‚©Aƒ^[ƒQƒbƒg‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚É vsprintf‚ª‘¶İ‚µ‚È‚©‚Á‚½ê‡‚ÌŒğ‘ã‚Æ‚µ‚Ä */
-//x uint32_t memCrc32(void *dat, int sz);       /* CCITT 32ƒrƒbƒg CRC ‚ÌŒvZ */
+//x int Vsprintf(char *dst, const char *fmt, void *args);   /* ãªãœã‹ã€ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã« vsprintfãŒå­˜åœ¨ã—ãªã‹ã£ãŸå ´åˆã®äº¤ä»£ã¨ã—ã¦ */
+//x uint32_t memCrc32(void *dat, int sz);       /* CCITT 32ãƒ“ãƒƒãƒˆ CRC ã®è¨ˆç®— */
 
 
 /*--------------------------------------------------------------------------*/
@@ -61,18 +61,18 @@ int freeE(void *p);
 
 
 /*--------------------------------------------------------------------------*/
-/* ƒtƒ@ƒCƒ‹ŠÖŒW */
+/* ãƒ•ã‚¡ã‚¤ãƒ«é–¢ä¿‚ */
 
 extern int  fname_sjisFlag;
 #define FNAM_ISKANJI(c) (fname_sjisFlag && ISKANJI(c))
 
-int   fname_setSjisMode(int sw);                                                // ƒtƒ@ƒCƒ‹–¼‚ÍMS‘SŠp(SJIS)‚ğ‘Î‰‚·‚é(1)‚©”Û(0)‚©
+int   fname_setSjisMode(int sw);                                                // ãƒ•ã‚¡ã‚¤ãƒ«åã¯MSå…¨è§’(SJIS)ã‚’å¯¾å¿œã™ã‚‹(1)ã‹å¦(0)ã‹.
 char *fname_baseName(const char *adr);
 char *fname_getExt(const char *adr);
 char *fname_chgExt(char filename[], const char *ext);
 char *fname_addExt(char filename[], const char *ext);
 char *fname_delLastDirSep(char *dir);
-//x int fil_rename(const char *oldname, const char *newname);                   // rename‰ü. newname.bak‚ğì¬‚µ‚Ä‚©‚çA•Ï–¼
+//x int fil_rename(const char *oldname, const char *newname);                   // renameæ”¹. newname.bakã‚’ä½œæˆã—ã¦ã‹ã‚‰ã€å¤‰å.
 char *fname_dirNameDup(const char *dir, const char *name);
 char *fname_dirNameDupE(const char *dir, const char *name);
 char *fname_dirNameAddExt(char *nam, const char *dir, const char *name, const char *addext);
@@ -106,11 +106,11 @@ char *fil_findNextName(char dst[]);
 
 int fil_fdateCmp(const char *tgt, const char *src);
 
-/// ƒtƒ@ƒCƒ‹–¼ƒŠƒXƒg
+/// ãƒ•ã‚¡ã‚¤ãƒ«åãƒªã‚¹ãƒˆ.
 typedef struct flist_t {
-    struct flist_t *link;   ///< Ÿ‚Ö‚ÌƒŠƒ“ƒN
-    char *s;                ///< “ü—Í–¼
-    char *d;                ///< o—Í–¼
+    struct flist_t *link;   ///< æ¬¡ã¸ã®ãƒªãƒ³ã‚¯.
+    char *s;                ///< å…¥åŠ›å.
+    char *d;                ///< å‡ºåŠ›å.
 } flist_t;
 
 void     flist_setMode(int mode);
@@ -155,16 +155,16 @@ size_t  freadE(void *buf, size_t sz, size_t num, FILE *fp);
 
 
 /*--------------------------------------------------------------------------*/
-/* ®ŒvZ */
+/* å¼è¨ˆç®— */
 
-int strExpr(const char *s_old, const char **s_new, double *val);        /* –ß‚è’l0:no error  !0:error */
+int strExpr(const char *s_old, const char **s_new, double *val);        /* æˆ»ã‚Šå€¤0:no error  !0:error */
 void strExpr_setNameChkFunc(int (*name2valFnc)(char *name, double *valp));
-    /* name2valFnc ‚ÍA–¼‘O‚ª“n‚³‚êA³í‚È‚ç0‚ğ•Ô‚µ‚»‚Ì–¼‘O‚Ì’l‚ğ *valp‚É‚¢‚ê‚é. ˆÙí‚È‚ç-1‚ğ•Ô‚·ŠÖ”‚ğİ’è‚·‚é‚±‚Æ */
+    /* name2valFnc ã¯ã€åå‰ãŒæ¸¡ã•ã‚Œã€æ­£å¸¸ãªã‚‰0ã‚’è¿”ã—ãã®åå‰ã®å€¤ã‚’ *valpã«ã„ã‚Œã‚‹. ç•°å¸¸ãªã‚‰-1ã‚’è¿”ã™é–¢æ•°ã‚’è¨­å®šã™ã‚‹ã“ã¨ */
 
 
 
 /*--------------------------------------------------------------------------*/
-/* ƒeƒLƒXƒg“üo—Í */
+/* ãƒ†ã‚­ã‚¹ãƒˆå…¥å‡ºåŠ› */
 
 #define FIL_NMSZ        4096
 
@@ -180,15 +180,15 @@ extern FILE     *TXT1_fp;
 
 
 /*--------------------------------------------------------------------------*/
-/* ƒfƒoƒbƒOƒƒOo—Í */
+/* ãƒ‡ãƒãƒƒã‚°ãƒ­ã‚°å‡ºåŠ› */
 
 // -------
-// ƒfƒoƒbƒO
+// ãƒ‡ãƒãƒƒã‚°.
 
-extern int  dbgExLog_sw__;                              ///< [’¼Úg—p‚µ‚¿‚áƒ_ƒ] dbg_printf“™‚Å‚ÌƒƒOo—Í‚Ì—L–³‚ğ•Û. 0:off 1:on
-#define dbgExLog_setSw(sw)      (dbgExLog_sw__ = (sw))  ///< ƒƒOo—Í‚ğs‚¤‚©”Û‚©‚ğİ’è
-#define dbgExLog_getSw()        (dbgExLog_sw__)         ///< Œ»İ‚ÌƒƒOo—Í‚Ì—L–³‚ğæ“¾
-#define dbgExLog_revSw()        (dbgExLog_sw__ ^= 1)    ///< ƒƒOo—Í‚Ì—L–³‚ğA”½“]‚·‚é
+extern int  dbgExLog_sw__;                              ///< [ç›´æ¥ä½¿ç”¨ã—ã¡ã‚ƒãƒ€ãƒ¡] dbg_printfç­‰ã§ã®ãƒ­ã‚°å‡ºåŠ›ã®æœ‰ç„¡ã‚’ä¿æŒ. 0:off 1:on
+#define dbgExLog_setSw(sw)      (dbgExLog_sw__ = (sw))  ///< ãƒ­ã‚°å‡ºåŠ›ã‚’è¡Œã†ã‹å¦ã‹ã‚’è¨­å®š.
+#define dbgExLog_getSw()        (dbgExLog_sw__)         ///< ç¾åœ¨ã®ãƒ­ã‚°å‡ºåŠ›ã®æœ‰ç„¡ã‚’å–å¾—.
+#define dbgExLog_revSw()        (dbgExLog_sw__ ^= 1)    ///< ãƒ­ã‚°å‡ºåŠ›ã®æœ‰ç„¡ã‚’ã€åè»¢ã™ã‚‹.
 
 
 

@@ -1,11 +1,11 @@
 /**
  *  @file   DecreaseColorMC1.h
- *  @brief  ƒƒfƒBƒAƒ“ƒJƒbƒg‚ÈŒ¸F. YUV”Å
+ *  @brief  ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ³ã‚«ãƒƒãƒˆãªæ¸›è‰². YUVç‰ˆ
  *  @author Masashi KITAMURA
  *  @note
  *      http://www.h6.dion.ne.jp/~j_moto/html/program_myfo01.html
- *      ‚Ìƒ\[ƒX‚ğ‰ü‘¢‚µ‚½‚à‚Ì....‚µ‚½Œã‚ÉAyuv”Å‚Ì‚¿‚á‚ñ‚Æ‚µ‚½
- *      program_myfo03.html‚ª‚ ‚Á‚½‚±‚Æ‚É‹C‚Ã‚­on_
+ *      ã®ã‚½ãƒ¼ã‚¹ã‚’æ”¹é€ ã—ãŸã‚‚ã®....ã—ãŸå¾Œã«ã€yuvç‰ˆã®ã¡ã‚ƒã‚“ã¨ã—ãŸ
+ *      program_myfo03.htmlãŒã‚ã£ãŸã“ã¨ã«æ°—ã¥ãon_
  *
  */
 
@@ -18,22 +18,22 @@
 #include <algorithm>
 
 
-/// clut”Ô†‚ğ˜A”Ô‚Å‚È‚­AƒXƒ^ƒbƒN‚É—­‚ß‚½‚à‚Ì‚ğo‚µ“ü‚ê‚µ‚ÄŠ„‚è“–‚Ä‚é.
+/// clutç•ªå·ã‚’é€£ç•ªã§ãªãã€ã‚¹ã‚¿ãƒƒã‚¯ã«æºœã‚ãŸã‚‚ã®ã‚’å‡ºã—å…¥ã‚Œã—ã¦å‰²ã‚Šå½“ã¦ã‚‹.
 #define DECREASECOLORMC_USE_MUBERSTK
 
 
 
-/// ƒƒfƒBƒAƒ“ƒJƒbƒg‚ÈŒ¸F•ÏŠ·. 32ƒrƒbƒgF(ƒ¿–³‹)‚ğ8ƒrƒbƒgF‚É•ÏŠ·.
+/// ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ³ã‚«ãƒƒãƒˆãªæ¸›è‰²å¤‰æ›. 32ãƒ“ãƒƒãƒˆè‰²(Î±ç„¡è¦–)ã‚’8ãƒ“ãƒƒãƒˆè‰²ã«å¤‰æ›.
 template<typename DMY=void>
 class DecreaseColor {
 public:
     DecreaseColor();
     ~DecreaseColor();
 
-    /// •ÏŠ·.
+    /// å¤‰æ›.
     bool conv(unsigned char* dstPic, const unsigned* srcPic, unsigned w, unsigned h, unsigned* dstClut, unsigned clutSize);
 
-    /// on ‚Å YUV‚Å‚È‚­ RGB‚Åˆ—‚·‚é. ¦ G‚ÍY, R‚ÍU, B‚ÍV‚ğg—p.
+    /// on ã§ YUVã§ãªã RGBã§å‡¦ç†ã™ã‚‹. â€» Gã¯Y, Rã¯U, Bã¯Vã‚’ä½¿ç”¨.
     void setModeRGB(bool sw) { modeRGB_ = sw; }
 
 
@@ -97,34 +97,34 @@ private:
 private:
     typedef unsigned char pixDat_int_t;
 
-    /// ˆ—’†‚ÌƒsƒNƒZƒ‹ƒf[ƒ^. rgbƒ‚[ƒh‚Å‚ÍAb,r,g‡.
+    /// å‡¦ç†ä¸­ã®ãƒ”ã‚¯ã‚»ãƒ«ãƒ‡ãƒ¼ã‚¿. rgbãƒ¢ãƒ¼ãƒ‰ã§ã¯ã€b,r,gé †.
     struct pixDat_t {
         pixDat_int_t    v;
         pixDat_int_t    u;
         pixDat_int_t    y;
-        unsigned char   no;                 ///< ˆ—‚ÌƒOƒ‹[ƒv”Ô†(‚Ù‚ÚF”Ô†‚Æ‚È‚é..‚ª–¢g—pF‚ª‚ ‚é‚Æ‚Ã‚ê‚é)
-        unsigned char   idx;                ///< F”Ô†(–¢g—pF‚ğ‚Â‚ß‚éˆ—‚Ì‚½‚ß‚É—pˆÓ)
+        unsigned char   no;                 ///< å‡¦ç†ã®ã‚°ãƒ«ãƒ¼ãƒ—ç•ªå·(ã»ã¼è‰²ç•ªå·ã¨ãªã‚‹..ãŒæœªä½¿ç”¨è‰²ãŒã‚ã‚‹ã¨ã¥ã‚Œã‚‹)
+        unsigned char   idx;                ///< è‰²ç•ªå·(æœªä½¿ç”¨è‰²ã‚’ã¤ã‚ã‚‹å‡¦ç†ã®ãŸã‚ã«ç”¨æ„)
     };
 
-    /// clut‚ğ¶¬‚·‚é‚Ì‚Ég‚¤.
+    /// clutã‚’ç”Ÿæˆã™ã‚‹ã®ã«ä½¿ã†.
     struct clutDat_t {
-        double      y;                      ///< y‚Ì‡Œv.
-        double      u;                      ///< u‚Ì‡Œv.
-        double      v;                      ///< v‚Ì‡Œv.
-        double      num;                    ///< ƒsƒNƒZƒ‹‡Œv.
+        double      y;                      ///< yã®åˆè¨ˆ.
+        double      u;                      ///< uã®åˆè¨ˆ.
+        double      v;                      ///< vã®åˆè¨ˆ.
+        double      num;                    ///< ãƒ”ã‚¯ã‚»ãƒ«åˆè¨ˆ.
     };
 
-    unsigned*       clut_;                  ///< Œ¸H‚µ‚½Œ‹‰Ê‚Ìclut.
-    unsigned char*  dstPic_;                ///< Œ¸FŒ‹‰Ê‚ğ“ü‚ê‚éƒoƒbƒtƒ@. NULL‚¾‚Æo—Í‚¹‚¸(clut‚Ì‚İ‚Ìæ“¾).
-    pixDat_t*       pixDat_;                ///< ˆ—’†‚ÌƒsƒNƒZƒ‹ƒf[ƒ^.
-    const unsigned* srcPic_;                ///< Œ³‚ÌƒsƒNƒZƒ‹ƒf[ƒ^.
-    unsigned        w_;                     ///< ‰¡•
-    unsigned        h_;                     ///< c•
-    unsigned        size_;                  ///< ƒsƒNƒZƒ‹‡Œv
-    unsigned        clutTop_;               ///< clut‚ÌŠJn”Ô†.
-    unsigned        clutSize_;              ///< clut”.
+    unsigned*       clut_;                  ///< æ¸›é£Ÿã—ãŸçµæœã®clut.
+    unsigned char*  dstPic_;                ///< æ¸›è‰²çµæœã‚’å…¥ã‚Œã‚‹ãƒãƒƒãƒ•ã‚¡. NULLã ã¨å‡ºåŠ›ã›ãš(clutã®ã¿ã®å–å¾—æ™‚).
+    pixDat_t*       pixDat_;                ///< å‡¦ç†ä¸­ã®ãƒ”ã‚¯ã‚»ãƒ«ãƒ‡ãƒ¼ã‚¿.
+    const unsigned* srcPic_;                ///< å…ƒã®ãƒ”ã‚¯ã‚»ãƒ«ãƒ‡ãƒ¼ã‚¿.
+    unsigned        w_;                     ///< æ¨ªå¹…
+    unsigned        h_;                     ///< ç¸¦å¹…
+    unsigned        size_;                  ///< ãƒ”ã‚¯ã‚»ãƒ«åˆè¨ˆ
+    unsigned        clutTop_;               ///< clutã®é–‹å§‹ç•ªå·.
+    unsigned        clutSize_;              ///< clutæ•°.
 
-    bool            modeRGB_;               ///< YUV‚Å‚È‚­GRB‚ğ—p‚¢‚é
+    bool            modeRGB_;               ///< YUVã§ãªãGRBã‚’ç”¨ã„ã‚‹
 };
 
 
@@ -155,25 +155,25 @@ DecreaseColor<DMY>::~DecreaseColor() {
 
 
 
-/// •ÏŠ·.
+/// å¤‰æ›.
 ///
 template<typename DMY>
 bool DecreaseColor<DMY>::conv(unsigned char* dstPic, const unsigned* srcPic, unsigned w, unsigned h, unsigned* dstClut, unsigned clutSize)
 {
-    // ‰Šú‰»
+    // åˆæœŸåŒ–
     if (init(dstPic, srcPic, w, h, dstClut, clutSize) == false)
         return false;
 
-    // ƒƒfƒBƒAƒ“ƒJƒbƒg‚ÈŒ¸Fˆ—
+    // ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ³ã‚«ãƒƒãƒˆãªæ¸›è‰²å‡¦ç†
     convMain(0, clutSize);
 
-    // clut‚ğì¬‚·‚é
+    // clutã‚’ä½œæˆã™ã‚‹
     makeClut();
 
-    // clut‚ğ—p‚¢‚ÄA24bitF‚ğ256F(clutSizeF)‚ÉŒ¸F.
+    // clutã‚’ç”¨ã„ã¦ã€24bitè‰²ã‚’256è‰²(clutSizeè‰²)ã«æ¸›è‰².
     makeDstPic();
 
-    // ŠJ•ú
+    // é–‹æ”¾
     delete pixDat_;
     pixDat_ = 0;
     return true;
@@ -181,12 +181,12 @@ bool DecreaseColor<DMY>::conv(unsigned char* dstPic, const unsigned* srcPic, uns
 
 
 
-/// ¡‰ñ‚Ì‰Šú‰».
+/// ä»Šå›ã®åˆæœŸåŒ–.
 ///
 template<typename DMY>
 bool DecreaseColor<DMY>::init(unsigned char* dstPic, const unsigned* srcPic, unsigned w, unsigned h, unsigned* dstClut, unsigned clutSize)
 {
-    // ‚Æ‚è‚ ‚¦‚¸Aƒpƒ‰ƒ[ƒ^‚Íˆê’Ê‚èT‚¦‚Ä‚¨‚­.
+    // ã¨ã‚Šã‚ãˆãšã€ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¯ä¸€é€šã‚Šæ§ãˆã¦ãŠã.
     srcPic_   = srcPic;
     dstPic_   = dstPic;
     clut_     = dstClut;
@@ -195,7 +195,7 @@ bool DecreaseColor<DMY>::init(unsigned char* dstPic, const unsigned* srcPic, uns
     h_        = h;
     size_     = w * h;
 
-    // ˆø”ƒ`ƒFƒbƒN
+    // å¼•æ•°ãƒã‚§ãƒƒã‚¯
     if (srcPic == 0)
         return false;
     if (size_ == 0)
@@ -205,12 +205,12 @@ bool DecreaseColor<DMY>::init(unsigned char* dstPic, const unsigned* srcPic, uns
     if (clutSize < 2 || clutSize > 256)
         return false;
 
-    // ì‹Æƒƒ‚ƒŠŠm•Û
+    // ä½œæ¥­ãƒ¡ãƒ¢ãƒªç¢ºä¿
     pixDat_  = new pixDat_t[ size_ ];
     if (pixDat_ == 0)
         return false;
 
-    // ƒsƒNƒZƒ‹rgb‚ğyuv‚É•ÏŠ·‚µ‚Äì‹Æƒƒ‚ƒŠ‚ğ€”õ.
+    // ãƒ”ã‚¯ã‚»ãƒ«rgbã‚’yuvã«å¤‰æ›ã—ã¦ä½œæ¥­ãƒ¡ãƒ¢ãƒªã‚’æº–å‚™.
     for (unsigned i = 0; i < size_; ++i) {
         unsigned c      = srcPic[i];
         int     g       = argb_g(c);
@@ -239,36 +239,36 @@ bool DecreaseColor<DMY>::init(unsigned char* dstPic, const unsigned* srcPic, uns
 
 
 
-/// ’†ŠÔ’l‚ğ‹‚ß‚é
+/// ä¸­é–“å€¤ã‚’æ±‚ã‚ã‚‹
 ///
 template<typename DMY> inline
 unsigned DecreaseColor<DMY>::calcMid(unsigned minVal, unsigned maxVal, unsigned val, unsigned total) const
 {
-    // ƒsƒNƒZƒ‹”‚ğ”½‰f
+    // ãƒ”ã‚¯ã‚»ãƒ«æ•°ã‚’åæ˜ 
     unsigned mid = val / total;
     mid += (mid <= minVal);
     return mid;
 
-    // // ’Pƒ‚ÉŠ„‚é‚¾‚¯‚Ìê‡.
+    // // å˜ç´”ã«å‰²ã‚‹ã ã‘ã®å ´åˆ.
     // return (minVal + maxVal + 1) / 2;
 }
 
 
 
-/// ƒƒfƒBƒAƒ“ƒJƒbƒg‚ÈŒ¸F‚ÌƒƒCƒ“ˆ—. Ä‹AÀs.
-/// @param  no      æ“ª”Ô†
-/// @param  num     ˆ—‚·‚é”Ô†‚Ì”ÍˆÍ/”.
+/// ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ³ã‚«ãƒƒãƒˆãªæ¸›è‰²ã®ãƒ¡ã‚¤ãƒ³å‡¦ç†. å†å¸°å®Ÿè¡Œ.
+/// @param  no      å…ˆé ­ç•ªå·
+/// @param  num     å‡¦ç†ã™ã‚‹ç•ªå·ã®ç¯„å›²/æ•°.
 ///
 template<typename DMY>
 int DecreaseColor<DMY>::convMain(int no, int num)
 {
     //x printf("%d:%d\n", no, num);
-    // ŒÄ‚Î‚ê‚½’iŠK‚Å pixDat_[].no ‚É‚Í no ‚ªİ’è‚³‚ê‚Ä‚¢‚éB
-    // ‚Ì‚ÅAnum ‚ª2ˆÈã‚È‚¢‚Æ•ªŠ„‚ÌˆÓ–¡‚ª‚È‚¢‚Ì‚ÅA–¢–‚È‚ç‚©‚¦‚éB
+    // å‘¼ã°ã‚ŒãŸæ®µéšã§ pixDat_[].no ã«ã¯ no ãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹ã€‚
+    // ã®ã§ã€num ãŒ2ä»¥ä¸Šãªã„ã¨åˆ†å‰²ã®æ„å‘³ãŒãªã„ã®ã§ã€æœªæº€ãªã‚‰ã‹ãˆã‚‹ã€‚
     if (num < 2)
         return num;
 
-    // ‚Ü‚¸‘ÎÛ‚Æ‚È‚éƒsƒNƒZƒ‹‚ğ‚P‚Â’T‚·
+    // ã¾ãšå¯¾è±¡ã¨ãªã‚‹ãƒ”ã‚¯ã‚»ãƒ«ã‚’ï¼‘ã¤æ¢ã™
     pixDat_t*   pixEnd = &pixDat_[size_];
     pixDat_t*   pixDat = &pixDat_[0];
     if (no != pixDat->no) {
@@ -277,12 +277,12 @@ int DecreaseColor<DMY>::convMain(int no, int num)
         } while (pixDat != pixEnd && no != pixDat->no);
     }
 
-    // ‘ÎÛ‚Æ‚È‚éƒsƒNƒZƒ‹‚ª–³‚©‚Á‚½...
+    // å¯¾è±¡ã¨ãªã‚‹ãƒ”ã‚¯ã‚»ãƒ«ãŒç„¡ã‹ã£ãŸ...
     if (pixDat == pixEnd) {
         return 0;
     }
 
-    // ‚Æ‚è‚ ‚¦‚¸‚ÌAy,u,v”ÍˆÍ‚ğİ’è. ¦ rgbƒ‚[ƒh‚Å‚Íg,r,b‚É‘Š“–.
+    // ã¨ã‚Šã‚ãˆãšã®ã€y,u,vç¯„å›²ã‚’è¨­å®š. â€» rgbãƒ¢ãƒ¼ãƒ‰ã§ã¯g,r,bã«ç›¸å½“.
     unsigned    minY = pixDat->y;
     unsigned    maxY = minY;
 
@@ -323,13 +323,13 @@ int DecreaseColor<DMY>::convMain(int no, int num)
     int lenU = (int)(maxU - minU);
     int lenV = (int)(maxV - minV);
 
-    // ‹——£‚ª‚È‚¢‚Á‚Ä‚±‚Æ‚Í‚·‚Å‚É‚PF‚Ì‚İ‚È‚ñ‚ÅA•ªŠ„‚Å‚«‚È‚¢‚Ì‚Å‹A‚é.
+    // è·é›¢ãŒãªã„ã£ã¦ã“ã¨ã¯ã™ã§ã«ï¼‘è‰²ã®ã¿ãªã‚“ã§ã€åˆ†å‰²ã§ããªã„ã®ã§å¸°ã‚‹.
     if (sum <= 1 || (lenY == 0 && lenU == 0 && lenV == 0))
-        return num;     // ¡‰ñ‚Ìˆ—‚ğ‚·‚é’iŠK‚Åno”Ô‚ªnumŒÂİ’è‚³‚ê‚Ä‚é‚Ì‚ÅA‚»‚Ì‚Ü‚Ünum‚ğ•Ô‚·.
+        return num;     // ä»Šå›ã®å‡¦ç†ã‚’ã™ã‚‹æ®µéšã§noç•ªãŒnumå€‹è¨­å®šã•ã‚Œã¦ã‚‹ã®ã§ã€ãã®ã¾ã¾numã‚’è¿”ã™.
 
     int mode;
-    // ˆê”ÔA•‚ª‚ ‚é•”•ª‚ğ‘I‘ğ‚·‚é
-    // “¯‚¶’l‚Ìê‡‚Í Y,U,V‚Ì‡‚É‘I‘ğ‚³‚ê‚é
+    // ä¸€ç•ªã€å¹…ãŒã‚ã‚‹éƒ¨åˆ†ã‚’é¸æŠã™ã‚‹
+    // åŒã˜å€¤ã®å ´åˆã¯ Y,U,Vã®é †ã«é¸æŠã•ã‚Œã‚‹
     if (lenY >= lenU)
         mode = (lenY >= lenV) ? 2 : 0;
     else
@@ -350,7 +350,7 @@ int DecreaseColor<DMY>::convMain(int no, int num)
         mid = calcMid(minV, maxV, sumV, sum);
         for (pixDat = &pixDat_[0]; pixDat != pixEnd; ++pixDat) {
             if (pixDat->no == no) {
-                pixDat->no = (pixDat->v < mid) ? (++c1, no1) : (++c2, no2);         // ˆÃ‚¢•û‚©‚çˆ—
+                pixDat->no = (pixDat->v < mid) ? (++c1, no1) : (++c2, no2);         // æš—ã„æ–¹ã‹ã‚‰å‡¦ç†
             }
         }
         break;
@@ -377,10 +377,10 @@ int DecreaseColor<DMY>::convMain(int no, int num)
         assert(0);
     }
 
-    // •ªŠ„‚µ‚½‚¯‚ÇA‚PƒsƒNƒZƒ‹‚à‚È‚©‚Á‚½ê‡.
+    // åˆ†å‰²ã—ãŸã‘ã©ã€ï¼‘ãƒ”ã‚¯ã‚»ãƒ«ã‚‚ãªã‹ã£ãŸå ´åˆ.
     if (c1 == 0) {
       #ifdef DECREASECOLORMC_USE_MUBERSTK
-        numberStk_.push(no1);   // ”Ô†‚ğ–¢g—p‚É‚·‚é.
+        numberStk_.push(no1);   // ç•ªå·ã‚’æœªä½¿ç”¨ã«ã™ã‚‹.
       #endif
         num1 = 0;
     }
@@ -391,7 +391,7 @@ int DecreaseColor<DMY>::convMain(int no, int num)
     }
   #endif
 
-    // Ä‹A
+    // å†å¸°
     if (num1 > 1) {
         num1 = convMain(no1, num1);
     }
@@ -414,7 +414,7 @@ int DecreaseColor<DMY>::convMain(int no, int num)
 
 
 
-/// clut‚ğ¶¬.
+/// clutã‚’ç”Ÿæˆ.
 ///
 template<typename DMY>
 void DecreaseColor<DMY>::makeClut()
@@ -438,7 +438,7 @@ void DecreaseColor<DMY>::makeClut()
         ++pixDat;
     }
 
-    // yuv->rgb•ÏŠ·. ¦ clut”Ô†‚ğ‹l‚ß‚é.
+    // yuv->rgbå¤‰æ›. â€» clutç•ªå·ã‚’è©°ã‚ã‚‹.
     unsigned idx = 0;
     for (unsigned i = 0; i < 256; ++i) {
         clutDat_t*  d   = &clutDat[i];
@@ -458,14 +458,14 @@ void DecreaseColor<DMY>::makeClut()
         ++pixDat;
     }
 
-    // clutSize_ŒÂ‚Ìclut‚ğì¬‚·‚é
+    // clutSize_å€‹ã®clutã‚’ä½œæˆã™ã‚‹
     assert(clutSize_ >= 0 && clutSize_ <= 256);
     std::memcpy(clut_, clut, sizeof(unsigned) * clutSize_);
 }
 
 
 
-/// (a,y,u,v) 1F‚ğ argb‚É•ÏŠ·.
+/// (a,y,u,v) 1è‰²ã‚’ argbã«å¤‰æ›.
 ///
 template<typename DMY>
 unsigned DecreaseColor<DMY>::ayuv_to_argb(unsigned a, unsigned y0, unsigned u0, unsigned v0)
@@ -492,17 +492,17 @@ unsigned DecreaseColor<DMY>::ayuv_to_argb(unsigned a, unsigned y0, unsigned u0, 
 
 
 
-/// Œ¸F‚µ‚½ƒsƒNƒZƒ‹ƒf[ƒ^‚ğ¶¬
+/// æ¸›è‰²ã—ãŸãƒ”ã‚¯ã‚»ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’ç”Ÿæˆ
 ///
 template<typename DMY>
 void DecreaseColor<DMY>::makeDstPic() {
     unsigned char   *dstPic = dstPic_;
     if (dstPic == 0)
-        return;     // clutì¬‚¾‚¯‚Ì‚Æ‚«‚Ínull‚¾‚©‚çA‚©‚¦‚é
+        return;     // clutä½œæˆã ã‘ã®ã¨ãã¯nullã ã‹ã‚‰ã€ã‹ãˆã‚‹
 
     pixDat_t    *pixDat = &pixDat_[0];
     for (unsigned i = 0; i < size_; ++i) {
-        //x *dstPic++  = pixDat->no;    // ‚²‚­A’Pƒ‚ÉƒƒfƒBƒAƒ“ƒJƒbƒg‚µ‚½‚Æ‚«‚Ì”Ô†‚ğ‚»‚Ì‚Ü‚ÜƒsƒNƒZƒ‹’l‚Æ‚·‚é.
+        //x *dstPic++  = pixDat->no;    // ã”ãã€å˜ç´”ã«ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ³ã‚«ãƒƒãƒˆã—ãŸã¨ãã®ç•ªå·ã‚’ãã®ã¾ã¾ãƒ”ã‚¯ã‚»ãƒ«å€¤ã¨ã™ã‚‹.
         *dstPic++  = pixDat->idx;
         ++pixDat;
     }

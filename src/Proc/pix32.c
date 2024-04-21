@@ -1,10 +1,10 @@
 /**
  *  @file   pix32.c
- *  @biref  32ƒrƒbƒgF‰æ‘œ‚ğ‚¢‚ë‚¢‚ë•ÏŠ·
+ *  @biref  32ãƒ“ãƒƒãƒˆè‰²ç”»åƒã‚’ã„ã‚ã„ã‚å¤‰æ›
  *  @author Masashi Kitamura
  *  @date   2000
  *  @note
- *      2001-07 v2.00 Šgk‚ğƒoƒCƒŠƒjƒAƒTƒ“ƒvƒŠƒ“ƒO‚ğ—p‚¢‚½•û–@‚É•ÏXB
+ *      2001-07 v2.00 æ‹¡ç¸®ã‚’ãƒã‚¤ãƒªãƒ‹ã‚¢ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ã‚’ç”¨ã„ãŸæ–¹æ³•ã«å¤‰æ›´.
  */
 
 #include "def.h"
@@ -14,14 +14,14 @@
 #include <stdlib.h>
 
 
-/** dstW*dstH‚È‰æ‘œdst ‚Ì(dstX,dstY) ‚É srcW*srcH‚È‰æ‘œsrc‚Ì(srcX,srcY)‚Ì‹éŒ`rctW*rctH ‚ğƒRƒs[‚·‚é
+/** dstW*dstHãªç”»åƒdst ã®(dstX,dstY) ã« srcW*srcHãªç”»åƒsrcã®(srcX,srcY)ã®çŸ©å½¢rctW*rctH ã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹.
  */
 void pix32_copyRect(void *dst, int dstW, int dstH, int dstX, int dstY, void *src, int srcW, int srcH, int rctX, int rctY, int rctW, int rctH)
 {
     int n;
 
-    // ƒ\[ƒX”ÍˆÍƒ`ƒFƒbƒN
-    if ((rctX+rctW <= 0) | (rctX >= srcW) | (rctY+rctH <= 0) | (rctY >= srcH)) {    // ‰æ–Ê‚Ì”ÍˆÍŠO‚¾‚©‚ç•`‰æ‚µ‚È‚¢
+    // ã‚½ãƒ¼ã‚¹ç¯„å›²ãƒã‚§ãƒƒã‚¯.
+    if ((rctX+rctW <= 0) | (rctX >= srcW) | (rctY+rctH <= 0) | (rctY >= srcH)) {    // ç”»é¢ã®ç¯„å›²å¤–ã ã‹ã‚‰æç”»ã—ãªã„.
         return;
     }
     if (rctX < 0) {
@@ -36,15 +36,15 @@ void pix32_copyRect(void *dst, int dstW, int dstH, int dstX, int dstY, void *src
         dstY += n;
         rctY =  0;
     }
-    if (rctX+rctW > srcW) {         // Œã‚ë‚ªØ‚ê‚é‚È‚çA•\¦•‚ğŒ¸‚ç‚·
+    if (rctX+rctW > srcW) {         // å¾Œã‚ãŒåˆ‡ã‚Œã‚‹ãªã‚‰ã€è¡¨ç¤ºå¹…ã‚’æ¸›ã‚‰ã™.
         rctW = srcW - rctX;
     }
-    if (rctY+rctH > srcH) {         // Œã‚ë‚ªØ‚ê‚é‚È‚çA•\¦•‚ğŒ¸‚ç‚·
+    if (rctY+rctH > srcH) {         // å¾Œã‚ãŒåˆ‡ã‚Œã‚‹ãªã‚‰ã€è¡¨ç¤ºå¹…ã‚’æ¸›ã‚‰ã™.
         rctH = srcH - rctY;
     }
 
-    // o—Í”ÍˆÍƒ`ƒFƒbƒN
-    if ((dstX+rctW <= 0) | (dstX >= dstW) | (dstY+rctH <= 0) | (dstY >= dstH)) {    // ‰æ–Ê‚Ì”ÍˆÍŠO‚¾‚©‚ç•`‰æ‚µ‚È‚¢
+    // å‡ºåŠ›ç¯„å›²ãƒã‚§ãƒƒã‚¯.
+    if ((dstX+rctW <= 0) | (dstX >= dstW) | (dstY+rctH <= 0) | (dstY >= dstH)) {    // ç”»é¢ã®ç¯„å›²å¤–ã ã‹ã‚‰æç”»ã—ãªã„.
         return;
     }
     if (dstX < 0) {
@@ -67,8 +67,8 @@ void pix32_copyRect(void *dst, int dstW, int dstH, int dstX, int dstY, void *src
 
 
 
-/** src‰æ‘œ(‰¡•srcW)‚Ì‹éŒ`(rctW*rctH)‚ğdst‰æ‘œ(‰¡•dstW)‚ÉƒRƒs[
- *  ”ÍˆÍƒ`ƒFƒbƒN‚È‚Ç‚Í‚µ‚È‚¢‚Ì‚Åg‚¢è‘¤‚Å’²®‚Ì‚±‚Æ
+/** srcç”»åƒ(æ¨ªå¹…srcW)ã®çŸ©å½¢(rctW*rctH)ã‚’dstç”»åƒ(æ¨ªå¹…dstW)ã«ã‚³ãƒ”ãƒ¼.
+ *  ç¯„å›²ãƒã‚§ãƒƒã‚¯ãªã©ã¯ã—ãªã„ã®ã§ä½¿ã„æ‰‹å´ã§èª¿æ•´ã®ã“ã¨.
  */
 void pix32_copyWH(void *dst, int dstW, void *src, int srcW, int rctW, int rctH)
 {
@@ -89,7 +89,7 @@ void pix32_copyWH(void *dst, int dstW, void *src, int srcW, int rctW, int rctH)
 
 
 #if 0
-/** ƒ¿î•ñ‚ª0ˆÈŠO‚Ì‹éŒ`‚ğ‹‚ß‚é. ”²‚«F‚Íƒtƒ‹ƒJƒ‰[ */
+/** Î±æƒ…å ±ãŒ0ä»¥å¤–ã®çŸ©å½¢ã‚’æ±‚ã‚ã‚‹. æŠœãè‰²ã¯ãƒ•ãƒ«ã‚«ãƒ©ãƒ¼ */
 int pix32_getAlpRect(void *pix0, int xsz, int ysz, int *x_p, int *y_p, int *w_p, int *h_p)
 {
     int x,y,x0,y0,x1,y1;
@@ -115,7 +115,7 @@ int pix32_getAlpRect(void *pix0, int xsz, int ysz, int *x_p, int *y_p, int *w_p,
         }
     }
 
-    if (x0 == 0x7fff || x1 == -0x7fff) {    /* ”wŒiF‚Ì‚İ‚Ì‚Æ‚« */
+    if (x0 == 0x7fff || x1 == -0x7fff) {    /* èƒŒæ™¯è‰²ã®ã¿ã®ã¨ã */
         *w_p = 0;
         *h_p = 0;
         *x_p = 0;
@@ -136,8 +136,8 @@ int pix32_getAlpRect(void *pix0, int xsz, int ysz, int *x_p, int *y_p, int *w_p,
 /*                                                                          */
 /*--------------------------------------------------------------------------*/
 
-/** ‰æ‘œ‚Ìƒ¿‚ªsikiiAˆÈ‰º‚È‚ç ƒ¿=0‚Ì”²F, F‚ª0‚È‚ç‚¿‚å‚Á‚Æ–¾‚é‚¢F‚É,
- * r,g,b‚ÌŠe’l‚ª bppƒrƒbƒgF‚Ì0ˆÈŠO‚ÌÅ¬’l–¢–‚È‚çA‚»‚ÌÅ¬’l‚É•ÏŠ·‚·‚é.
+/** ç”»åƒã®Î±ãŒsikiiAä»¥ä¸‹ãªã‚‰ Î±=0ã®æŠœè‰², è‰²ãŒ0ãªã‚‰ã¡ã‚‡ã£ã¨æ˜ã‚‹ã„è‰²ã«,
+ * r,g,bã®å„å€¤ãŒ bppãƒ“ãƒƒãƒˆè‰²ã®0ä»¥å¤–ã®æœ€å°å€¤æœªæº€ãªã‚‰ã€ãã®æœ€å°å€¤ã«å¤‰æ›ã™ã‚‹.
  */
 void pix32_blackAMskGen(unsigned *pix, unsigned w, unsigned h, unsigned sikiiA, unsigned bpp)
 {
@@ -184,7 +184,7 @@ void pix32_blackAMskGen(unsigned *pix, unsigned w, unsigned h, unsigned sikiiA, 
 
 
 /*--------------------------------------------------------------------------*/
-/* ƒ}[ƒW                                                                   */
+/* ãƒãƒ¼ã‚¸                                                                   */
 /*--------------------------------------------------------------------------*/
 
 void pix32_merge(unsigned *dst, const unsigned *src1, const unsigned *src2, int w, int h, unsigned rate2)
@@ -214,7 +214,7 @@ void pix32_merge(unsigned *dst, const unsigned *src1, const unsigned *src2, int 
 }
 
 
-/// rgb1,rgb2‚Ì‚QF‚©‚çAŠer,g,b‚ª‚»‚Ì”ÍˆÍ‚Éû‚Ü‚éƒsƒNƒZƒ‹‚Ì‚İƒ¿=0xff‚Æ‚È‚é‰æ‘œ‚ğ¶¬
+/// rgb1,rgb2ã®ï¼’è‰²ã‹ã‚‰ã€å„r,g,bãŒãã®ç¯„å›²ã«åã¾ã‚‹ãƒ”ã‚¯ã‚»ãƒ«ã®ã¿Î±=0xffã¨ãªã‚‹ç”»åƒã‚’ç”Ÿæˆ.
 void pix32_genCol2MaskAlp(unsigned *dst, const unsigned *src, int w, int h, unsigned rgb1, unsigned rgb2)
 {
     unsigned    r1 = PIX32_GET_R(rgb1);
@@ -247,7 +247,7 @@ void pix32_genCol2MaskAlp(unsigned *dst, const unsigned *src, int w, int h, unsi
 }
 
 
-/// src1‚Æsrc2‚ğrgbRate2‚Æsrc2‚Ìƒ¿’l‚ğ—p‚¢‚Ä‡¬. dst‚Ìƒ¿‚Í src1‚Ì’l‚Æ‚È‚é(rgbRate2‚Íƒ¿‚É‚Í”½‰f‚µ‚È‚¢)
+/// src1ã¨src2ã‚’rgbRate2ã¨src2ã®Î±å€¤ã‚’ç”¨ã„ã¦åˆæˆ. dstã®Î±ã¯ src1ã®å€¤ã¨ãªã‚‹(rgbRate2ã¯Î±ã«ã¯åæ˜ ã—ãªã„)
 void pix32_mergeSrc2Alp(unsigned *dst, const unsigned *src1, const unsigned *src2, int w, int h, unsigned rate2)
 {
     //x unsigned rate2a = PIX32_GET_A(rate2);

@@ -1,6 +1,6 @@
 /**
  *  @file   DecreaseColorLowBpp.hpp
- *  @brief  32ƒrƒbƒgF‰æ‚ÌF”‚ª256F(w’èF”)‚Éû‚Ü‚é‚È‚çA256F‰æ‚É•ÏŠ·.
+ *  @brief  32ãƒ“ãƒƒãƒˆè‰²ç”»ã®è‰²æ•°ãŒ256è‰²(æŒ‡å®šè‰²æ•°)ã«åã¾ã‚‹ãªã‚‰ã€256è‰²ç”»ã«å¤‰æ›.
  *  @author Masashi KITAMURA
  */
 
@@ -15,7 +15,7 @@
 #include "pix32_kyuv.h"
 
 
-/** 32ƒrƒbƒgF‰æ‚ÌF”‚ª256F(w’èF”)‚Éû‚Ü‚é‚È‚çA256F‰æ‚É•ÏŠ·. û‚Ü‚ç‚È‚¢ê‡‚Í•ÏŠ·‚µ‚È‚¢.
+/** 32ãƒ“ãƒƒãƒˆè‰²ç”»ã®è‰²æ•°ãŒ256è‰²(æŒ‡å®šè‰²æ•°)ã«åã¾ã‚‹ãªã‚‰ã€256è‰²ç”»ã«å¤‰æ›. åã¾ã‚‰ãªã„å ´åˆã¯å¤‰æ›ã—ãªã„.
  */
 template<class DMY=void>
 class DecreaseColorLowBpp {
@@ -26,7 +26,7 @@ public:
 };
 
 
-/// 32ƒrƒbƒgF‰æ‚ğ1ƒrƒbƒgF‰æ‚É•ÏŠ·. clutì¬.
+/// 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’1ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›. clutä½œæˆ.
 template<class A>
 bool DecreaseColorLowBpp<A>::convPix32ToBpp1(uint8_t* pDst, const uint32_t* pSrc, unsigned w, unsigned h, unsigned* clut)
 {
@@ -72,7 +72,7 @@ bool DecreaseColorLowBpp<A>::convPix32ToBpp1(uint8_t* pDst, const uint32_t* pSrc
 }
 
 
-/// 32ƒrƒbƒgF‰æ‚ğ2ƒrƒbƒgF‰æ‚É•ÏŠ·. clutì¬.
+/// 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’2ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›. clutä½œæˆ.
 template<class A>
 bool DecreaseColorLowBpp<A>::convPix32ToBpp2(uint8_t* pDst, const uint32_t* pSrc, unsigned w, unsigned h, unsigned* clut)
 {

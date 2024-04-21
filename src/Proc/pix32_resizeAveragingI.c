@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_resizeAveragingI.c
- *  @brief  o—ÍƒTƒCƒY‚Å“ü—ÍƒTƒCƒY‚ªŠ„‚èØ‚ê‚éê‡—p‚Ì•½‹Ï‰æ‘f–@‚Å‚Ìk¬.
+ *  @brief  å‡ºåŠ›ã‚µã‚¤ã‚ºã§å…¥åŠ›ã‚µã‚¤ã‚ºãŒå‰²ã‚Šåˆ‡ã‚Œã‚‹å ´åˆç”¨ã®å¹³å‡ç”»ç´ æ³•ã§ã®ç¸®å°.
  *  @author Masashi KITAMURA
  */
 
@@ -10,7 +10,7 @@
 #include "def.h"
 
 
-/** o—ÍƒTƒCƒY‚Å“ü—ÍƒTƒCƒY‚ªŠ„‚èØ‚ê‚éê‡A•½‹Ï‰æ‘f–@‚Åk¬.
+/** å‡ºåŠ›ã‚µã‚¤ã‚ºã§å…¥åŠ›ã‚µã‚¤ã‚ºãŒå‰²ã‚Šåˆ‡ã‚Œã‚‹å ´åˆã€å¹³å‡ç”»ç´ æ³•ã§ç¸®å°.
  */
 void pix32_resizeAveragingI(unsigned* dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH)
 {

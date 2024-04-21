@@ -1,6 +1,6 @@
 /**
  *  @file   BmImgLoad.h
- *  @brief  ŠeíƒtƒH[ƒ}ƒbƒg(bmp,tga ..)‚Ìƒ[ƒh
+ *  @brief  å„ç¨®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ(bmp,tga ..)ã®ãƒ­ãƒ¼ãƒ‰
  *  @author Masashi Kitamura
  *  @date   2000,2007
  */
@@ -8,7 +8,7 @@
 #ifndef BMIMGLOAD_H
 #define BMIMGLOAD_H
 
-typedef enum {
+typedef enum BM_FNT {
     BM_FMT_NON=0,
     BM_FMT_BMP,     ///< bmp
     BM_FMT_TGA,     ///< targa

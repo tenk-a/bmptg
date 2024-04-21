@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_resizeLanczos3.c
- *  @brief  lanczos-3 –@‚ÅŠg‘åk¬.
+ *  @brief  lanczos-3 æ³•ã§æ‹¡å¤§ç¸®å°.
  *  @author Masashi KITAMURA
  */
 #ifndef PIX32_RESIZELANCZOS3_H
@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-/** Šg‘åk¬
+/** æ‹¡å¤§ç¸®å°
  */
 int pix32_resizeLanczos3(unsigned *dst, unsigned dstW, unsigned dstH, unsigned const* src, unsigned srcW, unsigned srcH, int hasAlpha);
 
@@ -19,8 +19,8 @@ int pix32_resizeLanczos3(unsigned *dst, unsigned dstW, unsigned dstH, unsigned c
 #endif
 
 #if defined __cplusplus
-// C++Œü
-// image(), witdh(),height(),bpp() ‚ğƒƒ“ƒo[‚É‚Â‰æ‘œƒNƒ‰ƒX‚ğ‘€ì.
+// C++å‘.
+// image(), witdh(),height(),bpp() ã‚’ãƒ¡ãƒ³ãƒãƒ¼ã«æŒã¤ç”»åƒã‚¯ãƒ©ã‚¹ã‚’æ“ä½œ.
 
 template<class IMG>
 int pix32_resizeLanczos3(IMG& dst, const IMG& src) {

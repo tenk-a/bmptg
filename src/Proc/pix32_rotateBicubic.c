@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_rotateBicubic.c
- *  @brief  ‰ñ“](•âŠ®‚Íbicubic–@)
+ *  @brief  å›è»¢(è£œå®Œã¯bicubicæ³•)
  *  @author Masashi KITAMURA
  */
 
@@ -26,7 +26,7 @@ typedef double          sum_t;
 static int  pix32_rotateBicubicSub(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol);
 
 
-/** ‰ñ“]
+/** å›è»¢
  */
 int  pix32_rotateBicubic(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol, int hasAlpha)
 {
@@ -40,13 +40,13 @@ int  pix32_rotateBicubic(pix32_rotate_dst_t* dst, const unsigned *src, unsigned 
     if (pix32_rotateBicubicSub(dst, src, srcW, srcH, rot, dcol) == 0)
         return 0;
 
-    if (hasAlpha)   // ƒ¿ƒ`ƒƒƒ“ƒlƒ‹•”•ª‚ÍƒoƒCƒŠƒjƒA‚Åˆ—
+    if (hasAlpha)   // Î±ãƒãƒ£ãƒ³ãƒãƒ«éƒ¨åˆ†ã¯ãƒã‚¤ãƒªãƒ‹ã‚¢ã§å‡¦ç†.
         pix32_rotateBilinearAlpha(dst, src, srcW, srcH, rot, dcol);
 
     return 1;
 }
 
-/** ‰ñ“]
+/** å›è»¢
  */
 static int  pix32_rotateBicubicSub(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol)
 {

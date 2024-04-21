@@ -1,10 +1,10 @@
 /**
  *  @file   ConvOne.cpp
- *  @brief  ‰ж‘њ•ПЉ·
+ *  @brief  з”»еѓЏе¤‰жЏ›.
  *  @author Masashi Kitamura
  *  @date   2000-??-??
  *  @note
- *      2006    bmptg.c ‚©‚з•Є—Ј.
+ *      2006    bmptg.c гЃ‹г‚‰е€†й›ў.
  */
 
 #include "def.h"
@@ -37,12 +37,12 @@
 #endif
 
 
-// int32_t,uint32_t ‚Єlong‚Е’и‹`‚і‚к‚Д‚ў‚й‚ЖЃA‚±‚Мѓ\Ѓ[ѓX‚Е‚Н‚Ь‚ё‚ў‚М‚ЕЃAѓ„ѓbѓpѓЉЋ©‘OђЭ’и‚Й•ПЌX.
+// int32_t,uint32_t гЃЊlongгЃ§е®љзѕ©гЃ•г‚ЊгЃ¦гЃ„г‚‹гЃЁгЂЃгЃ“гЃ®г‚Ѕгѓјг‚№гЃ§гЃЇгЃѕгЃљгЃ„гЃ®гЃ§гЂЃгѓ¤гѓѓгѓ‘гѓЄи‡Єе‰ЌиЁ­е®љгЃ«е¤‰ж›ґ.
 typedef unsigned      UINT32_T;
 typedef unsigned char UINT8_T;
 
 
-/** •ПЉ·‚ЙЉЦ‚·‚йѓIѓvѓVѓ‡ѓ“—v‘f‚МЏ‰Љъ‰»
+/** е¤‰жЏ›гЃ«й–ўгЃ™г‚‹г‚Єгѓ—г‚·гѓ§гѓіи¦Ѓзґ гЃ®е€ќжњџеЊ–.
  */
 ConvOne_Opts::ConvOne_Opts() {
     memset(this, 0, sizeof(*this));
@@ -63,10 +63,10 @@ ConvOne_Opts::ConvOne_Opts() {
     this->quality   = -1;
     this->quality_grey = -1;
 
-    this->alpMin    = 0x00;         // ”ј“§–ѕ”Н€Нmin
-    this->alpMax    = 0xff;         // ”ј“§–ѕ”Н€Нmax
-    this->alpToCol  = -1;           // ”ј“§–ѕ(ѓї)minЃ`max‚МѓsѓNѓZѓ‹‚ЙЃAђFalpToCol‚ЖѓїѓuѓЊѓ“ѓh‚µ‚ДЃAѓї’l‚р0xff‚Й‚·‚й.
-    this->clutAlpNum = -1;          // ЊёђFЋћ‚Мѓїђ”. Ћ©“®ђЭ’и.
+    this->alpMin    = 0x00;         // еЌЉйЂЏжЋзЇ„е›Іmin
+    this->alpMax    = 0xff;         // еЌЉйЂЏжЋзЇ„е›Іmax
+    this->alpToCol  = -1;           // еЌЉйЂЏжЋ(О±)minпЅћmaxгЃ®гѓ”г‚Їг‚»гѓ«гЃ«гЂЃи‰ІalpToColгЃЁО±гѓ–гѓ¬гѓігѓ‰гЃ—гЃ¦гЂЃО±еЂ¤г‚’0xffгЃ«гЃ™г‚‹.
+    this->clutAlpNum = -1;          // жё›и‰Іж™‚гЃ®О±ж•°. и‡Єе‹•иЁ­е®љ.
 
     this->monoToAlp_rate = 1.0;
 
@@ -80,7 +80,7 @@ ConvOne_Opts::ConvOne_Opts() {
     this->decreaseColorParam[2] = 1.0;
     this->decreaseColorParam[3] = 1.0;
 
-    this->rszType = 1;  // ѓoѓCѓLѓ…Ѓ[ѓrѓbѓN
+    this->rszType = 1;  // гѓђг‚¤г‚­гѓҐгѓјгѓ“гѓѓг‚Ї.
 }
 
 
@@ -118,9 +118,9 @@ ConvOne::~ConvOne()
 //  delete bmImgSaveMgr_;
 }
 
-/** ‰ж‘њ‚р‚Р‚Ж‚В•ПЉ·‚·‚й
- *  @param  srcName     “ь—Нѓtѓ@ѓCѓ‹–ј
- *  @param  dstName     Џo—Нѓtѓ@ѓCѓ‹–ј
+/** з”»еѓЏг‚’гЃІгЃЁгЃ¤е¤‰жЏ›гЃ™г‚‹.
+ *  @param  srcName     е…ҐеЉ›гѓ•г‚Ўг‚¤гѓ«еђЌ.
+ *  @param  dstName     е‡єеЉ›гѓ•г‚Ўг‚¤гѓ«еђЌ.
  */
 int ConvOne::run(const char *srcName, const char *dstName) {
     init(srcName, dstName);
@@ -130,59 +130,59 @@ int ConvOne::run(const char *srcName, const char *dstName) {
 }
 
 
-/// •ПЉ·‚МѓЃѓCѓ“
+/// е¤‰жЏ›гЃ®гѓЎг‚¤гѓі.
 int ConvOne::main() {
-    if (readFile() == 0)                // ѓtѓ@ѓCѓ‹“З‚ЭЌћ‚Э
+    if (readFile() == 0)                // гѓ•г‚Ўг‚¤гѓ«иЄ­гЃїиѕјгЃї.
         return 0;
-    if (imageLoad() == 0)               // ѓtѓ@ѓCѓ‹ѓoѓCѓiѓЉ‚©‚з‰ж‘њ‚рЋж“ѕ
+    if (imageLoad() == 0)               // гѓ•г‚Ўг‚¤гѓ«гѓђг‚¤гѓЉгѓЄгЃ‹г‚‰з”»еѓЏг‚’еЏ–еѕ—.
         return 0;
-    adjustAlpha();                      // ѓї’l‚Є‘S‚Д0‚И‚з0xff‰»
-    swapARGB();                         // argb‚МЏ‡”Ф•А‚ЧЉ·‚¦
-    loadAlphaPlaneFile();               // ѓїѓvѓЊЃ[ѓ“‚Йѓ‚ѓmѓNѓЌ‰ж‘њ‚р“З‚ЭЌћ‚Ю.
-    changeClut();                       // ѓpѓЊѓbѓg’Іђ®
-    bitCom();                           // ђF’l‚Мѓrѓbѓg‚р”Ѕ“]‚·‚й
-    revAlpha();                         // ѓї’l”Ѕ“]
-    monoToAlpha();                      // rgb’l‚ж‚иѓ‚ѓmѓNѓЌ’l‚р‹Ѓ‚Я‚»‚к‚рѓї‚Й‚·‚й.
-    setClutNukiCol();                   // 256ђF‚Е”І‚«ђF‚Єѓ†Ѓ[ѓUЃ[Ћw’и‚і‚к‚Д‚ў‚И‚ўЏкЌ‡ЃAclut_‚Мѓї=0‚М‚а‚М‚р”І‚«ђF‚Ж‚µ‚ДЌМ—p‚·‚йЃB
-    reflectColKey();                    // ”І‚«ђF(ѓJѓ‰Ѓ[ѓLЃ[) ‚р”Ѕ‰f‚·‚й
-    easyPaintRoundAlpha();              // Ќ¶Џг(0,0)‚МѓsѓNѓZѓ‹‚р”І‚«ђF‚Ж‚µ‚ДЃA‰ж‘њ‚М4‹ч‚©‚з”І‚«ђF‚Мѓї‚р“h‚и‚В‚Ф‚·
-    clearColorIfAlpha0();               // a=0‚И‚зrgb‚а0ѓNѓЉѓA
-    alphaBokashi();                     // BU‚р‘O’с‚Йѓї‚р‚Ъ‚©‚·
-    resizeCanvas(0);                    // ‰ж‘њѓTѓCѓY‚МђШ‚и”І‚«•ПЌX
-    resizeCanvas(1);                    // ‰ж‘њѓTѓCѓY‚МђШ‚и”І‚«•ПЌX
-    changeSrcBpp();                     // “ь—Н‚Мbpp_‚ЙђF‚рЏCђіЃB
-    reverseImage();                     // Џг‰єЌ¶‰E”Ѕ“]
-    rotR90(opts_.rotR90);               // Ќ¶‰E90Ѓ‹
-    rotateImage();                      // ”C€УЉp‰с“]
-    setDstBpp();                        // Џo—Нbpp‚рђЭ’и.
-    checkSrcDstBpp();                   // clut‰ж“ЇЋm‚М•ПЉ·‚ЕЏo—Нbpp‚ж‚иђF”ФЌ†‚Є‘Ѕ‚ўЋћ‚Йѓ\Ѓ[ѓX‘¤‚рѓtѓ‹ѓJѓ‰Ѓ[‰»(ЊёђF‚·‚й‚М‘O’с)
+    adjustAlpha();                      // О±еЂ¤гЃЊе…ЁгЃ¦0гЃЄг‚‰0xffеЊ–.
+    swapARGB();                         // argbгЃ®й †з•Єдё¦гЃ№жЏ›гЃ€.
+    loadAlphaPlaneFile();               // О±гѓ—гѓ¬гѓјгѓігЃ«гѓўгѓЋг‚Їгѓ­з”»еѓЏг‚’иЄ­гЃїиѕјг‚Ђ.
+    changeClut();                       // гѓ‘гѓ¬гѓѓгѓ€иЄїж•ґ.
+    bitCom();                           // и‰ІеЂ¤гЃ®гѓ“гѓѓгѓ€г‚’еЏЌи»ўгЃ™г‚‹.
+    revAlpha();                         // О±еЂ¤еЏЌи»ў.
+    monoToAlpha();                      // rgbеЂ¤г‚€г‚ЉгѓўгѓЋг‚Їгѓ­еЂ¤г‚’ж±‚г‚ЃгЃќг‚Њг‚’О±гЃ«гЃ™г‚‹.
+    setClutNukiCol();                   // 256и‰ІгЃ§жЉњгЃЌи‰ІгЃЊгѓ¦гѓјг‚¶гѓјжЊ‡е®љгЃ•г‚ЊгЃ¦гЃ„гЃЄгЃ„е ґеђ€гЂЃclut_гЃ®О±=0гЃ®г‚‚гЃ®г‚’жЉњгЃЌи‰ІгЃЁгЃ—гЃ¦жЋЎз”ЁгЃ™г‚‹.
+    reflectColKey();                    // жЉњгЃЌи‰І(г‚«гѓ©гѓјг‚­гѓј) г‚’еЏЌж гЃ™г‚‹.
+    easyPaintRoundAlpha();              // е·¦дёЉ(0,0)гЃ®гѓ”г‚Їг‚»гѓ«г‚’жЉњгЃЌи‰ІгЃЁгЃ—гЃ¦гЂЃз”»еѓЏгЃ®4йљ…гЃ‹г‚‰жЉњгЃЌи‰ІгЃ®О±г‚’еЎ—г‚ЉгЃ¤гЃ¶гЃ™.
+    clearColorIfAlpha0();               // a=0гЃЄг‚‰rgbг‚‚0г‚ЇгѓЄг‚ў.
+    alphaBokashi();                     // BUг‚’е‰ЌжЏђгЃ«О±г‚’гЃјгЃ‹гЃ™.
+    resizeCanvas(0);                    // з”»еѓЏг‚µг‚¤г‚єгЃ®е€‡г‚ЉжЉњгЃЌе¤‰ж›ґ.
+    resizeCanvas(1);                    // з”»еѓЏг‚µг‚¤г‚єгЃ®е€‡г‚ЉжЉњгЃЌе¤‰ж›ґ.
+    changeSrcBpp();                     // е…ҐеЉ›гЃ®bpp_гЃ«и‰Іг‚’дї®ж­Ј.
+    reverseImage();                     // дёЉдё‹е·¦еЏіеЏЌи»ў.
+    rotR90(opts_.rotR90);               // е·¦еЏі90В°.
+    rotateImage();                      // д»»ж„Џи§’е›ћи»ў.
+    setDstBpp();                        // е‡єеЉ›bppг‚’иЁ­е®љ.
+    checkSrcDstBpp();                   // clutз”»еђЊеЈ«гЃ®е¤‰жЏ›гЃ§е‡єеЉ›bppг‚€г‚Љи‰Із•ЄеЏ·гЃЊе¤љгЃ„ж™‚гЃ«г‚Ѕгѓјг‚№еЃґг‚’гѓ•гѓ«г‚«гѓ©гѓјеЊ–(жё›и‰ІгЃ™г‚‹гЃ®е‰ЌжЏђ)
 
-    convNukiBlack();                    // ”І‚«ђF‚ЄђF(0,0,0)ЊЕ’и‚МѓnЃ[ѓhЊь‚Ї‚ЙЃAђ^Ќ•‚р(0,0,m)‚ЙЃA”І‚«ѓhѓbѓg‚р(0,0,0)‚Й•ПЉ·.
-    resizeImage1st();                   // Џc‰ЎЉgЏkѓTѓCѓY•ПЌX   // Џ‰‰с
-    filter();                           // ѓtѓBѓ‹ѓ^ (‚Ъ‚©‚µ)
-    resizeImage2nd();                   // Џc‰ЎЉgЏkѓTѓCѓY•ПЌX   2‰с–Ъ
-    aptRect();                          // ”І‚«ђF|ѓї‚Е”Н€Н‚р‹Ѓ‚Я‚ДѓTѓCѓY•ПЌX
-    toMono();                           // ѓ‚ѓmѓNѓЌ‰»
-    patternDither();                    // ЊлЌ·ЉgЋUЃEѓpѓ^Ѓ[ѓ“ѓfѓBѓU‚рЋ{‚·
-    alphaBlendByColor();                // Ћw’иђF‚Жѓї‚рѓuѓЊѓ“ѓh‚µЃAѓї‚р0 or 255 ‚Й‚·‚й
+    convNukiBlack();                    // жЉњгЃЌи‰ІгЃЊи‰І(0,0,0)е›єе®љгЃ®гѓЏгѓјгѓ‰еђ‘гЃ‘гЃ«гЂЃзњџй»’г‚’(0,0,m)гЃ«гЂЃжЉњгЃЌгѓ‰гѓѓгѓ€г‚’(0,0,0)гЃ«е¤‰жЏ›.
+    resizeImage1st();                   // зё¦жЁЄж‹Ўзё®г‚µг‚¤г‚єе¤‰ж›ґ   // е€ќе›ћ.
+    filter();                           // гѓ•г‚Јгѓ«г‚ї (гЃјгЃ‹гЃ—)
+    resizeImage2nd();                   // зё¦жЁЄж‹Ўзё®г‚µг‚¤г‚єе¤‰ж›ґ   2е›ћз›®.
+    aptRect();                          // жЉњгЃЌи‰І|О±гЃ§зЇ„е›Іг‚’ж±‚г‚ЃгЃ¦г‚µг‚¤г‚єе¤‰ж›ґ.
+    toMono();                           // гѓўгѓЋг‚Їгѓ­еЊ–.
+    patternDither();                    // иЄ¤е·®ж‹Ўж•Јгѓ»гѓ‘г‚їгѓјгѓігѓ‡г‚Јг‚¶г‚’ж–ЅгЃ™.
+    alphaBlendByColor();                // жЊ‡е®љи‰ІгЃЁО±г‚’гѓ–гѓ¬гѓігѓ‰гЃ—гЂЃО±г‚’0 or 255 гЃ«гЃ™г‚‹.
 
-    mulCol();                           // ЉeѓsѓNѓZѓ‹‚ЙђF‚рЏж‚ё‚й
-    colChSquare();                      // ARGBЉeЃX‚р“сЏж‚·‚й
-    changeTone();                       // ”І‚«ђF€ИЉO‚МђF‚МѓgЃ[ѓ“‚р opts_.toneЃ“‚Й•ПЉ·
+    mulCol();                           // еђ„гѓ”г‚Їг‚»гѓ«гЃ«и‰Іг‚’д№—гЃљг‚‹.
+    colChSquare();                      // ARGBеђ„гЂ…г‚’дєЊд№—гЃ™г‚‹.
+    changeTone();                       // жЉњгЃЌи‰Ід»Ґе¤–гЃ®и‰ІгЃ®гѓ€гѓјгѓіг‚’ opts_.toneпј…гЃ«е¤‰жЏ›.
 
-    decreaseColor();                    // ‘ЅђF‚ЕЏo—Н‚Єclut_•t‚«‚И‚зЃA€А€ХЊёђF‚рЌs‚¤
-    changeChipAndMap();                 // ѓ`ѓbѓv(ѓZѓ‹)Ѓ•ѓ}ѓbѓv‰»
-    reverseOutputAlpha();               // Џo—Н‚Мѓї‚р”Ѕ“]‚·‚й•K—v‚Є‚ ‚й‚Ж‚«
-    changeMaskImage();                  // ѓ}ѓXѓN‰ж‘њђ¶ђ¬‚М‚Ж‚«
-    if (saveImage() == 0)               // Џo—Нѓtѓ@ѓCѓ‹ѓCѓЃЃ[ѓW‚рђ¶ђ¬
+    decreaseColor();                    // е¤љи‰ІгЃ§е‡єеЉ›гЃЊclut_д»гЃЌгЃЄг‚‰гЂЃе®‰ж“жё›и‰Іг‚’иЎЊгЃ†.
+    changeChipAndMap();                 // гѓЃгѓѓгѓ—(г‚»гѓ«)пј†гѓћгѓѓгѓ—еЊ–.
+    reverseOutputAlpha();               // е‡єеЉ›гЃ®О±г‚’еЏЌи»ўгЃ™г‚‹еї…и¦ЃгЃЊгЃ‚г‚‹гЃЁгЃЌ.
+    changeMaskImage();                  // гѓћг‚№г‚Їз”»еѓЏз”џж€ђгЃ®гЃЁгЃЌ.
+    if (saveImage() == 0)               // е‡єеЉ›гѓ•г‚Ўг‚¤гѓ«г‚¤гѓЎгѓјг‚ёг‚’з”џж€ђ.
         return 0;
-    if (writeFile() == 0)               // ѓtѓ@ѓCѓ‹Џ‘‚«Ќћ‚Э
+    if (writeFile() == 0)               // гѓ•г‚Ўг‚¤гѓ«ж›ёгЃЌиѕјгЃї.
         return 0;
     return 1;
 }
 
 
-/// Џ‰Љъ‰»
+/// е€ќжњџеЊ–.
 void ConvOne::init(const char *srcName, const char *dstName) {
     sz_         = 0;
     w_          = 0;
@@ -213,7 +213,7 @@ void ConvOne::init(const char *srcName, const char *dstName) {
     fullColFlg_ = opts_.fullColFlg != 0;
     mono_       = false;
 
-    // ‰ж‘њѓЌЃ[ѓhѓZЃ[ѓu‚МѓIѓvѓVѓ‡ѓ“—v‘f‚МђЭ’и
+    // з”»еѓЏгѓ­гѓјгѓ‰г‚»гѓјгѓ–гЃ®г‚Єгѓ—г‚·гѓ§гѓіи¦Ѓзґ гЃ®иЁ­е®љ.
     bo_         = &bopt_;
     memset(bo_, 0, sizeof(*bo_));
 
@@ -230,16 +230,16 @@ void ConvOne::init(const char *srcName, const char *dstName) {
     bo_->x0      = opts_.startX;
     bo_->y0      = opts_.startY;
 
-    // ѓpѓЊѓbѓgѓNѓЉѓA
+    // гѓ‘гѓ¬гѓѓгѓ€г‚ЇгѓЄг‚ў.
     memset(clut_, 0, sizeof(clut_));
 }
 
 
-/// ѓtѓ@ѓCѓ‹“З‚ЭЌћ‚Э
+/// гѓ•г‚Ўг‚¤гѓ«иЄ­гЃїиѕјгЃї.
 bool ConvOne::readFile() {
     int bytSkp = opts_.bytSkp;
 
-    // ѓtѓ@ѓCѓ‹ѓЌЃ[ѓh
+    // гѓ•г‚Ўг‚¤гѓ«гѓ­гѓјгѓ‰.
     if (varbose_) {
         if (dstName_ && dstName_[0])
             printf("%s -> %s  ", srcName_, dstName_);
@@ -249,16 +249,16 @@ bool ConvOne::readFile() {
     src_ = (UINT8_T*)fil_load(srcName_, NULL, 0, &sz_);
     if (src_ == NULL) {
         if (varbose_) printf("\n");
-        printf("%s ‚рѓIЃ[ѓvѓ“‚Е‚«‚Ь‚№‚сЃB\n", srcName_);
+        printf("%s г‚’г‚Єгѓјгѓ—гѓігЃ§гЃЌгЃѕгЃ›г‚“.\n", srcName_);
         return 0;
     }
     if (sz_ == 0) {
         if (varbose_) printf("\n");
-        printf("%s ‚Н 0byte‚Е‚·ЃB\n", srcName_);
+        printf("%s гЃЇ 0byteгЃ§гЃ™.\n", srcName_);
         return 0;
     }
     dat_ = src_;
-    if (bytSkp && sz_ > bytSkp) {   // ђж“Є ѓoѓCѓg‚рѓXѓLѓbѓv‚·‚й‚Ж‚«
+    if (bytSkp && sz_ > bytSkp) {   // е…€й ­ гѓђг‚¤гѓ€г‚’г‚№г‚­гѓѓгѓ—гЃ™г‚‹гЃЁгЃЌ.
         dat_ += bytSkp;
         sz_  -= bytSkp;
     }
@@ -266,11 +266,11 @@ bool ConvOne::readFile() {
 }
 
 
-/// ѓtѓ@ѓCѓ‹ѓoѓCѓiѓЉ‚©‚з‰ж‘њ‚рЋж“ѕ
+/// гѓ•г‚Ўг‚¤гѓ«гѓђг‚¤гѓЉгѓЄгЃ‹г‚‰з”»еѓЏг‚’еЏ–еѕ—.
 bool ConvOne::imageLoad() {
     int binBpp = opts_.binBpp;
 
-    // ‰ж‘њ‚Мѓwѓbѓ_Џо•сЋж“ѕ
+    // з”»еѓЏгЃ®гѓгѓѓгѓЂжѓ…е ±еЏ–еѕ—.
     if (binBpp == 0) {
         srcFmt_ = bm_getHdr(dat_, sz_, &w_, &h_, &bpp_, &colNum_);
     } else {
@@ -292,7 +292,7 @@ bool ConvOne::imageLoad() {
         MY_imageLoad_log(srcFmt_);
       #endif
     }
-    // Џo—Н–ј‚Є–і‚Ї‚и‚бЃA‚Ѕ‚Ф‚с‚Ѕ‚ѕ‚МЏо•с•\Ћ¦‚ѕЃB
+    // е‡єеЉ›еђЌгЃЊз„ЎгЃ‘г‚Љг‚ѓгЂЃгЃџгЃ¶г‚“гЃџгЃ гЃ®жѓ…е ±иЎЁз¤є.
     if (dstName_ == NULL || dstName_[0] == '\0') {
         if (varbose_) printf("\n");
         freeE(src_);
@@ -305,12 +305,12 @@ bool ConvOne::imageLoad() {
     srcH_    = h_;
     if (srcFmt_ == 0) {
         if (varbose_) printf("\n");
-        printf("%s : –ў‘О‰ћ‚М‰ж‘њѓtѓHЃ[ѓ}ѓbѓg‚Мѓtѓ@ѓCѓ‹‚р“З‚Э‚±‚с‚ѕ\n", srcName_);
+        printf("%s : жњЄеЇѕеїњгЃ®з”»еѓЏгѓ•г‚©гѓјгѓћгѓѓгѓ€гЃ®гѓ•г‚Ўг‚¤гѓ«г‚’иЄ­гЃїгЃ“г‚“гЃ .\n", srcName_);
         freeE(src_);
         return 0;
     }
 
-    pixBpp_ = (bpp_ <= 8) ? 8 : 32; // clut_ •t‚«‰ж‚Н€к’U 256ђF‰ж‚ЙЃA‘ЅђF‰ж‚Н 32bitђF‰ж‚Й‚·‚й
+    pixBpp_ = (bpp_ <= 8) ? 8 : 32; // clut_ д»гЃЌз”»гЃЇдёЂж—¦ 256и‰Із”»гЃ«гЂЃе¤љи‰Із”»гЃЇ 32bitи‰Із”»гЃ«гЃ™г‚‹.
 
     //
     fullColFlg_ = opts_.fullColFlg || opts_.dstFmt == BM_FMT_JPG || (opts_.bpp == 0 && (opts_.rszN || opts_.bokashiCnt));
@@ -325,23 +325,23 @@ bool ConvOne::imageLoad() {
   #endif
 
     pixH_  = h_;
-    if (opts_.mapMode && bo_->celW && bo_->celH)        // ѓ}ѓbѓv‰»
+    if (opts_.mapMode && bo_->celW && bo_->celH)        // гѓћгѓѓгѓ—еЊ–.
         pixH_ = ((h_ + bo_->celH-1) / bo_->celH) * bo_->celH;
     pixWb_ = WID2BYT(w_, pixBpp_);
     pix_ = (UINT8_T*)calloc(1, pixWb_ * pixH_ + 16);
     if (pix_ == NULL) {
         if (varbose_) printf("\n");
-        printf("%s “З‚Э‚±‚Э‚Ѕ‚Я‚МѓЃѓ‚ѓЉ‚рЉm•Ы‚Е‚«‚Ь‚№‚с\n", srcName_);
+        printf("%s иЄ­гЃїгЃ“гЃїгЃџг‚ЃгЃ®гѓЎгѓўгѓЄг‚’зўєдїќгЃ§гЃЌгЃѕгЃ›г‚“.\n", srcName_);
         freeE(src_);
         return 0;
     }
 
-    // ‰ж‘њ“WЉJ
+    // з”»еѓЏе±•й–‹.
     int c;
     DBG_PRINTF(("rd %x %x %d, %d, %d, %d, %x, %d\n", src_, pix_, pixWb_, w_, h_ , pixBpp_, clut_, 0));
-    if (binBpp == 0) {  // ’КЏн‚М‰ж‘њѓtѓ@ѓCѓ‹“З‚ЭЌћ‚Э
+    if (binBpp == 0) {  // йЂљеёёгЃ®з”»еѓЏгѓ•г‚Ўг‚¤гѓ«иЄ­гЃїиѕјгЃї.
         c = bm_read(dat_, sz_, pix_, pixWb_, h_, pixBpp_, clut_, 0);
-    } else {            // ѓxѓ^‰ж‘њ “З‚ЭЌћ‚Э
+    } else {            // гѓ™г‚їз”»еѓЏ иЄ­гЃїиѕјгЃї.
         c = WID2BYT(opts_.binW, binBpp);
         if (sz_ < c * pixH_) {
             UINT8_T *p = (UINT8_T*)callocE(c , h_);
@@ -349,13 +349,13 @@ bool ConvOne::imageLoad() {
             freeE(src_);
             src_ = dat_ = p;
         }
-        if (binBpp <= 8) beta_genMonoClut(clut_, binBpp);   // ѓ_ѓ~Ѓ[clut‚р—p€У
+        if (binBpp <= 8) beta_genMonoClut(clut_, binBpp);   // гѓЂгѓџгѓјclutг‚’з”Ёж„Џ.
         c = beta_conv(pix_, pixWb_, h_, pixBpp_,  dat_, c, binBpp, clut_, 0, opts_.binEndian, 0);
     }
     freeE(src_);
     if (c == 0) {
         if (varbose_) printf("\n");
-        printf("%s : ‰ж‘њ“З‚ЭЌћ‚Э‚ЙЋё”s\n", srcName_);
+        printf("%s : з”»еѓЏиЄ­гЃїиѕјгЃїгЃ«е¤±ж•—\n", srcName_);
         freeE(pix_);
         return 0;
     }
@@ -363,7 +363,7 @@ bool ConvOne::imageLoad() {
 }
 
 
-/** ѓїѓvѓЊЃ[ѓ“‚Йѓ‚ѓmѓNѓЌ‰ж‘њ‚р“З‚ЭЌћ‚Ю.
+/** О±гѓ—гѓ¬гѓјгѓігЃ«гѓўгѓЋг‚Їгѓ­з”»еѓЏг‚’иЄ­гЃїиѕјг‚Ђ.
  */
 void ConvOne::loadAlphaPlaneFile()
 {
@@ -384,9 +384,9 @@ void ConvOne::loadAlphaPlaneFile()
                     if (x < unsigned(w) && y < unsigned(h)) {
                         unsigned cc = apic[y*w+x];
                         if (bpp == 32) {
-                            a = ARGB_A(cc);     // alpha•t‰ж‘њ‚И‚з alpha’l‚рЋж“ѕ.
+                            a = ARGB_A(cc);     // alphaд»з”»еѓЏгЃЄг‚‰ alphaеЂ¤г‚’еЏ–еѕ—.
                         } else {
-                            a = ARGB_G(cc);     // r=g=b ‚И‰ж‘њѓtѓ@ѓCѓ‹‚М“ЗЌћ‘O’с‚ЕGѓvѓЊЃ[ѓ“‚рЋж“ѕ.
+                            a = ARGB_G(cc);     // r=g=b гЃЄз”»еѓЏгѓ•г‚Ўг‚¤гѓ«гЃ®иЄ­иѕје‰ЌжЏђгЃ§Gгѓ—гѓ¬гѓјгѓіг‚’еЏ–еѕ—.
                             // a = PIX32_RGB_TO_YUV_Y_x_VAL(PIX32_GET_R(cc), PIX32_GET_G(cc), PIX32_GET_B(cc), 1);
                         }
                     }
@@ -399,17 +399,17 @@ void ConvOne::loadAlphaPlaneFile()
             freeE(apic);
         }
     }
-    // —LЊш‚И‚М‚Н1ѓtѓ@ѓCѓ‹‚М‚Э‚И‚М‚Еѓtѓ@ѓCѓ‹–ј‚рЌнЏњ.
+    // жњ‰еЉ№гЃЄгЃ®гЃЇ1гѓ•г‚Ўг‚¤гѓ«гЃ®гЃїгЃЄгЃ®гЃ§гѓ•г‚Ўг‚¤гѓ«еђЌг‚’е‰Љй™¤.
     freeE((void*)opts_.alphaPlaneFileName);
     opts_.alphaPlaneFileName = NULL;
 }
 
 
 // -------------------------------------------------------------------
-// ѓsѓNѓZѓ‹ѓfЃ[ѓ^‚МЉeЋн•ПЉ·
+// гѓ”г‚Їг‚»гѓ«гѓ‡гѓјг‚їгЃ®еђ„зЁ®е¤‰жЏ›.
 
 
-/// argb‚МЏ‡”Ф•А‚ЧЉ·‚¦
+/// argbгЃ®й †з•Єдё¦гЃ№жЏ›гЃ€.
 void ConvOne::swapARGB() {
     int colrot = opts_.colrot;
     if (colrot) {
@@ -419,7 +419,7 @@ void ConvOne::swapARGB() {
 }
 
 
-/// ѓpѓЊѓbѓg’Іђ®
+/// гѓ‘гѓ¬гѓѓгѓ€иЄїж•ґ.
 void ConvOne::changeClut() {
     int         clutOfs     = opts_.clutOfs;
     const int*  clutChgFlg  = opts_.clutChgFlg;
@@ -444,29 +444,29 @@ void ConvOne::changeClut() {
 }
 
 
-/// ђF’l‚Мѓrѓbѓg‚р”Ѕ“]‚·‚й
+/// и‰ІеЂ¤гЃ®гѓ“гѓѓгѓ€г‚’еЏЌи»ўгЃ™г‚‹.
 void ConvOne::bitCom() {
     int sw = opts_.bitCom;
     if (sw) {
         if (pixBpp_ == 8)   pix_bitCom((UINT8_T *)pix_, w_, h_);
-        else                pix_bitCom((UINT32_T*)pix_, w_, h_); //x printf("‘ЅђF‚Е‚Нѓrѓbѓg”Ѕ“]‚Н–ў‘О‰ћ\n");
+        else                pix_bitCom((UINT32_T*)pix_, w_, h_); //x printf("е¤љи‰ІгЃ§гЃЇгѓ“гѓѓгѓ€еЏЌи»ўгЃЇжњЄеЇѕеїњ.\n");
     }
 }
 
 
-/// ѓї’l’Іђ®
+/// О±еЂ¤иЄїж•ґ.
 void ConvOne::adjustAlpha() {
     if (opts_.alpNon || bpp_ == 24 || (bpp_ <= 8 && pix32_isAlphaAllZero(clut_,1,256))) {
-        // ѓї’l‚И‚µ‰ж‘њ‚И‚з‚Оѓї‚р•t‰Б. (ѓJѓ‰Ѓ[ѓLЃ[‚р‚ ‚и‚¦‚И‚ў-1‚Й‚µ‚ДЃA‘S‚Д‚МѓsѓNѓZѓ‹‚Мѓї‚р0xff‚Й‚·‚й)
+        // О±еЂ¤гЃЄгЃ—з”»еѓЏгЃЄг‚‰гЃ°О±г‚’д»еЉ . (г‚«гѓ©гѓјг‚­гѓјг‚’гЃ‚г‚ЉгЃ€гЃЄгЃ„-1гЃ«гЃ—гЃ¦гЂЃе…ЁгЃ¦гЃ®гѓ”г‚Їг‚»гѓ«гЃ®О±г‚’0xffгЃ«гЃ™г‚‹)
         if (pixBpp_ == 8)   pix32_genColKeyToAlpha(clut_, 1, 256, (unsigned)-1);
         else                pix32_genColKeyToAlpha((UINT32_T*)pix_, w_, h_, (unsigned) -1);
     }
 }
 
 
-/// ѓї’l”Ѕ“]
+/// О±еЂ¤еЏЌи»ў.
 void ConvOne::revAlpha() {
-    // “ь—Н‚Мѓї‚р”Ѕ“]‚·‚й‚Ж‚«
+    // е…ҐеЉ›гЃ®О±г‚’еЏЌи»ўгЃ™г‚‹гЃЁгЃЌ.
     if (opts_.alpModeI) {
         if (pixBpp_ == 8)   pix32_revAlpha(clut_, 1, 256);
         else                pix32_revAlpha((UINT32_T*)pix_, w_, h_);
@@ -474,11 +474,11 @@ void ConvOne::revAlpha() {
 }
 
 
-/// 256ђF‚Е”І‚«ђF‚Єѓ†Ѓ[ѓUЃ[Ћw’и‚і‚к‚Д‚ў‚И‚ўЏкЌ‡ЃAclut_’†‚МЌЕЏ‰‚ЙЊ©‚В‚©‚Б‚Ѕѓї=0‚М‚а‚М‚р”І‚«ђF‚Ж‚µ‚ДЌМ—p‚·‚йЃB
+/// 256и‰ІгЃ§жЉњгЃЌи‰ІгЃЊгѓ¦гѓјг‚¶гѓјжЊ‡е®љгЃ•г‚ЊгЃ¦гЃ„гЃЄгЃ„е ґеђ€гЂЃclut_дё­гЃ®жњЂе€ќгЃ«и¦‹гЃ¤гЃ‹гЃЈгЃџО±=0гЃ®г‚‚гЃ®г‚’жЉњгЃЌи‰ІгЃЁгЃ—гЃ¦жЋЎз”ЁгЃ™г‚‹.
 void ConvOne::setClutNukiCol() {
     if (pixBpp_ == 8) {
         nukiClut_ = opts_.nukiClut;
-        if (nukiClut_ == -1 && opts_.colKey != -1) {    // clut-index‚Е‚И‚­”І‚«ђFЋw’и‚Є‚ ‚Б‚Ѕ‚О‚ ‚ўЃA‚»‚к‚р’T‚µ‚Д‚Э‚й
+        if (nukiClut_ == -1 && opts_.colKey != -1) {    // clut-indexгЃ§гЃЄгЃЏжЉњгЃЌи‰ІжЊ‡е®љгЃЊгЃ‚гЃЈгЃџгЃ°гЃ‚гЃ„гЂЃгЃќг‚Њг‚’жЋўгЃ—гЃ¦гЃїг‚‹.
             int idx = 256;
             unsigned colKey = opts_.colKey;
             unsigned mask   = (colKey <= 0xFFFFFF) ? 0xFFFFFF : 0xFFFFFFFF;
@@ -504,7 +504,7 @@ void ConvOne::setClutNukiCol() {
                 }
             }
         }
-        // ”І‚«ђFЋw’и‚Є‚ ‚к‚ОЃA‚»‚МђF‚Мѓї‚р 0‚Й‚·‚й
+        // жЉњгЃЌи‰ІжЊ‡е®љгЃЊгЃ‚г‚ЊгЃ°гЂЃгЃќгЃ®и‰ІгЃ®О±г‚’ 0гЃ«гЃ™г‚‹.
         if (nukiClut_ >= 0 && nukiClut_ <= 255 && opts_.colKeyNA == 0) {
             clut_[nukiClut_] &= 0xFFFFFF;
         }
@@ -512,7 +512,7 @@ void ConvOne::setClutNukiCol() {
 }
 
 
-/// ”І‚«ђF(ѓJѓ‰Ѓ[ѓLЃ[) ‚р”Ѕ‰f‚·‚й
+/// жЉњгЃЌи‰І(г‚«гѓ©гѓјг‚­гѓј) г‚’еЏЌж гЃ™г‚‹.
 void ConvOne::reflectColKey() {
     if (opts_.colKeyNA)
         return;
@@ -528,19 +528,19 @@ void ConvOne::reflectColKey() {
 }
 
 
-/// Ќ¶Џг(0,0)‚МѓsѓNѓZѓ‹‚р”І‚«ђF‚Ж‚µ‚ДЃA‰ж‘њ‚М4‹ч‚©‚з”І‚«ђF‚Мѓї‚р“h‚и‚В‚Ф‚·
+/// е·¦дёЉ(0,0)гЃ®гѓ”г‚Їг‚»гѓ«г‚’жЉњгЃЌи‰ІгЃЁгЃ—гЃ¦гЂЃз”»еѓЏгЃ®4йљ…гЃ‹г‚‰жЉњгЃЌи‰ІгЃ®О±г‚’еЎ—г‚ЉгЃ¤гЃ¶гЃ™.
 void ConvOne::easyPaintRoundAlpha() {
     if (opts_.genAlpEx && pixBpp_ == 32) {
         if (varbose_) printf("->[XCA]");
 
         UINT32_T* pix = reinterpret_cast<UINT32_T*>(pix_);
         //x pix32_genAlpEx(pix, w_, h_);
-        // €к’U‚·‚Ч‚Д‚Мѓї‚рon.
+        // дёЂж—¦гЃ™гЃ№гЃ¦гЃ®О±г‚’on.
         unsigned size = w_ * h_;
         for (unsigned i = 0; i < size; ++i)
             pix[i] |= 0xff000000;
 
-        // Ќ¶Џг‚М“_‚МђF‚Є‘±‚­”Н€Н‚рЋl‹ч‚Ж‚а‚µ‚з‚ЧЃAARGB(0,0,0,0) ‚Е–„‚Я‚й.
+        // е·¦дёЉгЃ®з‚№гЃ®и‰ІгЃЊз¶љгЃЏзЇ„е›Іг‚’е››йљ…гЃЁг‚‚гЃ—г‚‰гЃ№гЂЃARGB(0,0,0,0) гЃ§еџ‹г‚Ѓг‚‹.
         int dif = abs(opts_.genAlpEx - 1);
             if (dif > 255)
                 dif = 255;
@@ -558,21 +558,21 @@ void ConvOne::clearColorIfAlpha0() {
     }
 }
 
-/// ”І‚«ђF(ѓJѓ‰Ѓ[ѓLЃ[) ‚р”Ѕ‰f‚·‚й
+/// жЉњгЃЌи‰І(г‚«гѓ©гѓјг‚­гѓј) г‚’еЏЌж гЃ™г‚‹.
 void ConvOne::alphaBokashi() {
     int alpBokasi = opts_.alpBokasi;
     if (alpBokasi > 0 && pixBpp_ == 32) {
-        pix32_alpBokasi((UINT32_T*)pix_, w_, h_, alpBokasi);      // “§–ѕЃE•s“§–ѕ‚М‹«–Ъ‚Мѓї‚р‚Ъ‚©‚·
+        pix32_alpBokasi((UINT32_T*)pix_, w_, h_, alpBokasi);      // йЂЏжЋгѓ»дёЌйЂЏжЋгЃ®еўѓз›®гЃ®О±г‚’гЃјгЃ‹гЃ™.
     }
 }
 
 
-/// ‰ж‘њѓTѓCѓY‚МђШ‚и”І‚«•ПЌX
+/// з”»еѓЏг‚µг‚¤г‚єгЃ®е€‡г‚ЉжЉњгЃЌе¤‰ж›ґ.
 void ConvOne::resizeCanvas(int n) {
     if (n >= opts_.vvIdx)
         return;
     ConvOne_Opts::vv_t* opts_vv = &opts_.vv[n];
-    if (opts_.vv[n].flg) {     // Ћw’иѓTѓCѓY‚М‰ж‘њ—М€ж‚ЙЃApix_‚р‹йЊ`“]‘—‚·‚й
+    if (opts_.vv[n].flg) {     // жЊ‡е®љг‚µг‚¤г‚єгЃ®з”»еѓЏй еџџгЃ«гЂЃpix_г‚’зџ©еЅўи»ўйЂЃгЃ™г‚‹.
         int vv_w = (opts_vv->w || opts_vv->wf) ? opts_vv->w : w_;
         int vv_h = (opts_vv->h || opts_vv->hf) ? opts_vv->h : h_;
         if (vv_w < 0 || opts_vv->wf)
@@ -593,7 +593,7 @@ void ConvOne::resizeCanvas(int n) {
         int vv_sy = opts_vv->sy;
 
         int vv_lcr = opts_vv->lcr;
-        if (opts_vv->lcr_ex) {  // ѓtѓ@ѓCѓ‹–ј–{‘М‚МЌЕЊг‚М€к•¶Ћљ‚Єђ”Ћљ‚МЋћЃA‹фђ”Љпђ”‚ЕЌ¶‹l‚ЯЃE‰E‹l‚Я‚рђШ‚и‘Ц‚¦‚йЏ€—ќ
+        if (opts_vv->lcr_ex) {  // гѓ•г‚Ўг‚¤гѓ«еђЌжњ¬дЅ“гЃ®жњЂеѕЊгЃ®дёЂж–‡е­—гЃЊж•°е­—гЃ®ж™‚гЂЃеЃ¶ж•°еҐ‡ж•°гЃ§е·¦и©°г‚Ѓгѓ»еЏіи©°г‚Ѓг‚’е€‡г‚Љж›їгЃ€г‚‹е‡¦зђ†.
             char const* e = fname_getExt(srcName_);
             if (srcName_ <= e - 2) {
                 int c = e[-2];
@@ -605,17 +605,17 @@ void ConvOne::resizeCanvas(int n) {
             }
         }
 
-        if (vv_lcr == 1) {              // ’†‰›Љс‚№
+        if (vv_lcr == 1) {              // дё­е¤®еЇ„гЃ›.
             vv_x  += (vv_w - vv_sw) / 2;
             vv_sx += (w_   - vv_sw) / 2;
-        } else if (vv_lcr == 2) {       // ‰EЉс‚№
+        } else if (vv_lcr == 2) {       // еЏіеЇ„гЃ›.
             vv_x  += (vv_w - vv_sw);
             vv_sx += (w_   - vv_sw);
         }
-        if (opts_vv->umd == 1) {        // Џc’†‰›Љс‚№
+        if (opts_vv->umd == 1) {        // зё¦дё­е¤®еЇ„гЃ›.
             vv_y  += (vv_h - vv_sh) / 2;
             vv_sy += (h_   - vv_sh) / 2;
-        } else if (opts_vv->umd == 2) { // ‰єЉс‚№
+        } else if (opts_vv->umd == 2) { // дё‹еЇ„гЃ›.
             vv_y  += (vv_h - vv_sh);
             vv_sy += (h_   - vv_sh);
         }
@@ -654,7 +654,7 @@ void ConvOne::resizeCanvas(int n) {
         srcH_  = h_;
     }
 
-    if (bo_->celW) {        // Ћw’иѓhѓbѓg’P€К‚МѓTѓCѓY‚ЙЌ‡‚н‚№’ј‚·
+    if (bo_->celW) {        // жЊ‡е®љгѓ‰гѓѓгѓ€еЌдЅЌгЃ®г‚µг‚¤г‚єгЃ«еђ€г‚ЏгЃ›з›ґгЃ™.
         int sw=w_, sh=h_;
         if (varbose_) printf("->cel(%d*%d)",bo_->celW,bo_->celH);
         if (pixBpp_ == 8) gen_celSz8(&pix_, &w_, &h_, bo_->celW, bo_->celH, nukiClut_);
@@ -665,10 +665,10 @@ void ConvOne::resizeCanvas(int n) {
 }
 
 
-/// “ь—Н‚Мbpp_‚ЙђF‚рЏCђіЃB
+/// е…ҐеЉ›гЃ®bpp_гЃ«и‰Іг‚’дї®ж­Ј.
 void ConvOne::changeSrcBpp() {
     int srcBpp = opts_.srcBpp;
-    if (srcBpp >= 0) {  // “ь—Н‚Мbpp_‚ЙђF‚рЏCђіЃB
+    if (srcBpp >= 0) {  // е…ҐеЉ›гЃ®bpp_гЃ«и‰Іг‚’дї®ж­Ј.
         if (varbose_) printf("->bpp_(%d)", srcBpp);
         if (pixBpp_ == 8)  pix32_bppChg(clut_, 1, 256, srcBpp);
         else               pix32_bppChg((UINT32_T*)pix_, w_, h_, srcBpp);
@@ -676,7 +676,7 @@ void ConvOne::changeSrcBpp() {
 }
 
 
-/// Џг‰єЌ¶‰E”Ѕ“]
+/// дёЉдё‹е·¦еЏіеЏЌи»ў.
 void ConvOne::reverseImage() {
     int dir = opts_.dir;
  #if 1  // ???? atode
@@ -684,7 +684,7 @@ void ConvOne::reverseImage() {
         dir ^= 3;
     }
  #endif
-    if (dir) {            // ”Ѕ“]Џ€—ќ
+    if (dir) {            // еЏЌи»ўе‡¦зђ†.
         if (varbose_) printf("->rev%s%s", (dir&1)?"X":"", (dir&2)?"Y":"");
         if (pixBpp_ == 8)  pix_revXY((UINT8_T*)pix_, w_, h_, dir);
         else               pix_revXY((UINT32_T*)pix_, w_, h_, dir);
@@ -692,7 +692,7 @@ void ConvOne::reverseImage() {
 }
 
 
-/// ‰E90Ѓ‹‰с“].
+/// еЏі90В°е›ћи»ў.
 void ConvOne::rotR90(int type) {
     if (type) {
         if (varbose_) printf("->rot%c90", type < 0 ? 'L' : 'R');
@@ -707,7 +707,7 @@ void ConvOne::rotR90(int type) {
 }
 
 
-/// ‰ERЃ‹‰с“].
+/// еЏіRВ°е›ћи»ў.
 void ConvOne::rotateImage() {
     double rotR = opts_.rotR;
     rotR = fmod(rotR + 360.0, 360.0);
@@ -755,10 +755,10 @@ void ConvOne::rotateImage() {
 }
 
 
-/// ѓ‚ѓmѓNѓЌ‰»‚·‚й
+/// гѓўгѓЋг‚Їгѓ­еЊ–.
 void ConvOne::toMono() {
     //bo_->mono = opts_.mono;
-    if (opts_.monoNear) {       // ѓOѓЊѓC‚Й‹Я‚ўђF‚И‚зЃAѓ‚ѓmѓNѓЌ€µ‚ў‚Й‚·‚й
+    if (opts_.monoNear) {       // г‚°гѓ¬г‚¤гЃ«иї‘гЃ„и‰ІгЃЄг‚‰гЂЃгѓўгѓЋг‚Їгѓ­ж‰±гЃ„гЃ«гЃ™г‚‹.
         if ((pixBpp_ == 8 && GrayClut<>::isNearGrey(clut_, 1, 256))
             || GrayClut<>::isNearGrey((UINT32_T*)pix_, w_, h_)
         ){
@@ -768,11 +768,11 @@ void ConvOne::toMono() {
     if (opts_.mono || mono_) {
         mono_ = true;
         int monoCh = opts_.monoChRGB;
-        if (monoCh == 0) {  // ’КЏн‚Мѓ‚ѓmѓNѓЌ‰»
+        if (monoCh == 0) {  // йЂљеёёгЃ®гѓўгѓЋг‚Їгѓ­еЊ–.
             if (varbose_) printf("->mono");
             if (pixBpp_ == 8) pix32_toMono(clut_, 1, 256);
             else              pix32_toMono((UINT32_T*)pix_, w_, h_);
-        } else {            // Ћw’и(RGBA)ѓ`ѓѓѓ“ѓlѓ‹‚р—p‚ў‚Дѓ‚ѓmѓNѓЌ‰»
+        } else {            // жЊ‡е®љ(RGBA)гѓЃгѓЈгѓігѓЌгѓ«г‚’з”ЁгЃ„гЃ¦гѓўгѓЋг‚Їгѓ­еЊ–.
             --monoCh;
             if (varbose_) {
                 static char const s_monoCh[4] = {'B','G','R','A'};
@@ -785,9 +785,9 @@ void ConvOne::toMono() {
 }
 
 
-/// ЉeѓsѓNѓZѓ‹‚ЙђF‚рЏж‚ё‚й
+/// еђ„гѓ”г‚Їг‚»гѓ«гЃ«и‰Іг‚’д№—гЃљг‚‹.
 void ConvOne::mulCol() {
-    if (opts_.colMul) {     // ЉeѓsѓNѓZѓ‹‚ЙђF‚рЏж‚ё‚й
+    if (opts_.colMul) {     // еђ„гѓ”г‚Їг‚»гѓ«гЃ«и‰Іг‚’д№—гЃљг‚‹.
         if (varbose_) printf("->colMul[%x]", opts_.colMul);
         if (pixBpp_ == 8) pix32_colMul(clut_, 1, 256, opts_.colMul);
         else              pix32_colMul((UINT32_T*)pix_, w_, h_, opts_.colMul);
@@ -808,9 +808,9 @@ void ConvOne::mulCol() {
 }
 
 
-/// RGBAЉeѓ`ѓѓѓ“ѓlѓ‹‚р“сЏж‚·‚й
+/// RGBAеђ„гѓЃгѓЈгѓігѓЌгѓ«г‚’дєЊд№—гЃ™г‚‹.
 void ConvOne::colChSquare() {
-    if (opts_.colChSquare) {    // RGBAЉeѓ`ѓѓѓ“ѓlѓ‹‚р“сЏж‚·‚й
+    if (opts_.colChSquare) {    // RGBAеђ„гѓЃгѓЈгѓігѓЌгѓ«г‚’дєЊд№—гЃ™г‚‹.
         if (varbose_) printf("->colChSquare");
         if (pixBpp_ == 8) pix32_colChSquare(clut_, 1, 256);
         else              pix32_colChSquare((UINT32_T*)pix_, w_, h_);
@@ -819,9 +819,9 @@ void ConvOne::colChSquare() {
 }
 
 
-/// ”І‚«ђF€ИЉO‚МђF‚МѓgЃ[ѓ“‚р opts_.toneЃ“‚Й•ПЉ·
+/// жЉњгЃЌи‰Ід»Ґе¤–гЃ®и‰ІгЃ®гѓ€гѓјгѓіг‚’ opts_.toneпј…гЃ«е¤‰жЏ›.
 void ConvOne::changeTone() {
-    if (opts_.tone >= 0) {      // ”І‚«ђF€ИЉO‚МђF‚МѓgЃ[ѓ“‚р opts_.toneЃ“‚Й•ПЉ·
+    if (opts_.tone >= 0) {      // жЉњгЃЌи‰Ід»Ґе¤–гЃ®и‰ІгЃ®гѓ€гѓјгѓіг‚’ opts_.toneпј…гЃ«е¤‰жЏ›.
         if (opts_.toneType == 0) {
             if (varbose_) printf("->toneRgb[%d]", opts_.tone);
             if (pixBpp_ == 8) pix32_changeRgbTone(clut_, 1, 256, opts_.tone / 100.0);
@@ -844,10 +844,10 @@ void ConvOne::monoToAlpha() {
 }
 
 
-/// Џo—НBPP ‚рЊ€’иЃB
+/// е‡єеЉ›BPP г‚’ж±єе®љ.
 void ConvOne::setDstBpp()
 {
-    // ѓIѓvѓVѓ‡ѓ“Ћw’и‚і‚к‚Д‚Ѕ‚з‚»‚к‚Й‚·‚й.
+    // г‚Єгѓ—г‚·гѓ§гѓіжЊ‡е®љгЃ•г‚ЊгЃ¦гЃџг‚‰гЃќг‚ЊгЃ«гЃ™г‚‹.
     if (dstBpp_ > 0) {
         ;
     } else if (fullColFlg_ && bpp_ < 24) {
@@ -860,7 +860,7 @@ void ConvOne::setDstBpp()
             dstBpp_ = 32;
         else
             dstBpp_ = 24;
-        if (opts_.dstFmt == BM_FMT_BMP) // bmp‚Н‰єЋи‚Й32ѓrѓbѓgЏo—Н‚Й‚И‚й‚Ж•s–Ў‚ў‚Ж‚µ‚ДЃAЋw’и‚М‚И‚ўЊА‚и24ѓrѓbѓgђF‚Й‚µ‚Ж‚­.
+        if (opts_.dstFmt == BM_FMT_BMP) // bmpгЃЇдё‹ж‰‹гЃ«32гѓ“гѓѓгѓ€е‡єеЉ›гЃ«гЃЄг‚‹гЃЁдёЌе‘ігЃ„гЃЁгЃ—гЃ¦гЂЃжЊ‡е®љгЃ®гЃЄгЃ„й™ђг‚Љ24гѓ“гѓѓгѓ€и‰ІгЃ«гЃ—гЃЁгЃЏ.
             dstBpp_ = 24;
     } else if (bpp_== 4 && colNum_ > 16) {
         dstBpp_ = 8;
@@ -881,8 +881,8 @@ void ConvOne::setDstBpp()
 }
 
 
-/** srcBpp,dstBpp‹¤‚Йclut‰ж‚ЕЃAdstBpp < srcBpp ‚МЋћЃAdst‚ЙЋы‚Ь‚и‚«‚з‚И‚ўsrc‚Є‚ ‚й‚©ѓ`ѓFѓbѓN
- *  src‚МђF”ФЌ†‚Є‚Н‚ЭЏo‚·‚ж‚¤‚И‚зЃA‚ў‚Б‚»ЃAsrc ‚рѓtѓ‹ѓJѓ‰Ѓ[‚Й•ПЉ·(ЊёђF‚Й”C‚·)
+/** srcBpp,dstBppе…±гЃ«clutз”»гЃ§гЂЃdstBpp < srcBpp гЃ®ж™‚гЂЃdstгЃ«еЏЋгЃѕг‚ЉгЃЌг‚‰гЃЄгЃ„srcгЃЊгЃ‚г‚‹гЃ‹гѓЃг‚§гѓѓг‚Ї.
+ *  srcгЃ®и‰Із•ЄеЏ·гЃЊгЃЇгЃїе‡єгЃ™г‚€гЃ†гЃЄг‚‰гЂЃгЃ„гЃЈгЃќгЂЃsrc г‚’гѓ•гѓ«г‚«гѓ©гѓјгЃ«е¤‰жЏ›(жё›и‰ІгЃ«д»»гЃ™)
  */
 void ConvOne::checkSrcDstBpp()
 {
@@ -900,9 +900,9 @@ void ConvOne::checkSrcDstBpp()
 }
 
 
-/// ”І‚«ђF‚ЄђF(0,0,0)ЊЕ’и‚МѓnЃ[ѓhЊь‚Ї‚ЙЃAђ^Ќ•‚р(0,0,m)‚ЙЃA”І‚«ѓhѓbѓg‚р(0,0,0)‚Й•ПЉ·.
+/// жЉњгЃЌи‰ІгЃЊи‰І(0,0,0)е›єе®љгЃ®гѓЏгѓјгѓ‰еђ‘гЃ‘гЃ«гЂЃзњџй»’г‚’(0,0,m)гЃ«гЂЃжЉњгЃЌгѓ‰гѓѓгѓ€г‚’(0,0,0)гЃ«е¤‰жЏ›.
 void ConvOne::convNukiBlack() {
-    if (opts_.g555val>=0) { // ѓї<=opts_.g555val‚МѓsѓNѓZѓ‹‚р(0,0,0)‚ЙЃA€ИЉO‚М(0,0,0)‚р(0,0,m)‚Й, 1Ѓ`m‚рm‚Й.
+    if (opts_.g555val>=0) { // О±<=opts_.g555valгЃ®гѓ”г‚Їг‚»гѓ«г‚’(0,0,0)гЃ«гЂЃд»Ґе¤–гЃ®(0,0,0)г‚’(0,0,m)гЃ«, 1пЅћmг‚’mгЃ«.
         int abpp = (dstBpp_ > 8) ? dstBpp_ : (opts_.srcBpp > 0) ? opts_.srcBpp : (opts_.ditBpp > 0) ? opts_.ditBpp : 32;
         if (varbose_) printf("->[-xg]");
         if (pixBpp_ == 8) pix32_blackAMskGen(clut_, 1, 256, opts_.g555val, abpp);
@@ -911,17 +911,17 @@ void ConvOne::convNukiBlack() {
 }
 
 
-/// Џc‰ЎЉgЏkѓTѓCѓY•ПЌX  // Џ‰‰с
+/// зё¦жЁЄж‹Ўзё®г‚µг‚¤г‚єе¤‰ж›ґ  // е€ќе›ћ.
 void ConvOne::resizeImage1st() {
-    if (opts_.rszN) {   // Џc‰ЎЉgЏkѓTѓCѓY•ПЌX   // Џ‰‰с
+    if (opts_.rszN) {   // зё¦жЁЄж‹Ўзё®г‚µг‚¤г‚єе¤‰ж›ґ   // е€ќе›ћ.
         int     rszW;
         int     rszH;
         UINT8_T     *pix2;
         int    c = 0;
         // for (c = 0; c < opts_.rszN; c++)
         {
-            if (opts_.rszXsz[c] || opts_.rszYsz[c]) {   //rszXsz,rszYsz‚рЋg‚¤ЏкЌ‡
-                if (opts_.rszK[c] && (opts_.rszXsz[c] && opts_.rszYsz[c])) {    // -xrq ”д—¦‚р•П‚¦‚ёЃA‚З‚ї‚з‚©€к•ыЃA‹·‚ў•ы‚М•У‚рѓWѓѓѓXѓg‚Й‚·‚йЃB
+            if (opts_.rszXsz[c] || opts_.rszYsz[c]) {   //rszXsz,rszYszг‚’дЅїгЃ†е ґеђ€.
+                if (opts_.rszK[c] && (opts_.rszXsz[c] && opts_.rszYsz[c])) {    // -xrq жЇ”зЋ‡г‚’е¤‰гЃ€гЃљгЂЃгЃ©гЃЎг‚‰гЃ‹дёЂж–№гЂЃз‹­гЃ„ж–№гЃ®иѕєг‚’г‚ёгѓЈг‚№гѓ€гЃ«гЃ™г‚‹.
                     double rw = (double)opts_.rszXsz[c] / (double)w_;
                     double rh = (double)opts_.rszYsz[c] / (double)h_;
                     if (rw >= rh || opts_.rszYsz[c] == 0) {
@@ -952,10 +952,10 @@ void ConvOne::resizeImage1st() {
             }
             if (varbose_) printf("->rsz[%d,%d]", rszW,rszH);
             if (rszW <= 0 || rszH <= 0)
-                printf("ЉgЏkЊг‚МѓTѓCѓY‚Є‚Ё‚©‚µ‚­‚И‚й(%d,%d)\n", rszW, rszH);
+                printf("ж‹Ўзё®еѕЊгЃ®г‚µг‚¤г‚єгЃЊгЃЉгЃ‹гЃ—гЃЏгЃЄг‚‹(%d,%d)\n", rszW, rszH);
             pix2 = (UINT8_T*)callocE(1, 4 * ((rszW+15)&~15)*(rszH+1) + 256);
             if (pixBpp_ == 8)
-                pix8_resize(pix2, rszW, rszH, pix_, w_, h_);    //x printf("CLUT•t‰ж‘њ‚М‚Ь‚Ь‚Е‚НЉgЏk‚Е‚«‚И‚ў\n");
+                pix8_resize(pix2, rszW, rszH, pix_, w_, h_);    //x printf("CLUTд»з”»еѓЏгЃ®гЃѕгЃѕгЃ§гЃЇж‹Ўзё®гЃ§гЃЌгЃЄгЃ„\n");
             else
                 pix32_resize((UINT32_T*)pix2, rszW, rszH, (UINT32_T*)pix_, w_, h_, opts_.rszType, pixBpp_ > 24);
             w_ = rszW, h_ = rszH;
@@ -967,10 +967,10 @@ void ConvOne::resizeImage1st() {
 }
 
 
-/// ѓtѓBѓ‹ѓ^ (‚Ъ‚©‚µ)
+/// гѓ•г‚Јгѓ«г‚ї (гЃјгЃ‹гЃ—)
 void ConvOne::filter() {
     if (opts_.filterType && pixBpp_ == 32) {
-        if (opts_.filterType == 1) {    // ЉИ€Х‚Ъ‚©‚µ
+        if (opts_.filterType == 1) {    // з°Ўж“гЃјгЃ‹гЃ—.
             if (opts_.bokashiCnt) {
                 int i;
                 if (varbose_) printf("->bokashi1[%d]", opts_.bokashiCnt);
@@ -983,7 +983,7 @@ void ConvOne::filter() {
                 }
             }
 
-        } else if (opts_.filterType == 2) { // ’КЏн‰ж‘њ‚Ж‚Ъ‚©‚µ‰ж‘њ‚рЌ‡ђ¬
+        } else if (opts_.filterType == 2) { // йЂљеёёз”»еѓЏгЃЁгЃјгЃ‹гЃ—з”»еѓЏг‚’еђ€ж€ђ.
             if (opts_.bokashiCnt) {
                 //if (varbose_) printf("->bokashi2[%d,%d%%]", opts_.bokashiCnt, (int)(opts_.bokashiMergeRate*100));
                 if (varbose_) printf("->bokashi2[%d,%x]", opts_.bokashiCnt, (int)(opts_.bokashiMergeRateRGB));
@@ -994,7 +994,7 @@ void ConvOne::filter() {
                 if (opts_.bokashiMaskGenCol1 == 0 && opts_.bokashiMaskGenCol2 == 0xffffff) {
                 } else {
                     pix1 = pix0 = (UINT32_T*)callocE(1, w_*h_*4);
-                    // 2ђF‚МЋw’и‚©‚зЃAЉer,g,b ‚М’l‚Є‚»‚М”Н€Н‚ЙЋы‚Ь‚Б‚ЅѓsѓNѓZѓ‹‚М‚Э‚рѓї=0xff‚Й‚µ‚Ѕ‰ж‘њ‚рЌм‚й.
+                    // 2и‰ІгЃ®жЊ‡е®љгЃ‹г‚‰гЂЃеђ„r,g,b гЃ®еЂ¤гЃЊгЃќгЃ®зЇ„е›ІгЃ«еЏЋгЃѕгЃЈгЃџгѓ”г‚Їг‚»гѓ«гЃ®гЃїг‚’О±=0xffгЃ«гЃ—гЃџз”»еѓЏг‚’дЅњг‚‹.
                     pix32_genCol2MaskAlp(pix0, (UINT32_T*)pix_, w_, h_, opts_.bokashiMaskGenCol1, opts_.bokashiMaskGenCol2);
                 }
                 for (i = 0; i < opts_.bokashiCnt; ++i) {
@@ -1006,7 +1006,7 @@ void ConvOne::filter() {
                     pix0 = pix2;
                 }
                 UINT32_T *pix3 = (UINT32_T*)callocE(1, w_*h_*4);
-                // Њі‰ж‘њpix_ ‚Ж ‚Ъ‚©‚µ‰ж‘њpix2 ‚рpix2‘¤‚МЉ„Ќ‡Ћw’и(0Ѓ`1.0)‚ЕЌ‡ђ¬‚µ‚Дpix3‚рЌмђ¬
+                // е…ѓз”»еѓЏpix_ гЃЁ гЃјгЃ‹гЃ—з”»еѓЏpix2 г‚’pix2еЃґгЃ®е‰Іеђ€жЊ‡е®љ(0пЅћ1.0)гЃ§еђ€ж€ђгЃ—гЃ¦pix3г‚’дЅњж€ђ.
                 if (opts_.bokashiMaskGenCol1 == 0 && opts_.bokashiMaskGenCol2 == 0xffffff) {
                     //x pix32_merge((UINT32_T*)pix3, (UINT32_T*)pix_, (UINT32_T*)pix2, w_, h_, opts_.bokashiMergeRate);
                     pix32_merge(pix3, (UINT32_T*)pix_, pix2, w_, h_, opts_.bokashiMergeRateRGB);
@@ -1017,7 +1017,7 @@ void ConvOne::filter() {
                 freeE(pix2);
                 pix_ = (UINT8_T*)pix3;
             }
-        } else if (opts_.filterType == 3) { // ЉИ€ХѓVѓѓЃ[ѓv
+        } else if (opts_.filterType == 3) { // з°Ўж“г‚·гѓЈгѓјгѓ—.
             if (opts_.bokashiCnt) {
                 int i;
                 if (varbose_) printf("->sharp[%d]", opts_.bokashiCnt);
@@ -1028,7 +1028,7 @@ void ConvOne::filter() {
                     pix_ = pix2;
                 }
             }
-        } else if (opts_.filterType == 4) { // alp 0..254 ‚МѓsѓNѓZѓ‹•t‹Я‚р‚Ъ‚©‚·(255‚Н‚Ъ‚©‚і‚И‚ў)
+        } else if (opts_.filterType == 4) { // alp 0..254 гЃ®гѓ”г‚Їг‚»гѓ«д»иї‘г‚’гЃјгЃ‹гЃ™(255гЃЇгЃјгЃ‹гЃ•гЃЄгЃ„)
             if (opts_.bokashiCnt) {
                 int i;
                 if (varbose_) printf("->bokashi(a<=%d)[%d]", opts_.bokashiAlpSikii, opts_.bokashiCnt);
@@ -1046,16 +1046,16 @@ void ConvOne::filter() {
 }
 
 
-/// Џc‰ЎЉgЏkѓTѓCѓY•ПЌX  2‰с–Ъ
+/// зё¦жЁЄж‹Ўзё®г‚µг‚¤г‚єе¤‰ж›ґ  2е›ћз›®.
 void ConvOne::resizeImage2nd() {
-    if (opts_.rszN >= 2) {  // Џc‰ЎЉgЏkѓTѓCѓY•ПЌX   2‰с–Ъ
+    if (opts_.rszN >= 2) {  // зё¦жЁЄж‹Ўзё®г‚µг‚¤г‚єе¤‰ж›ґ   2е›ћз›®.
         int     rszW;
         int     rszH;
         UINT8_T *pix2;
         int     c = 1;
         // for (c = 0; c < opts_.rszN; c++)
         {
-            if (opts_.rszXsz[c] || opts_.rszYsz[c]) {   //rszXsz,rszYsz‚рЋg‚¤ЏкЌ‡
+            if (opts_.rszXsz[c] || opts_.rszYsz[c]) {   //rszXsz,rszYszг‚’дЅїгЃ†е ґеђ€.
                 rszW  = (opts_.rszXsz[c]) ? opts_.rszXsz[c] : w_ * opts_.rszYsz[c] / h_;
                 rszH  = (opts_.rszYsz[c]) ? opts_.rszYsz[c] : h_ * opts_.rszXsz[c] / w_;
                 srcW_ = (int)((double)srcW_ * (double)rszW / (double)w_);
@@ -1075,10 +1075,10 @@ void ConvOne::resizeImage2nd() {
 
             if (varbose_) printf("->rsz[%d,%d]", rszW,rszH);
             if (rszW <= 0 || rszH <= 0)
-                printf("ЉgЏkЊг‚МѓTѓCѓY‚Є‚Ё‚©‚µ‚­‚И‚й(%d,%d)\n", rszW, rszH);
+                printf("ж‹Ўзё®еѕЊгЃ®г‚µг‚¤г‚єгЃЊгЃЉгЃ‹гЃ—гЃЏгЃЄг‚‹(%d,%d)\n", rszW, rszH);
             pix2 = (UINT8_T*)callocE(1, 4 * ((rszW+15)&~15)*(rszH+1) + 256);
             if (pixBpp_ == 8)
-                printf("CLUT•t‰ж‘њ‚М‚Ь‚Ь‚Е‚НЉgЏk‚Е‚«‚И‚ў(-if‚Е‘ЅђF‰»‚Е‚«‚Ь‚·)\n");
+                printf("CLUTд»з”»еѓЏгЃ®гЃѕгЃѕгЃ§гЃЇж‹Ўзё®гЃ§гЃЌгЃЄгЃ„(-ifгЃ§е¤љи‰ІеЊ–гЃ§гЃЌгЃѕгЃ™)\n");
             else
                 pix32_resize((UINT32_T*)pix2, rszW, rszH, (UINT32_T*)pix_, w_, h_, opts_.rszType, pixBpp_ > 24);
             w_ = rszW;
@@ -1091,11 +1091,11 @@ void ConvOne::resizeImage2nd() {
 }
 
 
-/// ”І‚«ђF|ѓї‚Е”Н€Н‚р‹Ѓ‚Я‚ДѓTѓCѓY•ПЌX
+/// жЉњгЃЌи‰І|О±гЃ§зЇ„е›Іг‚’ж±‚г‚ЃгЃ¦г‚µг‚¤г‚єе¤‰ж›ґ.
 void ConvOne::aptRect() {
-    if (opts_.nukiRctFlg) { // ”І‚«ђF|ѓї‚Е”Н€Н‚р‹Ѓ‚Я‚ДѓTѓCѓY•ПЌX
+    if (opts_.nukiRctFlg) { // жЉњгЃЌи‰І|О±гЃ§зЇ„е›Іг‚’ж±‚г‚ЃгЃ¦г‚µг‚¤г‚єе¤‰ж›ґ.
         int gridMd = (opts_.nukiRctFlg & 0xF) - 1;
-        gridMd |= ((opts_.nukiRctFlg>>4) & 3) << 1;     // 0‚И‚зwh‚Ж‚а 2(0x10)‚И‚зw_‚М‚Э 4(0x20)‚И‚зh_‚М‚Э
+        gridMd |= ((opts_.nukiRctFlg>>4) & 3) << 1;     // 0гЃЄг‚‰whгЃЁг‚‚ 2(0x10)гЃЄг‚‰w_гЃ®гЃї 4(0x20)гЃЄг‚‰h_гЃ®гЃї.
         int x0 = 0;
         int y0 = 0;
         if (pixBpp_ == 8) gen_nukiRect8(&pix_, &w_, &h_, &x0, &y0, bo_->celW, bo_->celH, nukiClut_, gridMd);
@@ -1105,15 +1105,15 @@ void ConvOne::aptRect() {
         bo_->y0 += y0;
 
         pixWb_ = WID2BYT(w_, pixBpp_);
-        //* srcW_, srcH_ ‚З‚¤‚·‚й?
+        //* srcW_, srcH_ гЃ©гЃ†гЃ™г‚‹?
     }
 }
 
-/// ѓpѓ^Ѓ[ѓ“ѓfѓBѓU‚рЋ{‚·
+/// гѓ‘г‚їгѓјгѓігѓ‡г‚Јг‚¶г‚’ж–ЅгЃ™.
 void ConvOne::patternDither() {
-    if (opts_.ditBpp && pixBpp_ == 32) {    // ѓfѓBѓU‚рЋ{‚·
+    if (opts_.ditBpp && pixBpp_ == 32) {    // гѓ‡г‚Јг‚¶г‚’ж–ЅгЃ™.
         int ditBpp = opts_.ditBpp;
-        if (ditBpp <= 0) {              // ѓfѓtѓHѓ‹ѓg‚МђF‚Мѓrѓbѓgђ”‚рЏo—Н‚ЙЌ‡‚н‚№‚Д‘I‚Ф
+        if (ditBpp <= 0) {              // гѓ‡гѓ•г‚©гѓ«гѓ€гЃ®и‰ІгЃ®гѓ“гѓѓгѓ€ж•°г‚’е‡єеЉ›гЃ«еђ€г‚ЏгЃ›гЃ¦йЃёгЃ¶.
             if (mono_) {
                 ditBpp  = (dstBpp_ <=  8) ? dstBpp_*3
                         : (dstBpp_ <  12) ? 3*3
@@ -1121,7 +1121,7 @@ void ConvOne::patternDither() {
                         : (dstBpp_ <= 15) ? 5*3
                         : (dstBpp_ <= 18) ? 6*3
                         :                   8*3;
-            } else if (opts_.isFixedClut()) {  // jp or win ЊЕ’иclut‚МЏкЌ‡
+            } else if (opts_.isFixedClut()) {  // jp or win е›єе®љclutгЃ®е ґеђ€.
                 ditBpp  = (dstBpp_ <   3) ? 15
                         : (dstBpp_ <=  6) ?  6
                         : (dstBpp_ <=  8) ? 15
@@ -1148,23 +1148,23 @@ void ConvOne::patternDither() {
     }
 }
 
-/// ЊлЌ·ЉgЋU.
+/// иЄ¤е·®ж‹Ўж•Ј.
 void ConvOne::errorDiffusion1b(int dpp) {
-    // RGB‚р‰ЅЉK’І‚Й‚·‚й‚©.
+    // RGBг‚’дЅ•йљЋиЄїгЃ«гЃ™г‚‹гЃ‹.
     unsigned const tonesTbl[][3] = {
         // r   g   b
-        {  2,  2,  2, },    // 0 :  3bit r1g1b1     8ђF.
-        {  3,  3,  3, },    // 1 :  4bit           27ђF.
-        {  4,  4,  4, },    // 2 :  6bit r2g2b2    64ђF.
-        {  5,  5,  5, },    // 3 :  7bit          125ђF.
-        {  6,  6,  6, },    // 4 :  8bit          216ђF. sp,(xterm)
-        {  8,  8,  4, },    // 5 :  8bit r3g3b2   256ђF.
-        {  8,  8,  8, },    // 6 :  9bit r3g3b3   512ђF.
-        { 16, 16, 16, },    // 7 : 12bit r4g4b4  4096ђF.
-        { 32, 32, 32, },    // 8 : 15bit r5g5b5 32768ђF.
-        { 32, 64, 32, },    // 9 : 16bit r5g6b5 65536ђF.
-        { 64, 64, 64, },    //10 : 18bit r6g6b6 262144ђF.
-        {  7,  9,  4, },    //11 :  8bit         252ђF. win clut
+        {  2,  2,  2, },    // 0 :  3bit r1g1b1     8и‰І.
+        {  3,  3,  3, },    // 1 :  4bit           27и‰І.
+        {  4,  4,  4, },    // 2 :  6bit r2g2b2    64и‰І.
+        {  5,  5,  5, },    // 3 :  7bit          125и‰І.
+        {  6,  6,  6, },    // 4 :  8bit          216и‰І. sp,(xterm)
+        {  8,  8,  4, },    // 5 :  8bit r3g3b2   256и‰І.
+        {  8,  8,  8, },    // 6 :  9bit r3g3b3   512и‰І.
+        { 16, 16, 16, },    // 7 : 12bit r4g4b4  4096и‰І.
+        { 32, 32, 32, },    // 8 : 15bit r5g5b5 32768и‰І.
+        { 32, 64, 32, },    // 9 : 16bit r5g6b5 65536и‰І.
+        { 64, 64, 64, },    //10 : 18bit r6g6b6 262144и‰І.
+        {  7,  9,  4, },    //11 :  8bit         252и‰І. win clut
     };
     bool noErrDif = (opts_.ditTyp & 0x8000) == 0;
 //noErrDif = true;
@@ -1204,7 +1204,7 @@ void ConvOne::errorDiffusion1b(int dpp) {
     ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, tones, dpp);
 }
 
-/// Ћw’иђF‚Жѓї‚рѓuѓЊѓ“ѓh‚µЃAѓї‚р0 or 255 ‚Й‚·‚й
+/// жЊ‡е®љи‰ІгЃЁО±г‚’гѓ–гѓ¬гѓігѓ‰гЃ—гЂЃО±г‚’0 or 255 гЃ«гЃ™г‚‹.
 void ConvOne::alphaBlendByColor() {
     int col = opts_.alpToCol;
     if (col >= 0) {
@@ -1215,7 +1215,7 @@ void ConvOne::alphaBlendByColor() {
 }
 
 
-/// “а•” ‘ЅђF‚ЕЏo—Н‚Єclut_•t‚«‚И‚зЃA€А€ХЊёђF‚рЌs‚¤
+/// е†…йѓЁ е¤љи‰ІгЃ§е‡єеЉ›гЃЊclut_д»гЃЌгЃЄг‚‰гЂЃе®‰ж“жё›и‰Іг‚’иЎЊгЃ†.
 void ConvOne::decreaseColor() {
     if (pixBpp_ > 8 && dstBpp_ <= 8) {
         UINT8_T *p       = (UINT8_T*)callocE(w_ , 2+h_);
@@ -1231,12 +1231,12 @@ void ConvOne::decreaseColor() {
 
         if (opts_.alpBitForBpp8 == 0) {
             switch (dcm) {
-            case DCM_FIX_JP:        //0 “ъ–{‚М80”N‘гѓpѓ\ѓRѓ“—R—€‚М 16ђF,256ђF(G3R3B2)ЊЕ’иѓpѓЊѓbѓg.
-            case DCM_FIX_WIN:       //1 ЊЕ’и WinѓVѓXѓeѓЂѓpѓЊѓbѓg
-            case DCM_FIX_XTERM:     //2 ЊЕ’и xterm256.
-            case DCM_FIX_G6R6B6C40: //3 ЊЕ’и rgb 6*6*6+40.
-            //case DCM_FIX_OTAMESHI1: //4 ‚ЁЋЋ‚µѓpѓЊѓbѓgO
-            //case DCM_FIX_OTAMESHI2: //5 ‚ЁЋЋ‚µѓpѓЊѓbѓgP
+            case DCM_FIX_JP:        //0 ж—Ґжњ¬гЃ®80е№ґд»Јгѓ‘г‚Ѕг‚ігѓіз”±жќҐгЃ® 16и‰І,256и‰І(G3R3B2)е›єе®љгѓ‘гѓ¬гѓѓгѓ€.
+            case DCM_FIX_WIN:       //1 е›єе®љ Winг‚·г‚№гѓ†гѓ гѓ‘гѓ¬гѓѓгѓ€.
+            case DCM_FIX_XTERM:     //2 е›єе®љ xterm256.
+            case DCM_FIX_G6R6B6C40: //3 е›єе®љ rgb 6*6*6+40.
+            //case DCM_FIX_OTAMESHI1: //4 гЃЉи©¦гЃ—гѓ‘гѓ¬гѓѓгѓ€O
+            //case DCM_FIX_OTAMESHI2: //5 гЃЉи©¦гЃ—гѓ‘гѓ¬гѓѓгѓ€P
                 {
                     int md = int(dcm);
                     if (md >= 7) md = md - 7 + 3;
@@ -1253,19 +1253,19 @@ void ConvOne::decreaseColor() {
                         FixedClut256<>::decreaseColorRGB111(p, (UINT32_T*)pix_, w_, h_, (md == 1));
                     } else {
                         unsigned  idx  = 0;
-                        if (dstBpp_ == 7) {         // 128ђF‚М‚Ж‚«.
-                            idx = 1;                // ђж“Є‚М”І‚«ђFѓXѓLѓbѓv.
-                            colNum = 5 * 5 * 5;     // Љe5ЉK’І.
-                        } else if (md == 2) {       // xterm256     ѓVѓXѓeѓЂ16ђF‚рѓXѓLѓbѓv.
-                            if (colNum == 216) {    // 6*6*6 Љe6ЉK’І.
+                        if (dstBpp_ == 7) {         // 128и‰ІгЃ®гЃЁгЃЌ.
+                            idx = 1;                // е…€й ­гЃ®жЉњгЃЌи‰Іг‚№г‚­гѓѓгѓ—.
+                            colNum = 5 * 5 * 5;     // еђ„5йљЋиЄї.
+                        } else if (md == 2) {       // xterm256 г‚·г‚№гѓ†гѓ 16и‰Іг‚’г‚№г‚­гѓѓгѓ—.
+                            if (colNum == 216) {    // 6*6*6 еђ„6йљЋиЄї.
                                 idx = 16;
                             } else {
-                                idx = 1;            // (0,0,0)‚Н‚Q‚В‚ ‚й‚М‚Еђж“Є‚М‚р”І‚«ђF€µ‚ў‚Й‚µ‚Д‚Ё‚­.
+                                idx = 1;            // (0,0,0)гЃЇпј’гЃ¤гЃ‚г‚‹гЃ®гЃ§е…€й ­гЃ®г‚’жЉњгЃЌи‰Іж‰±гЃ„гЃ«гЃ—гЃ¦гЃЉгЃЏ.
                                 if (colNum == 256)
                                     --colNum;
                             }
-                        } else if (md == 3) {   // b5r5b5c40    ђж“Є‚Й”І‚«ђF‚PђF‚ ‚й‚М‚р”т‚О‚·.
-                            if (colNum == 216) {    // 6*6*6 Љe6ЉK’І.
+                        } else if (md == 3) {   // b5r5b5c40    е…€й ­гЃ«жЉњгЃЌи‰Іпј‘и‰ІгЃ‚г‚‹гЃ®г‚’йЈ›гЃ°гЃ™.
+                            if (colNum == 216) {    // 6*6*6 еђ„6йљЋиЄї.
                                 idx = 1;
                             }
                         }
@@ -1274,15 +1274,15 @@ void ConvOne::decreaseColor() {
                 }
                 break;
 
-            default:    // ”Н€НЉO‚И‚з‚Ж‚и‚ ‚¦‚ёЃAѓЃѓfѓBѓAѓ“ѓJѓbѓg(yuv)‚Ц.
+            default:    // зЇ„е›Іе¤–гЃЄг‚‰гЃЁг‚ЉгЃ‚гЃ€гЃљгЂЃгѓЎгѓ‡г‚Јг‚ўгѓіг‚«гѓѓгѓ€(yuv)гЃё.
             //case 0:
                 dcm = DCM_UNKOWN;
-                // ‘±‚­
-            case DCM_MC_YUV: // ѓЃѓfѓBѓAѓ“ѓJѓbѓg(yuv)
-            case DCM_MC_RGB: // ѓЃѓfѓBѓAѓ“ѓJѓbѓg(rgb)
-            case DCM_HIST:   // •p“xЏ‡ clut
+                // з¶љгЃЏ.
+            case DCM_MC_YUV: // гѓЎгѓ‡г‚Јг‚ўгѓіг‚«гѓѓгѓ€(yuv)
+            case DCM_MC_RGB: // гѓЎгѓ‡г‚Јг‚ўгѓіг‚«гѓѓгѓ€(rgb)
+            case DCM_HIST:   // й »еє¦й † clut
                 if (alpFlg == 0 && alpNum < 0 && colNum >= (1 << dstBpp_) && (mono_ || GrayClut<>::isGrey((UINT32_T*)pix_, w_, h_))) {
-                    // ѓ‚ѓmѓNѓЌ‰ж‘њђк—p‚МЊёђF
+                    // гѓўгѓЋг‚Їгѓ­з”»еѓЏе°‚з”ЁгЃ®жё›и‰І.
                     if (dstBpp_ > 4 && colNum >= 256) {
                         GrayClut<>::getFixedGreyClut(clut_, 256, 8);
                         GrayClut<>::fromGreyToBpp8(p, (UINT32_T*)pix_, w_, h_);
@@ -1296,31 +1296,31 @@ void ConvOne::decreaseColor() {
                     if (varbose_)
                     printf("->cltGry%d", 1 << dstBpp_);
                 } else if (DecreaseColorIfWithin256<>::conv(p, (UINT32_T*)pix_, w_, h_, clut_, colNum, alpFlg)) {
-                    // 32ѓrѓbѓgђF‰ж‚ЄЃA‚а‚Ж‚ж‚иclutNumђF€И“а‚И‚зЃA‚»‚М‚Ь‚Ь•ПЉ·.
+                    // 32гѓ“гѓѓгѓ€и‰Із”»гЃЊгЂЃг‚‚гЃЁг‚€г‚ЉclutNumи‰Ід»Ґе†…гЃЄг‚‰гЂЃгЃќгЃ®гЃѕгЃѕе¤‰жЏ›.
                     if (varbose_)
                         printf("->clt%d", dstBpp_);
                 } else if ((dstBpp_ == 1 || dstBpp_ == 2) && colNum >= (1<<dstBpp_)) {
-                    // 1bitђF,2bitђFђк—p‚МЊёђFЏ€—ќ
+                    // 1bitи‰І,2bitи‰Іе°‚з”ЁгЃ®жё›и‰Іе‡¦зђ†.
                     if (dstBpp_ == 1)
                         DecreaseColorLowBpp<>::convPix32ToBpp1(p, (UINT32_T*)pix_, w_, h_, clut_);
                     else
                         DecreaseColorLowBpp<>::convPix32ToBpp2(p, (UINT32_T*)pix_, w_, h_, clut_);
                     if (varbose_)
                         printf("->cltBpp%d", 1 << dstBpp_);
-                } else if (dcm == DCM_HIST) {   // •p“xЏ‡ clut ‚ЕЊёђF.
+                } else if (dcm == DCM_HIST) {   // й »еє¦й † clut гЃ§жё›и‰І.
                     //int a = (opts_.alpMin >= 0) ? opts_.alpMin : 4;
                     DecreaseColorHst<>(p, (UINT32_T*)pix_, w_, h_, clut_, colNum, alpNum);
                     if (varbose_) {
                         printf("->decreaseCol%d", dstBpp_);
                     }
-                } else {            // 256ђF‚ж‚и‘Ѕ‚ў‚М‚Е—vЊёђF.
+                } else {            // 256и‰Іг‚€г‚Ље¤љгЃ„гЃ®гЃ§и¦Ѓжё›и‰І.
                     if (dcm == DCM_UNKOWN)
                         dcm = DCM_MC_YUV;
                     memset(clut_, 0, sizeof clut_);
-                    // ѓЃѓfѓBѓAѓ“ѓJѓbѓg‚ИЊёђF.
+                    // гѓЎгѓ‡г‚Јг‚ўгѓіг‚«гѓѓгѓ€гЃЄжё›и‰І.
                     DecreaseColorMC     rcmc;
-                    rcmc.setModeRGB(dcm == DCM_MC_RGB);      // rgb‚©yuv‚©‚МђЭ’и
-                    if (opts_.decreaseColorParam[0] >= 0) { // Ћb’и“I‚И‚П‚з‚ЯЃ[‚ЅђЭ’и
+                    rcmc.setModeRGB(dcm == DCM_MC_RGB);      // rgbгЃ‹yuvгЃ‹гЃ®иЁ­е®љ.
+                    if (opts_.decreaseColorParam[0] >= 0) { // жљ«е®љзљ„гЃЄгЃ±г‚‰г‚ЃгѓјгЃџиЁ­е®љ.
                         rcmc.setCalcMidParam(
                             (int  )(opts_.decreaseColorParam[0]),
                             (float)(opts_.decreaseColorParam[1]),
@@ -1328,9 +1328,9 @@ void ConvOne::decreaseColor() {
                             (float)(opts_.decreaseColorParam[3])
                         );
                     }
-                    // ѓїѓpѓ‰ѓЃЃ[ѓ^‚МђЭ’и.(ѓїђ”, ѓїbit‚р—p‚ў‚йЏкЌ‡‚Мbitђ”, ѓї‚МЌЕЏ¬’l, ѓї‚МЌЕ‘е’l)
+                    // О±гѓ‘гѓ©гѓЎгѓјг‚їгЃ®иЁ­е®љ.(О±ж•°, О±bitг‚’з”ЁгЃ„г‚‹е ґеђ€гЃ®bitж•°, О±гЃ®жњЂе°ЏеЂ¤, О±гЃ®жњЂе¤§еЂ¤)
                     rcmc.setAlphaParam(alpNum, 0, opts_.alpMin, opts_.alpMax);
-                    // ѓRѓ“ѓoЃ[ѓg.
+                    // г‚ігѓігѓђгѓјгѓ€.
                     rcmc.conv(p, (UINT32_T*)pix_, w_, h_, clut_, colNum);
 
                     if (varbose_)
@@ -1347,7 +1347,7 @@ void ConvOne::decreaseColor() {
                 break;
             }
 
-        } else {    // a3i5,a5i3‚Мђк—pЏ€—ќ.
+        } else {    // a3i5,a5i3гЃ®е°‚з”Ёе‡¦зђ†.
             UINT8_T* alpPln = 0;
             unsigned idxBit = 8 - opts_.alpBitForBpp8;
             unsigned cnum   = 1 << idxBit;
@@ -1366,12 +1366,12 @@ void ConvOne::decreaseColor() {
 
             pix32_clearAlpha((UINT32_T*)pix_, w_, h_, 0xff);
 
-            // 32ѓrѓbѓgђF‰ж‚ЄЃA‚а‚Ж‚ж‚иclutNumђF€И“а‚И‚зЃA‚»‚М‚Ь‚Ь•ПЉ·.
+            // 32гѓ“гѓѓгѓ€и‰Із”»гЃЊгЂЃг‚‚гЃЁг‚€г‚ЉclutNumи‰Ід»Ґе†…гЃЄг‚‰гЂЃгЃќгЃ®гЃѕгЃѕе¤‰жЏ›.
             if (DecreaseColorIfWithin256<>::conv(p, (UINT32_T*)pix_, w_, h_, clut_, colNum, 0/*alpFlg*/)) {
                 if (varbose_)
                     printf("->cltA%dI%d", opts_.alpBitForBpp8, idxBit);
 
-            } else {            // colNumђF‚ж‚и‘Ѕ‚ў‚М‚Е—vЊёђF.
+            } else {            // colNumи‰Іг‚€г‚Ље¤љгЃ„гЃ®гЃ§и¦Ѓжё›и‰І.
                 memset(clut_, 0, sizeof clut_);
                 if (dcm == DCM_HIST) {
                     if (varbose_)
@@ -1380,10 +1380,10 @@ void ConvOne::decreaseColor() {
                 } else {
                     if (varbose_)
                         printf("->decreaseCol_A%dI%d", opts_.alpBitForBpp8, idxBit);
-                    // ѓЃѓfѓBѓAѓ“ѓJѓbѓg‚ИЊёђF.
+                    // гѓЎгѓ‡г‚Јг‚ўгѓіг‚«гѓѓгѓ€гЃЄжё›и‰І.
                     DecreaseColorMC     rcmc;
-                    rcmc.setModeRGB(0/*dcm == 4*/);          // rgb‚©yuv‚©‚МђЭ’и
-                    if (opts_.decreaseColorParam[0] >= 0) { // Ћb’и“I‚И‚П‚з‚ЯЃ[‚ЅђЭ’и
+                    rcmc.setModeRGB(0/*dcm == 4*/);          // rgbгЃ‹yuvгЃ‹гЃ®иЁ­е®љ.
+                    if (opts_.decreaseColorParam[0] >= 0) { // жљ«е®љзљ„гЃЄгЃ±г‚‰г‚ЃгѓјгЃџиЁ­е®љ.
                         rcmc.setCalcMidParam(
                             (int  )(opts_.decreaseColorParam[0]),
                             (float)(opts_.decreaseColorParam[1]),
@@ -1391,9 +1391,9 @@ void ConvOne::decreaseColor() {
                             (float)(opts_.decreaseColorParam[3])
                         );
                     }
-                    // ѓїѓpѓ‰ѓЃЃ[ѓ^‚МђЭ’и.(ѓїђ”, ѓїbit‚р—p‚ў‚йЏкЌ‡‚Мbitђ”, ѓї‚МЌЕЏ¬’l, ѓї‚МЌЕ‘е’l)
+                    // О±гѓ‘гѓ©гѓЎгѓјг‚їгЃ®иЁ­е®љ.(О±ж•°, О±bitг‚’з”ЁгЃ„г‚‹е ґеђ€гЃ®bitж•°, О±гЃ®жњЂе°ЏеЂ¤, О±гЃ®жњЂе¤§еЂ¤)
                     rcmc.setAlphaParam(0/*alpNum*/, 0/*opts_.alpBitForBpp8*/, opts_.alpMin, opts_.alpMax);
-                    // ѓRѓ“ѓoЃ[ѓg.
+                    // г‚ігѓігѓђгѓјгѓ€.
                     rcmc.conv(p, (UINT32_T*)pix_, w_, h_, clut_, colNum);
                 }
             }
@@ -1421,9 +1421,9 @@ void ConvOne::decreaseColor() {
 }
 
 
-/// ѓ`ѓbѓv(ѓZѓ‹)Ѓ•ѓ}ѓbѓv‰»
+/// гѓЃгѓѓгѓ—(г‚»гѓ«)пј†гѓћгѓѓгѓ—еЊ–.
 void ConvOne::changeChipAndMap() {
-    if (opts_.mapMode && bo_->celW && bo_->celH) {      // ѓ}ѓbѓv‰»
+    if (opts_.mapMode && bo_->celW && bo_->celH) {      // гѓћгѓѓгѓ—еЊ–.
         int     celNum;
         int     styl  = opts_.celStyl | (opts_.mapNoCmp << 1) | (opts_.mapEx256x256<<3);    // 1bit|2bit|1bit
         int     f     = 1;
@@ -1465,20 +1465,21 @@ void ConvOne::changeChipAndMap() {
 }
 
 
-// Џo—Н‚Мѓї‚р”Ѕ“]‚·‚й•K—v‚Є‚ ‚й‚Ж‚«
+/// е‡єеЉ›гЃ®О±г‚’еЏЌи»ўгЃ™г‚‹еї…и¦ЃгЃЊгЃ‚г‚‹гЃЁгЃЌ..
 void ConvOne::reverseOutputAlpha() {
-    if (opts_.alpModeO) {       // Џo—Н‚Мѓї‚р”Ѕ“]‚·‚й•K—v‚Є‚ ‚й‚Ж‚«
-        if (varbose_) printf("->ѓї”Ѕ");
+    if (opts_.alpModeO) {       // е‡єеЉ›гЃ®О±г‚’еЏЌи»ўгЃ™г‚‹еї…и¦ЃгЃЊгЃ‚г‚‹гЃЁгЃЌ..
+        if (varbose_) printf("->О±еЏЌ.");
         if (pixBpp_ == 8) pix32_revAlpha(clut_, 1, 256);
         else              pix32_revAlpha((UINT32_T*)pix_, w_, h_);
     }
 }
 
 
-/// ѓ}ѓXѓN‰ж‘њђ¶ђ¬‚М‚Ж‚«
+/// гѓћг‚№г‚Їз”»еѓЏз”џж€ђгЃ®гЃЁгЃЌ.
+///
 void ConvOne::changeMaskImage() {
     if (opts_.genMaskFlg) {
-        if (varbose_) printf("->mask‰»");
+        if (varbose_) printf("->maskеЊ–.");
         if (pixBpp_ == 8) {
             //pix32_alpToMask(clut_, 1, 256, dstBpp_);
             int m = 8 - dstBpp_;
@@ -1501,15 +1502,15 @@ void ConvOne::changeMaskImage() {
 }
 
 
-/// Џo—Нѓtѓ@ѓCѓ‹ѓCѓЃЃ[ѓW‚рђ¶ђ¬
+/// е‡єеЉ›гѓ•г‚Ўг‚¤гѓ«г‚¤гѓЎгѓјг‚ёг‚’з”џж€ђ..
 bool ConvOne::saveImage() {
     bool     rc   = true;
     uint8_t* pix2 = NULL;
-    // Џo—НЏЂ”х
-    // ЊёђF‚МђFђ”‚М‚Ѕ‚Я‚ЙdstBpp_‚р—¬—p‚µ‚Д’l‚Є”Н€НЉO‚МЏкЌ‡‚Є‚ ‚й‚М‚ЕЃA‹­€ш‚Й’ТелЌ‡‚н‚№
+    // е‡єеЉ›жє–е‚™.
+    // жё›и‰ІгЃ®и‰Іж•°гЃ®гЃџг‚ЃгЃ«dstBpp_г‚’жµЃз”ЁгЃ—гЃ¦еЂ¤гЃЊзЇ„е›Іе¤–гЃ®е ґеђ€гЃЊгЃ‚г‚‹гЃ®гЃ§гЂЃеј·еј•гЃ«иѕ»и¤„еђ€г‚ЏгЃ›.
     dstBpp_ = bm_chkDstBpp(opts_.dstFmt, dstBpp_);
 
-    // Џo—НBPPЋw’и‚И‚ўЏкЌ‡ЃA24bit‰ж‚И‚з‰В”\‚И‚зclut‰ж‚Й‚·‚й(ѓTѓCѓYЏkЏ¬‚М‚Ѕ‚Я. 32bit‰ж(alpha•t)‚Мclut‰жѓtѓHЃ[ѓ}ѓbѓg‚Н”ч–­‚И‚М‚Е‰с”р.
+    // е‡єеЉ›BPPжЊ‡е®љгЃЄгЃ„е ґеђ€гЂЃ24bitз”»гЃЄг‚‰еЏЇиѓЅгЃЄг‚‰clutз”»гЃ«гЃ™г‚‹(г‚µг‚¤г‚єзё®е°ЏгЃ®гЃџг‚Ѓ. 32bitз”»(alphaд»)гЃ®clutз”»гѓ•г‚©гѓјгѓћгѓѓгѓ€гЃЇеѕ®е¦™гЃЄгЃ®гЃ§е›ћйЃї.
     int dstFmt = opts_.dstFmt;
     if (opts_.bpp == 0 && pixBpp_ == 32) {
         if (dstBpp_ == 24 && (dstFmt == BM_FMT_PNG || dstFmt == BM_FMT_TGA || dstFmt == BM_FMT_BMP
@@ -1518,14 +1519,14 @@ bool ConvOne::saveImage() {
             #endif
         )) {
             unsigned clutSize = 256;
-            // ѓ‚ѓmѓ‰ѓ‹‰»ЌП‚Э‚МЏкЌ‡
+            // гѓўгѓЋгѓ©гѓ«еЊ–жё€гЃїгЃ®е ґеђ€.
             if (/*mono_ ||*/ GrayClut<>::isGrey((uint32_t const*)pix_, w_, h_)) {
                 if (varbose_) printf("->auto-mono");
                 pix2 = new uint8_t[w_ * h_ + 16];
                 GrayClut<>::getFixedGreyClut(clut_, 256, 8);
                 GrayClut<>::fromGreyToBpp8(pix2, (uint32_t const*)pix_, w_, h_);
                 mono_ = true;
-            } else {    // ђFђ”‚Є 256€И‰є‚И‚з clut‰ж‚Й•ПЉ·
+            } else {    // и‰Іж•°гЃЊ 256д»Ґдё‹гЃЄг‚‰ clutз”»гЃ«е¤‰жЏ›.
                 pix2 = DecreaseColorIfWithin256<>::convToNewArray((uint32_t*)pix_, w_, h_, clut_, clutSize, false, 0xFFFFFFFF);
                 if (pix2 && varbose_) {
                     if (clutSize <= 16)
@@ -1534,7 +1535,7 @@ bool ConvOne::saveImage() {
                         printf("->auto-256");
                 }
             }
-            if (pix2) { // •ПЉ·ђ¬ЊчЋћ
+            if (pix2) { // е¤‰жЏ›ж€ђеЉџж™‚.
                 freeE(pix_);
                 dstBpp_  = (clutSize <= 16 && dstFmt != BM_FMT_TGA) ? 4 : 8;
                 pix_     = pix2;
@@ -1556,27 +1557,27 @@ bool ConvOne::saveImage() {
         clutTxtSave(opts_.clutTxtName, dstName_, clut_, dstColN_);
     }
 
-    // ѓoѓbѓtѓ@Љm•Ы
+    // гѓђгѓѓгѓ•г‚Ўзўєдїќ.
     int c = bm_encodeWorkSize(dstFmt, w_, h_, dstBpp_);
     dst_  = (UINT8_T*)calloc(1, c);
     if (dst_ == NULL) {
         if (varbose_) printf("\n");
-        printf("%s Џo—Н‚М‚Ѕ‚Я‚МѓЃѓ‚ѓЉ‚рЉm•Ы‚Е‚«‚Ь‚№‚с\n", dstName_);
+        printf("%s е‡єеЉ›гЃ®гЃџг‚ЃгЃ®гѓЎгѓўгѓЄг‚’зўєдїќгЃ§гЃЌгЃѕгЃ›г‚“.\n", dstName_);
         term();
         rc = false;
         goto RET;
     }
 
-    // Џo—Н‰ж‘њ‚рђ¶ђ¬
+    // е‡єеЉ›з”»еѓЏг‚’з”џж€ђ.
     if (dstFmt != BM_FMT_NON) {
         int clutAlpFlg = opts_.clutAlpFlg;
         if (clutAlpFlg == 0 && pixBpp_ == 8 && dstBpp_ <= 8) {
             clutAlpFlg = pix32_isUseAlpha(clut_, 1<<dstBpp_, 1);
         }
         int dir_flgs = 0;
-        dir_flgs    |= opts_.encMode    << BM_FLAG_EX_ENC_SH;                                               // “Б•К‚М€іЏk‚р‚·‚й‚©
-        dir_flgs    |= clutAlpFlg       << BM_FLAG_CLUT_ALP_SH;                                             // alpha•tclut‚Й‚·‚й‚©
-        dir_flgs    |= (opts_.colKeyNA == 0 && (opts_.colKey >= 0 || nukiClut_ >= 0)) << BM_FLAG_COLKEY_SH; // ”І‚«ђF‚Є‚ ‚й‚©
+        dir_flgs    |= opts_.encMode    << BM_FLAG_EX_ENC_SH;                                               // з‰№е€ҐгЃ®ењ§зё®г‚’гЃ™г‚‹гЃ‹.
+        dir_flgs    |= clutAlpFlg       << BM_FLAG_CLUT_ALP_SH;                                             // alphaд»clutгЃ«гЃ™г‚‹гЃ‹.
+        dir_flgs    |= (opts_.colKeyNA == 0 && (opts_.colKey >= 0 || nukiClut_ >= 0)) << BM_FLAG_COLKEY_SH; // жЉњгЃЌи‰ІгЃЊгЃ‚г‚‹гЃ‹.
         if (dstFmt == BM_FMT_JPG) {
             printf("->JpgQ=%2d", ((bo_->mono && bo_->quality_grey >= 0) ? bo_->quality_grey : bo_->quality));
         }
@@ -1593,8 +1594,8 @@ bool ConvOne::saveImage() {
         sz_   = bm_write(dstFmt, dst_, w_, h_, dstBpp_, pix_, pixWb_, pixBpp_, clut_, dir_flgs, bo_);
         if (sz_ <= 0) {
             if (varbose_) printf("\n");
-            //x printf("%s ‚р %s ‚Й•ПЉ·’†‚ЙѓGѓ‰Ѓ[‚Є‚ ‚и‚Ь‚µ‚Ѕ\n", srcName_, opts_.dstExt);
-            printf("%s ‚р •ПЉ·’†‚ЙѓGѓ‰Ѓ[‚Є‚ ‚и‚Ь‚µ‚Ѕ\n", srcName_);
+            //x printf("%s г‚’ %s гЃ«е¤‰жЏ›дё­гЃ«г‚Ёгѓ©гѓјгЃЊгЃ‚г‚ЉгЃѕгЃ—гЃџ\n", srcName_, opts_.dstExt);
+            printf("%s г‚’ е¤‰жЏ›дё­гЃ«г‚Ёгѓ©гѓјгЃЊгЃ‚г‚ЉгЃѕгЃ—гЃџ.\n", srcName_);
             term();
             rc = false;
             goto RET;
@@ -1611,37 +1612,37 @@ bool ConvOne::saveImage() {
 }
 
 
-/// ѓtѓ@ѓCѓ‹Џ‘‚«Ќћ‚Э
+/// гѓ•г‚Ўг‚¤гѓ«ж›ёгЃЌиѕјгЃї.
 int ConvOne::writeFile() {
-    if (opts_.saveInfFile) {    // ‰ж‘њЏо•с‚МѓeѓLѓXѓgѓtѓ@ѓCѓ‹‚рЌмђ¬
+    if (opts_.saveInfFile) {    // з”»еѓЏжѓ…е ±гЃ®гѓ†г‚­г‚№гѓ€гѓ•г‚Ўг‚¤гѓ«г‚’дЅњж€ђ.
         saveInfFile(dstName_, w_, h_, dstBpp_, opts_.mapMode, bo_);
     }
 
     if (opts_.dstFmt != BM_FMT_NON) {
-        if (opts_.mapMode >= 2 && map_) {   // ѓeѓNѓXѓ`ѓѓ“а‘ ѓ}ѓbѓvѓtѓ@ѓCѓ‹ђ¶ђ¬‚МЏкЌ‡
+        if (opts_.mapMode >= 2 && map_) {   // гѓ†г‚Їг‚№гѓЃгѓЈе†…и”µгѓћгѓѓгѓ—гѓ•г‚Ўг‚¤гѓ«з”џж€ђгЃ®е ґеђ€.
             saveMapFile(dstName_, opts_.exDstExt, map_, mapSz_, dst_, sz_);
 
         } else {
-            if (map_) {                 // ѓ}ѓbѓvЏо•сѓtѓ@ѓCѓ‹‚М‚Э‚Мђ¶ђ¬
+            if (map_) {                 // гѓћгѓѓгѓ—жѓ…е ±гѓ•г‚Ўг‚¤гѓ«гЃ®гЃїгЃ®з”џж€ђ.
                 saveMapFile(dstName_, NULL, map_, mapSz_, NULL, 0);
             }
 
-            // ѓtѓ@ѓCѓ‹ђ¶ђ¬
-            if (strlen(dstName_) < FIL_NMSZ-4) {        // ‚·‚Е‚Йѓtѓ@ѓCѓ‹‚Є‚ ‚Б‚ЅЏкЌ‡ЃA.bakђ¶ђ¬
+            // гѓ•г‚Ўг‚¤гѓ«з”џж€ђ.
+            if (strlen(dstName_) < FIL_NMSZ-4) {        // гЃ™гЃ§гЃ«гѓ•г‚Ўг‚¤гѓ«гЃЊгЃ‚гЃЈгЃџе ґеђ€гЂЃ.bakз”џж€ђ.
                 char            tmpName[FIL_NMSZ];
                 sprintf(tmpName,"%s.bak", dstName_);
                 remove(tmpName);
                 rename(dstName_, tmpName);
             }
             if (fil_save(dstName_, dst_, sz_) == NULL) {
-                printf("%s ‚МЏ‘‚«Ќћ‚Э‚ЙЋё”s‚µ‚Ь‚µ‚Ѕ\a\n", dstName_);
+                printf("%s гЃ®ж›ёгЃЌиѕјгЃїгЃ«е¤±ж•—гЃ—гЃѕгЃ—гЃџ.\a\n", dstName_);
             }
         }
     }
     return 1;
 }
 
-/// ЏI—№Џ€—ќ
+/// зµ‚дє†е‡¦зђ†.
 void ConvOne::term() {
     if (map_) {
         freeE(map_);
@@ -1658,7 +1659,7 @@ void ConvOne::term() {
 
 // -------------------------------------------------------------------
 
-/// ѓ}ѓbѓvѓtѓ@ѓCѓ‹ђ¶ђ¬
+/// гѓћгѓѓгѓ—гѓ•г‚Ўг‚¤гѓ«з”џж€ђ.
 void ConvOne::saveMapFile(const char *name, const char *ext, UINT8_T *map, int mapSz, UINT8_T *pix, int pixSz) {
     char nm[FIL_NMSZ];
     char tmpName[FIL_NMSZ];
@@ -1672,14 +1673,14 @@ void ConvOne::saveMapFile(const char *name, const char *ext, UINT8_T *map, int m
         rename(nm, tmpName);
     }
 
-    if (pix == NULL) {  // ѓwѓbѓ_‚М‚Э‚М‚Ж‚«
+    if (pix == NULL) {  // гѓгѓѓгѓЂгЃ®гЃїгЃ®гЃЁгЃЌ.
         if (fil_save(nm, map, mapSz) == NULL) {
-            printf("%s ‚МЏ‘‚«Ќћ‚Э‚ЙЋё”s‚µ‚Ь‚µ‚Ѕ\a\n", nm);
+            printf("%s гЃ®ж›ёгЃЌиѕјгЃїгЃ«е¤±ж•—гЃ—гЃѕгЃ—гЃџ.\a\n", nm);
         }
-    } else {            // ‰ж‘њ‚а€кЏЏ‚Й”[‚Я‚й‚Ж‚«
+    } else {            // з”»еѓЏг‚‚дёЂз·’гЃ«зґЌг‚Ѓг‚‹гЃЁгЃЌ.
         FILE *fp = fopenE(nm, "wb");
         mapSz = (mapSz + 31) & ~31;
-        POKEiD(map+4, mapSz);           // ‰ж‘њ‚Ц‚МѓIѓtѓZѓbѓg‚рђЭ’и
+        POKEiD(map+4, mapSz);           // з”»еѓЏгЃёгЃ®г‚Єгѓ•г‚»гѓѓгѓ€г‚’иЁ­е®љ.
       #if 1
         {   UINT8_T *m = (UINT8_T*)mallocE(mapSz+pixSz);
             memcpy(m, map, mapSz);
@@ -1700,7 +1701,7 @@ void ConvOne::saveMapFile(const char *name, const char *ext, UINT8_T *map, int m
 }
 
 
-/// ‰ж‘њЏо•сѓeѓLѓXѓgѓtѓ@ѓCѓ‹Џo—Н
+/// з”»еѓЏжѓ…е ±гѓ†г‚­г‚№гѓ€гѓ•г‚Ўг‚¤гѓ«е‡єеЉ›.
 void ConvOne::saveInfFile(const char *oname, int w, int h, int bpp, int mapMode, bm_opt_t *bo) {
     FILE *fp;
     char nm[FIL_NMSZ];
@@ -1716,7 +1717,7 @@ void ConvOne::saveInfFile(const char *oname, int w, int h, int bpp, int mapMode,
         fprintf(fp,"WSIZE=%d,%d\n", bo->srcW, bo->srcH);
     if (bo->celW) {
         fprintf(fp,"CELSIZE=%d,%d\n", bo->celW, bo->celH);
-        if (mapMode) {  // celW‚Є>0‚И‚зcelH‚а•K‚ё>0
+        if (mapMode) {  // celWгЃЊ>0гЃЄг‚‰celHг‚‚еї…гЃљ>0
             fprintf(fp,"MAPSIZE=%d,%d\n", w/bo->celW, h/bo->celH);
             if (mapMode == 3 && bo->celW == bo->mapTexW && bo->celH == bo->mapTexH) {
                 fprintf(fp,"1X1MAP_TEXTURE\n");
@@ -1727,7 +1728,7 @@ void ConvOne::saveInfFile(const char *oname, int w, int h, int bpp, int mapMode,
 }
 
 
-/// clutѓeѓLѓXѓg‚МЏo—Н
+/// clutгѓ†г‚­г‚№гѓ€гЃ®е‡єеЉ›.
 void ConvOne::clutTxtSave(const char *clutTxtName, const char *dstName, unsigned *clut, int dstColN) {
     char name[FIL_NMSZ];
     FILE *fp;

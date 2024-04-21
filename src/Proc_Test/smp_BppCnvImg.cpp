@@ -47,7 +47,7 @@ void conv(const char* fname)
     BppCnvImg   img2;
     BppCnvImg   img0;
     if (tga_load(src_name, img0) == 0) {
-        printf("%s : tgaƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ‚É¸”s\n", src_name);
+        printf("%s : tgaãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—\n", src_name);
         exit(1);
     }
     std::string bname = fname_chgExt(src_name, NULL);

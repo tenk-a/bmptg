@@ -1,6 +1,6 @@
 /**
  *  @file   ReduceColorHist.h
- *  @brief  Œ¸Fˆ—. rgb ‚ğ yuv ‚É‚µ‚Ä•p“xƒJƒEƒ“ƒg‚µ‚Ä‘½‚¢‚à‚Ì‡.
+ *  @brief  æ¸›è‰²å‡¦ç†. rgb ã‚’ yuv ã«ã—ã¦é »åº¦ã‚«ã‚¦ãƒ³ãƒˆã—ã¦å¤šã„ã‚‚ã®é †.
  *  @author Masashi KITAMURA
  */
 
@@ -15,7 +15,7 @@
 #include <algorithm>
 
 
-/// Œ¸Fˆ—.(ˆê’U rgb ‚ğ yuv ‚É‚µAyuv[45][19][19]‚Ì•p“x‚ğƒJƒEƒ“ƒg‚µ‚ÄA‘½‚¢‚à‚Ì‚ğ‘I‚Ô)
+/// æ¸›è‰²å‡¦ç†.(ä¸€æ—¦ rgb ã‚’ yuv ã«ã—ã€yuv[45][19][19]ã®é »åº¦ã‚’ã‚«ã‚¦ãƒ³ãƒˆã—ã¦ã€å¤šã„ã‚‚ã®ã‚’é¸ã¶)
 template<class A=void>
 class ReduceColorT3 {
 public:
@@ -80,7 +80,7 @@ private:
 
 
 
-/// 32ƒrƒbƒgF‰æ‚ğ8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+/// 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
 template<class A>
 bool ReduceColorT3<A>::conv(const unsigned* pSrc, unsigned w, unsigned h, unsigned char* pDst, unsigned* pClut, unsigned clutSize)
 {
@@ -97,7 +97,7 @@ bool ReduceColorT3<A>::conv(const unsigned* pSrc, unsigned w, unsigned h, unsign
 
 
 
-/// ƒsƒNƒZƒ‹rgb‚ğyuv‚É•ÏŠ·.
+/// ãƒ”ã‚¯ã‚»ãƒ«rgbã‚’yuvã«å¤‰æ›.
 template<class A>
 void ReduceColorT3<A>::rgb_to_yuv(const unsigned* pRgb, std::size_t size, typename ReduceColorT3<A>::Yuv* yuv)
 {
@@ -193,10 +193,10 @@ bool ReduceColorT3<A>::choseColor(const struct ReduceColorT3::Yuv* pYuv, unsigne
         h->v += p->v;
     }
 
-    // ‘½‚¢‡‚É•À‚×‚é.
+    // å¤šã„é †ã«ä¸¦ã¹ã‚‹.
     std::sort( &pHst[top], &pHst[NUM] );
 
-    // ‘½‚¢‚à‚Ì‚©‚çF‚ğæ“¾.
+    // å¤šã„ã‚‚ã®ã‹ã‚‰è‰²ã‚’å–å¾—.
     for (unsigned j = 0; j < clutSize; ++j) {
         const Hst*  h = &pHst[j];
         std::size_t num = h->num;
@@ -205,7 +205,7 @@ bool ReduceColorT3<A>::choseColor(const struct ReduceColorT3::Yuv* pYuv, unsigne
         Yuv*    t = &pClutYuv[j];
         t->a      = h->a;
       #if 0
-        // ‚Æ‚è‚ ‚¦‚¸‚Ìyuv‚ğİ’è.(‚ ‚Æ‚ÅŒvZ‚µ’¼‚·).
+        // ã¨ã‚Šã‚ãˆãšã®yuvã‚’è¨­å®š.(ã‚ã¨ã§è¨ˆç®—ã—ç›´ã™).
         unsigned no = h->no;
         if (no > 0) {
             --no;
@@ -224,7 +224,7 @@ bool ReduceColorT3<A>::choseColor(const struct ReduceColorT3::Yuv* pYuv, unsigne
       #endif
     }
 
-    // ˆÃ‚¢‚à‚Ì‡‚É•À‚×’¼‚·.
+    // æš—ã„ã‚‚ã®é †ã«ä¸¦ã¹ç›´ã™.
     std::sort( &pClutYuv[top], &pClutYuv[clutSize] );
 
     delete pHst;
@@ -233,19 +233,19 @@ bool ReduceColorT3<A>::choseColor(const struct ReduceColorT3::Yuv* pYuv, unsigne
 
 
 
-/** 32ƒrƒbƒgF‰æ‚ğ clut ‚É]‚Á‚Ä‹ß‚¢F‚É’uŠ·.
- *  ƒ¿‚ÍA”²‚«F‚PF‚Ì‚İl—¶.
+/** 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’ clut ã«å¾“ã£ã¦è¿‘ã„è‰²ã«ç½®æ›.
+ *  Î±ã¯ã€æŠœãè‰²ï¼‘è‰²ã®ã¿è€ƒæ…®.
  */
 template<class A>
 bool ReduceColorT3<A>::convPix32to8(const typename ReduceColorT3<A>::Yuv *pSrc, int w, int h
         , unsigned char *pDst, typename ReduceColorT3<A>::Yuv *pClut, unsigned clutSize)
 {
-    // Œ»ó‚Ìclut‚ÅA‚·‚×‚Ä‚ÌƒsƒNƒZƒ‹‚ğclutSizeF‰».
+    // ç¾çŠ¶ã®clutã§ã€ã™ã¹ã¦ã®ãƒ”ã‚¯ã‚»ãƒ«ã‚’clutSizeè‰²åŒ–.
     for (unsigned n = 0; n < w * h; ++n) {
         unsigned ii = 0;
         const Yuv*  s   = &pSrc[n];
         int         a   = s->a;
-        if (a > minA_) {    // “§–¾ˆÈŠO‚ÌƒsƒNƒZƒ‹‚¾‚Á‚½‚Æ‚«.
+        if (a > minA_) {    // é€æ˜ä»¥å¤–ã®ãƒ”ã‚¯ã‚»ãƒ«ã ã£ãŸã¨ã.
             unsigned k = 0xFFFFFFFF;
             for (unsigned i = 0; i < clutSize; ++i) {
                 const Yuv*  t    = &pClut[i];
@@ -265,7 +265,7 @@ bool ReduceColorT3<A>::convPix32to8(const typename ReduceColorT3<A>::Yuv *pSrc, 
     }
 
  #if 0
-    // clut‚ÌŠeF‚ğÀÛ‚ÌƒsƒNƒZƒ‹‚ÌF‚Ì•½‹Ï‚É‚·‚é.
+    // clutã®å„è‰²ã‚’å®Ÿéš›ã®ãƒ”ã‚¯ã‚»ãƒ«ã®è‰²ã®å¹³å‡ã«ã™ã‚‹.
     Hst*    pHst = new Hst[ clutSize ];
     std::memset(pHst, 0, sizeof(Hst) * clutSize);
     for (unsigned j = 0; j < w * h; ++j) {

@@ -1,13 +1,13 @@
 /**
  *  @file   misc.h
- *  @brief  ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ƒc[ƒ‹‚ÈƒTƒ“ƒvƒ‹ƒ‹[ƒ`ƒ“‚Ì‚¨‹Ÿ—p‚ÉA“K“–‚ÉW‚ß‚½ƒTƒuƒ‹[ƒ`ƒ“
+ *  @brief  ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ãƒ„ãƒ¼ãƒ«ãªã‚µãƒ³ãƒ—ãƒ«ãƒ«ãƒ¼ãƒãƒ³ã®ãŠä¾›ç”¨ã«ã€é©å½“ã«é›†ã‚ãŸã‚µãƒ–ãƒ«ãƒ¼ãƒãƒ³
  *  @author Masashi KITAMURA
  */
 #ifndef MISC_H
 #define MISC_H
 
 // -------------------------------------------------------------------
-// “K“–‚É•W€ƒ‰ƒCƒuƒ‰ƒŠ‚ğinclude
+// é©å½“ã«æ¨™æº–ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’include
 
 #include <stddef.h>
 #include <stdio.h>
@@ -62,7 +62,7 @@ typedef uint64_t            uintmax_t;
 
 // -------------------------------------------------------------------
 
-/** ƒtƒ@ƒCƒ‹Eƒ[ƒh
+/** ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ­ãƒ¼ãƒ‰
  */
 template<typename T>
 bool file_load(const char* name, std::vector<T>& buf)
@@ -87,7 +87,7 @@ bool file_load(const char* name, std::vector<T>& buf)
 }
 
 
-/** ƒtƒ@ƒCƒ‹EƒZ[ƒu
+/** ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ã‚»ãƒ¼ãƒ–
  */
 template<typename T>
 bool file_save(const char* name, const T* buf, unsigned byteSize)
@@ -106,10 +106,10 @@ bool file_save(const char* name, const T* buf, unsigned byteSize)
 
 
 // ------------------------------------------------
-// ƒwƒbƒ_‚É‘‚­‚½‚ß‚É–³—‚â‚è template‚É..CHR_T=char‚Ì‚İ!
+// ãƒ˜ãƒƒãƒ€ã«æ›¸ããŸã‚ã«ç„¡ç†ã‚„ã‚Š templateã«..CHR_T=charã®ã¿!
 
 
-/// •¶š C ‚ª MS‘SŠp‚Ì‚PƒoƒCƒg–Ú‚©”Û‚©. (utf8‚âeuc‚Í \ –â‘è‚Í–³‚¢‚Ì‚Å 0‚ª‹A‚ê‚Îok)
+/// æ–‡å­— C ãŒ MSå…¨è§’ã®ï¼‘ãƒã‚¤ãƒˆç›®ã‹å¦ã‹. (utf8ã‚„eucã¯ \ å•é¡Œã¯ç„¡ã„ã®ã§ 0ãŒå¸°ã‚Œã°ok)
 int fname_ismbblead(unsigned char c)
 {
   #if defined _WIN32 || defined _WIN64
@@ -124,7 +124,7 @@ int fname_ismbblead(unsigned char c)
 }
 
 
-/// ƒtƒ@ƒCƒ‹ƒpƒX–¼’†‚ÌƒfƒBƒŒƒNƒgƒŠ‚ğœ‚¢‚½ƒtƒ@ƒCƒ‹–¼‚ÌˆÊ’u‚ğ•Ô‚·.
+/// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹åä¸­ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’é™¤ã„ãŸãƒ•ã‚¡ã‚¤ãƒ«åã®ä½ç½®ã‚’è¿”ã™.
 template<typename CHR_T>
 char *fname_baseName(const CHR_T *adr)
 {
@@ -145,7 +145,7 @@ char *fname_baseName(const CHR_T *adr)
 
 
 
-/** Šg’£q‚ÌˆÊ’u‚ğ•Ô‚·.
+/** æ‹¡å¼µå­ã®ä½ç½®ã‚’è¿”ã™.
  */
 template<typename CHR_T>
 char *fname_getExt(const CHR_T *name)
@@ -162,7 +162,7 @@ char *fname_getExt(const CHR_T *name)
 
 
 
-/** Šg’£q‚ğAext ‚É•ÏX‚·‚é.
+/** æ‹¡å¼µå­ã‚’ã€ext ã«å¤‰æ›´ã™ã‚‹.
  */
 template<typename CHR_T>
 char *fname_chgExt(CHR_T filename[], const char *ext)
@@ -187,7 +187,7 @@ char *fname_chgExt(CHR_T filename[], const char *ext)
 
 
 
-/** Šg’£q‚ª‚È‚¯‚ê‚ÎAext ‚ğ’Ç‰Á‚·‚é.
+/** æ‹¡å¼µå­ãŒãªã‘ã‚Œã°ã€ext ã‚’è¿½åŠ ã™ã‚‹.
  */
 template<typename CHR_T>
 char *fname_addExt(CHR_T filename[], const char *ext)
@@ -201,7 +201,7 @@ char *fname_addExt(CHR_T filename[], const char *ext)
 
 
 // ------------------------------------------------
-// ”ñí‚Éè”²‚«‚Èstd::string‘Î‰...
+// éå¸¸ã«æ‰‹æŠœããªstd::stringå¯¾å¿œ...
 
 
 

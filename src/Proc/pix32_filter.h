@@ -1,19 +1,19 @@
 /**
  *  @file   pix32_filter.h
- *  @brief  ƒtƒBƒ‹ƒ^
+ *  @brief  ãƒ•ã‚£ãƒ«ã‚¿
  */
 #ifndef PIX32_FILTER_H
 #define PIX32_FILTER_H
 
-#ifndef PIX32_ARGB  // a,r,g,bŒ‹‡••ª‰ğƒ}ƒNƒ
+#ifndef PIX32_ARGB  // a,r,g,bçµåˆï¼†åˆ†è§£ãƒã‚¯ãƒ­.
 
-/// 8bit’l‚Ìa,r,g,b‚ğŒq‚°‚Ä 32bit ‚ÌF’l‚É‚·‚é
+/// 8bitå€¤ã®a,r,g,bã‚’ç¹‹ã’ã¦ 32bit ã®è‰²å€¤ã«ã™ã‚‹.
 #define PIX32_ARGB(a,r,g,b)     ((((unsigned char)(a))<<24)|(((unsigned char)(r))<<16)|(((unsigned char)(g))<<8)|((unsigned char)(b)))
 
-#define PIX32_GET_B(argb)       ((unsigned char)(argb))         ///< argb’l’†‚Ì blue‚Ì’l‚ğæ“¾
-#define PIX32_GET_G(argb)       ((unsigned char)((argb) >>  8)) ///< argb’l’†‚Ì green‚Ì’l‚ğæ“¾
-#define PIX32_GET_R(argb)       ((unsigned char)((argb) >> 16)) ///< argb’l’†‚Ì green‚Ì’l‚ğæ“¾
-#define PIX32_GET_A(argb)       (((unsigned)(argb)) >> 24)      ///< argb’l’†‚Ì alpha‚Ì’l‚ğæ“¾
+#define PIX32_GET_B(argb)       ((unsigned char)(argb))         ///< argbå€¤ä¸­ã® blueã®å€¤ã‚’å–å¾—.
+#define PIX32_GET_G(argb)       ((unsigned char)((argb) >>  8)) ///< argbå€¤ä¸­ã® greenã®å€¤ã‚’å–å¾—.
+#define PIX32_GET_R(argb)       ((unsigned char)((argb) >> 16)) ///< argbå€¤ä¸­ã® greenã®å€¤ã‚’å–å¾—.
+#define PIX32_GET_A(argb)       (((unsigned)(argb)) >> 24)      ///< argbå€¤ä¸­ã® alphaã®å€¤ã‚’å–å¾—.
 
 #endif
 

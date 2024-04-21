@@ -1,10 +1,10 @@
 /**
  *  @file   def.h
- *  @brief  ЋG‘Ѕ‚ИЉо–{’и‹`ЃBѓRѓ}ѓ“ѓhѓ‰ѓCѓ“Ѓ•Win—p‚МЉИ€Х‚И1ѓwѓbѓ_ѓtѓ@ѓCѓ‹”Е.
+ *  @brief  й›‘е¤љгЃЄеџєжњ¬е®љзѕ©гЂ‚г‚ігѓћгѓігѓ‰гѓ©г‚¤гѓіпј†Winз”ЁгЃ®з°Ўж“гЃЄ1гѓгѓѓгѓЂгѓ•г‚Ўг‚¤гѓ«з‰€.
  *  @author Masashi KITAMURA
  *  @note
- *      •Ўђ”‚Мѓtѓ@ѓCѓ‹‚Й•Є‚©‚к‚Д‚ў‚й‚ЖЊ‹‹ЗЋg‚ў‚Ь‚н‚µ‚Й‚­‚ў‚М‚ЕЃA
- *      ЌЕЏ¬ЊА‚МѓRѓ“ѓpѓCѓ‰’ТелЌ‡‚н‚№‚М’и‹`ЃA‚ЖЃAѓfѓoѓbѓO—pѓ}ѓNѓЌ‚М‚ЭђЭ’и.
+ *      и¤‡ж•°гЃ®гѓ•г‚Ўг‚¤гѓ«гЃ«е€†гЃ‹г‚ЊгЃ¦гЃ„г‚‹гЃЁзµђе±ЂдЅїгЃ„гЃѕг‚ЏгЃ—гЃ«гЃЏгЃ„гЃ®гЃ§гЂЃ
+ *      жњЂе°Џй™ђгЃ®г‚ігѓігѓ‘г‚¤гѓ©иѕ»и¤„еђ€г‚ЏгЃ›гЃ®е®љзѕ©гЂЃгЃЁгЂЃгѓ‡гѓђгѓѓг‚°з”Ёгѓћг‚Їгѓ­гЃ®гЃїиЁ­е®љ.
  */
 
 #ifndef DEF_H
@@ -13,18 +13,18 @@
 
 
 // ===========================================================================
-// ѓRѓ“ѓpѓCѓ‰•К‚МЌЕЏ¬ЊА‚М’Іђ®.
+// г‚ігѓігѓ‘г‚¤гѓ©е€ҐгЃ®жњЂе°Џй™ђгЃ®иЄїж•ґ.
 
 
 #if defined(_M_IX86) || defined(_X86_) || defined(_M_AMD64)
-  #define ENABLE_BYTE_ALIGN     // ѓAѓ‰ѓCѓЃѓ“ѓg‚ЄѓoѓCѓg’P€К‚Е‚а—Ћ‚ї‚Г‚ЙѓЃѓ‚ѓЉѓAѓNѓZѓX‰В”\.
+  #define ENABLE_BYTE_ALIGN     // г‚ўгѓ©г‚¤гѓЎгѓігѓ€гЃЊгѓђг‚¤гѓ€еЌдЅЌгЃ§г‚‚иђЅгЃЎгЃҐгЃ«гѓЎгѓўгѓЄг‚ўг‚Їг‚»г‚№еЏЇиѓЅ.
   #undef  BIG_ENDIAN
   //#ifndef _X86_
   //#define _X86_
   //#endif
-  #if defined(_MSC_VER)         // vc 7.1(.net 2003)€ИЌ~‚р‘ОЏЫ.
-    #define _USE_MATH_DEFINES   // math.h ‚Е’и‹`‚і‚к‚йѓ‰ѓxѓ‹–ј‚рЋg‚¤ЏкЌ‡‚Нђж‚Й’и‹`‚·‚й.
-  #elif defined(__GNUC__)       // mingw gcc v3.?€ИЌ~.
+  #if defined(_MSC_VER)         // vc 7.1(.net 2003)д»Ґй™Ќг‚’еЇѕи±Ў.
+    #define _USE_MATH_DEFINES   // math.h гЃ§е®љзѕ©гЃ•г‚Њг‚‹гѓ©гѓ™гѓ«еђЌг‚’дЅїгЃ†е ґеђ€гЃЇе…€гЃ«е®љзѕ©гЃ™г‚‹.
+  #elif defined(__GNUC__)       // mingw gcc v3.?д»Ґй™Ќ.
     //#ifndef _M_IX86
     //#define _M_IX86
     //#endif
@@ -41,10 +41,10 @@
   #endif
 
 #elif defined(_PPC_)
-  #define ENABLE_BYTE_ALIGN     // ѓAѓ‰ѓCѓЃѓ“ѓg‚ЄѓoѓCѓg’P€К‚Е‚а—Ћ‚ї‚Г‚ЙѓЃѓ‚ѓЉѓAѓNѓZѓX‰В”\.
+  #define ENABLE_BYTE_ALIGN     // г‚ўгѓ©г‚¤гѓЎгѓігѓ€гЃЊгѓђг‚¤гѓ€еЌдЅЌгЃ§г‚‚иђЅгЃЎгЃҐгЃ«гѓЎгѓўгѓЄг‚ўг‚Їг‚»г‚№еЏЇиѓЅ.
   #define BIG_ENDIAN
 
-#else   // ѓ^Ѓ[ѓQѓbѓgЊь‚Ї
+#else   // г‚їгѓјг‚Ігѓѓгѓ€еђ‘гЃ‘.
   #ifndef __inline
     #define __inline    inline
   #endif
@@ -62,9 +62,8 @@
 
 
 // =====================================================
-// Љо–{ ’и‹`‚М ѓ‰ѓCѓuѓ‰ѓЉЃEѓwѓbѓ_‚М include.
+// еџєжњ¬ е®љзѕ©гЃ® гѓ©г‚¤гѓ–гѓ©гѓЄгѓ»гѓгѓѓгѓЂгЃ® include.
 
-// C C++ ‘ОЌф
 #ifdef __cplusplus
  #define EXTERN_C       extern "C"
  #include <cstddef>
@@ -88,8 +87,8 @@
 
 
 // =====================================================
-// stdint ‚Н–ў‚ѕ‚Й vc ‚Н–ўѓTѓ|Ѓ[ѓg‚Е•s•Ц‚И‚М‚ЕЃAЌЕ’бЊА‚МЊ^‚р’и‹`.
-// (boost‚вSDL‚рЋg‚¤‚Щ‚¤‚Є–і“п‚©‚а)
+// stdint гЃЇжњЄгЃ гЃ« vc гЃЇжњЄг‚µгѓќгѓјгѓ€гЃ§дёЌдѕїгЃЄгЃ®гЃ§гЂЃжњЂдЅЋй™ђгЃ®ећ‹г‚’е®љзѕ©.
+// (boostг‚„SDLг‚’дЅїгЃ†гЃ»гЃ†гЃЊз„Ўй›ЈгЃ‹г‚‚)
 
 #if (defined _MSC_VER && _MSC_VER < 1600) || (defined __BORLANDC__ && __BORLANDC__ <= 0x0551)
 typedef __int8              int8_t;
@@ -123,7 +122,7 @@ typedef uint64_t            uintmax_t;
 #if defined(HAVE_INT128)
 typedef long long          __INT128;
 typedef unsigned long long __UINT128;
-#else   // ‹UЋТ
+#else   // еЃЅиЂ….
 
 typedef union __UINT128 {
     double      align;
@@ -157,13 +156,13 @@ typedef union __INT128 {
 
 // =====================================================
 
-// offsetofѓ}ѓNѓЌ‚Нansi‹KЉi(c94)‚ѕ‚ЄЃA–ў’и‹`‚Мѓ‰ѓCѓuѓ‰ѓЉ‚а‚ ‚й‚Ѕ‚Я.
+// offsetofгѓћг‚Їгѓ­гЃЇansiи¦Џж ј(c94)гЃ гЃЊгЂЃжњЄе®љзѕ©гЃ®гѓ©г‚¤гѓ–гѓ©гѓЄг‚‚гЃ‚г‚‹гЃџг‚Ѓ.
 #if defined(offsetof) == 0
  #define offsetof(t,m)      ((unsigned)&(((t*)0)->m))
 #endif
 
 
-// C99–ў–ћ‚МC‚ѕ‚Жinline‚Є‚И‚ў...‚ЄWin—pѓRѓ“ѓpѓCѓ‰‚Е‚Н__inline‚Н‘е’п‚ ‚й‚М‚Е.
+// C99жњЄжєЂгЃ®CгЃ гЃЁinlineгЃЊгЃЄгЃ„...гЃЊWinз”Ёг‚ігѓігѓ‘г‚¤гѓ©гЃ§гЃЇ__inlineгЃЇе¤§жЉµгЃ‚г‚‹гЃ®гЃ§.
 #if (defined(__cplusplus) == 0) && (defined __STDC_VERSION__ == 0 || __STDC_VERSION__ < 199901L)
  #define inline     __inline
 #endif
@@ -172,7 +171,7 @@ typedef union __INT128 {
 
 
 // =====================================================
-// winЉВ‹«‚М‚Ж‚«‚НЃAwindows—p‚М’и‹`‚р“З‚ЭЌћ‚с‚Е‚Ё‚­
+// winз’°еўѓгЃ®гЃЁгЃЌгЃЇгЂЃwindowsз”ЁгЃ®е®љзѕ©г‚’иЄ­гЃїиѕјг‚“гЃ§гЃЉгЃЏ.
 
 #if defined _WINDOWS
 #include <windows.h>
@@ -188,16 +187,16 @@ typedef union __INT128 {
 // ===========================================================================
 
 // ===========================================================================
-// ѓfѓoѓbѓOЃEѓЌѓOЏo—Нѓ}ѓNѓЌ
+// гѓ‡гѓђгѓѓг‚°гѓ»гѓ­г‚°е‡єеЉ›гѓћг‚Їгѓ­.
 
 
 #if (defined DBG_TARGET)
-// DBG_TARGET‚рђЭ’и‚µ‚Ѕ‚зЃA•К“rЃAѓ^Ѓ[ѓQѓbѓg—p‚М‰є‹L3ЉЦђ”‚р•Кѓtѓ@ѓCѓ‹‚Й—p€У‚·‚й‚±‚Ж
+// DBG_TARGETг‚’иЁ­е®љгЃ—гЃџг‚‰гЂЃе€ҐйЂ”гЂЃг‚їгѓјг‚Ігѓѓгѓ€з”ЁгЃ®дё‹иЁ3й–ўж•°г‚’е€Ґгѓ•г‚Ўг‚¤гѓ«гЃ«з”Ёж„ЏгЃ™г‚‹гЃ“гЃЁ.
 
 EXTERN_C int err_abort();
 EXTERN_C int err_printf(const char *fmt, ...);
 
-#else   // DBG_TARGET ‚МЋw’и‚Є‚И‚Ї‚к‚ОЃA‚±‚МЏк‚ЕђЭ’и
+#else   // DBG_TARGET гЃ®жЊ‡е®љгЃЊгЃЄгЃ‘г‚ЊгЃ°гЂЃгЃ“гЃ®е ґгЃ§иЁ­е®љ.
 
 #if defined _WINDOWS
 
@@ -209,7 +208,7 @@ EXTERN_C int err_printf(const char *fmt, ...);
 #pragma warning(disable: 4702)
 #endif
 
-/// ‹­€ш‚ИѓvѓЌѓOѓ‰ѓЂЏI—№(Ће‚ЙѓfѓoѓbѓOЊь‚Ї)
+/// еј·еј•гЃЄгѓ—гѓ­г‚°гѓ©гѓ зµ‚дє†(дё»гЃ«гѓ‡гѓђгѓѓг‚°еђ‘гЃ‘)
 static inline int err_abort() {
   #if defined __cplusplus && defined USE_DBG_EXIT_IS_THROW
     throw std::exception();
@@ -221,7 +220,7 @@ static inline int err_abort() {
 }
 
 
-/// Win‚МѓfѓoѓbѓOѓЌѓO‘‹‚ЦЏo—Н&ЏI—№
+/// WinгЃ®гѓ‡гѓђгѓѓг‚°гѓ­г‚°зЄ“гЃёе‡єеЉ›&зµ‚дє†.
 static inline int err_abortMsg(const char *fmt, ...) {
     char    buf[0x1000];
     va_list     args;
@@ -233,7 +232,7 @@ static inline int err_abortMsg(const char *fmt, ...) {
 }
 
 
-/// Win‚МѓfѓoѓbѓOѓЌѓO‘‹‚ЦЏo—Н
+/// WinгЃ®гѓ‡гѓђгѓѓг‚°гѓ­г‚°зЄ“гЃёе‡єеЉ›.
 static inline int err_printf(const char *fmt, ...) {
     char    buf[0x1000];
     va_list     args;
@@ -250,7 +249,7 @@ static inline int err_printf(const char *fmt, ...) {
 
 
 #else   // ------------------------------------------------------
-// ѓRѓ“ѓ\Ѓ[ѓ‹—p
+// г‚ігѓіг‚Ѕгѓјгѓ«з”Ё.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -265,7 +264,7 @@ static inline int err_printf(const char *fmt, ...) {
 #pragma warning(disable: 4702)
 #endif
 
-/// ‹­€ш‚ИѓvѓЌѓOѓ‰ѓЂЏI—№(Ће‚ЙѓfѓoѓbѓOЊь‚Ї)
+/// еј·еј•гЃЄгѓ—гѓ­г‚°гѓ©гѓ зµ‚дє†(дё»гЃ«гѓ‡гѓђгѓѓг‚°еђ‘гЃ‘)
 static inline int err_abort() {
   #if defined __cplusplus && defined USE_DBG_EXIT_IS_THROW
     throw std::exception();
@@ -277,7 +276,7 @@ static inline int err_abort() {
 }
 
 
-/// •WЏЂЏo—Н‚ЦѓfѓoѓbѓOѓЌѓO‚рЏo—Н
+/// жЁ™жє–е‡єеЉ›гЃёгѓ‡гѓђгѓѓг‚°гѓ­г‚°г‚’е‡єеЉ›.
 static inline int err_printf(const char *fmt, ...) {
     int n;
     va_list     args;
@@ -289,7 +288,7 @@ static inline int err_printf(const char *fmt, ...) {
 }
 
 
-/// •WЏЂЏo—Н‚ЦѓfѓoѓbѓOѓЌѓO‚рЏo—Н&‹­ђ§ЏI—№
+/// жЁ™жє–е‡єеЉ›гЃёгѓ‡гѓђгѓѓг‚°гѓ­г‚°г‚’е‡єеЉ›&еј·е€¶зµ‚дє†.
 static inline int err_abortMsg(const char *fmt, ...) {
     va_list     args;
     va_start(args, fmt);
@@ -313,23 +312,23 @@ static inline int err_abortMsg(const char *fmt, ...) {
 
 
 // ===========================================================================
-// ѓfѓoѓbѓOЊь‚Їѓ}ѓNѓЌ
+// гѓ‡гѓђгѓѓг‚°еђ‘гЃ‘гѓћг‚Їгѓ­.
 
-// ђ”’l‚р"ђ”’l"•¶Ћљ—с‰»
+// ж•°еЂ¤г‚’"ж•°еЂ¤"ж–‡е­—е€—еЊ–.
 #define DBG_I2STR(a)        DBG_I2STR_2(a)
 #define DBG_I2STR_2(a)      #a
 #define DBG_I2I(a)          a
 
-// 2‚В‚М€шђ”‚рAЊ‹‚µ‚Д‚P‚В‚Мѓ‰ѓxѓ‹‚рђ¶ђ¬
+// 2гЃ¤гЃ®еј•ж•°г‚’йЂЈзµђгЃ—гЃ¦пј‘гЃ¤гЃ®гѓ©гѓ™гѓ«г‚’з”џж€ђ.
 #define DBG_STR_CAT(a,b)    DBG_STR_CAT_2(a,b)
 #define DBG_STR_CAT_2(a,b)  a##b
 
-/// ѓRѓ“ѓpѓCѓ‹Ћћassert.
+/// г‚ігѓігѓ‘г‚¤гѓ«ж™‚assert.
 #define DBG_STATIC_ASSERT(cc)   struct DBG_STR_CAT(STATIC_ASSERT_CHECK_ST,__LINE__) { char dmy[2*((cc)!=0) - 1];}; enum { DBG_STR_CAT(STATIC_ASSERT_CHECK,__LINE__) = sizeof( DBG_STR_CAT(STATIC_ASSERT_CHECK_ST,__LINE__) ) }
 
 
 
-// __FUNCTION__‚Є‚ ‚к‚О‚»‚к‚рЋg‚¤(Њ‹‹ЗC99‚Й‚И‚Б‚Д‚И‚©‚Б‚Ѕ‚М‚Л‚с...)
+// __FUNCTION__гЃЊгЃ‚г‚ЊгЃ°гЃќг‚Њг‚’дЅїгЃ†(зµђе±ЂC99гЃ«гЃЄгЃЈгЃ¦гЃЄгЃ‹гЃЈгЃџгЃ®гЃ­г‚“...)
 #if defined(__FUNCTION__) == 0
     #if (defined __STDC_VERSION__ == 0 || __STDC_VERSION__ < 199901L)
         #define __FUNCTION__    ""              // __FILE__ "(" DBG_I2STR(__LINE__) ")"
@@ -341,82 +340,82 @@ static inline int err_abortMsg(const char *fmt, ...) {
 
 
 
-#if defined( NDEBUG )   // defined(NDEBUG) // ѓЉѓЉЃ[ѓXЋћ - - - - - -
-// ѓЉѓЉЃ[ѓXЋћ‚Н‚±‚к‚з‚Мѓ}ѓNѓЌ‚НЋА‘М‚Є–і‚­‚И‚й
-// ѓ}ѓNѓЌ‚М‚Ѕ‚ЯЃAprintfѓXѓ^ѓCѓ‹‚МЋw’и‚НЃA
+#if defined( NDEBUG )   // defined(NDEBUG) // гѓЄгѓЄгѓјг‚№ж™‚ - - - - - -
+// гѓЄгѓЄгѓјг‚№ж™‚гЃЇгЃ“г‚Њг‚‰гЃ®гѓћг‚Їгѓ­гЃЇе®џдЅ“гЃЊз„ЎгЃЏгЃЄг‚‹.
+// гѓћг‚Їгѓ­гЃ®гЃџг‚ЃгЂЃprintfг‚№г‚їг‚¤гѓ«гЃ®жЊ‡е®љгЃЇ,
 //      ERR_PRINTF(("err=%d\n",err));
-//  ‚М‚ж‚¤‚Й(( ))‚р—p‚ў‚й.
+//  гЃ®г‚€гЃ†гЃ«(( ))г‚’з”ЁгЃ„г‚‹.
 
-#if (defined DBG_TARGET)            // ѓ^Ѓ[ѓQѓbѓgЉВ‹«‚МѓЉѓЉЃ[ѓX‚Е‚НЃAѓGѓ‰Ѓ[‚Н–іЋ‹‚µ‚Д‘–‚з‚№‚й...
-#define ERR_PRINTF(s)               ///< ѓGѓ‰Ѓ[ѓЌѓOЏo—Н
-#define ERR_ABORT()                 ///< ѓGѓ‰Ѓ[ЏI—№
-#define ERR_ABORTMSG(s)             ///< printfЊ`Ћ®‚ЕѓЃѓbѓZЃ[ѓWЋw’и‚ ‚и‚МѓGѓ‰Ѓ[ЏI—№
-#define ERR_EXIT(s)                 ///< printfЊ`Ћ®‚ЕѓЃѓbѓZЃ[ѓWЋw’и‚ ‚и‚МѓGѓ‰Ѓ[ЏI—№
-#else                               // ѓ^Ѓ[ѓQѓbѓg‚МЋw’и‚М–і‚ўЏкЌ‡‚НЃAѓRѓ“ѓ\Ѓ[ѓ‹ѓAѓvѓЉ‚Ж‚µ‚Д“®Ќм‚і‚№‚йЃB
+#if (defined DBG_TARGET)            // г‚їгѓјг‚Ігѓѓгѓ€з’°еўѓгЃ®гѓЄгѓЄгѓјг‚№гЃ§гЃЇгЂЃг‚Ёгѓ©гѓјгЃЇз„Ўи¦–гЃ—гЃ¦иµ°г‚‰гЃ›г‚‹...
+#define ERR_PRINTF(s)               ///< г‚Ёгѓ©гѓјгѓ­г‚°е‡єеЉ›.
+#define ERR_ABORT()                 ///< г‚Ёгѓ©гѓјзµ‚дє†.
+#define ERR_ABORTMSG(s)             ///< printfеЅўејЏгЃ§гѓЎгѓѓг‚»гѓјг‚ёжЊ‡е®љгЃ‚г‚ЉгЃ®г‚Ёгѓ©гѓјзµ‚дє†.
+#define ERR_EXIT(s)                 ///< printfеЅўејЏгЃ§гѓЎгѓѓг‚»гѓјг‚ёжЊ‡е®љгЃ‚г‚ЉгЃ®г‚Ёгѓ©гѓјзµ‚дє†.
+#else                               // г‚їгѓјг‚Ігѓѓгѓ€гЃ®жЊ‡е®љгЃ®з„ЎгЃ„е ґеђ€гЃЇгЂЃг‚ігѓіг‚Ѕгѓјгѓ«г‚ўгѓ—гѓЄгЃЁгЃ—гЃ¦е‹•дЅњгЃ•гЃ›г‚‹.
 #define ERR_PRINTF(s)   (err_printf s)
 #define ERR_ABORT()     (err_abort())
 #define ERR_ABORTMSG(s) (err_abortMsg s)
 #define ERR_EXIT(s)     ERR_ABORTMSG(s)
 #endif
-#define ERR_ROUTE()                 ///< ђв‘О‚Й—€‚И‚ўѓ‹Ѓ[ѓg‚Й’u‚­assert(0)Њр‘гѓ}ѓNѓЌ
+#define ERR_ROUTE()                 ///< зµ¶еЇѕгЃ«жќҐгЃЄгЃ„гѓ«гѓјгѓ€гЃ«зЅ®гЃЏassert(0)дє¤д»Јгѓћг‚Їгѓ­.
 
-#define DBG_M()                     ///< ЉJ”­Ћћ‚Мѓ‹Ѓ[ѓg’К‰Яѓ`ѓFѓbѓN—pѓ}ѓNѓЌ
-#define DBG_PRINTF(s)               ///< ѓGѓ‰Ѓ[ѓЌѓOЏo—Н
-#define DBG_ABORT()                 ///< ѓGѓ‰Ѓ[ЏI—№
-#define DBG_ABORTMSG(s)             ///< printfЊ`Ћ®‚ЕѓЃѓbѓZЃ[ѓWЋw’и‚ ‚и‚МѓGѓ‰Ѓ[ЏI—№
-#define DBG_BAD_ROUTE()             ///< ђв‘О‚Й—€‚И‚ўѓ‹Ѓ[ѓg‚Й’u‚­assert(0)Њр‘гѓ}ѓNѓЌ
+#define DBG_M()                     ///< й–‹з™єж™‚гЃ®гѓ«гѓјгѓ€йЂљйЃЋгѓЃг‚§гѓѓг‚Їз”Ёгѓћг‚Їгѓ­.
+#define DBG_PRINTF(s)               ///< г‚Ёгѓ©гѓјгѓ­г‚°е‡єеЉ›.
+#define DBG_ABORT()                 ///< г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_ABORTMSG(s)             ///< printfеЅўејЏгЃ§гѓЎгѓѓг‚»гѓјг‚ёжЊ‡е®љгЃ‚г‚ЉгЃ®г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_BAD_ROUTE()             ///< зµ¶еЇѕгЃ«жќҐгЃЄгЃ„гѓ«гѓјгѓ€гЃ«зЅ®гЃЏassert(0)дє¤д»Јгѓћг‚Їгѓ­.
 
-#define DBG_ASSERT(x)               ///< assert(x)‚МЊр‘г•Ё. x‚Є‹U‚И‚зѓGѓ‰Ѓ[ЏI—№
-#define DBG_ASSERT_THROW(x)         ///< ‰Ѕ‚©—бЉO‚Є‹A‚Б‚Д‚«‚Ѕ‚зђ^ЃA‚И‚Ї‚к‚О‹U‚ЕѓGѓ‰Ѓ[ЏI—№
+#define DBG_ASSERT(x)               ///< assert(x)гЃ®дє¤д»Јз‰©. xгЃЊеЃЅгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_ASSERT_THROW(x)         ///< дЅ•гЃ‹дѕ‹е¤–гЃЊеё°гЃЈгЃ¦гЃЌгЃџг‚‰зњџгЂЃгЃЄгЃ‘г‚ЊгЃ°еЃЅгЃ§г‚Ёгѓ©гѓјзµ‚дє†.
 
-#define DBG_NOCHK(a)                ///< a‚Нѓ`ѓFѓbѓN‚µ‚И‚ўЃA‚Ж‚ў‚¤ѓRѓЃѓ“ѓg‚М•П‚н‚и.
-#define DBG_LIM_I(a, mi, ma)        ///< ђ®ђ” a ‚Є [mi,ma]‚М”Н€НЉO‚И‚зѓGѓ‰Ѓ[ЏI—№
-#define DBG_LIM_U(a, ma)            ///< •„Ќ†–іђ®ђ” a ‚Є [0 ,ma]‚М”Н€НЉO‚И‚зѓGѓ‰Ѓ[ЏI—№
-#define DBG_LIM_BOOL(a)             ///< a ‚Є 0 or 1 ‚И‚зokЃA€б‚¦‚ОѓGѓ‰Ѓ[ЏI—№
-#define DBG_LIM_F(a, mi, ma)        ///< a ‚Є [mi,ma]‚М”Н€НЉO‚И‚зѓGѓ‰Ѓ[ЏI—№
-#define DBG_LIM_D(a, mi, ma)        ///< a ‚Є [mi,ma]‚М”Н€НЉO‚И‚зѓGѓ‰Ѓ[ЏI—№
-#define DBG_LIM_CSTR(s, sz)         ///< s ‚Є szѓoѓCѓg€И‰є‚М•¶Ћљ—с‚Ц‚Мѓ|ѓCѓ“ѓ^‚И‚зok. ng‚И‚зѓGѓ‰Ѓ[ЏI—№.
-#define DBG_LIM_CSTR0(s, sz)        ///< s ‚Є NULL ‚©szѓoѓCѓg€И‰є‚М•¶Ћљ—с‚Ц‚Мѓ|ѓCѓ“ѓ^‚И‚зok. ng‚И‚зѓGѓ‰Ѓ[ЏI—№.
+#define DBG_NOCHK(a)                ///< aгЃЇгѓЃг‚§гѓѓг‚ЇгЃ—гЃЄгЃ„гЂЃгЃЁгЃ„гЃ†г‚ігѓЎгѓігѓ€гЃ®е¤‰г‚Џг‚Љ.
+#define DBG_LIM_I(a, mi, ma)        ///< ж•ґж•° a гЃЊ [mi,ma]гЃ®зЇ„е›Іе¤–гЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_LIM_U(a, ma)            ///< з¬¦еЏ·з„Ўж•ґж•° a гЃЊ [0 ,ma]гЃ®зЇ„е›Іе¤–гЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_LIM_BOOL(a)             ///< a гЃЊ 0 or 1 гЃЄг‚‰okгЂЃйЃ•гЃ€гЃ°г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_LIM_F(a, mi, ma)        ///< a гЃЊ [mi,ma]гЃ®зЇ„е›Іе¤–гЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_LIM_D(a, mi, ma)        ///< a гЃЊ [mi,ma]гЃ®зЇ„е›Іе¤–гЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_LIM_CSTR(s, sz)         ///< s гЃЊ szгѓђг‚¤гѓ€д»Ґдё‹гЃ®ж–‡е­—е€—гЃёгЃ®гѓќг‚¤гѓіг‚їгЃЄг‚‰ok. ngгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_LIM_CSTR0(s, sz)        ///< s гЃЊ NULL гЃ‹szгѓђг‚¤гѓ€д»Ґдё‹гЃ®ж–‡е­—е€—гЃёгЃ®гѓќг‚¤гѓіг‚їгЃЄг‚‰ok. ngгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
 
-#define DBG_CHK_PTR(p, asz)         ///< p ‚Є ѓAѓ‰ѓCѓЃѓ“ѓgasz‚р–ћ‚Ѕ‚№‚Оok. ng‚И‚зѓGѓ‰Ѓ[ЏI—№
-#define DBG_CHK_PTR0(p, asz)        ///< p ‚Є NULL ‚©ѓAѓ‰ѓCѓЃѓ“ѓgasz‚р–ћ‚Ѕ‚№‚Оok. ng‚И‚зѓGѓ‰Ѓ[ЏI—№
+#define DBG_CHK_PTR(p, asz)         ///< p гЃЊ г‚ўгѓ©г‚¤гѓЎгѓігѓ€aszг‚’жєЂгЃџгЃ›гЃ°ok. ngгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_CHK_PTR0(p, asz)        ///< p гЃЊ NULL гЃ‹г‚ўгѓ©г‚¤гѓЎгѓігѓ€aszг‚’жєЂгЃџгЃ›гЃ°ok. ngгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
 
-#define DBG_CHK_MPTR(p)             ///< p ‚Є malloc‚і‚к‚Ѕѓ|ѓCѓ“ѓ^‚М‰В”\ђ«‚Є‚ ‚к‚Оok. ‚И‚Ї‚к‚ОѓGѓ‰Ѓ[ЏI—№.
-#define DBG_CHK_MPTR0(p)            ///< p ‚Є NULL ‚©malloc‚і‚к‚Ѕѓ|ѓCѓ“ѓ^‚М‰В”\ђ«‚Є‚ ‚к‚Оok. ‚И‚Ї‚к‚ОѓGѓ‰Ѓ[ЏI—№.
+#define DBG_CHK_MPTR(p)             ///< p гЃЊ mallocгЃ•г‚ЊгЃџгѓќг‚¤гѓіг‚їгЃ®еЏЇиѓЅжЂ§гЃЊгЃ‚г‚ЊгЃ°ok. гЃЄгЃ‘г‚ЊгЃ°г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_CHK_MPTR0(p)            ///< p гЃЊ NULL гЃ‹mallocгЃ•г‚ЊгЃџгѓќг‚¤гѓіг‚їгЃ®еЏЇиѓЅжЂ§гЃЊгЃ‚г‚ЊгЃ°ok. гЃЄгЃ‘г‚ЊгЃ°г‚Ёгѓ©гѓјзµ‚дє†.
 
-#define DBG_CHK_PTRPTR(p)           ///< p ‚Є sizeof(void*) ѓoѓCѓgѓAѓ‰ѓCѓЃѓ“ѓg‚Мѓ|ѓCѓ“ѓ^‚И‚зok. ng‚И‚зѓGѓ‰Ѓ[ЏI—№.
-#define DBG_CHK_PTRPTR0(p)          ///< p ‚Є NULL ‚© sizeof(void*) ѓoѓCѓgѓAѓ‰ѓCѓЃѓ“ѓg‚Мѓ|ѓCѓ“ѓ^‚И‚зok. ng‚И‚зѓGѓ‰Ѓ[ЏI—№.
+#define DBG_CHK_PTRPTR(p)           ///< p гЃЊ sizeof(void*) гѓђг‚¤гѓ€г‚ўгѓ©г‚¤гѓЎгѓігѓ€гЃ®гѓќг‚¤гѓіг‚їгЃЄг‚‰ok. ngгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_CHK_PTRPTR0(p)          ///< p гЃЊ NULL гЃ‹ sizeof(void*) гѓђг‚¤гѓ€г‚ўгѓ©г‚¤гѓЎгѓігѓ€гЃ®гѓќг‚¤гѓіг‚їгЃЄг‚‰ok. ngгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
 
-#define DBG_CHK_SHORTPTR(p)         ///< p ‚Є sizeof(short) ѓoѓCѓgѓAѓ‰ѓCѓЃѓ“ѓg‚Мѓ|ѓCѓ“ѓ^‚И‚зok. ng‚И‚зѓGѓ‰Ѓ[ЏI—№.
-#define DBG_CHK_SHORTPTR0(p)        ///< p ‚Є NULL ‚© sizeof(short) ѓoѓCѓgѓAѓ‰ѓCѓЃѓ“ѓg‚Мѓ|ѓCѓ“ѓ^‚И‚зok. ng‚И‚зѓGѓ‰Ѓ[ЏI—№.
-#define DBG_CHK_INTPTR(p)           ///< p ‚Є sizeof(int) ѓoѓCѓgѓAѓ‰ѓCѓЃѓ“ѓg‚Мѓ|ѓCѓ“ѓ^‚И‚зok. ng‚И‚зѓGѓ‰Ѓ[ЏI—№.
-#define DBG_CHK_INTPTR0(p)          ///< p ‚Є NULL ‚© sizeof(int) ѓoѓCѓgѓAѓ‰ѓCѓЃѓ“ѓg‚Мѓ|ѓCѓ“ѓ^‚И‚зok. ng‚И‚зѓGѓ‰Ѓ[ЏI—№.
-#define DBG_CHK_LONGPTR(p)          ///< p ‚Є sizeof(long) ѓoѓCѓgѓAѓ‰ѓCѓЃѓ“ѓg‚Мѓ|ѓCѓ“ѓ^‚И‚зok. ng‚И‚зѓGѓ‰Ѓ[ЏI—№.
-#define DBG_CHK_LONGPTR0(p)         ///< p ‚Є NULL ‚© sizeof(long) ѓoѓCѓgѓAѓ‰ѓCѓЃѓ“ѓg‚Мѓ|ѓCѓ“ѓ^‚И‚зok. ng‚И‚зѓGѓ‰Ѓ[ЏI—№.
-#define DBG_CHK_LONGLONGPTR(p)      ///< p ‚Є sizeof(long long) ѓoѓCѓgѓAѓ‰ѓCѓЃѓ“ѓg‚Мѓ|ѓCѓ“ѓ^‚И‚зok. ng‚И‚зѓGѓ‰Ѓ[ЏI—№.
-#define DBG_CHK_LONGLONGPTR0(p)     ///< p ‚Є NULL ‚© sizeof(long long) ѓoѓCѓgѓAѓ‰ѓCѓЃѓ“ѓg‚Мѓ|ѓCѓ“ѓ^‚И‚зok. ng‚И‚зѓGѓ‰Ѓ[ЏI—№.
+#define DBG_CHK_SHORTPTR(p)         ///< p гЃЊ sizeof(short) гѓђг‚¤гѓ€г‚ўгѓ©г‚¤гѓЎгѓігѓ€гЃ®гѓќг‚¤гѓіг‚їгЃЄг‚‰ok. ngгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_CHK_SHORTPTR0(p)        ///< p гЃЊ NULL гЃ‹ sizeof(short) гѓђг‚¤гѓ€г‚ўгѓ©г‚¤гѓЎгѓігѓ€гЃ®гѓќг‚¤гѓіг‚їгЃЄг‚‰ok. ngгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_CHK_INTPTR(p)           ///< p гЃЊ sizeof(int) гѓђг‚¤гѓ€г‚ўгѓ©г‚¤гѓЎгѓігѓ€гЃ®гѓќг‚¤гѓіг‚їгЃЄг‚‰ok. ngгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_CHK_INTPTR0(p)          ///< p гЃЊ NULL гЃ‹ sizeof(int) гѓђг‚¤гѓ€г‚ўгѓ©г‚¤гѓЎгѓігѓ€гЃ®гѓќг‚¤гѓіг‚їгЃЄг‚‰ok. ngгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_CHK_LONGPTR(p)          ///< p гЃЊ sizeof(long) гѓђг‚¤гѓ€г‚ўгѓ©г‚¤гѓЎгѓігѓ€гЃ®гѓќг‚¤гѓіг‚їгЃЄг‚‰ok. ngгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_CHK_LONGPTR0(p)         ///< p гЃЊ NULL гЃ‹ sizeof(long) гѓђг‚¤гѓ€г‚ўгѓ©г‚¤гѓЎгѓігѓ€гЃ®гѓќг‚¤гѓіг‚їгЃЄг‚‰ok. ngгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_CHK_LONGLONGPTR(p)      ///< p гЃЊ sizeof(long long) гѓђг‚¤гѓ€г‚ўгѓ©г‚¤гѓЎгѓігѓ€гЃ®гѓќг‚¤гѓіг‚їгЃЄг‚‰ok. ngгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_CHK_LONGLONGPTR0(p)     ///< p гЃЊ NULL гЃ‹ sizeof(long long) гѓђг‚¤гѓ€г‚ўгѓ©г‚¤гѓЎгѓігѓ€гЃ®гѓќг‚¤гѓіг‚їгЃЄг‚‰ok. ngгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
 
-#define DBG_ARY_INVARIANT(clsAry,num)   ///< class”z—сclsAry[num] ‚М 0Ѓ`num-1‚М”Н€Н‚Мinvariant()‚рЊД‚СЏo‚·.
+#define DBG_ARY_INVARIANT(clsAry,num)   ///< classй…Ќе€—clsAry[num] гЃ® 0пЅћnum-1гЃ®зЇ„е›ІгЃ®invariant()г‚’е‘јгЃіе‡єгЃ™.
 
-// CppUnit ‚Й‚ ‚йѓ`ѓFѓbѓN‚М—ЮЋ—•i(Њ‹‰К“I‚ЙЊ‹Ќ\‚ї‚Є‚¤‚Є...)
-#define DBG_ASSERT_MESSAGE(msg, cond)                       ///< cond‚Є‹U‚ѕ‚Б‚Ѕ‚зmsg‚рЏo—Н‚µ‚ДЏI—№.
-#define DBG_FAIL( msg )                                     ///< msg‚рЏo—Н‚µ‚Д•K‚ёЏI—№.
-#define DBG_ASSERT_EQUAL( expected, actual )                ///< expected == actual ‚И‚зђ^ЃA‹U‚И‚зѓGѓ‰Ѓ[ЏI—№
-#define DBG_ASSERT_EQUAL_MESSAGE( message,expected,actual ) ///< expected == actual ‚И‚зђ^ЃA‹U‚И‚зmessage‚рЏo—Н‚µ‚ДѓGѓ‰Ѓ[ЏI—№
-#define DBG_ASSERT_INTS_EQUAL( expected, actual )           ///< int ’l‚М”дЉr‚Е expected == actual ‚И‚зђ^ЃA‹U‚И‚зѓGѓ‰Ѓ[ЏI—№
-#define DBG_ASSERT_INT64S_EQUAL( expected, actual )         ///< int64_t ’l‚М”дЉr‚Е expected == actual ‚И‚зђ^ЃA‹U‚И‚зѓGѓ‰Ѓ[ЏI—№
-#define DBG_ASSERT_FLOATS_EQUAL( expected, actual, delta )  ///< float ’l‚М”дЉr‚Е expected == actual(Ќ·delta€И“а) ‚И‚зђ^ЃA‹U‚И‚зѓGѓ‰Ѓ[ЏI—№
-#define DBG_ASSERT_DOUBLES_EQUAL( expected, actual, delta ) ///< double ’l‚М”дЉr‚Е expected == actual(Ќ·delta€И“а) ‚И‚зђ^ЃA‹U‚И‚зѓGѓ‰Ѓ[ЏI—№
+// CppUnit гЃ«гЃ‚г‚‹гѓЃг‚§гѓѓг‚ЇгЃ®йЎћдјје“Ѓ(зµђжћњзљ„гЃ«зµђж§‹гЃЎгЃЊгЃ†гЃЊ...)
+#define DBG_ASSERT_MESSAGE(msg, cond)                       ///< condгЃЊеЃЅгЃ гЃЈгЃџг‚‰msgг‚’е‡єеЉ›гЃ—гЃ¦зµ‚дє†.
+#define DBG_FAIL( msg )                                     ///< msgг‚’е‡єеЉ›гЃ—гЃ¦еї…гЃљзµ‚дє†.
+#define DBG_ASSERT_EQUAL( expected, actual )                ///< expected == actual гЃЄг‚‰зњџгЂЃеЃЅгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_ASSERT_EQUAL_MESSAGE( message,expected,actual ) ///< expected == actual гЃЄг‚‰зњџгЂЃеЃЅгЃЄг‚‰messageг‚’е‡єеЉ›гЃ—гЃ¦г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_ASSERT_INTS_EQUAL( expected, actual )           ///< int еЂ¤гЃ®жЇ”ијѓгЃ§ expected == actual гЃЄг‚‰зњџгЂЃеЃЅгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_ASSERT_INT64S_EQUAL( expected, actual )         ///< int64_t еЂ¤гЃ®жЇ”ијѓгЃ§ expected == actual гЃЄг‚‰зњџгЂЃеЃЅгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_ASSERT_FLOATS_EQUAL( expected, actual, delta )  ///< float еЂ¤гЃ®жЇ”ијѓгЃ§ expected == actual(е·®deltaд»Ґе†…) гЃЄг‚‰зњџгЂЃеЃЅгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_ASSERT_DOUBLES_EQUAL( expected, actual, delta ) ///< double еЂ¤гЃ®жЇ”ијѓгЃ§ expected == actual(е·®deltaд»Ґе†…) гЃЄг‚‰зњџгЂЃеЃЅгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
 
-#define DBG_ASSERT_MEMS_EQUAL( s1, s2, sz )                 ///< ѓAѓhѓЊѓX s1‚Жs2‚©‚з‚МszѓoѓCѓg‚Є“Ї‚¶‚И‚зok. NG ‚И‚зѓGѓ‰Ѓ[ЏI—№.
-#define DBG_ASSERT_CSTRS_EQUAL(s1, s2 )                     ///< C•¶Ћљ—сs1‚Жs2‚Є“Ї‚¶‚И‚зok. NG‚И‚зѓGѓ‰Ѓ[ЏI—№.
+#define DBG_ASSERT_MEMS_EQUAL( s1, s2, sz )                 ///< г‚ўгѓ‰гѓ¬г‚№ s1гЃЁs2гЃ‹г‚‰гЃ®szгѓђг‚¤гѓ€гЃЊеђЊгЃгЃЄг‚‰ok. NG гЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
+#define DBG_ASSERT_CSTRS_EQUAL(s1, s2 )                     ///< Cж–‡е­—е€—s1гЃЁs2гЃЊеђЊгЃгЃЄг‚‰ok. NGгЃЄг‚‰г‚Ёгѓ©гѓјзµ‚дє†.
 
-/// ѓNѓ‰ѓXђ¶ђ¬‰сђ”‚рђ§ЊА‚·‚й‚Ѕ‚Я‚Мѓ}ѓNѓЌ
+/// г‚Їгѓ©г‚№з”џж€ђе›ћж•°г‚’е€¶й™ђгЃ™г‚‹гЃџг‚ЃгЃ®гѓћг‚Їгѓ­.
 #define DBG_COUNT_CLASS(NMAX)       typedef char Dbg_Count_Class_##NMAX##_
 
 
 
-#else   // ѓfѓoѓbѓO’† - - - - - - - - - - - - - - -
+#else   // гѓ‡гѓђгѓѓг‚°дё­ - - - - - - - - - - - - - - -
 
 #define ERR_PRINTF(s)           (err_printf s)
 #define ERR_ABORT()             (err_abort())
@@ -432,19 +431,19 @@ static inline int err_abortMsg(const char *fmt, ...) {
 
 #define DBG_ASSERT(x)           ((x) || DBG_ABORTMSG(("%s(%d):%s> assert(%s) is false.\n", __FILE__, __LINE__, __FUNCTION__, #x)) )
 
-#define DBG_ASSERT_THROW(x)     for(;;) { bool f = 0; try { x; } catch (...) { f = 1; } DBG_ASSERT_MESSAGE( #x " ‚Є—бЉO‚р“Љ‚°‚И‚ў\n", f); break;}
+#define DBG_ASSERT_THROW(x)     for(;;) { bool f = 0; try { x; } catch (...) { f = 1; } DBG_ASSERT_MESSAGE( #x " гЃЊдѕ‹е¤–г‚’жЉ•гЃ’гЃЄгЃ„\n", f); break;}
 
 #define DBG_NOCHK(a)
-#define DBG_LIM_I(a, mi, ma)    for(;;) {if ((a) < (mi) || (ma) < (a)) DBG_ABORTMSG(("%s (%d): %s: %d <= %s <= %d ‚р–ћ‚Ѕ‚і‚И‚ў(%d)\n", __FILE__, __LINE__, __FUNCTION__, (mi), #a, (ma),(a) ));break;}
-#define DBG_LIM_U(a, ma)        for(;;) { if (! (unsigned(a) <= (ma))) DBG_ABORTMSG(("%s (%d): %s: %d <= %s <= %d ‚р–ћ‚Ѕ‚і‚И‚ў(%d)\n", __FILE__, __LINE__, __FUNCTION__, 0, #a, (ma),(a) )); break;}
-#define DBG_LIM_BOOL(a)         for(;;) {if (int(a)!= 0 && int(a)!=1) DBG_ABORTMSG(("%s (%d): %s: 0 <= %s <= 1 ‚р–ћ‚Ѕ‚і‚И‚ў(%d)\n", __FILE__, __LINE__, __FUNCTION__, #a, (a) ));break;}
-#define DBG_LIM_F(a, mi, ma)    for(;;) {const float *aa=&(a); if ((a) < (mi) || (ma) < (a)) DBG_ABORTMSG(("%s (%d): %s: %f <= %s <= %f ‚р–ћ‚Ѕ‚і‚И‚ў(%f)\n", __FILE__, __LINE__, __FUNCTION__, (double)(mi), #a, (double)(ma),(double)(a) )); break;}
-#define DBG_LIM_D(a, mi, ma)    for(;;) {const double *aa=&(a); if ((a) < (mi) || (ma) < (a)) DBG_ABORTMSG(("%s (%d): %s: %f <= %s <= %f ‚р–ћ‚Ѕ‚і‚И‚ў(%f)\n", __FILE__, __LINE__, __FUNCTION__, (double)(mi), #a, (double)(ma),(a) ));break;}
-#define DBG_LIM_CSTR(a, sz)     for(;;) {int l__ = strlen(a); if (l__ <= 0 || (sz) <= l__) DBG_ABORTMSG(("%s (%d): %s: %s{`%s'}‚М’·‚і%d‚Н1Ѓ`%d‚М”Н€НЉO\n", __FILE__, __LINE__, __FUNCTION__, #a, (a), l__, (sz)-1 ));   break;}
-#define DBG_LIM_CSTR0(a, sz)    for(;;) {int l__ = strlen(a); if (l__ < 0 || (sz) <= l__) DBG_ABORTMSG(("%s (%d): %s: %s{`%s'}‚М’·‚і%d‚Н0Ѓ`%d‚М”Н€НЉO\n", __FILE__, __LINE__, __FUNCTION__, #a, (a), l__, (sz)-1 ));  break;}
+#define DBG_LIM_I(a, mi, ma)    for(;;) {if ((a) < (mi) || (ma) < (a)) DBG_ABORTMSG(("%s (%d): %s: %d <= %s <= %d г‚’жєЂгЃџгЃ•гЃЄгЃ„(%d)\n", __FILE__, __LINE__, __FUNCTION__, (mi), #a, (ma),(a) ));break;}
+#define DBG_LIM_U(a, ma)        for(;;) { if (! (unsigned(a) <= (ma))) DBG_ABORTMSG(("%s (%d): %s: %d <= %s <= %d г‚’жєЂгЃџгЃ•гЃЄгЃ„(%d)\n", __FILE__, __LINE__, __FUNCTION__, 0, #a, (ma),(a) )); break;}
+#define DBG_LIM_BOOL(a)         for(;;) {if (int(a)!= 0 && int(a)!=1) DBG_ABORTMSG(("%s (%d): %s: 0 <= %s <= 1 г‚’жєЂгЃџгЃ•гЃЄгЃ„(%d)\n", __FILE__, __LINE__, __FUNCTION__, #a, (a) ));break;}
+#define DBG_LIM_F(a, mi, ma)    for(;;) {const float *aa=&(a); if ((a) < (mi) || (ma) < (a)) DBG_ABORTMSG(("%s (%d): %s: %f <= %s <= %f г‚’жєЂгЃџгЃ•гЃЄгЃ„(%f)\n", __FILE__, __LINE__, __FUNCTION__, (double)(mi), #a, (double)(ma),(double)(a) )); break;}
+#define DBG_LIM_D(a, mi, ma)    for(;;) {const double *aa=&(a); if ((a) < (mi) || (ma) < (a)) DBG_ABORTMSG(("%s (%d): %s: %f <= %s <= %f г‚’жєЂгЃџгЃ•гЃЄгЃ„(%f)\n", __FILE__, __LINE__, __FUNCTION__, (double)(mi), #a, (double)(ma),(a) ));break;}
+#define DBG_LIM_CSTR(a, sz)     for(;;) {int l__ = strlen(a); if (l__ <= 0 || (sz) <= l__) DBG_ABORTMSG(("%s (%d): %s: %s{`%s'}гЃ®й•·гЃ•%dгЃЇ1пЅћ%dгЃ®зЇ„е›Іе¤–\n", __FILE__, __LINE__, __FUNCTION__, #a, (a), l__, (sz)-1 ));   break;}
+#define DBG_LIM_CSTR0(a, sz)    for(;;) {int l__ = strlen(a); if (l__ < 0 || (sz) <= l__) DBG_ABORTMSG(("%s (%d): %s: %s{`%s'}гЃ®й•·гЃ•%dгЃЇ0пЅћ%dгЃ®зЇ„е›Іе¤–\n", __FILE__, __LINE__, __FUNCTION__, #a, (a), l__, (sz)-1 ));  break;}
 
 
-// ѓ|ѓCѓ“ѓ^‚Ж‚µ‚Д‚Ё‚©‚µ‚И’l‚И‚зђ^( ЉВ‹«€Л‘¶‚И‚М‚ЕЃA‚±‚±‚Е‚Н‘еЋG”c‚Й’и‹` )
+// гѓќг‚¤гѓіг‚їгЃЁгЃ—гЃ¦гЃЉгЃ‹гЃ—гЃЄеЂ¤гЃЄг‚‰зњџ( з’°еўѓдѕќе­гЃЄгЃ®гЃ§гЂЃгЃ“гЃ“гЃ§гЃЇе¤§й›‘жЉЉгЃ«е®љзѕ© )
 #ifndef DBG_IS_BADPTR
  #if defined _WIN64
   #define DBG_IS_BADPTR(p)      ((p) != 0 && (size_t)(ptrdiff_t)(p) < 0x10000)
@@ -459,10 +458,10 @@ static inline int err_abortMsg(const char *fmt, ...) {
 #define DBG_CHK_PTR(p, asz) for(;;) {                                       \
     enum {l0__ = (asz)}; int l__ = l0__;                                    \
     if ( ((p) == 0) || (((ptrdiff_t)(p) & (l__ - 1)) != 0) || DBG_IS_BADPTR(p) ) { \
-        DBG_ABORTMSG(("%s (%d): %s: %s{%#x}‚НѓAѓhѓЊѓX‚Є•sђі",               \
+        DBG_ABORTMSG(("%s (%d): %s: %s{%#x}гЃЇг‚ўгѓ‰гѓ¬г‚№гЃЊдёЌж­Ј.",              \
                 __FILE__,__LINE__,__FUNCTION__, #p, (int)(ptrdiff_t)(p) )); \
         if ((((ptrdiff_t)(p) & (l__ - 1)) != 0))                            \
-            DBG_ABORTMSG(("(align %d ‚Е‚И‚ў)", l__ ));                      \
+            DBG_ABORTMSG(("(align %d гЃ§гЃЄгЃ„)", l__ ));                      \
         DBG_ABORTMSG(("\n"));                                               \
     }                                                                       \
     break;                                                                  \
@@ -471,10 +470,10 @@ static inline int err_abortMsg(const char *fmt, ...) {
 #define DBG_CHK_PTR0(p, asz) for(;;) {                                      \
     enum {l0__ = (asz)}; int l__ = l0__;                                    \
     if ( (((ptrdiff_t)(p) & (l__ - 1)) != 0) || DBG_IS_BADPTR(p) ) {        \
-        DBG_ABORTMSG(("%s (%d): %s: %s{%#x}‚НѓAѓhѓЊѓX‚Є•sђі",               \
+        DBG_ABORTMSG(("%s (%d): %s: %s{%#x}гЃЇг‚ўгѓ‰гѓ¬г‚№гЃЊдёЌж­Ј.",              \
                 __FILE__,__LINE__,__FUNCTION__, #p, (int)(ptrdiff_t)(p) )); \
         if ((((ptrdiff_t)(p) & (l__ - 1)) != 0))                            \
-            DBG_ABORTMSG(("(align %d ‚Е‚И‚ў)", l__ ));                      \
+            DBG_ABORTMSG(("(align %d гЃ§гЃЄгЃ„)", l__ ));                      \
         DBG_ABORTMSG(("\n"));                                               \
     }                                                                       \
     break;                                                                  \
@@ -492,7 +491,7 @@ static inline int err_abortMsg(const char *fmt, ...) {
 #define DBG_CHK_LONGLONGPTR(p)  DBG_CHK_PTR(p, sizeof(long long))
 #define DBG_CHK_LONGLONGPTR0(p) DBG_CHK_PTR0(p, sizeof(long long))
 
-/// numЊВ‚М”z—сary ‚МЉe invariant() ‚рЋАЌs.
+/// numеЂ‹гЃ®й…Ќе€—ary гЃ®еђ„ invariant() г‚’е®џиЎЊ.
 #define DBG_ARY_INVARIANT( ary, num )   for(;;) {                           \
     unsigned int num__ = (unsigned int)(num);                               \
     for (unsigned int i__ = 0; i__ < num__; ++i__) {                        \
@@ -504,15 +503,15 @@ static inline int err_abortMsg(const char *fmt, ...) {
 
 
 // -----------------------------------------
-// CppUnit ‚Й‚ ‚йѓ`ѓFѓbѓN‚М—ЮЋ—•i
+// CppUnit гЃ«гЃ‚г‚‹гѓЃг‚§гѓѓг‚ЇгЃ®йЎћдјје“Ѓ.
 
-/// cond ‚М’l‚Є‹U‚М‚Ж‚«ѓЃѓbѓZЃ[ѓW‚р•\Ћ¦‚µ‚ДЋё”s
+/// cond гЃ®еЂ¤гЃЊеЃЅгЃ®гЃЁгЃЌгѓЎгѓѓг‚»гѓјг‚ёг‚’иЎЁз¤єгЃ—гЃ¦е¤±ж•—.
 #define DBG_ASSERT_MESSAGE(msg, cond)           ((cond) || (DBG_ABORTMSG(("%s(%d): %s\n", __FILE__, __LINE__, msg)), 0))
 
-/// •K‚ёЋё”s
+/// еї…гЃље¤±ж•—.
 #define DBG_FAIL( msg )                         (DBG_ABORTMSG(("%s(%d): %s\n", __FILE__, __LINE__, msg)), 0)
 
-/// Љъ‘Т’lexpected ‚Ж Њ‹‰Кactual ‚Є“™‚µ‚­‚И‚ў‚Ж‚«ѓЃѓbѓZЃ[ѓW‚р•\Ћ¦‚µ‚ДЋё”s
+/// жњџеѕ…еЂ¤expected гЃЁ зµђжћњactual гЃЊз­‰гЃ—гЃЏгЃЄгЃ„гЃЁгЃЌгѓЎгѓѓг‚»гѓјг‚ёг‚’иЎЁз¤єгЃ—гЃ¦е¤±ж•—.
 #define DBG_ASSERT_EQUAL_MESSAGE( message, expected, actual )  for(;;) {    \
         if ((expected) != (actual))                                         \
             DBG_ABORTMSG(("%s(%d): %s\n", __FILE__, __LINE__, msg));        \
@@ -520,7 +519,7 @@ static inline int err_abortMsg(const char *fmt, ...) {
     }
 
 
-/// Љъ‘Т’lexpected ‚Ж Њ‹‰Кactual ‚Є“™‚µ‚­‚И‚ў‚Ж‚«Ћё”s
+/// жњџеѕ…еЂ¤expected гЃЁ зµђжћњactual гЃЊз­‰гЃ—гЃЏгЃЄгЃ„гЃЁгЃЌе¤±ж•—.
 #define DBG_ASSERT_EQUAL( expected, actual )  for(;;) {                     \
         if ((expected) != (actual))                                         \
             DBG_ABORTMSG(("%s(%d): equality assertion failed. %s != %s\n"   \
@@ -529,7 +528,7 @@ static inline int err_abortMsg(const char *fmt, ...) {
     }
 
 
-/// Љъ‘Т’lexpected ‚Ж Њ‹‰Кactual ‚Є“™‚µ‚­‚И‚ў‚Ж‚«Ћё”s
+/// жњџеѕ…еЂ¤expected гЃЁ зµђжћњactual гЃЊз­‰гЃ—гЃЏгЃЄгЃ„гЃЁгЃЌе¤±ж•—.
 #define DBG_ASSERT_INTS_EQUAL( expected, actual )  for(;;) {                \
         if ((expected) != (actual)) {                                       \
             DBG_ABORTMSG(("%s(%d): equality assertion failed. %s{%d} != %s{%d}\n" \
@@ -539,7 +538,7 @@ static inline int err_abortMsg(const char *fmt, ...) {
     }
 
 
-/// Љъ‘Т’lexpected ‚Ж Њ‹‰Кactual ‚Є“™‚µ‚­‚И‚ў‚Ж‚«Ћё”s
+/// жњџеѕ…еЂ¤expected гЃЁ зµђжћњactual гЃЊз­‰гЃ—гЃЏгЃЄгЃ„гЃЁгЃЌе¤±ж•—.
 #define DBG_ASSERT_INT64S_EQUAL( expected, actual )  for(;;) {              \
         if ((expected) != (actual)) {                                       \
             DBG_ABORTMSG(("%s(%d): equality assertion failed. %s{%#x%08x} != %s{%#x%08x}\n"         \
@@ -550,7 +549,7 @@ static inline int err_abortMsg(const char *fmt, ...) {
         break;                                                              \
     }
 
-/// Љъ‘Т’lexpected ‚Ж Њ‹‰Кactual ‚МЌ·‚Є delta ‚ж‚и‘е‚«‚ў‚Ж‚«Ћё”s
+/// жњџеѕ…еЂ¤expected гЃЁ зµђжћњactual гЃ®е·®гЃЊ delta г‚€г‚Ље¤§гЃЌгЃ„гЃЁгЃЌе¤±ж•—.
 #define DBG_ASSERT_FLOATS_EQUAL( expected, actual, delta )  for(;;) {       \
         double eXPe__ = (double)(float)(expected);                          \
         double aCTu__ = (double)(float)(actual);                            \
@@ -563,7 +562,7 @@ static inline int err_abortMsg(const char *fmt, ...) {
         break;                                                              \
     }
 
-/// Љъ‘Т’lexpected ‚Ж Њ‹‰Кactual ‚МЌ·‚Є delta ‚ж‚и‘е‚«‚ў‚Ж‚«Ћё”s
+/// жњџеѕ…еЂ¤expected гЃЁ зµђжћњactual гЃ®е·®гЃЊ delta г‚€г‚Ље¤§гЃЌгЃ„гЃЁгЃЌе¤±ж•—.
 #define DBG_ASSERT_DOUBLES_EQUAL( expected, actual, delta )  for(;;) {      \
         double eXPe__ = (double)(expected);                                 \
         double aCTu__ = (double)(actual);                                   \
@@ -579,7 +578,7 @@ static inline int err_abortMsg(const char *fmt, ...) {
 
 
 
-/// ѓЃѓ‚ѓЉ s1 ‚Ж s1 ‚М sz ѓoѓCѓg‚Є€к’v‚·‚к‚Ођ¬ЊчЃA‚Е‚И‚Ї‚к‚ОЋё”s
+/// гѓЎгѓўгѓЄ s1 гЃЁ s1 гЃ® sz гѓђг‚¤гѓ€гЃЊдёЂи‡ґгЃ™г‚ЊгЃ°ж€ђеЉџгЂЃгЃ§гЃЄгЃ‘г‚ЊгЃ°е¤±ж•—.
 #define DBG_ASSERT_MEMS_EQUAL(s1, s2, sz )  for(;;) {                       \
         const unsigned char *cucp1__ = (const unsigned char *)(s1);         \
         const unsigned char *cucp2__ = (const unsigned char *)(s2);         \
@@ -599,7 +598,7 @@ static inline int err_abortMsg(const char *fmt, ...) {
     }
 
 
-/// C•¶Ћљ—с s1 ‚Ж s1 ‚Є€к’v‚·‚к‚Ођ¬ЊчЃA‚Е‚И‚Ї‚к‚ОЋё”s
+/// Cж–‡е­—е€— s1 гЃЁ s1 гЃЊдёЂи‡ґгЃ™г‚ЊгЃ°ж€ђеЉџгЂЃгЃ§гЃЄгЃ‘г‚ЊгЃ°е¤±ж•—.
 #define DBG_ASSERT_CSTRS_EQUAL(s1, s2 ) for(;;) {                           \
         const unsigned char *cucp1__ = (const unsigned char *)(s1);         \
         const unsigned char *cucp2__ = (const unsigned char *)(s2);         \
@@ -620,7 +619,7 @@ static inline int err_abortMsg(const char *fmt, ...) {
 
 
 // ------------------------------------------------
-/** ѓNѓ‰ѓXѓЃѓ“ѓo‚Й‹LЏq‚·‚й‚±‚Ж‚ЕЃAѓNѓ‰ѓX‚Мђ¶ђ¬‰сђ”‚рNMAX‰с‚Ь‚Е‚ЙЊА’и‚·‚й
+/** г‚Їгѓ©г‚№гѓЎгѓігѓђгЃ«иЁиї°гЃ™г‚‹гЃ“гЃЁгЃ§гЂЃг‚Їгѓ©г‚№гЃ®з”џж€ђе›ћж•°г‚’NMAXе›ћгЃѕгЃ§гЃ«й™ђе®љгЃ™г‚‹.
  */
 #define DBG_COUNT_CLASS(NMAX)                                               \
     class Dbg_Count_Class {                                                 \
@@ -633,13 +632,13 @@ static inline int err_abortMsg(const char *fmt, ...) {
         Dbg_Count_Class() {                                                 \
             int n = dbg_count_class_add(1);                                 \
             if (n > NMAX)                                                   \
-                DBG_ABORTMSG(("%s ‚Є %d ‰с–Ъ(ЌЕ‘е %d)‚ѕ\n"                  \
+                DBG_ABORTMSG(("%s гЃЊ %d е›ћз›®(жњЂе¤§ %d)\n"                    \
                     , __FUNCTION__, n, NMAX));                              \
         }                                                                   \
         ~Dbg_Count_Class() {                                                \
             int n = dbg_count_class_add(-1);                                \
             if (n < 0)                                                      \
-                DBG_ABORTMSG(("%s ‚Еђ”‚Є•‰‚Й‚И‚Б‚Ѕ\n"                       \
+                DBG_ABORTMSG(("%s гЃ§ж•°гЃЊиІ гЃ«гЃЄгЃЈгЃџ.\n"                      \
                     , __FUNCTION__));                                       \
         }                                                                   \
     };                                                                      \
@@ -652,8 +651,8 @@ static inline int err_abortMsg(const char *fmt, ...) {
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// ѓЃѓ‚
-//  ѓRѓ“ѓpѓCѓ‰ЋЇ•К:
+// гѓЎгѓў.
+//  г‚ігѓігѓ‘г‚¤гѓ©и­е€Ґ:
 //      __GNUC__,
 //      _MSC_VER,
 //      __BORLANDC__,
@@ -661,17 +660,17 @@ static inline int err_abortMsg(const char *fmt, ...) {
 //      __DMC__, __SC__ {DigitalMars},
 //      __WATCOMC__
 //      __INTEL_COMPILER,
-//  osЋЇ•К:
+//  osи­е€Ґ:
 //      _WIN32,_WIN64
 //      WINVER, _WINDOWS_, _WIN32_WINNT, _MAC
-//      _WINDOWS (windowsѓAѓvѓЉЌмђ¬‚М‚Ж‚«ЃAvc‚МѓEѓBѓUЃ[ѓh‚Єvcproj‚ЙђЭ’и)
-//      _CONSOLE (ѓRѓ“ѓ\Ѓ[ѓ‹ѓAѓvѓЉЌмђ¬‚М‚Ж‚«ЃAvc‚МѓEѓBѓUЃ[ѓh‚ЄђЭ’и)
+//      _WINDOWS (windowsг‚ўгѓ—гѓЄдЅњж€ђгЃ®гЃЁгЃЌгЂЃvcгЃ®г‚¦г‚Јг‚¶гѓјгѓ‰гЃЊvcprojгЃ«иЁ­е®љ)
+//      _CONSOLE (г‚ігѓіг‚Ѕгѓјгѓ«г‚ўгѓ—гѓЄдЅњж€ђгЃ®гЃЁгЃЌгЂЃvcгЃ®г‚¦г‚Јг‚¶гѓјгѓ‰гЃЊиЁ­е®љ)
 //  CPU(vc):
 //      _M_IX86, _M_AMD64, _M_IA64
-//  vc(‹Њ?),bcc,mingw:
+//  vc(ж—§?),bcc,mingw:
 //      _X86_, _MIPS_, _ALPHA_, _PPC_, _68K_, _MPPC_, _IA64_
 //  mwerks:
-//      __INTEL__, _MC68K_, _MIPS_, _MIPS_ISA2Ѓ`4_, _POWERPC_
+//      __INTEL__, _MC68K_, _MIPS_, _MIPS_ISA2пЅћ4_, _POWERPC_
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

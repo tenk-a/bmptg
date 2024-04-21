@@ -1,14 +1,14 @@
 /**
  *  @file   Pix32_Paint.hpp
- *  @brief  32ƒrƒbƒg‰æ‚ÌA(x,y)‚ÌˆÊ’u‚É‚ ‚éF‚ğAw’è‚µ‚½F‚Å“h‚è‚Â‚Ô‚·.
+ *  @brief  32ãƒ“ãƒƒãƒˆç”»ã®ã€(x,y)ã®ä½ç½®ã«ã‚ã‚‹è‰²ã‚’ã€æŒ‡å®šã—ãŸè‰²ã§å¡—ã‚Šã¤ã¶ã™.
  *  @note
- *      ‚Ç‚±‚¾‚Á‚½‚©‚ÌƒTƒCƒg‚ğQl
+ *      ã©ã“ã ã£ãŸã‹ã®ã‚µã‚¤ãƒˆã‚’å‚è€ƒ
  */
 #ifndef PIX32_PAINT_HPP
 #define PIX32_PAINT_HPP
 
-/// (x,y)‚ÌF‚ª‘±‚­—Ìˆæ‚ğ newCol ‚Å“h‚è‚Â‚Ô‚·.
-/// x,y‚¢‚Ã‚ê‚©‚ª•‰‚ªw’è‚³‚ê‚é‚ÆA¶ã‚Ì“_‚ÌF‚ğŒ³‚ÉA‰æ‘œ‚Ìl‹÷‚ğ“h‚è‚Â‚Ô‚·.
+/// (x,y)ã®è‰²ãŒç¶šãé ˜åŸŸã‚’ newCol ã§å¡—ã‚Šã¤ã¶ã™.
+/// x,yã„ã¥ã‚Œã‹ãŒè² ãŒæŒ‡å®šã•ã‚Œã‚‹ã¨ã€å·¦ä¸Šã®ç‚¹ã®è‰²ã‚’å…ƒã«ã€ç”»åƒã®å››éš…ã‚’å¡—ã‚Šã¤ã¶ã™.
 class Pix32_Paint {
     enum { PAINT_BUF_MAX = 0x4000 };
 public:
@@ -19,7 +19,7 @@ public:
     Pix32_Paint(unsigned *pix, unsigned w, unsigned h, pix_t newCol=0, xy_t tgtX=xy_t(-1), xy_t tgtY=xy_t(-1), xy_t dif=8)
         : pix_(pix), w_(w), h_(h), x0_(0), y0_(0), x1_(xy_t(w-1)), y1_(xy_t(h-1)), ck_(dif*dif)
     {
-        // ŠJnˆÊ’u‚ª•‰‚È‚çA¶ã‚Ì“_‚ÌF‚ğŒ³‚ÉAl‹÷‚ğ“h‚è‚Â‚Ô‚·.
+        // é–‹å§‹ä½ç½®ãŒè² ãªã‚‰ã€å·¦ä¸Šã®ç‚¹ã®è‰²ã‚’å…ƒã«ã€å››éš…ã‚’å¡—ã‚Šã¤ã¶ã™.
         if ((tgtX == xy_t(-1)) || (tgtY == xy_t(-1))) {
             pix_t   c = getPix(0, 0);
             paint(x0_, y0_, newCol);
@@ -58,29 +58,29 @@ private:
             if (paintCur_ == &paintBuf_[PAINT_BUF_MAX])
                 paintCur_   = &paintBuf_[0];
 
-            // ˆ—Ï‚ÌƒV[ƒh‚È‚ç–³‹.
+            // å‡¦ç†æ¸ˆã®ã‚·ãƒ¼ãƒ‰ãªã‚‰ç„¡è¦–.
             if (getPix(lx, uy) == fillCol)
                 continue;
 
-            // ‰E•ûŒü‚Ì‹«ŠE‚ğ’T‚·.
+            // å³æ–¹å‘ã®å¢ƒç•Œã‚’æ¢ã™.
             while (rx < x1_) {
                 if (isSamePix(rx + 1, uy, tgtCol) == false)
                     break;
                 ++rx;
             }
 
-            // ¶•ûŒü‚Ì‹«ŠE‚ğ’T‚·.
+            // å·¦æ–¹å‘ã®å¢ƒç•Œã‚’æ¢ã™.
             while (lx > x0_) {
                 if (isSamePix(lx - 1, uy, tgtCol) == false)
                     break;
                 --lx;
             }
 
-            // lx-rx‚Ìü•ª‚ğ•`‰æ.
+            // lx-rxã®ç·šåˆ†ã‚’æç”».
             for (xy_t i = lx; i <= rx; ++i)
                 setPix(i, uy, fillCol);
 
-            // ^ã‚ÌƒXƒLƒƒƒ“ƒ‰ƒCƒ“‚ğ‘–¸‚·‚é.
+            // çœŸä¸Šã®ã‚¹ã‚­ãƒ£ãƒ³ãƒ©ã‚¤ãƒ³ã‚’èµ°æŸ»ã™ã‚‹.
             if (--uy >= y0_) {
                 if (uy == oy) {
                     scanLine(   lx, lxsav, uy, uy + 1, tgtCol);
@@ -90,7 +90,7 @@ private:
                 }
             }
 
-            // ^‰º‚ÌƒXƒLƒƒƒ“ƒ‰ƒCƒ“‚ğ‘–¸‚·‚é.
+            // çœŸä¸‹ã®ã‚¹ã‚­ãƒ£ãƒ³ãƒ©ã‚¤ãƒ³ã‚’èµ°æŸ»ã™ã‚‹.
             if (++dy <= y1_) {
                 if (dy == oy) {
                     scanLine(   lx, lxsav, dy, dy - 1, tgtCol);
@@ -106,7 +106,7 @@ private:
 
     void scanLine(xy_t lx, xy_t rx, xy_t y, xy_t oy, pix_t tgtCol) {
         while (lx <= rx) {
-            // ”ñ—ÌˆæF‚ğ”ò‚Î‚·.
+            // éé ˜åŸŸè‰²ã‚’é£›ã°ã™.
             for (; lx < rx; ++lx) {
                 if (isSamePix(lx, y,tgtCol))
                     break;
@@ -117,7 +117,7 @@ private:
 
             paintEnd_->leftX_ = lx;
 
-            // —ÌˆæF‚ğ”ò‚Î‚·.
+            // é ˜åŸŸè‰²ã‚’é£›ã°ã™.
             for (; lx <= rx; ++lx) {
                 if (isSamePix(lx, y, tgtCol) == false)
                     break;
@@ -165,10 +165,10 @@ private:
 
 private:
     struct PaintBuf {
-        xy_t    leftX_;         ///< —Ìˆæ¶’[‚ÌXÀ•W
-        xy_t    rightX_;        ///< —Ìˆæ‰E’[‚ÌXÀ•W
-        xy_t    curY_;          ///< —Ìˆæ‚ÌYÀ•W
-        xy_t    parentY_;       ///< eƒ‰ƒCƒ“‚ÌYÀ•W
+        xy_t    leftX_;         ///< é ˜åŸŸå·¦ç«¯ã®Xåº§æ¨™.
+        xy_t    rightX_;        ///< é ˜åŸŸå³ç«¯ã®Xåº§æ¨™.
+        xy_t    curY_;          ///< é ˜åŸŸã®Yåº§æ¨™.
+        xy_t    parentY_;       ///< è¦ªãƒ©ã‚¤ãƒ³ã®Yåº§æ¨™.
     };
     pix_t*      pix_;
     xy_t        w_;

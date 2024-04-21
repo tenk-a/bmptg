@@ -1,6 +1,6 @@
 /**
  *  @file   bmptg.cpp
- *  @brief  �摜�R���o�[�^
+ *  @brief  画像コンバータ.
  *  @author Masashi Kitamura
  *  @date   2000-2021
  *  @note
@@ -30,147 +30,147 @@ void usage(void)
     printf("https://github.com/tenk-a/bmptg/\n"
            "usage> %s [-opts] file(s)   // v2.40 " __DATE__ "  by tenk*\n", g_appName);
     printf(
-       "  bmp tga jpg png ���摜�𑊌݂ɕϊ�.\n"
-       "  ���l�͗L����00:�����`0xFF:�s����. �������0xFF�Ƃ��Ĕ��F�̓�=0�Ƃ��ď���.\n"
+       "  bmp tga jpg png 等画像を相互に変換.\n"
+       "  α値は有効で00:透明～0xFF:不透明. α無画は0xFFとして抜色はα=0として処理.\n"
        MY_USAGE_1
        "\n"
-       "  :FMT          �o�̓t�H�[�}�b�g��FMT(bmp tga jpg png bin non)��.\n"
-       "                bin �̓w�b�_&clut���s�N�Z���݂̂̃x�^�o��.\n"
-       "                non �͌o�߃��b�Z�[�W�݂̂ŁA�t�@�C���ϊ���.\n"
-       "  -f[FMT]       :FMT�ɓ���\n"
-       "  -b[N]         �o�͂�N bit�F��(1,4,8,12,15,16,24,32).\n"
-       "                (���ʃr�b�g�؎̂Ȃ̂ŁA�K�v�Ȃ�-xd�Ńf�B�U���F��)\n"
-       "  -v-           �������b�Z�[�W�����炷.\n"
+       "  :FMT          出力フォーマットをFMT(bmp tga jpg png bin non)に.\n"
+       "                bin はヘッダ&clut無ピクセルのみのベタ出力.\n"
+       "                non は経過メッセージのみで、ファイル変換無.\n"
+       "  -f[FMT]       :FMTに同じ\n"
+       "  -b[N]         出力をN bit色に(1,4,8,12,15,16,24,32).\n"
+       "                (下位ビット切捨なので、必要なら-xdでディザ減色を)\n"
+       "  -v-           処理メッセージを減らす.\n"
        "\n"
-       " [�t�@�C����]\n"
-       "  -o[FILE]      1�t�@�C���ϊ��ł̏o�͖�.\n"
-       "  -d[DIR]       �o�̓f�B���N�g����DIR��.\n"
-       "  -s[DIR]       ���̓f�B���N�g����DIR��.\n"
-       "  -ed[EXT]      �o�͂̊g���q�� EXT ��.\n"
-       "  -es[EXT]      ���͂̏ȗ����g���q��EXT��.\n"
-       "  -u            ���t���V������Εϊ�.\n"
+       " [ファイル名]\n"
+       "  -o[FILE]      1ファイル変換での出力名.\n"
+       "  -d[DIR]       出力ディレクトリをDIRに.\n"
+       "  -s[DIR]       入力ディレクトリをDIRに.\n"
+       "  -ed[EXT]      出力の拡張子を EXT に.\n"
+       "  -es[EXT]      入力の省略時拡張子をEXTに.\n"
+       "  -u            日付が新しければ変換.\n"
        "\n"
-       "  [�o�C�i������]\n"
-       "  -ig[W:H:B:E]  B�r�b�g�FW*H�̃x�^��(�܂��̓o�C�i���t�@�C��)����.\n"
-       "  -is[N]        ����FILE�擪N byte�X�L�b�v.\n"
+       "  [バイナリ入力]\n"
+       "  -ig[W:H:B:E]  Bビット色W*Hのベタ画(またはバイナリファイル)入力.\n"
+       "  -is[N]        入力FILE先頭N byteスキップ.\n"
        "\n"
-       " [�F�֌W]\n"
-       "  -if           clut����t���J���[(24or32�r�b�g�F)�ɂ��ē���.\n"
-       "  -ib[N]        ���͎�(���̕ϊ�������O)�ɁAN(3�`24) bit�F�ɕϊ�.\n"
+       " [色関係]\n"
+       "  -if           clut画をフルカラー(24or32ビット色)にして入力.\n"
+       "  -ib[N]        入力時(他の変換をする前)に、N(3～24) bit色に変換.\n"
        "                24 = R8G8B8    23 = R8G8B7   22 = R7G8B7\n"
        "                21 = R7G7B7    ...........    3 = R1G1B1\n"
-       "  -xd[N:T]      �f�B�U��N(3�`24)bit�F�Ɍ��F. (T:0-7)\n"
-       "                 N= �w����@�� -ib[N] �ɓ���\n"
-       "                 T=  0:�f�B�U����\n"
-       "                     1:�p�^�[���f�B�U 2x2\n"
-       "                     2:�p�^�[���f�B�U 4x4\n"
-       "                     3:�p�^�[���f�B�U 8x8\n"
-       //x "                    +4: �덷�g�U����(����:����o�O���Ă�͗l?)\n"
-       "                 +0x80:A,G �� R,B �ƂŃf�B�U�}�g���b�N�X��΂ɂ���\n"
-       "                +0x100:�����f�B�U����. �L���r�b�g����G�ɓ���\n"
+       "  -xd[N:T]      ディザでN(3～24)bit色に減色. (T:0-7)\n"
+       "                 N= 指定方法は -ib[N] に同じ\n"
+       "                 T=  0:ディザ無し\n"
+       "                     1:パターンディザ 2x2\n"
+       "                     2:パターンディザ 4x4\n"
+       "                     3:パターンディザ 8x8\n"
+       //x "                    +4: 誤差拡散する(実験:現状バグってる模様?)\n"
+       "                 +0x80:A,G と R,B とでディザマトリックスを対にする\n"
+       "                +0x100:αもディザする. 有効ビット数はGに同じ\n"
        "\n"
-       "  -cq[ARGB]     ARGB ���ABGRA,AGRB ���̏��ɕ��ъ�.\n"
-       "  -t[N]         RGB�l�� N%% �ɂ��ďo��.\n"
-       "  -tt[N]        �P�x�� N%% �ɂ��ďo��.\n"
-       "  -cm[C]        �e�s�N�Z���ɐFC���悸��.\n"
-       "  -cem          R,G,B,A�l�e�X���悷��.\n"
-       "  -cs[A:R:G:B]  �����w���rgb�s�N�Z���̊e�l�����{���邩���w��\n"
-       "  -ct[A:Y:U:V]  �����w���yuv�s�N�Z���̊e�l�����{���邩���w��\n"
-       "  -cg           ���m�N����\n"
-       "  -cgc[R|G|B|A] R,G,B,A �����ꂩ�̃`�����l����p���ă��m�N����.\n"
-       "  -cf[C]        ���F�� C (�ȗ���000000)��.\n"
-       "  (-ca[C]       -cf�g���Ŕ��F���Ӄ��ڂ���. ������)\n"
-       "  -cfn[C]       -cf�ɂقړ������� ��=0�ɂ��Ȃ�(-vv�ł̖��ߐF)\n"
-       "  -an           ���͉惿�l�𖳎�(��������).\n"
-       "  -ao           ���`�����l����mask�摜�������t�@�C�����o��.\n"
-       "  -ai[FILE]     FILE�����`�����l���ɓǂݍ���\n"
-       "  -ari          ���̓����].\n"
-       "  -aro          �o�̓����].\n"
-       "  -am[A:B]      ���F���֌W�̕ϊ��ŗp���郿�͈�[A,B]. A�ȉ��͓���,B�ȏ�͕s����.\n"
-       "  -ac[C:C2]     �s�N�Z���ƐFC�����u�����h����=0 or 0xFF. C2�w��̓�=0����RGB�l.\n"
-       "  -ag[RATE:OFS] �s�N�Z��RGB��胂�m�N���l�����߂�������Ƃ���.\n"
-       "                 RATE,OFS������ΐF�̕ϊ� (r,g,b)*RATE+OFS ���ɍs��\n"
-       "  -ad           �����F�Ɣ񔲂��F�̍�̃����ڂ����ȈՏ���(��BU�쐬��)\n"
-       "                (v2.38�ȑO�� -ca -xca �ŋ@�\�������̂𕪗�)\n"
-       "  -az           ��=0�Ȃ�RGB��0�ɂ���\n"
+       "  -cq[ARGB]     ARGB を、BGRA,AGRB 等の順に並び換.\n"
+       "  -t[N]         RGB値を N%% にして出力.\n"
+       "  -tt[N]        輝度を N%% にして出力.\n"
+       "  -cm[C]        各ピクセルに色Cを乗ずる.\n"
+       "  -cem          R,G,B,A値各々を二乗する.\n"
+       "  -cs[A:R:G:B]  実数指定でrgbピクセルの各値を何倍するかを指定\n"
+       "  -ct[A:Y:U:V]  実数指定でyuvピクセルの各値を何倍するかを指定\n"
+       "  -cg           モノクロ化\n"
+       "  -cgc[R|G|B|A] R,G,B,A いずれかのチャンネルを用いてモノクロ化.\n"
+       "  -cf[C]        抜色を C (省略時000000)に.\n"
+       "  (-ca[C]       -cf拡張で抜色周辺αぼかし. 実験物)\n"
+       "  -cfn[C]       -cfにほぼ同じだが α=0にしない(-vvでの埋め色)\n"
+       "  -an           入力画α値を無視(α無扱い).\n"
+       "  -ao           αチャンネルをmask画像化したファイルを出力.\n"
+       "  -ai[FILE]     FILEをαチャンネルに読み込む\n"
+       "  -ari          入力α反転.\n"
+       "  -aro          出力α反転.\n"
+       "  -am[A:B]      減色α関係の変換で用いるα範囲[A,B]. A以下は透明,B以上は不透明.\n"
+       "  -ac[C:C2]     ピクセルと色Cをαブレンドしα=0 or 0xFF. C2指定はα=0時のRGB値.\n"
+       "  -ag[RATE:OFS] ピクセルRGBよりモノクロ値を求めそれをαとする.\n"
+       "                 RATE,OFSがあれば色の変換 (r,g,b)*RATE+OFS を先に行う\n"
+       "  -ad           抜き色と非抜き色の堺のαをぼかす簡易処理(仮BU作成向)\n"
+       "                (v2.38以前は -ca -xca で機能だったのを分離)\n"
+       "  -az           α=0ならRGBも0にする\n"
        "\n"
-       " [clut�֌W]\n"
-       "  -cpc[FILE]    clut���e��c�p�e�L�X�g�o��.\n"
-       "  -cpf[FILE]    ���F�ŗp����Œ�clut.\n"
-       "  -cp[N]        �Œ�clut�ݒ�or���F�A���S���Y���w��.\n"
-       "                1:jp�Œ�clut             2:win�V�X�e��clut.\n"
-       "                3:���f�B�A���J�b�g(yuv)  4:���f�B�A���J�b�g(rgb)\n"
-       "                5:�p�x��\n"
-       "                N�̎w��̂Ȃ��ꍇ��-cp3\n"
-       "                -cp3:M:L (-cp4��)\n"
-       "                  M=0:�����l�͒P����2�Ŋ���������. M=1:�p�x�𔽉f(�f�t�H���g)\n"
-       "                  L=1�`4.0:Y,U,V,A�̑I���ŁAY�l��L�{���čs��(�f�t�H���g1.2)\n"
-       "  -cn[N]        ���F����1<<bpp�����̐F���ɂ������ꍇ�Ɏw��\n"
+       " [clut関係]\n"
+       "  -cpc[FILE]    clut内容をc用テキスト出力.\n"
+       "  -cpf[FILE]    減色で用いる固定clut.\n"
+       "  -cp[N]        固定clut設定or減色アルゴリズム指定.\n"
+       "                1:jp固定clut             2:winシステムclut.\n"
+       "                3:メディアンカット(yuv)  4:メディアンカット(rgb)\n"
+       "                5:頻度順\n"
+       "                Nの指定のない場合は-cp3\n"
+       "                -cp3:M:L (-cp4も)\n"
+       "                  M=0:中央値は単純に2で割ったもの. M=1:頻度を反映(デフォルト)\n"
+       "                  L=1～4.0:Y,U,V,Aの選択で、Y値をL倍して行う(デフォルト1.2)\n"
+       "  -cn[N]        減色時に1<<bpp未満の色数にしたい場合に指定\n"
        "\n"
-       "  -ap           ���tclut�ŏo��. ���ꂩ���F�w��(-ap)���Ȃ��ƃ���clut�ɂȂ�\n"
-       "  -ap[N]        N:���F������. N>=2�͋����I��-cp3���f�B�A���J�b�g(yuv)�ɂȂ�\n"
-       "  -ci[I]        clut��̔��F�ԍ���I��.\n"
-       "  -cc[I:C]      clut �� i(0�`255)�Ԃ�F C �ɒu��. I���Ⴆ�Ε����w��L��\n"
-       "  -co[N]        clut�̓Y����/���g�� N���炷. (-cis[N]������)\n"
-       "  -cb[N]        tga�ł̏o��clut��BPP.\n"
+       "  -ap           α付clutで出力. これか抜色指定(-ap)がないとα無clutになる\n"
+       "  -ap[N]        N:減色時α数. N>=2は強制的に-cp3メディアンカット(yuv)になる\n"
+       "  -ci[I]        clut画の抜色番号をIに.\n"
+       "  -cc[I:C]      clut の i(0～255)番を色 C に置換. Iが違えば複数指定有効\n"
+       "  -co[N]        clutの添え字/中身を N個ずらす. (-cis[N]も同じ)\n"
+       "  -cb[N]        tgaでの出力clutのBPP.\n"
        "\n"
-       " [�T�C�Y�ϊ�]\n"
-       "  -xrs[W:H:K]   W*H�Ɋg�k.\n"
-       "  -xrp[N]       �c���̒�����N���Ɋg�k.\n"
-       "  -xrc          �g��Ƀo�C�L���[�r�b�N�@��p����(�f�t�H���g).\n"
-       "  -xrb          �g��Ƀo�C���j�A�@��p����.\n"
-       "  -xre          �g���spline36��p����.\n"
-       "  -xrl          �g�k��lanczos-3��p����.\n"
-       "  -xrn          �g�k�Ƀj�A���X�g�l�C�o�[�@��p����.\n"
-       "  -xn           �s�����͈݂͂̂ɂ���.\n"
+       " [サイズ変換]\n"
+       "  -xrs[W:H:K]   W*Hに拡縮.\n"
+       "  -xrp[N]       縦横の長さをN％に拡縮.\n"
+       "  -xrc          拡大にバイキュービック法を用いる(デフォルト).\n"
+       "  -xrb          拡大にバイリニア法を用いる.\n"
+       "  -xre          拡大にspline36を用いる.\n"
+       "  -xrl          拡縮にlanczos-3を用いる.\n"
+       "  -xrn          拡縮にニアレストネイバー法を用いる.\n"
+       "  -xn           不透明範囲のみにする.\n"
       #ifdef MY_H
-       "                -mc[N:M]�w�莞��NxM�`�b�v�P�ʂŋ��߂�.\n"
+       "                -mc[N:M]指定時はNxMチップ単位で狭める.\n"
       #endif
-       "  -xv[W:H:X:Y:w:h:x:y]  ���摜��(x,y)��w*h��W*H���(X,Y)�Ƀ��[�h�����摜�ɂ���.\n"
-       "                        W,H�� 0�Ȃ�摜�T�C�Y.\n"
-       "                -xv+10:+5 �̂悤��+�ŋL�q����Ή摜�T�C�Y�ɑ΂��鑝���ɂȂ�.\n"
-       "  -xvc[W:H:X:Y:w:h:x:y] �Z���^�����O��-xv. X:Y,x:y�̓Z���^�����O��I�t�Z�b�g\n"
-       "  -xvr[W:H:X:Y:w:h:x:y] �E(��)���-xv. X:Y,x:y�͉E���̃I�t�Z�b�g\n"
-       "  -xve[W:H:X:Y:w:h:x:y] �t�@�C�����̍Ōオ�����Ŋ�Ȃ�-xv,�����Ȃ�-xvr\n"
-       "  -xv?u[�c],-xv?m[�c],-xv?d[�c] -xv �̏c��ʒu�w��\n"
-       "                ?��l|c|r�̉��w��, u|m|r �͏c ���|������|���� �w��\n"
-       //"  -xl[M:N]      -xv+M:+N:M:N �ɓ���\n"
+       "  -xv[W:H:X:Y:w:h:x:y]  元画像の(x,y)のw*hをW*H画の(X,Y)にロードした画像にする.\n"
+       "                        W,Hは 0なら画像サイズ.\n"
+       "                -xv+10:+5 のように+で記述すれば画像サイズに対する増分になる.\n"
+       "  -xvc[W:H:X:Y:w:h:x:y] センタリング版-xv. X:Y,x:yはセンタリング後オフセット\n"
+       "  -xvr[W:H:X:Y:w:h:x:y] 右(下)寄版-xv. X:Y,x:yは右寄後のオフセット\n"
+       "  -xve[W:H:X:Y:w:h:x:y] ファイル名の最後が数字で奇数なら-xv,偶数なら-xvr\n"
+       "  -xv?u[…],-xv?m[…],-xv?d[…] -xv の縦基準位置指定\n"
+       "                ?はl|c|rの横指定, u|m|r は縦 上寄|中央寄|下寄 指定\n"
+       //"  -xl[M:N]      -xv+M:+N:M:N に同じ\n"
       #ifdef MY_H
        "\n"
-       " [�`�b�v&�}�b�v]\n"
-       "  -mc[N:M]      N*N(N*M)�h�b�g�P��(�`�b�v)��\n"
-       "  -mh[W]        �`�b�v&�}�b�v��. W:�e�N�X�`������\n"
-       "  -mp[W]        �e�N�X�`�����܂߂��t�@�C���ł̃`�b�v&�}�b�v��.\n"
-       "  -mn           ���`�b�v�Z�߂��s��Ȃ�(�����`�b�v�l�߂͍s��)\n"
-       "  -mnn          ���`�b�v���`�b�v��Z�߂Ȃ�.\n"
-       "  -mb           -mh,-mp�ɂ����ă`�b�v�̎��͂P�h�b�g�𑝐B�����e�N�X�`���𐶐�\n"
-       "  -mq[TW:TH]    -mp �Ɠ��l�B������256x256���̉摜�Ȃ�1*1�}�b�v�ɂ���\n"
-       "  -mi           ���e�L�X�g����.\n"
-       "  -my           �}�b�v���ł̑������̓��ʔ�\n"
-       "  -xnn          -xn�Ɠ��l�����A-mc���Ɏn�_���̓`�b�v�P�ʉ������A���肬���I��.\n"
-       "  -xo[X:Y]      �摜�t�H�[�}�b�g�̎n�_����ݒ�\n"
+       " [チップ&マップ]\n"
+       "  -mc[N:M]      N*N(N*M)ドット単位(チップ)化\n"
+       "  -mh[W]        チップ&マップ化. W:テクスチャ横幅\n"
+       "  -mp[W]        テクスチャを含めたファイルでのチップ&マップ化.\n"
+       "  -mn           同チップ纏めを行わない(抜きチップ詰めは行う)\n"
+       "  -mnn          抜チップ同チップを纏めない.\n"
+       "  -mb           -mh,-mpにおいてチップの周囲１ドットを増殖したテクスチャを生成\n"
+       "  -mq[TW:TH]    -mp と同様。ただし256x256内の画像なら1*1マップにする\n"
+       "  -mi           情報テキスト生成.\n"
+       "  -my           マップ化での走査順の特別版\n"
+       "  -xnn          -xnと同様だが、-mc時に始点側はチップ単位化せず、ぎりぎりを選択.\n"
+       "  -xo[X:Y]      画像フォーマットの始点情報を設定\n"
       #endif
        "\n"
-       " [���̑��̕ϊ�]\n"
-       "  -xe           ���k���ďo��(tga�̂�).\n"
-       "  -xq[N]        jpg���k���̃N�I���e�B(��)\n"
-       "  -xqg[N]       ���m�N���摜�p��jpg���k���̃N�I���e�B(��)\n"
-       "  -xx           x�������].\n"
-       "  -xy           y�������].\n"
-       "  -xj           �E90����].\n"
-       "  -xjl          ��90����].\n"
-       "  -xi[R]        �ER����].\n"
-       "  -xb           �s�N�Z���l�̃r�b�g���](2�l��ł̔��]��z��).\n"
-       "  -xg[N]        ��<=N�̓_��(0,0,0)�ɁA�o��bpp��(0,0,0)�ɂȂ�_���ߎ��̕ʐF��.\n"
-       "  -xca[N]       ����(0,0)�̐F�𔲂��F�Ƃ���4�����烿=0�̐F�Ńy�C���g.\n"
-       "                N=1-256�K���͈�. (�o�X�g�A�b�v���G�쐬��z��)\n"
-       "  -cgn[R|G|B|A] ���m�N���摜�ۂ���� -cg|-cgc �̓���(������)\n"
-       "  -xfa[A:N]     ��<=A �̃s�N�Z�����ڂ���. N:��\n"
-       "  -xf[..]       �ڂ����t�B���^����.\n"
-       "   -xf1:N                     �ڂ���[3x3:4/2/1]��N��.\n"
-       "   (-xf2:N:LeapARGB           ����:-xf1�g���łڂ����摜�ƒʏ�������)\n"
-       "   (-xf2:N:LeapARGB:RGB1:RGB2 ����:�����2�F���琶�������}�X�N�����f)\n"
-       //"   -xf4:N                     ��<255�̃s�N�Z�����ڂ���\n"
+       " [その他の変換]\n"
+       "  -xe           圧縮して出力(tgaのみ).\n"
+       "  -xq[N]        jpg圧縮時のクオリティ(％)\n"
+       "  -xqg[N]       モノクロ画像用のjpg圧縮時のクオリティ(％)\n"
+       "  -xx           x方向反転.\n"
+       "  -xy           y方向反転.\n"
+       "  -xj           右90°回転.\n"
+       "  -xjl          左90°回転.\n"
+       "  -xi[R]        右R°回転.\n"
+       "  -xb           ピクセル値のビット反転(2値画での反転を想定).\n"
+       "  -xg[N]        α<=Nの点を(0,0,0)に、出力bppで(0,0,0)になる点を近似の別色に.\n"
+       "  -xca[N]       左上(0,0)の色を抜き色として4隅からα=0の色でペイント.\n"
+       "                N=1-256適応範囲. (バストアップ仮絵作成を想定)\n"
+       "  -cgn[R|G|B|A] モノクロ画像ぽければ -cg|-cgc の動作(実験中)\n"
+       "  -xfa[A:N]     α<=A のピクセルをぼかす. N:回数\n"
+       "  -xf[..]       ぼかしフィルタ処理.\n"
+       "   -xf1:N                     ぼかし[3x3:4/2/1]をN回.\n"
+       "   (-xf2:N:LeapARGB           実験:-xf1拡張でぼかし画像と通常画を合成)\n"
+       "   (-xf2:N:LeapARGB:RGB1:RGB2 実験:さらに2色から生成したマスクも反映)\n"
+       //"   -xf4:N                     α<255のピクセルをぼかす\n"
        "\n"
         MY_USAGE_2
        "\n"
@@ -182,7 +182,7 @@ void usage(void)
 
 /* ------------------------------------------------------------------------ */
 
-/// �I�v�V�������
+/// オプション情報.
 struct Opts {
 public:
     ConvOne_Opts*   convOne_opts;
@@ -211,7 +211,7 @@ private:
 
 
 
-/** �I�v�V�����̏����� */
+/** オプションの初期化 */
 Opts::Opts(ConvOne_Opts& convOne_opts)
 {
     memset(this, 0, sizeof(*this));
@@ -225,7 +225,7 @@ Opts::Opts(ConvOne_Opts& convOne_opts)
 
 
 
-/** �I�v�V�����̏��� */
+/** オプションの処理 */
 int Opts::scan(const char *a)
 {
     ConvOne_Opts* o = this->convOne_opts;
@@ -284,7 +284,7 @@ int Opts::scan(const char *a)
             if (*p) {
                 o->clutAlpNum = strToUI(p,0);
             } else {
-                o->clutAlpNum = -1; // ���clut�����K���ɋ��߂�.
+                o->clutAlpNum = -1; // 後でclut数より適当に求める.
             }
             if (o->clutAlpNum >= 256)
                 o->clutAlpNum = 256;
@@ -299,7 +299,7 @@ int Opts::scan(const char *a)
         } else if (c == 'Z') {  // -az
             o->clearColIfAlp0 = (*p != '-');
 
-      #if 0 //����
+      #if 0 //旧版.
         } else if (c == 'I') {
             if (*p == 0)
                 o->alpModeI = 1;
@@ -320,7 +320,7 @@ int Opts::scan(const char *a)
         if (isdigit(*p)) {
             o->bpp = c = strToUI(p, 0);
             if (strchr("\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0c\x0f\x10\x18\x20", c) == NULL)
-                err_abortMsg("-b �̎w��l���z��O(%d)\n", c);
+                err_abortMsg("-b の指定値が想定外(%d)\n", c);
         } else {
             c = 0;
             if      (stricmp(p, "A2I6") == 0) c = 2;
@@ -332,7 +332,7 @@ int Opts::scan(const char *a)
                 o->fullColFlg      = 1;
                 o->bpp             = 8;
                 o->alpBitForBpp8   = c;
-                o->decreaseColorMode = DCM_MC_YUV;  // �Ƃ肠����yuv�ȃ��f�B�A���J�b�g�@�Ō��F���邱�Ƃɂ���
+                o->decreaseColorMode = DCM_MC_YUV;  // とりあえずyuvなメディアンカット法で減色することにする.
             }
         }
         break;
@@ -450,7 +450,7 @@ int Opts::scan(const char *a)
         case 'P':   //-cp
             if (TOUPPER(*p) == 'C') {   //-cpc
                 o->clutTxtName = strdupE(p+1);
-            } else if (TOUPPER(*p) == 'F') {    // -cpf �O���p���b�g�t�@�C����p���Č��F
+            } else if (TOUPPER(*p) == 'F') {    // -cpf 外部パレットファイルを用いて減色.
                 o->readFixedClut(p+1);
                 o->decreaseColorMode = DCM_FIX_FILE;
                 o->fullColFlg        = 1;
@@ -632,11 +632,11 @@ int Opts::scan(const char *a)
             }
         } else if (c == 'B') {  //-mb
             o->celStyl = (*p != '-') ? 1 : 0;
-        } else if (c == 'T') {  //-mt   �Ƃ肠�����A�p�~
+        } else if (c == 'T') {  //-mt   とりあえず、廃止.
             o->mapStyl = (*p != '-') ? 1 : 0;
-        } else if (c == 'N') {  //-mn   ���Z���`�F�b�N�����Ȃ�. -mnn �����L�����������Ȃ�(�X�v���C�g�n�[�h�����̃f�[�^�R���o�[�g)
+        } else if (c == 'N') {  //-mn   同セルチェックをしない. -mnn 抜きキャラも抜かない(スプライトハード向けのデータコンバート)
             o->mapNoCmp = (*p == 'n' || *p == 'N') ? 3 : (*p != '-') ? 1 : 0;
-        } else if (c == 'Y') {  //-my   �}�b�v���̑������Ԃ̓��ʔ�
+        } else if (c == 'Y') {  //-my   マップ化の走査順番の特別版.
             o->mapEx256x256 = (*p != '-') ? 1 : 0;
         } else if (c == 'H' || c == 'P' || c == 'Q') {  //-mh,-mp,-mq
             o->mapMode = (c == 'H') ? 1 : (c == 'P') ? 2 : 3;
@@ -654,7 +654,7 @@ int Opts::scan(const char *a)
                 o->celSzW = o->celSzH = 32;
             }
             if (o->mapTexW < o->celSzW || (o->mapTexH && o->mapTexH < o->celSzH)) {
-                err_abortMsg("�}�b�v�����̃e�N�X�`������������������(-mp�̑O��-mc�ŃT�C�Y��ݒ肵�Ă�������)\n");
+                err_abortMsg("マップ化時のテクスチャ横幅が小さすぎる(-mpの前に-mcでサイズを設定してください)\n");
                 goto OPT_ERR;
             }
         } else if (c == 'I') {      //-mi
@@ -735,11 +735,11 @@ int Opts::scan(const char *a)
                     p++;
                 }
                 unsigned errDif = 0;
-                if (*p == 'E' || *p == 'e') {   // -xde �덷�g�U.
+                if (*p == 'E' || *p == 'e') {   // -xde 誤差拡散.
                     errDif |= 0x8000;
                     p++;
                 }
-                if (*p == 'P' || *p == 'p') {   // -xdc �덷�g�U�������̃p�^�[���f�B�U���g��.
+                if (*p == 'P' || *p == 'p') {   // -xdc 誤差拡散処理側のパターンディザを使う.
                     errDif |= 0x4000;
                     p++;
                 }
@@ -747,7 +747,7 @@ int Opts::scan(const char *a)
                 if (o->ditBpp <= 0)
                     o->ditBpp = -1;
                 else if (o->ditBpp >= 24)
-                    err_abortMsg("-xd[%d] ���ƃf�B�U���s���܂���\n");
+                    err_abortMsg("-xd[%d] だとディザを行えません\n");
                 o->ditTyp = errDif ? 0 /*none*/ : 2 /* 2x2 */;
                 if (*p) {
                     p++;
@@ -780,7 +780,7 @@ int Opts::scan(const char *a)
         case 'R':   //-xr
             {
                 if (o->rszN > 2)
-                    err_abortMsg("-xrs�܂���-xrp ��3�ȏ�w�肳��Ă���\n");
+                    err_abortMsg("-xrsまたは-xrp が3つ以上指定されている.\n");
                 c = *p++, c = TOUPPER(c);
                 o->rszK[o->rszN] = 0;
                 if (c == 'P') {         //-xrp
@@ -811,11 +811,11 @@ int Opts::scan(const char *a)
                     //  o->rszK[o->rszN] = strToI(p+1,10);
                     o->rszK[o->rszN] = 1;
                     o->rszN++;
-                } else if (c == 'N') {  //-xrn �j�A���X�g�l�C�o�[
+                } else if (c == 'N') {  //-xrn ニアレストネイバー.
                     o->rszType = 0;
-                } else if (c == 'B') {  //-xrb �o�C���j�A
+                } else if (c == 'B') {  //-xrb バイリニア.
                     o->rszType = 1;
-                } else if (c == 'C') {  //-xrc �o�C�L���[�r�b�N
+                } else if (c == 'C') {  //-xrc バイキュービック.
                     o->rszType = 2;
                 } else if (c == 'E') {  //-xre spline36
                     o->rszType = 3;
@@ -898,7 +898,7 @@ int Opts::scan(const char *a)
                     } else if (c2 == 'E') { // -xve
                         ov->lcr_ex = 1;
                         if (ov->umd < 0)
-                            ov->umd = 1;    // umd���ݒ�Ȃ�c������
+                            ov->umd = 1;    // umd未設定なら縦中央寄.
                         ++p;
                     } else {
                         break;
@@ -991,7 +991,7 @@ int Opts::scan(const char *a)
                 goto OPT_ERR;
             }
             break;
-      #if 0 // �Ƃ��Ɍ��s��-xv�\�[�X�Ɩ������ăo�O���Ă�̂ō폜
+      #if 0 // とうに現行の-xvソースと矛盾してバグってるので削除.
         case 'L':   //-xl
             if (*p) {
                 if (o->vvIdx >= 2)
@@ -1018,8 +1018,8 @@ int Opts::scan(const char *a)
             o->bitCom = (*p == '-') ? 0 : 1;
             break;
 
-        case 'F':   //-xf   �t�B���^
-            if (TOUPPER(*p) == 'A') {   // -xfa臒l:��
+        case 'F':   //-xf   フィルタ.
+            if (TOUPPER(*p) == 'A') {   // -xfa閾値:回数.
                 o->filterType = 4;
                 o->bokashiCnt = 1;
                 o->bokashiAlpSikii = 254;
@@ -1044,13 +1044,13 @@ int Opts::scan(const char *a)
                     if (*p != 0) {
                         ++p;
                         o->bokashiCnt = strToI(p, 10);
-                        if (*p != 0) {  // -xf2 -xf3 �p
+                        if (*p != 0) {  // -xf2 -xf3 用.
                             //o->bokashiMergeRate = strToI(p+1, 10) / 100.0;
                             ++p;
                             o->bokashiMergeRateRGB = strToUI(p, 16);
                             o->bokashiMaskGenCol1  = 0x000000;
                             o->bokashiMaskGenCol2  = 0xffffff;
-                            if (*p != 0) {  // xf3 �p
+                            if (*p != 0) {  // xf3 用.
                                 ++p;
                                 o->bokashiMaskGenCol1 = strToUI(p, 16);
                                 if (*p != 0) {
@@ -1156,7 +1156,7 @@ void Opts::readClutBin(char const* fname, int clutbpp)
 
 /* ------------------------------------------------------------------------ */
 
-/// ���X�|���X�t�@�C���̓���
+/// レスポンスファイルの入力.
 static void getResFile(char *name, slist_t **a_fnames, Opts& opts)
 {
     char        buf[1024*64];
@@ -1198,7 +1198,7 @@ int main(int argc, char *argv[])
     static ConvOne convOne;
     static Opts    opts(convOne.opts());
 
-    /* �R�}���h���C����� */
+    /* コマンドライン解析 */
     for (int i = 1; i < argc; i++) {
         char* p = argv[i];
         if (*p == '-') {
@@ -1213,10 +1213,10 @@ int main(int argc, char *argv[])
     }
 
     if (fnames == NULL) {
-        err_abortMsg("�t�@�C�������w�肵�Ă�������\n");
+        err_abortMsg("ファイル名を指定してください\n");
     }
 
-    if (opts.convOne_opts->mapMode >= 2) {  // ����map�t�@�C���̊g���q��ݒ肷��
+    if (opts.convOne_opts->mapMode >= 2) {  // 合体mapファイルの拡張子を設定する.
         if (opts.convOne_opts->exDstExt == NULL)
             opts.convOne_opts->exDstExt = "mp";
         opts.dstExt = opts.convOne_opts->exDstExt;
@@ -1229,9 +1229,9 @@ int main(int argc, char *argv[])
             if (opts.srcDir)
                 fname_getMidDir(mdir, fl->s);
             fname_dirNameAddExt(inam, opts.srcDir, fl->s, opts.srcExt);
-            if (fil_findFirstName(nm, inam)) {      // �t�@�C��������������
+            if (fil_findFirstName(nm, inam)) {      // ファイル名が見つかった.
                 do {
-                    // �o�͖���ݒ�
+                    // 出力名を設定.
                     convOne.run(nm, NULL);
                 } while (fil_findNextName(nm));
             }
@@ -1243,9 +1243,9 @@ int main(int argc, char *argv[])
             if (opts.srcDir)
                 fname_getMidDir(mdir, fl->s);
             fname_dirNameAddExt(inam, opts.srcDir, fl->s, opts.srcExt);
-            if (fil_findFirstName(nm, inam)) {      // �t�@�C��������������
+            if (fil_findFirstName(nm, inam)) {      // ファイル名が見つかった.
                 do {
-                    // �o�͖���ݒ�
+                    // 出力名を設定.
                     if (opts.oname) {
                         char*   p = opts.oname;
                         if ((p[0] == '\\' || p[1] == ':') && opts.dstDir)
@@ -1257,11 +1257,11 @@ int main(int argc, char *argv[])
                     } else {
                         fname_dirDirNameChgExt(onam, opts.dstDir, mdir, fname_baseName(nm), opts.dstExt);
                     }
-                    if (opts.updateFlg == 0 || fil_fdateCmp(onam, nm) < 0) {    //��ɕϊ����Aonam�̓��t���Â����
-                        // ���ۂ̕ϊ�����
+                    if (opts.updateFlg == 0 || fil_fdateCmp(onam, nm) < 0) {    //常に変換か、onamの日付が古ければ.
+                        // 実際の変換処理.
                         convOne.run(nm, onam);
                     }
-                    if (opts.oname) // �o�̓t�@�C�������w�肳��Ă����ꍇ�͂P�t�@�C���̂�.
+                    if (opts.oname) // 出力ファイル名が指定されていた場合は１ファイルのみ.
                         break;
                 } while (fil_findNextName(nm));
             }

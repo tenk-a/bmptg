@@ -1,6 +1,6 @@
 /**
  *  @file RuigMgr.hpp
- *  @brief  ‰æ‘œ—Ş—‡•À‚×ˆ—
+ *  @brief  ç”»åƒé¡ä¼¼é †ä¸¦ã¹å‡¦ç†
  *  @author Masashi Kitamura (tenka@6809.net)
  */
 #ifndef RUIGMGR_HPP
@@ -27,7 +27,7 @@ typedef uint16_t                        RuigPtn4x4_t;
 typedef uint64_t                        RuigC4x4x4_t;   // tColor4bit 4x4
 
 
-/// 1‰æ‘œî•ñ (“¯ˆê‰æ‘œ‚ğ‚Ğ‚Æ‚Ü‚Æ‚ß‚É‚Å‚«‚é”Å)
+/// 1ç”»åƒæƒ…å ± (åŒä¸€ç”»åƒã‚’ã²ã¨ã¾ã¨ã‚ã«ã§ãã‚‹ç‰ˆ)
 class RuigFactor
     : public intrusive_ptr_ref_count<RuigFactor>
     //, public tiny_twlink<RuigFactor, sizeof(intrusive_ptr_ref_count<RuigFactor>) >
@@ -57,7 +57,7 @@ public:
     void     checkAndGenSameLinks(RuigFactors& sortFactors, uint32_t& majorNo);
     bool     hasNearSame() const { return minorNo_ > 0 || subNo_ > 0; }
 
-    // ‚É‚Ä‚»‚¤‚È‚Ì‚ÅŒã‚ÅÚ×ƒ`ƒFƒbƒN‚·‚×‚«ˆê——
+    // ã«ã¦ãã†ãªã®ã§å¾Œã§è©³ç´°ãƒã‚§ãƒƒã‚¯ã™ã¹ãä¸€è¦§
     //RuigFactors const& sameLinks() const { return sameLinks_; }
     //RuigFactors const& nearLinks() const { return nearLinks_; }
 
@@ -81,7 +81,7 @@ private:
     enum    { PIX_MAX  = 1023 };
     typedef uint32_t    pix_t;
 
-    /// ‰æ‘œ‚ÌF(yuv)•½‹Ï’l‚ğŒ³‚É‚µ‚½®”’l
+    /// ç”»åƒã®è‰²(yuv)å¹³å‡å€¤ã‚’å…ƒã«ã—ãŸæ•´æ•°å€¤
     union PackKey {
         uint32_t    key_;
         struct {
@@ -96,55 +96,55 @@ private:
     char            id_[8];
     char const*     namePtr_;
  #endif
-    std::string     name_;          ///< ƒtƒ@ƒCƒ‹–¼
-    RuigFactor*     parent_;        ///< same ‚Ì‘ã•\‚Ö‚Ìƒ|ƒCƒ“ƒ^. “¯‚¶ƒ‚ƒm‚ª–³‚¯‚ê‚Î©•ª©g‚ğw‚·.
+    std::string     name_;          ///< ãƒ•ã‚¡ã‚¤ãƒ«å
+    RuigFactor*     parent_;        ///< same æ™‚ã®ä»£è¡¨ã¸ã®ãƒã‚¤ãƒ³ã‚¿. åŒã˜ãƒ¢ãƒãŒç„¡ã‘ã‚Œã°è‡ªåˆ†è‡ªèº«ã‚’æŒ‡ã™.
 
-    uint32_t        majorNo_;       ///< mgr‚Å“o˜^‚³‚ê‚é‚Æ‚«‚Ì”Ô† 1`
-    uint16_t        minorNo_;       ///< ‹ß‚¢‚ª“¯Œ^‚Å‚Í‚È‚¢‚à‚Ì‚ÉU‚ç‚ê‚é”Ô†. 0:‹ß“¯–³ 1`:‹ß“¯—L
-    uint16_t        subNo_;         ///< “¯Œ^“à‚Å‚Ì”Ô† 0:“¯Œ^–³ 1`:“¯Œ^—L
+    uint32_t        majorNo_;       ///< mgrã§ç™»éŒ²ã•ã‚Œã‚‹ã¨ãã®ç•ªå· 1ï½
+    uint16_t        minorNo_;       ///< è¿‘ã„ãŒåŒå‹ã§ã¯ãªã„ã‚‚ã®ã«æŒ¯ã‚‰ã‚Œã‚‹ç•ªå·. 0:è¿‘åŒç„¡ 1ï½:è¿‘åŒæœ‰
+    uint16_t        subNo_;         ///< åŒå‹å†…ã§ã®ç•ªå· 0:åŒå‹ç„¡ 1ï½:åŒå‹æœ‰
 
-    uint32_t        width_;         ///< ‰¡•
-    uint32_t        height_;        ///< c•
-    uint32_t        lsize_;         ///< ‰¡•‚©c•‚Ì’·‚¢‚Ù‚¤‚ÌƒTƒCƒY
-    uint32_t        fsize_;         ///< ƒtƒ@ƒCƒ‹ƒTƒCƒY
+    uint32_t        width_;         ///< æ¨ªå¹…
+    uint32_t        height_;        ///< ç¸¦å¹…
+    uint32_t        lsize_;         ///< æ¨ªå¹…ã‹ç¸¦å¹…ã®é•·ã„ã»ã†ã®ã‚µã‚¤ã‚º
+    uint32_t        fsize_;         ///< ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚º
 
-    uint32_t        origWidth_;     ///< Œ³‰æ‘œ‚Ì‰¡•
-    uint32_t        origHeight_;    ///< Œ³‰æ‘œ‚Ìc•
+    uint32_t        origWidth_;     ///< å…ƒç”»åƒã®æ¨ªå¹…
+    uint32_t        origHeight_;    ///< å…ƒç”»åƒã®ç¸¦å¹…
 
 private:
-    bool            mono_;          ///< ƒ‚ƒmƒNƒ‚©‚Ç‚¤‚©
-    int             asp_;           ///< ³‚È‚ç aspW_ ‚Ì’lA•‰‚È‚çâ‘Î’l‚ªaspH_‚Ì’l.
-    int             aspW_;          ///< ‰¡•‚ğ•ª•ê‚É‚µ‚½1000•ª—¦‚É‚æ‚éƒAƒXƒyƒNƒg”ä
-    int             aspH_;          ///< c•‚ğ•ª•ê‚É‚µ‚½1000•ª—¦‚É‚æ‚éƒAƒXƒyƒNƒg”ä
-    RuigPtn4x4_t    ptnY4x4_;       ///< 4x4 k¬‚µ‚½‹P“x‚Ì2’l‰æ‘œ
-    PackKey         packKey_;       ///< ‰æ‘œ‚ÌF(YUV)•½‹Ï’l‚ğ—p‚¢‚½”äŠr—p®”’l
-    RuigPtn8x8_t    ptnY8x8_;       ///< 8x8 k¬‚µ‚½‹P“x‚Ì2’l‰æ‘œ
-    RuigPtn8x8_t    ptnY8x8sub_;    ///< 8x8 k¬‚µ “ñ’l‰»ŒãAoff‘¤‚Æon‘¤•Ê‚Å‹P“x•½‹Ïì‚Á‚Äã‰º‚Å“ñ’l‰»‚µ‚½‚à‚Ì
-    RuigPtn8x8_t    ptnU8x8_;       ///< 8x8 k¬‚µ‚½U‚Ì2’l‰æ‘œ
-    RuigPtn8x8_t    ptnV8x8_;       ///< 8x8 k¬‚µ‚½V‚Ì2’l‰æ‘œ
-    RuigPtn8x8_t    ptnY16x16_[2][2]; ///< 16x16 k¬‚µ‚½‹P“x‚Ì2’l‰æ‘œ
+    bool            mono_;          ///< ãƒ¢ãƒã‚¯ãƒ­ã‹ã©ã†ã‹
+    int             asp_;           ///< æ­£ãªã‚‰ aspW_ ã®å€¤ã€è² ãªã‚‰çµ¶å¯¾å€¤ãŒaspH_ã®å€¤.
+    int             aspW_;          ///< æ¨ªå¹…ã‚’åˆ†æ¯ã«ã—ãŸ1000åˆ†ç‡ã«ã‚ˆã‚‹ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”
+    int             aspH_;          ///< ç¸¦å¹…ã‚’åˆ†æ¯ã«ã—ãŸ1000åˆ†ç‡ã«ã‚ˆã‚‹ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”
+    RuigPtn4x4_t    ptnY4x4_;       ///< 4x4 ç¸®å°ã—ãŸè¼åº¦ã®2å€¤ç”»åƒ
+    PackKey         packKey_;       ///< ç”»åƒã®è‰²(YUV)å¹³å‡å€¤ã‚’ç”¨ã„ãŸæ¯”è¼ƒç”¨æ•´æ•°å€¤
+    RuigPtn8x8_t    ptnY8x8_;       ///< 8x8 ç¸®å°ã—ãŸè¼åº¦ã®2å€¤ç”»åƒ
+    RuigPtn8x8_t    ptnY8x8sub_;    ///< 8x8 ç¸®å°ã— äºŒå€¤åŒ–å¾Œã€offå´ã¨onå´åˆ¥ã§è¼åº¦å¹³å‡ä½œã£ã¦ä¸Šä¸‹ã§äºŒå€¤åŒ–ã—ãŸã‚‚ã®
+    RuigPtn8x8_t    ptnU8x8_;       ///< 8x8 ç¸®å°ã—ãŸUã®2å€¤ç”»åƒ
+    RuigPtn8x8_t    ptnV8x8_;       ///< 8x8 ç¸®å°ã—ãŸVã®2å€¤ç”»åƒ
+    RuigPtn8x8_t    ptnY16x16_[2][2]; ///< 16x16 ç¸®å°ã—ãŸè¼åº¦ã®2å€¤ç”»åƒ
 
     //RuigC4x4x4_t  pixC4x4x4_[3];  // 0:y 1:u 2:v
     //uint8_t       pixC8x4x4_[3][4][4];
 
-    pix_t           thresholdY_;    ///< Y‚ğ“ñ’l‰»‚·‚éê‡‚Ìè‡’l
-    pix_t           thresholdU_;    ///< U‚ğ“ñ’l‰»‚·‚éê‡‚Ìè‡’l
-    pix_t           thresholdV_;    ///< V‚ğ“ñ’l‰»‚·‚éê‡‚Ìè‡’l
+    pix_t           thresholdY_;    ///< Yã‚’äºŒå€¤åŒ–ã™ã‚‹å ´åˆã®é–¾å€¤
+    pix_t           thresholdU_;    ///< Uã‚’äºŒå€¤åŒ–ã™ã‚‹å ´åˆã®é–¾å€¤
+    pix_t           thresholdV_;    ///< Vã‚’äºŒå€¤åŒ–ã™ã‚‹å ´åˆã®é–¾å€¤
 
 private:
-    uint32_t        sameCount_;     ///< “¯ˆê‹‰æ‚Ì”
-    uint32_t        nearCount_;     ///< ‹ß—‰æ‚Ì”
-    uint32_t        midCount_;      ///< ’†’ö“x‚É‹ß‚»‚¤‚È‰æ‚Ì”
-    //RuigFactors   sameLinks_;     ///< ‘ã•\Factor‚Ìê‡: ‚Ù‚Ú“¯‚¶‚Æ‚İ‚È‚µ‚½ˆê——.
-    //RuigFactors   nearLinks_;     ///< ‘ã•\Factor‚Ìê‡: •”•ª“I‚Éˆá‚¤ê‡‚à‚ ‚é‚ª‚¾‚¢‚½‚¢“¯‚¶‚Æ‚İ‚È‚µ‚½ˆê——.
-    ValueLinks      valueLinks_;    ///< “¯‚¶‚©‹ß‚¢‚Æv‚í‚ê‚é‰æ‘œ‚Ì•]‰¿’l‚Æƒ|ƒCƒ“ƒ^. ‘ŠŒİ‚Éİ’è‚³‚ê‚é.
+    uint32_t        sameCount_;     ///< åŒä¸€è¦–ç”»ã®æ•°
+    uint32_t        nearCount_;     ///< è¿‘ä¼¼ç”»ã®æ•°
+    uint32_t        midCount_;      ///< ä¸­ç¨‹åº¦ã«è¿‘ãã†ãªç”»ã®æ•°
+    //RuigFactors   sameLinks_;     ///< ä»£è¡¨Factorã®å ´åˆ: ã»ã¼åŒã˜ã¨ã¿ãªã—ãŸä¸€è¦§.
+    //RuigFactors   nearLinks_;     ///< ä»£è¡¨Factorã®å ´åˆ: éƒ¨åˆ†çš„ã«é•ã†å ´åˆã‚‚ã‚ã‚‹ãŒã ã„ãŸã„åŒã˜ã¨ã¿ãªã—ãŸä¸€è¦§.
+    ValueLinks      valueLinks_;    ///< åŒã˜ã‹è¿‘ã„ã¨æ€ã‚ã‚Œã‚‹ç”»åƒã®è©•ä¾¡å€¤ã¨ãƒã‚¤ãƒ³ã‚¿. ç›¸äº’ã«è¨­å®šã•ã‚Œã‚‹.
 
 private:
     uint8_t         pix8x8_[8][8][3];
 };
 
 
-/// ‰æ‘œŒQ‚ğ‚Ü‚Æ‚ß‚ÄŠÇ—‚·‚é
+/// ç”»åƒç¾¤ã‚’ã¾ã¨ã‚ã¦ç®¡ç†ã™ã‚‹
 class RuigMgr {
 public:
     RuigMgr();
@@ -181,11 +181,11 @@ private:
         }
     };
 
-    typedef std::multiset< RuigFactorPtr, FirstSortLess >  RuigFactorBodys;    // ‘S•”‚ÌÀ‘Ì—p
+    typedef std::multiset< RuigFactorPtr, FirstSortLess >  RuigFactorBodys;    // å…¨éƒ¨ã®å®Ÿä½“ç”¨
 
 private:
-    RuigFactorBodys     factorBodys_;       ///< ‘Sfactor‚ÌÀ‘Ì.
-    RuigFactors         allFactors_;        ///< ‘Sfactorƒ\[ƒgÏ‚Ìˆê——(är‚ß‚é—p)
+    RuigFactorBodys     factorBodys_;       ///< å…¨factorã®å®Ÿä½“.
+    RuigFactors         allFactors_;        ///< å…¨factorã‚½ãƒ¼ãƒˆæ¸ˆã®ä¸€è¦§(èˆã‚ã‚‹ç”¨)
 };
 
 #endif

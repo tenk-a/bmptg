@@ -1,6 +1,6 @@
 /**
  *  @file   BmImgSave.h
- *  @brief  ŠeíƒtƒH[ƒ}ƒbƒg(bmp,tga ..)‚ÌƒZ[ƒu
+ *  @brief  å„ç¨®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ(bmp,tga ..)ã®ã‚»ãƒ¼ãƒ–
  *  @author Masashi Kitamura
  *  @date   2000
  */
@@ -9,7 +9,7 @@
 #define BMIMGSAVE_H
 
 
-/// ‰æ‘œ•ÏŠ·‚ÌƒIƒvƒVƒ‡ƒ“
+/// ç”»åƒå¤‰æ›ã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³.
 typedef struct bm_opt_t {
     int x0,y0;
     int clutNum;
@@ -34,9 +34,9 @@ typedef enum BM_FLAG_T {
     BM_FLAG_COLKEY_SH   = 5,
     BM_FLAG_CLUT_ALP_SH = 6,
     BM_FLAG_EX_ENC_SH   = 7,
-    BM_FLAG_COLKEY      = 1 << BM_FLAG_COLKEY_SH,       ///< ”²‚«F‚ª‚ ‚é‚©
-    BM_FLAG_CLUT_ALP    = 1 << BM_FLAG_CLUT_ALP_SH,     ///< alpha•tclut‚É‚·‚é‚©
-    BM_FLAG_EX_ENC      = 1 << BM_FLAG_EX_ENC_SH,       ///< “Á•Ê‚Ìˆ³k‚ğ‚·‚é‚©
+    BM_FLAG_COLKEY      = 1 << BM_FLAG_COLKEY_SH,       ///< æŠœãè‰²ãŒã‚ã‚‹ã‹.
+    BM_FLAG_CLUT_ALP    = 1 << BM_FLAG_CLUT_ALP_SH,     ///< alphaä»˜clutã«ã™ã‚‹ã‹.
+    BM_FLAG_EX_ENC      = 1 << BM_FLAG_EX_ENC_SH,       ///< ç‰¹åˆ¥ã®åœ§ç¸®ã‚’ã™ã‚‹ã‹.
 } BM_FLAG_T;
 
 

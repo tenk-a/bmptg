@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_rotateBilinearAlpha.c
- *  @brief  ‰ñ“](•âŠ®‚ÍƒoƒCƒŠƒjƒA–@)
+ *  @brief  å›è»¢(è£œå®Œã¯ãƒã‚¤ãƒªãƒ‹ã‚¢æ³•)
  *  @author Masashi KITAMURA
  */
 
@@ -26,7 +26,7 @@ typedef double          sum_t;
 static int  pix32_rotateBilinearAlphaSub(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol);
 
 
-/** ‰ñ“]
+/** å›è»¢
  */
 int  pix32_rotateBilinearAlpha(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol)
 {
@@ -40,7 +40,7 @@ int  pix32_rotateBilinearAlpha(pix32_rotate_dst_t* dst, const unsigned *src, uns
     return pix32_rotateBilinearAlphaSub(dst, src, srcW, srcH, rot, dcol);
 }
 
-/** ‰ñ“]
+/** å›è»¢
  */
 static int  pix32_rotateBilinearAlphaSub(pix32_rotate_dst_t* dst, const unsigned *src, unsigned srcW, unsigned srcH, double rot, uint32_t dcol)
 {

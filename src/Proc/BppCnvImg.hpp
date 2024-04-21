@@ -1,6 +1,6 @@
 /**
  *  @file   BppCnvImg.h
- *  @brief  å‚É‰æ‘œ‚Ì bpp ‚â‰¡•ƒAƒ‰ƒCƒƒ“ƒg‚ğ’²®‚·‚é‚½‚ß‚ÌƒNƒ‰ƒX.
+ *  @brief  ä¸»ã«ç”»åƒã® bpp ã‚„æ¨ªå¹…ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã‚’èª¿æ•´ã™ã‚‹ãŸã‚ã®ã‚¯ãƒ©ã‚¹.
  *  @author Masashi KITAMURA
  */
 
@@ -22,13 +22,13 @@
 
 
 // ----------------------------------------------------------------------------
-// ƒƒ‚ƒŠ[Šm•ÛEŠJ•ú—p ƒNƒ‰ƒX. malloc,free‚Ì‘ã—p•i.
+// ãƒ¡ãƒ¢ãƒªãƒ¼ç¢ºä¿ãƒ»é–‹æ”¾ç”¨ ã‚¯ãƒ©ã‚¹. malloc,freeã®ä»£ç”¨å“.
 // typedef std::allocator<unsigned char>  BppCnvImg_byte_allocator;
-// ‚Å‚¢‚¢‚ªAallocate(n), deallocate(p,n)‚Ì‚İ‚ ‚ê‚Î‚¢‚¢‚Ì‚Å..
+// ã§ã„ã„ãŒã€allocate(n), deallocate(p,n)ã®ã¿ã‚ã‚Œã°ã„ã„ã®ã§..
 
 #ifndef BppCnvImg_byte_allocator
 struct BppCnvImg_byte_allocator {
-  #if defined _WINDOWS  // winƒAƒvƒŠ‚È‚ç win-api”Å.
+  #if defined _WINDOWS  // winã‚¢ãƒ—ãƒªãªã‚‰ win-apiç‰ˆ.
     static unsigned char* allocate(unsigned n) {
         void *alc_mem_ptr = ::LocalAlloc(LMEM_FIXED, n);
         assert(alc_mem_ptr != 0);
@@ -58,19 +58,19 @@ struct BppCnvImg_byte_allocator {
 
 // ----------------------------------------------------------------------------
 
-/** bpp‚â‰¡•ƒAƒ‰ƒCƒƒ“ƒg‚Ì•ÏŠ·—p‚Ì‰æ‘œƒNƒ‰ƒX.
- *  ¦ template‚É‚µ‚Ä‚é‚Ì‚ÍAƒwƒbƒ_‚Ì‚İ‚Éƒ‹[ƒ`ƒ“‚ğ‚¨‚«‚½‚¢ˆ×....
+/** bppã‚„æ¨ªå¹…ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã®å¤‰æ›ç”¨ã®ç”»åƒã‚¯ãƒ©ã‚¹.
+ *  â€» templateã«ã—ã¦ã‚‹ã®ã¯ã€ãƒ˜ãƒƒãƒ€ã®ã¿ã«ãƒ«ãƒ¼ãƒãƒ³ã‚’ãŠããŸã„ç‚º....
  */
 template<class A=BppCnvImg_byte_allocator>
 class BppCnvImg_T : private A {
 public:
-    // bpp‚ğŒ³‚É
-    enum Fmt {          // bpp‚É‘Î‚·‚é•â•“I‚ÈƒtƒH[ƒ}ƒbƒgí•Ê.
-        FMT_N        =  0,      // ƒfƒtƒHƒ‹ƒgw’è“™
-        FMT_I1       =  1,      //bpp=1     2F
-        FMT_I2       =  2,      //bpp=2     4F
-        FMT_I4       =  4,      //bpp=4     16F
-        FMT_I8       =  8,      //bpp=8     256F
+    // bppã‚’å…ƒã«.
+    enum Fmt {          // bppã«å¯¾ã™ã‚‹è£œåŠ©çš„ãªãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆç¨®åˆ¥.
+        FMT_N        =  0,      // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆæŒ‡å®šç­‰.
+        FMT_I1       =  1,      //bpp=1     2è‰².
+        FMT_I2       =  2,      //bpp=2     4è‰².
+        FMT_I4       =  4,      //bpp=4     16è‰².
+        FMT_I8       =  8,      //bpp=8     256è‰².
         FMT_ARGB4444 = 12,
         FMT_GRB655   = 13,
         FMT_BRG556   = 14,
@@ -84,11 +84,11 @@ public:
     BppCnvImg_T() { zeroclear(); }
     ~BppCnvImg_T() { release(); }
 
-    /// ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^.
+    /// ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿.
     BppCnvImg_T(const BppCnvImg_T& rhs);
 
-    /// ì¬. alc=true‚Ì‚Æ‚«pix,clut‚Ìƒƒ‚ƒŠ‚ğ“®“I‚Éæ“¾‚µ‚ÄŠÇ—.
-    /// alc=false‚Ì‚Íˆø”‚ğ‚»‚Ì‚Ü‚Ü•Û(ŠJ•ú“™‚Ís‚í‚È‚¢).
+    /// ä½œæˆ. alc=trueã®ã¨ãpix,clutã®ãƒ¡ãƒ¢ãƒªã‚’å‹•çš„ã«å–å¾—ã—ã¦ç®¡ç†.
+    /// alc=falseã®æ™‚ã¯å¼•æ•°ã‚’ãã®ã¾ã¾ä¿æŒ(é–‹æ”¾ç­‰ã¯è¡Œã‚ãªã„).
     BppCnvImg_T(bool alc, void* pix, unsigned w, unsigned h, unsigned bppFmt, unsigned algn
                 , unsigned* clut, unsigned clutSize=unsigned(-1))
         : pix_(0), clut_(0)
@@ -96,46 +96,46 @@ public:
         create(alc, pix, w, h, bppFmt, algn, clut, clutSize);
     }
 
-    /// w*h ‚Åbpp(Fmt)‚Ì–³’n‚Ì‰æ‘œ‚ğì¬.
+    /// w*h ã§bpp(Fmt)ã®ç„¡åœ°ã®ç”»åƒã‚’ä½œæˆ.
     BppCnvImg_T(unsigned w, unsigned h, unsigned bppFmt, unsigned align=1, unsigned clutSize=unsigned(-1))
         : pix_(0), clut_(0)
     {
         create(true, NULL, w, h, bppFmt, align, NULL, clutSize);
     }
 
-    /// src‚ğw’èfmt‚É•ÏŠ·‚µ‚Äì¬.
+    /// srcã‚’æŒ‡å®šfmtã«å¤‰æ›ã—ã¦ä½œæˆ.
     BppCnvImg_T(const BppCnvImg_T& src, unsigned bppFmt, unsigned align=1)
         : pix_(0), clut_(0)
     {
         create(src, bppFmt, align);
     }
 
-    /// ì¬. alc=true‚Ì‚Æ‚«pix,clut‚Ìƒƒ‚ƒŠ‚ğ“®“I‚Éæ“¾‚µ‚ÄŠÇ—.
-    /// alc=false‚Ì‚Íˆø”‚ğ‚»‚Ì‚Ü‚Ü•Û(ŠJ•ú“™‚Ís‚í‚È‚¢).
+    /// ä½œæˆ. alc=trueã®ã¨ãpix,clutã®ãƒ¡ãƒ¢ãƒªã‚’å‹•çš„ã«å–å¾—ã—ã¦ç®¡ç†.
+    /// alc=falseã®æ™‚ã¯å¼•æ•°ã‚’ãã®ã¾ã¾ä¿æŒ(é–‹æ”¾ç­‰ã¯è¡Œã‚ãªã„).
     bool create(bool alc, void* pix, unsigned w, unsigned h, unsigned bppFmt, unsigned srcAlgn
                 , unsigned* clut, unsigned clutSize=unsigned(-1) );
 
-    /// w*h ‚Åbpp(Fmt)‚Ì–³’n‚Ì‰æ‘œ‚ğì¬.
+    /// w*h ã§bpp(Fmt)ã®ç„¡åœ°ã®ç”»åƒã‚’ä½œæˆ.
     bool create(unsigned w, unsigned h, unsigned bppFmt, unsigned align=1, unsigned clutSize=unsigned(-1)) {
         return create(true, NULL, w, h, bppFmt, align, NULL, clutSize);
     }
 
-    /// src ‚©‚çbpp‚ÆƒAƒ‰ƒCƒƒ“ƒg‚ğ•ÏX‚µ‚½ƒ‚ƒm‚ğì¬.
+    /// src ã‹ã‚‰bppã¨ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã‚’å¤‰æ›´ã—ãŸãƒ¢ãƒã‚’ä½œæˆ.
     bool create(const BppCnvImg_T& src, unsigned bppFmt, unsigned align=1);
 
-    /// ŠJ•ú.
+    /// é–‹æ”¾.
     void release();
 
-    /// ƒRƒs[.
+    /// ã‚³ãƒ”ãƒ¼.
     BppCnvImg_T& operator=(const BppCnvImg_T& rhs) {
         BppCnvImg_T(rhs).swap(*this);
         return *this;
     }
 
-    /// ŒğŠ·.
+    /// äº¤æ›.
     void swap(BppCnvImg_T& rhs);
 
-    // ƒƒ“ƒo[î•ñ‚ğ•Ô‚·.
+    // ãƒ¡ãƒ³ãƒãƒ¼æƒ…å ±ã‚’è¿”ã™.
     unsigned    width()       const { return w_; }
     unsigned    height()      const { return h_; }
     unsigned    bpp()         const { return bpp_; }
@@ -154,54 +154,54 @@ public:
     void    getClut(unsigned* clut, unsigned clutSize=0);
     void    setClut(const unsigned* clut, unsigned clutSize);
 
-    /// fmtBppŒ`®‚É•ÏŠ·‚µ‚Äw*h‚µ‚Äpix‚Éİ’è.
+    /// fmtBppå½¢å¼ã«å¤‰æ›ã—ã¦w*hã—ã¦pixã«è¨­å®š.
     bool    getImage(void* pix, unsigned w=0, unsigned h=0, unsigned fmtBpp=0, unsigned algn=0
                         , unsigned* clut=0, unsigned clutSize=0, int ox=0, int oy=0);
 
-    /// src‚Ì‰æ‘œ‚ğAdst‚ÖAdst‚Ì”İ’è‚Å•ÏŠ·‚µ‚Äİ’è. ‘½F->clut•ÏŠ·‚Ís‚í‚È‚¢.
-    // (ox,oy)‚Ísrc’†‚ÌŠJn“_.
-    //  ¦ clut‰æ‚©‚çF”‚ÌŒ¸‚éclut‰æ‚Ö‚Ì•ÏŠ·‚ÍA’Pƒ‚ÉãˆÊƒrƒbƒg‚ğÌ‚Ä‚é‚¾‚¯.
-    //      Œ¸F‚ª•K—v‚È‚ç‚ÎconvEx‚ğ—p‚¢‚é‚©A—\‚ßŒ¸F‚µ‚Ä‚¨‚­‚±‚Æ.
+    /// srcã®ç”»åƒã‚’ã€dstã¸ã€dstã®è«¸è¨­å®šã§å¤‰æ›ã—ã¦è¨­å®š. å¤šè‰²->clutå¤‰æ›ã¯è¡Œã‚ãªã„.
+    // (ox,oy)ã¯srcä¸­ã®é–‹å§‹ç‚¹.
+    //  â€» clutç”»ã‹ã‚‰è‰²æ•°ã®æ¸›ã‚‹clutç”»ã¸ã®å¤‰æ›ã¯ã€å˜ç´”ã«ä¸Šä½ãƒ“ãƒƒãƒˆã‚’æ¨ã¦ã‚‹ã ã‘.
+    //      æ¸›è‰²ãŒå¿…è¦ãªã‚‰ã°convExã‚’ç”¨ã„ã‚‹ã‹ã€äºˆã‚æ¸›è‰²ã—ã¦ãŠãã“ã¨.
     static bool conv(BppCnvImg_T& dst, const BppCnvImg_T& src, int ox=0, int oy=0);
     bool conv(const BppCnvImg_T& src, int ox=0, int oy=0) { return conv(*this,src,ox,oy); }
 
-    /// src‚Ì‰æ‘œ‚ğAdst‚ÖAdst‚Ì”İ’è‚Å•ÏŠ·‚µ‚Äİ’è. •K—v‚È‚ç‚ÎŒ¸F‚ğs‚¤(ŠÈˆÕ).
+    /// srcã®ç”»åƒã‚’ã€dstã¸ã€dstã®è«¸è¨­å®šã§å¤‰æ›ã—ã¦è¨­å®š. å¿…è¦ãªã‚‰ã°æ¸›è‰²ã‚’è¡Œã†(ç°¡æ˜“).
     static bool convEx(BppCnvImg_T& dst, const BppCnvImg_T& src, int ox=0, int oy=0);
     bool convEx(const BppCnvImg_T& src, int ox=0, int oy=0) {return convEx(*this,src,ox,oy);}
 
-    // 0‚È‚ç little endian  1‚È‚çbig endian
+    // 0ãªã‚‰ little endian  1ãªã‚‰big endian
     void setSrcEndian(bool sw)  { flags_ &= ~4; flags_ |= int(sw)<<2; }
     bool srcEndian() const      { return (flags_ & 4) != 0; }
     void setDstEndian(bool sw)  { flags_ &= ~8; flags_ |= int(sw)<<3; }
     bool dstEndian() const      { return (flags_ & 8) != 0; }
 
-    void revY();                ///< ã‰º”½“]‚·‚é.
-    void swapBitOrder();        ///< bpp=1,2,4‚Ì‚Æ‚«A‚PƒoƒCƒg’†‚Ì‹l‚ß‡‚ğ”½“]‚·‚é.
-    void swapByteOrder();       ///< bpp> 8‚Ì‚Æ‚«A‚PƒsƒNƒZƒ‹’†‚ÌƒoƒCƒg‚Ì‡‚ğ”½“]‚·‚é.
+    void revY();                ///< ä¸Šä¸‹åè»¢ã™ã‚‹.
+    void swapBitOrder();        ///< bpp=1,2,4ã®ã¨ãã€ï¼‘ãƒã‚¤ãƒˆä¸­ã®è©°ã‚é †ã‚’åè»¢ã™ã‚‹.
+    void swapByteOrder();       ///< bpp> 8ã®ã¨ãã€ï¼‘ãƒ”ã‚¯ã‚»ãƒ«ä¸­ã®ãƒã‚¤ãƒˆã®é †ã‚’åè»¢ã™ã‚‹.
 
-    bool isUseAlpha() const;    ///< ”¼“§–¾‚ªg‚í‚ê‚Ä‚¢‚ê‚Îtrue(•s“§–¾‚Æ“§–¾‚ª¬İ‚µ‚Ä‚¢‚éê‡‚àtrue)
+    bool isUseAlpha() const;    ///< åŠé€æ˜ãŒä½¿ã‚ã‚Œã¦ã„ã‚Œã°true(ä¸é€æ˜ã¨é€æ˜ãŒæ··åœ¨ã—ã¦ã„ã‚‹å ´åˆã‚‚true)
 
-    /// conv(),convEx()‚É‚Ä16ƒrƒbƒgF‰æ‚Ö•ÏŠ·‚·‚é, ƒpƒ^[ƒ“ƒfƒBƒU‚ğ“K—p.
+    /// conv(),convEx()ã«ã¦16ãƒ“ãƒƒãƒˆè‰²ç”»ã¸å¤‰æ›ã™ã‚‹æ™‚, ãƒ‘ã‚¿ãƒ¼ãƒ³ãƒ‡ã‚£ã‚¶ã‚’é©ç”¨.
     void setDitherMode(bool sw=true) { flags_ &= ~2; flags_ |= int(sw)<<1; }
 
-    /// ƒpƒ^[ƒ“ƒfƒBƒU‚ğ“K—p‚·‚é‚©”Û‚©‚Ìó‘Ô‚ğ•Ô‚·.
+    /// ãƒ‘ã‚¿ãƒ¼ãƒ³ãƒ‡ã‚£ã‚¶ã‚’é©ç”¨ã™ã‚‹ã‹å¦ã‹ã®çŠ¶æ…‹ã‚’è¿”ã™.
     bool ditherMode() const { return (flags_ & 2) != 0; }
 
-    /// dst‚ªclut‰æ‚ÅAsrc‚ª dst.clutSize()FˆÈ‰º‚µ‚©F‚ğg‚Á‚Ä‚¢‚È‚¢ê‡Asrc‚ğdst‚É•ÏŠ·.
+    /// dstãŒclutç”»ã§ã€srcãŒ dst.clutSize()è‰²ä»¥ä¸‹ã—ã‹è‰²ã‚’ä½¿ã£ã¦ã„ãªã„å ´åˆã€srcã‚’dstã«å¤‰æ›.
     static bool     convToClutImage(BppCnvImg_T& dst, const BppCnvImg_T& src, int ox, int oy);
     bool convToClutImage(const BppCnvImg_T& src, int ox=0, int oy=0) { return convToClutImage(*this,src,ox,oy); }
 
-    unsigned getPixXY(int x, int y) const;          ///< (x,y)‚ÌˆÊ’u‚ÌƒsƒNƒZƒ‹(color index ”Ô†). •Ô’l‚Í‘½F‚È‚çARGB8888‚É•ÏŠ·‚µ‚½’l.
-    unsigned getPixArgb(int x, int y) const;        ///< (x,y)‚ÌˆÊ’u‚ÌF‚ğ•Ô‚·. •Ô’l‚Í‘½F‚È‚çARGB8888‚É•ÏŠ·‚µ‚½’l.
-    void     setPixXY(int x, int y, unsigned c);    ///< (x,y)‚ÌˆÊ’u‚ÉƒsƒNƒZƒ‹‚ğİ’è. c‚Í‘½F‚Ìê‡‚ÍARGB8888
+    unsigned getPixXY(int x, int y) const;          ///< (x,y)ã®ä½ç½®ã®ãƒ”ã‚¯ã‚»ãƒ«(color index ç•ªå·). è¿”å€¤ã¯å¤šè‰²ãªã‚‰ARGB8888ã«å¤‰æ›ã—ãŸå€¤.
+    unsigned getPixArgb(int x, int y) const;        ///< (x,y)ã®ä½ç½®ã®è‰²ã‚’è¿”ã™. è¿”å€¤ã¯å¤šè‰²ãªã‚‰ARGB8888ã«å¤‰æ›ã—ãŸå€¤.
+    void     setPixXY(int x, int y, unsigned c);    ///< (x,y)ã®ä½ç½®ã«ãƒ”ã‚¯ã‚»ãƒ«ã‚’è¨­å®š. cã¯å¤šè‰²ã®å ´åˆã¯ARGB8888
 
-    /// ‰¡•,bpp,ƒAƒ‰ƒCƒƒ“ƒg‚©‚ç‰¡•ƒoƒCƒg”‚ğ‹‚ß‚é.
+    /// æ¨ªå¹…,bpp,ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã‹ã‚‰æ¨ªå¹…ãƒã‚¤ãƒˆæ•°ã‚’æ±‚ã‚ã‚‹.
     static unsigned widthToBytes(unsigned w, unsigned fmtBpp, unsigned algn);
 
-    /// EFmt ‚Ì’l‚©‚ç ÀÛ‚Ìbpp‚ğ‹‚ß‚é.
+    /// EFmt ã®å€¤ã‹ã‚‰ å®Ÿéš›ã®bppã‚’æ±‚ã‚ã‚‹.
     static unsigned fmtToBpp(Fmt fmt);
 
-    // little endian’l‚Å‚ÌARGB‚ğŠî€‚ÉAargb‡‚¾‚Á‚½‰æ‘œ‚ğ a,r,g,b‚Ì‡”Ô‚ğ•ÏX.
+    // little endianå€¤ã§ã®ARGBã‚’åŸºæº–ã«ã€argbé †ã ã£ãŸç”»åƒã‚’ a,r,g,bã®é †ç•ªã‚’å¤‰æ›´.
     void swapToAGRB() { swapARGB( 1, false); }
     void swapToABRG() { swapARGB( 3, false); }
     void swapToABGR() { swapARGB( 5, false); }
@@ -210,7 +210,7 @@ public:
     void swapToBRGA() { swapARGB( 9, false); }
     void swapToBGRA() { swapARGB(11, false); }
 
-    // little endian’l‚Å‚ÌARGB‚ğŠî€‚ÉAargb‡‚É‚È‚é‚æ‚¤‚É a,r,g,b‚Ì‡”Ô‚ğ•ÏX.
+    // little endianå€¤ã§ã®ARGBã‚’åŸºæº–ã«ã€argbé †ã«ãªã‚‹ã‚ˆã†ã« a,r,g,bã®é †ç•ªã‚’å¤‰æ›´.
     void swapFromAGRB() { swapARGB( 1, true); }
     void swapFromABRG() { swapARGB( 3, true); }
     void swapFromABGR() { swapARGB( 5, true); }
@@ -224,7 +224,7 @@ public:
     void clearImage() { memset(image(), 0, imageBytes()); }
     void clearClut()  { if (clut_ && clutSz_) memset(clut_, 0, sizeof(clut_[0])*clutSz_); }
   #if 0
-    /// “®“I‚ÉŠm•Û‚µ‚½ƒCƒ[ƒW‚Ìƒƒ‚ƒŠ‚ğ•Ô‚µAƒNƒ‰ƒX©‘Ì‚Í‰Šú‰».
+    /// å‹•çš„ã«ç¢ºä¿ã—ãŸã‚¤ãƒ¡ãƒ¼ã‚¸ã®ãƒ¡ãƒ¢ãƒªã‚’è¿”ã—ã€ã‚¯ãƒ©ã‚¹è‡ªä½“ã¯åˆæœŸåŒ–.
     unsigned char* removeImage(unsigned** ppClut);
   #endif
 
@@ -253,26 +253,26 @@ private:
     template<typename T>
     static unsigned binary_insert_tbl_n(T* pTbl, unsigned& rNum, const T& key);
 
-private:    // ƒƒ“ƒo[•Ï”.
-    unsigned char*  pix_;           ///< ‰æ‘œƒsƒNƒZƒ‹.
-    unsigned        w_;             ///< ‰¡•.
-    unsigned        h_;             ///< c•.
-    unsigned*       clut_;          ///< Fƒe[ƒuƒ‹.
-    unsigned        clutSz_;        ///< Fƒe[ƒuƒ‹‚ÌƒTƒCƒY.
-    unsigned        wb_;            ///< ‰¡•ƒoƒCƒg”.
-    unsigned char   bpp_;           ///< ‚PƒsƒNƒZƒ‹‚ ‚½‚è‚Ìƒrƒbƒg”.
-    unsigned char   align_;         ///< ‰¡•ƒAƒ‰ƒCƒƒ“ƒg.
-    unsigned char   fmt_;           ///< enum Fmt ‚Ì’l.
-    unsigned char   flags_;         /**< bit0: pix_‚Ìƒƒ‚ƒŠ‚ÌŠ—LÒ‚©.
-                                     *  bit1:•K—v‚È‚çdither‚·‚é.
-                                     *  bit2:“ü—Íbit/byte order‚ªBE
-                                     *  bit2:“ü—Íbit/byte order‚ªBE
+private:    // ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°.
+    unsigned char*  pix_;           ///< ç”»åƒãƒ”ã‚¯ã‚»ãƒ«.
+    unsigned        w_;             ///< æ¨ªå¹….
+    unsigned        h_;             ///< ç¸¦å¹….
+    unsigned*       clut_;          ///< è‰²ãƒ†ãƒ¼ãƒ–ãƒ«.
+    unsigned        clutSz_;        ///< è‰²ãƒ†ãƒ¼ãƒ–ãƒ«ã®ã‚µã‚¤ã‚º.
+    unsigned        wb_;            ///< æ¨ªå¹…ãƒã‚¤ãƒˆæ•°.
+    unsigned char   bpp_;           ///< ï¼‘ãƒ”ã‚¯ã‚»ãƒ«ã‚ãŸã‚Šã®ãƒ“ãƒƒãƒˆæ•°.
+    unsigned char   align_;         ///< æ¨ªå¹…ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆ.
+    unsigned char   fmt_;           ///< enum Fmt ã®å€¤.
+    unsigned char   flags_;         /**< bit0: pix_ã®ãƒ¡ãƒ¢ãƒªã®æ‰€æœ‰è€…ã‹.
+                                     *  bit1:å¿…è¦ãªã‚‰ditherã™ã‚‹.
+                                     *  bit2:å…¥åŠ›bit/byte orderãŒBE
+                                     *  bit2:å…¥åŠ›bit/byte orderãŒBE
                                      */
 };
 
 
 
-/// ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^. ƒCƒ[ƒW‚Íw*h>0‚È‚ç‚Îƒƒ‚ƒŠŠm•Û‚µ‚ÄƒRƒs[.
+/// ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿. ã‚¤ãƒ¡ãƒ¼ã‚¸ã¯w*h>0ãªã‚‰ã°ãƒ¡ãƒ¢ãƒªç¢ºä¿ã—ã¦ã‚³ãƒ”ãƒ¼.
 template<class A>
 BppCnvImg_T<A>::BppCnvImg_T(const BppCnvImg_T& src)
     : pix_(0), clut_(0)
@@ -282,7 +282,7 @@ BppCnvImg_T<A>::BppCnvImg_T(const BppCnvImg_T& src)
 
 
 
-/** ì¬.
+/** ä½œæˆ.
  */
 template<class A>
 bool BppCnvImg_T<A>::create(bool alcRq, void* pix, unsigned w, unsigned h, unsigned fmtBpp, unsigned algn, unsigned* clut, unsigned clutSz)
@@ -302,7 +302,7 @@ bool BppCnvImg_T<A>::create(bool alcRq, void* pix, unsigned w, unsigned h, unsig
         clutSz = (bpp_ <= 8) ? 1 << bpp_ : 0;
     clutSz_ = clutSz;
     fmt_    = (unsigned char) fmtBpp;
-    if (alcRq) {    // ƒƒ‚ƒŠŠJ•ú‹`–±‚Ì‚ ‚éê‡‚ÍAƒƒ‚ƒŠ[Šm•Û.
+    if (alcRq) {    // ãƒ¡ãƒ¢ãƒªé–‹æ”¾ç¾©å‹™ã®ã‚ã‚‹å ´åˆã¯ã€ãƒ¡ãƒ¢ãƒªãƒ¼ç¢ºä¿.
         pix_ = A::allocate(wb_ * h_);
         if (pix_) {
             if (pix == 0)
@@ -342,11 +342,11 @@ bool BppCnvImg_T<A>::create(const BppCnvImg_T<A>& src, unsigned bppFmt, unsigned
 }
 
 
-/** ŠJ•ú.
+/** é–‹æ”¾.
  */
 template<class A>
 void BppCnvImg_T<A>::release() {
-    if (flags_ & 1) {   // pix‚Ìƒƒ‚ƒŠ‚ÌŠJ•úÓ”C‚ª‚ ‚é‚È‚ç
+    if (flags_ & 1) {   // pixã®ãƒ¡ãƒ¢ãƒªã®é–‹æ”¾è²¬ä»»ãŒã‚ã‚‹ãªã‚‰.
         if (pix_)
             A::deallocate(pix_, wb_ * h_ );
         if (clut_)
@@ -359,7 +359,7 @@ void BppCnvImg_T<A>::release() {
 
 
 #if 0
-/** “®“I‚ÉŠm•Û‚µ‚½ƒCƒ[ƒW‚Ìƒƒ‚ƒŠ‚ğ•Ô‚µAƒNƒ‰ƒX©‘Ì‚Í‰Šú‰».
+/** å‹•çš„ã«ç¢ºä¿ã—ãŸã‚¤ãƒ¡ãƒ¼ã‚¸ã®ãƒ¡ãƒ¢ãƒªã‚’è¿”ã—ã€ã‚¯ãƒ©ã‚¹è‡ªä½“ã¯åˆæœŸåŒ–.
  */
 template<class A>
 unsigned char* BppCnvImg_T::removeImage(unsigned** ppClut=0) {
@@ -411,9 +411,9 @@ void BppCnvImg_T<A>::setClut(const unsigned* clut, unsigned clutSize) {
 
 
 
-/** fmtBppŒ`®‚Ìw*h‚Ì‰æ‘œ‚Æ‚µ‚ÄA©g‚Ì(ox,oy)‚ÌˆÊ’u‚©‚çA•ÏŠ·‚µ‚Äpix‚Æclut‚Éİ’è.
- *  w,h,fmtBpp,algn ‚Í 0 ‚¾‚ÆAƒNƒ‰ƒX©g‚Ì’l‚ğÌ—p.
- *  ŒÄ‚ÑŒ³‚ªpix,clut‚É•K—vƒTƒCƒY‚Ìƒƒ‚ƒŠ‚ğ—pˆÓ‚µ‚Ä‚¢‚é‚±‚Æ.
+/** fmtBppå½¢å¼ã®w*hã®ç”»åƒã¨ã—ã¦ã€è‡ªèº«ã®(ox,oy)ã®ä½ç½®ã‹ã‚‰ã€å¤‰æ›ã—ã¦pixã¨clutã«è¨­å®š.
+ *  w,h,fmtBpp,algn ã¯ 0 ã ã¨ã€ã‚¯ãƒ©ã‚¹è‡ªèº«ã®å€¤ã‚’æ¡ç”¨.
+ *  å‘¼ã³å…ƒãŒpix,clutã«å¿…è¦ã‚µã‚¤ã‚ºã®ãƒ¡ãƒ¢ãƒªã‚’ç”¨æ„ã—ã¦ã„ã‚‹ã“ã¨.
  */
 template<class A>
 bool BppCnvImg_T<A>::getImage(void* pix, unsigned w, unsigned h, unsigned fmtBpp, unsigned algn, unsigned* clut, unsigned clutSize, int ox, int oy) {
@@ -432,21 +432,21 @@ bool BppCnvImg_T<A>::getImage(void* pix, unsigned w, unsigned h, unsigned fmtBpp
 
 
 
-/** src‚Ì‰æ‘œ‚ğAdst‚ÖAdst‚Ì”İ’è‚Å•ÏŠ·‚µ‚Äİ’è. (ox,oy)‚Ísrc’†‚ÌŠJn“_.
- *  - ‘½F‚©‚çclut‰æ‚Ö‚Ì•ÏŠ·‚Ís‚í‚È‚¢(¸”s‚·‚é).
- *  - clut‰æ‚©‚çF”‚ÌŒ¸‚éclut‰æ‚Ö‚Ì•ÏŠ·‚ÍA’Pƒ‚ÉãˆÊƒrƒbƒg‚ğÌ‚Ä‚é‚¾‚¯.
- *    Œ¸F‚ª•K—v‚È‚ç‚ÎconvEx‚ğ—p‚¢‚é‚©A—\‚ßŒ¸F‚µ‚Ä‚¨‚­‚±‚Æ.
+/** srcã®ç”»åƒã‚’ã€dstã¸ã€dstã®è«¸è¨­å®šã§å¤‰æ›ã—ã¦è¨­å®š. (ox,oy)ã¯srcä¸­ã®é–‹å§‹ç‚¹.
+ *  - å¤šè‰²ã‹ã‚‰clutç”»ã¸ã®å¤‰æ›ã¯è¡Œã‚ãªã„(å¤±æ•—ã™ã‚‹).
+ *  - clutç”»ã‹ã‚‰è‰²æ•°ã®æ¸›ã‚‹clutç”»ã¸ã®å¤‰æ›ã¯ã€å˜ç´”ã«ä¸Šä½ãƒ“ãƒƒãƒˆã‚’æ¨ã¦ã‚‹ã ã‘.
+ *    æ¸›è‰²ãŒå¿…è¦ãªã‚‰ã°convExã‚’ç”¨ã„ã‚‹ã‹ã€äºˆã‚æ¸›è‰²ã—ã¦ãŠãã“ã¨.
  */
 template<class A>
 bool BppCnvImg_T<A>::conv(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox, int oy)
 {
-    // ‚Ü‚¸‚Íclut‚ÌƒRƒs[.
+    // ã¾ãšã¯clutã®ã‚³ãƒ”ãƒ¼.
     if ( dst.bpp() <= 8 && src.clut() && src.clutSize() )
         dst.setClut(src.clut(), src.clutSize());
 
     unsigned  dstFmt = dst.fmt();
 
-    // “¯ˆêƒtƒH[ƒ}ƒbƒg‚Ì‚ÍƒAƒ‰ƒCƒƒ“ƒg’²®‚Ì‚İÀs.
+    // åŒä¸€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®æ™‚ã¯ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆèª¿æ•´ã®ã¿å®Ÿè¡Œ.
     if (src.fmt() == dstFmt && ox == 0 && oy == 0)
         return conv_sameFmt(dst, src);
 
@@ -455,8 +455,8 @@ bool BppCnvImg_T<A>::conv(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox
     int      x;
     int      y;
     unsigned c;
-    if (src.fmt() <= 8) {   // “ü—Í‚ªclut‰æ‚ÅA
-        if (dstFmt <= 8) {  // o—Í‚àclut‰æ‚Ì.
+    if (src.fmt() <= 8) {   // å…¥åŠ›ãŒclutç”»ã§,
+        if (dstFmt <= 8) {  // å‡ºåŠ›ã‚‚clutç”»ã®æ™‚.
             for (y = 0; y < h; ++y) {
                 for (x = 0; x < w; ++x) {
                     c = src.getPixXY(x+ox,y+oy);
@@ -464,7 +464,7 @@ bool BppCnvImg_T<A>::conv(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox
                 }
             }
             return true;
-        } else {            // clut‰æ‚©‚ç‘½F‰æ‚Ö‚Ì•ÏŠ·.
+        } else {            // clutç”»ã‹ã‚‰å¤šè‰²ç”»ã¸ã®å¤‰æ›æ™‚.
             for (y = 0; y < h; ++y) {
                 for (x = 0; x < w; ++x) {
                     c = src.getPixXY(x+ox,y+oy);
@@ -475,7 +475,7 @@ bool BppCnvImg_T<A>::conv(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox
             return true;
         }
     } else {
-        if (dstFmt > 8) {   // ‘½F‰æŠÔ‚Ìbpp•ÏŠ·‚Ì.
+        if (dstFmt > 8) {   // å¤šè‰²ç”»é–“ã®bppå¤‰æ›ã®æ™‚.
             for (y = 0; y < h; ++y) {
                 for (x = 0; x < w; ++x) {
                     c = src.getPixXY(x+ox,y+oy);
@@ -483,8 +483,8 @@ bool BppCnvImg_T<A>::conv(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox
                 }
             }
             return true;
-        } else {            // ‘½F‰æ‚©‚çclut‰æ‚Ö‚Ì.
-            // F”‚ªclut‚Éû‚Ü‚éê‡‚Ì‚İ•ÏŠ·.
+        } else {            // å¤šè‰²ç”»ã‹ã‚‰clutç”»ã¸ã®æ™‚.
+            // è‰²æ•°ãŒclutã«åã¾ã‚‹å ´åˆã®ã¿å¤‰æ›.
             return convToClutImage(dst,src,ox,oy);
         }
     }
@@ -492,7 +492,7 @@ bool BppCnvImg_T<A>::conv(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox
 
 
 
-/// “¯‚¶ƒtƒH[ƒ}ƒbƒg“¯m‚Ì•ÏŠ·(‰¡•’²®).
+/// åŒã˜ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆåŒå£«ã®å¤‰æ›(æ¨ªå¹…èª¿æ•´).
 template<class A>
 bool BppCnvImg_T<A>::conv_sameFmt(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src)
 {
@@ -514,26 +514,26 @@ bool BppCnvImg_T<A>::conv_sameFmt(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src
 
 
 
-/** x,y‚ÌˆÊ’u‚ÌƒsƒNƒZƒ‹‚ğæ“¾. (bpp <= 8‚Ìê‡Acolor index ”Ô†).
+/** x,yã®ä½ç½®ã®ãƒ”ã‚¯ã‚»ãƒ«ã‚’å–å¾—. (bpp <= 8ã®å ´åˆã€color index ç•ªå·).
  */
 template<class A>
 unsigned BppCnvImg_T<A>::getPixXY(int x, int y) const
 {
-    //¦ ğŒ•Ê‚ÌŠÖ”‚É¬•ª‚¯‚µ‚ÄŠÖ”ƒ|ƒCƒ“ƒ^Œo—R‚ÅŒÄ‚Ño‚·‚×‚«‚¾‚ë‚¤‚ªA–Ê“|‚È‚ñ‚ÅŒã‰ñ‚µ.
+    //â€» æ¡ä»¶åˆ¥ã®é–¢æ•°ã«å°åˆ†ã‘ã—ã¦é–¢æ•°ãƒã‚¤ãƒ³ã‚¿çµŒç”±ã§å‘¼ã³å‡ºã™ã¹ãã ã‚ã†ãŒã€é¢å€’ãªã‚“ã§å¾Œå›ã—.
     const unsigned char*    pix = pix_;
     unsigned    bppFmt  = fmt_;
     unsigned    wb      = wb_;
     unsigned    c;
 
     if ((unsigned)x >= w_ || (unsigned)y >= h_)
-        return 0;       // è”²‚«‚Å0‚ğ•Ô‚·.
+        return 0;       // æ‰‹æŠœãã§0ã‚’è¿”ã™.
 
     if (bppFmt <= 8) {
         if (bppFmt <= 2) {
             if (bppFmt <= 1) {  // bpp=1
                 c =  pix[y * wb + (x >> 3)];
                 x &= 7;
-                if ((flags_ & 4) == 0)  // “ü—Í‚ªlittle endian ‚Ì
+                if ((flags_ & 4) == 0)  // å…¥åŠ›ãŒlittle endian ã®æ™‚.
                     x ^= 7;             // x = 7 - x;
                 c >>= x;
                 c &= 1;
@@ -542,7 +542,7 @@ unsigned BppCnvImg_T<A>::getPixXY(int x, int y) const
                 c =  pix[y * wb + (x >> 2)];
 
                 x  = (x & 3) << 1;
-                if ((flags_ & 4) == 0)  // “ü—Í‚ªlittle endian ‚Ì
+                if ((flags_ & 4) == 0)  // å…¥åŠ›ãŒlittle endian ã®æ™‚.
                     x ^= 6;             // x = 6 - x;
                 c >>= x;
                 c &= 3;
@@ -553,7 +553,7 @@ unsigned BppCnvImg_T<A>::getPixXY(int x, int y) const
             if (bppFmt <= 4) {  // bpp=4
                 c =  pix[y * wb + (x>>1)];
                 x = (x&1) << 2;
-                if ((flags_ & 4) == 0)  // “ü—Í‚ªlittle endian ‚Ì
+                if ((flags_ & 4) == 0)  // å…¥åŠ›ãŒlittle endian ã®æ™‚.
                     x ^= 4;             // x = 4 - x;
                 c >>= x;
                 c &= 15;
@@ -566,13 +566,13 @@ unsigned BppCnvImg_T<A>::getPixXY(int x, int y) const
     } else {
         unsigned a, r, g, b;
 
-        if (bppFmt <= 16) {         // 16ƒrƒbƒgF.
+        if (bppFmt <= 16) {         // 16ãƒ“ãƒƒãƒˆè‰².
             c = *(unsigned short*)&pix[y * wb + x*2];
           #if defined BIG_ENDIAN
-            if ((flags_ & 4) == 0)  // “ü—Í‚ªlittle endian ‚Ì
+            if ((flags_ & 4) == 0)  // å…¥åŠ›ãŒlittle endian ã®æ™‚.
                 c = revByteU16(c);
           #else
-            if (flags_ & 4)         // “ü—Í‚ªbig endian ‚Ì
+            if (flags_ & 4)         // å…¥åŠ›ãŒbig endian ã®æ™‚.
                 c = revByteU16(c);
           #endif
             if (bppFmt == FMT_ARGB1555) {
@@ -603,12 +603,12 @@ unsigned BppCnvImg_T<A>::getPixXY(int x, int y) const
             }
             return argb((unsigned char)a, (unsigned char)r,(unsigned char)g,(unsigned char)b);
 
-        } else if (bppFmt <= 24) {  // 24ƒrƒbƒgF.
-            if ((flags_ & 4) == 0) {    // “ü—Í‚ªlittle endian ‚Ì
+        } else if (bppFmt <= 24) {  // 24ãƒ“ãƒƒãƒˆè‰².
+            if ((flags_ & 4) == 0) {    // å…¥åŠ›ãŒlittle endian ã®æ™‚.
                 b = pix[y * wb + x*3 + 0];
                 g = pix[y * wb + x*3 + 1];
                 r = pix[y * wb + x*3 + 2];
-            } else {                    // “ü—Í‚ªbig endian ‚Ì
+            } else {                    // å…¥åŠ›ãŒbig endian ã®æ™‚.
                 r = pix[y * wb + x*3 + 0];
                 g = pix[y * wb + x*3 + 1];
                 b = pix[y * wb + x*3 + 2];
@@ -616,13 +616,13 @@ unsigned BppCnvImg_T<A>::getPixXY(int x, int y) const
             a = 0xff;
             return argb((unsigned char)a, (unsigned char)r,(unsigned char)g,(unsigned char)b);
 
-        } else {                // 32ƒrƒbƒgF.
+        } else {                // 32ãƒ“ãƒƒãƒˆè‰².
             c = *(unsigned*)&pix[y * wb + x*4];
           #if defined BIG_ENDIAN
-            if ((flags_ & 4) == 0)  // “ü—Í‚ªlittle endian ‚Ì
+            if ((flags_ & 4) == 0)  // å…¥åŠ›ãŒlittle endian ã®æ™‚.
                 c = revByteU32(c);
           #else
-            if (flags_ & 4)         // “ü—Í‚ªbig endian ‚Ì
+            if (flags_ & 4)         // å…¥åŠ›ãŒbig endian ã®æ™‚.
                 c = revByteU32(c);
           #endif
             return c;
@@ -632,9 +632,9 @@ unsigned BppCnvImg_T<A>::getPixXY(int x, int y) const
 
 
 
-/// x,y‚ÌˆÊ’u‚ÌF‚ğæ“¾.
+/// x,yã®ä½ç½®ã®è‰²ã‚’å–å¾—.
 template<class A> inline
-unsigned BppCnvImg_T<A>::getPixArgb(int x, int y) const         ///< (x,y)‚ÌˆÊ’u‚ÌƒsƒNƒZƒ‹(color index ”Ô†).
+unsigned BppCnvImg_T<A>::getPixArgb(int x, int y) const         ///< (x,y)ã®ä½ç½®ã®ãƒ”ã‚¯ã‚»ãƒ«(color index ç•ªå·).
 {
     unsigned c = getPixXY(x,y);
     if (bpp_ <= 8)
@@ -644,11 +644,11 @@ unsigned BppCnvImg_T<A>::getPixArgb(int x, int y) const         ///< (x,y)‚ÌˆÊ’u
 
 
 
-/// x,y‚ÌˆÊ’u‚ÌƒsƒNƒZƒ‹‚ğæ“¾. (bpp <= 8‚Ìê‡Acolor index ”Ô†).
+/// x,yã®ä½ç½®ã®ãƒ”ã‚¯ã‚»ãƒ«ã‚’å–å¾—. (bpp <= 8ã®å ´åˆã€color index ç•ªå·).
 template<class A>
 void     BppCnvImg_T<A>::setPixXY(int x, int y, unsigned c)
 {
-    //¦ ğŒ•Ê‚ÌŠÖ”‚É¬•ª‚¯‚µ‚ÄŠÖ”ƒ|ƒCƒ“ƒ^Œo—R‚ÅŒÄ‚Ño‚·‚×‚«‚¾‚ë‚¤‚ªA–Ê“|‚È‚ñ‚ÅŒã‰ñ‚µ.
+    //â€» æ¡ä»¶åˆ¥ã®é–¢æ•°ã«å°åˆ†ã‘ã—ã¦é–¢æ•°ãƒã‚¤ãƒ³ã‚¿çµŒç”±ã§å‘¼ã³å‡ºã™ã¹ãã ã‚ã†ãŒã€é¢å€’ãªã‚“ã§å¾Œå›ã—.
     unsigned        bppFmt = fmt_;
     unsigned        wb     = wb_;
     unsigned char*  d      = &pix_[y * wb];
@@ -662,7 +662,7 @@ void     BppCnvImg_T<A>::setPixXY(int x, int y, unsigned c)
                 c  = c != 0;
                 d += x >> 3;
                 x &= 7;
-                if ((flags_ & 8) == 0)  // o—Í‚ªlittle endian ‚Ì
+                if ((flags_ & 8) == 0)  // å‡ºåŠ›ãŒlittle endian ã®æ™‚
                     x ^= 7;             // x = 7 - x;
                 *d &= ~(1 << x);
                 *d |= c << x;
@@ -670,7 +670,7 @@ void     BppCnvImg_T<A>::setPixXY(int x, int y, unsigned c)
             } else {            // bpp = 2
                 d += x >> 2;
                 x = (x&3) << 1;
-                if ((flags_ & 8) == 0)  // o—Í‚ªlittle endian ‚Ì
+                if ((flags_ & 8) == 0)  // å‡ºåŠ›ãŒlittle endian ã®æ™‚
                     x ^= 6;             // x = 6 - x;
                 *d &= ~(3 << x);
                 *d |= (c&3) << x;
@@ -678,10 +678,10 @@ void     BppCnvImg_T<A>::setPixXY(int x, int y, unsigned c)
 
         } else {                // bpp = 4
             if (bppFmt <= 4) {
-                if ((flags_ & 8) == 0) {    // o—Í‚ªlittle endian ‚Ì
+                if ((flags_ & 8) == 0) {    // å‡ºåŠ›ãŒlittle endian ã®æ™‚
                     if ((x & 1) == 0) d[x>>1] =  (unsigned char)(c & 15);
                     else              d[x>>1] |= (unsigned char)(c << 4);
-                } else {                    // o—Í‚ªbig endian ‚Ì
+                } else {                    // å‡ºåŠ›ãŒbig endian ã®æ™‚
                     if ((x & 1) == 0) d[x>>1] =  (unsigned char)(c << 4);
                     else              d[x>>1] |= (unsigned char)(c & 15);
                 }
@@ -707,7 +707,7 @@ void     BppCnvImg_T<A>::setPixXY(int x, int y, unsigned c)
             int b = (unsigned char)(c >>  0);
             int a = ((unsigned)c >> 24);
             if (bppFmt == FMT_ARGB4444) {
-                if (flags_ & 2) {   // ditherƒ‚[ƒh‚Ì
+                if (flags_ & 2) {   // ditherãƒ¢ãƒ¼ãƒ‰ã®æ™‚
                     int u = x & 1, v = y & 1;
                     r = clamp(r + dit4[v][u], 0, 255);
                     g = clamp(g + dit4[v][u], 0, 255);
@@ -716,7 +716,7 @@ void     BppCnvImg_T<A>::setPixXY(int x, int y, unsigned c)
                 a = (a + 15) >> 4; if (a > 15) a = 15;
                 c = (a << 12) | ((r >> 4)<<8) | ((g >> 4)<<4) | (b >> 4);
             } else if (bppFmt == FMT_ARGB1555) {
-                if (flags_ & 2) {   // ditherƒ‚[ƒh‚Ì
+                if (flags_ & 2) {   // ditherãƒ¢ãƒ¼ãƒ‰ã®æ™‚
                     int u = x & 1, v = y & 1;
                     r = clamp(r + dit3[v][u], 0, 255);
                     g = clamp(g + dit3[v][u], 0, 255);
@@ -725,7 +725,7 @@ void     BppCnvImg_T<A>::setPixXY(int x, int y, unsigned c)
                 a = (a) ? 0x8000 : 0;
                 c = a | ((r >> 3)<<10) | ((g >> 3)<<5) | (b >> 3);
             } else {
-                if (flags_ & 2) {   // ditherƒ‚[ƒh‚Ì
+                if (flags_ & 2) {   // ditherãƒ¢ãƒ¼ãƒ‰ã®æ™‚
                     int u = x & 1, v = y & 1;
                     r = clamp(r + dit3[v][u], 0, 255);
                     g = clamp(g + dit2[v][u], 0, 255);
@@ -740,10 +740,10 @@ void     BppCnvImg_T<A>::setPixXY(int x, int y, unsigned c)
                 }
             }
           #if defined BIG_ENDIAN
-            if ((flags_ & 8) == 0)  // o—Í‚ªlittle endian ‚Ì
+            if ((flags_ & 8) == 0)  // å‡ºåŠ›ãŒlittle endian ã®æ™‚
                 c = revByteU16(c);
           #else
-            if (flags_ & 8)         // o—Í‚ªbig endian ‚Ì
+            if (flags_ & 8)         // å‡ºåŠ›ãŒbig endian ã®æ™‚
                 c = revByteU16(c);
           #endif
             d += x*2;
@@ -751,11 +751,11 @@ void     BppCnvImg_T<A>::setPixXY(int x, int y, unsigned c)
 
         } else if (bppFmt <= 24) {  // bpp = 24
             d += x*3;
-            if ((flags_ & 8) == 0) { // o—Í‚ªlittle endian ‚Ì
+            if ((flags_ & 8) == 0) { // å‡ºåŠ›ãŒlittle endian ã®æ™‚
                 d[0] = (unsigned char)(c >>  0);    // b
                 d[1] = (unsigned char)(c >>  8);    // g
                 d[2] = (unsigned char)(c >> 16);    // r
-            } else {                // o—Í‚ª big endian ‚Ì
+            } else {                // å‡ºåŠ›ãŒ big endian ã®æ™‚
                 d[0] = (unsigned char)(c >> 16);    // r
                 d[1] = (unsigned char)(c >>  8);    // g
                 d[2] = (unsigned char)(c >>  0);    // b
@@ -763,10 +763,10 @@ void     BppCnvImg_T<A>::setPixXY(int x, int y, unsigned c)
 
         } else {                // bpp = 32
           #if defined BIG_ENDIAN
-            if ((flags_ & 8) == 0)  // o—Í‚ªlittle endian ‚Ì
+            if ((flags_ & 8) == 0)  // å‡ºåŠ›ãŒlittle endian ã®æ™‚
                 c = revByteU32(c);
           #else
-            if (flags_ & 8)         // o—Í‚ªbig endian ‚Ì
+            if (flags_ & 8)         // å‡ºåŠ›ãŒbig endian ã®æ™‚
                 c = revByteU32(c);
           #endif
             d += x*4;
@@ -779,7 +779,7 @@ void     BppCnvImg_T<A>::setPixXY(int x, int y, unsigned c)
 
 // ---------------------------------------------------------------------------
 
-/** ŒğŠ·.
+/** äº¤æ›.
  */
 template<class A>
 void BppCnvImg_T<A>::swap(BppCnvImg_T<A>& rhs) {
@@ -800,7 +800,7 @@ void BppCnvImg_T<A>::swap(BppCnvImg_T<A>& rhs) {
 
 
 
-/** clut‰æ‚Ì‚Æ‚«‚ÌA1ƒoƒCƒg’†‚Ì‹l‚ß‡‚ğ‹t‚É‚·‚é.
+/** clutç”»ã®ã¨ãã®ã€1ãƒã‚¤ãƒˆä¸­ã®è©°ã‚é †ã‚’é€†ã«ã™ã‚‹.
  */
 template<class A>
 void BppCnvImg_T<A>::swapBitOrder() {
@@ -847,7 +847,7 @@ void BppCnvImg_T<A>::swapBitOrder() {
 
 
 
-/** ‘½F‚Ì‚Ì1ƒsƒNƒZƒ‹‚ÌƒoƒCƒg‡‚ğ‹t‚É‚·‚é.
+/** å¤šè‰²ã®æ™‚ã®1ãƒ”ã‚¯ã‚»ãƒ«ã®ãƒã‚¤ãƒˆé †ã‚’é€†ã«ã™ã‚‹.
  */
 template<class A>
 void BppCnvImg_T<A>::swapByteOrder() {
@@ -889,7 +889,7 @@ void BppCnvImg_T<A>::swapByteOrder() {
 
 
 
-/** ‰æ‘œ‚É”¼“§–¾(ƒ¿î•ñ)‚ªg‚í‚ê‚Ä‚¢‚é‰æ‘œ‚©? (‘S‚Äƒ¿=0‚©‘S‚Äƒ¿=0xff‚È‚ç–¢g—pˆµ‚¢)
+/** ç”»åƒã«åŠé€æ˜(Î±æƒ…å ±)ãŒä½¿ã‚ã‚Œã¦ã„ã‚‹ç”»åƒã‹? (å…¨ã¦Î±=0ã‹å…¨ã¦Î±=0xffãªã‚‰æœªä½¿ç”¨æ‰±ã„)
  */
 template<class A>
 bool BppCnvImg_T<A>::isUseAlpha() const
@@ -950,7 +950,7 @@ bool BppCnvImg_T<A>::isUseAlpha() const
 
 
 
-/** ã‰º”½“]‚·‚é.
+/** ä¸Šä¸‹åè»¢ã™ã‚‹.
  */
 template<class A>
 void BppCnvImg_T<A>::revY()
@@ -973,14 +973,14 @@ void BppCnvImg_T<A>::revY()
 
 
 
-/** argb‚Ì‡”Ô‚ğ“ü‚ê‘Ö‚¦‚é.
+/** argbã®é †ç•ªã‚’å…¥ã‚Œæ›¿ãˆã‚‹.
  */
 template<class A>
 void BppCnvImg_T<A>::swapARGB(unsigned rotNo, bool fromMode)
 {
     enum { B=0,G=1,R=2,A=3};
     static const unsigned char tbl[][4] = {
-      // b g r a        //      mem     little endian’l(ƒvƒƒOƒ‰ƒ€’†‚Í‚±‚¿‚ç)
+      // b g r a        //      mem     little endianå€¤(ãƒ—ãƒ­ã‚°ãƒ©ãƒ ä¸­ã¯ã“ã¡ã‚‰)
         {B,G,R,A,},     // 0    bgra    argb
         {B,R,G,A,},     // 1    brga    agrb
         {G,B,R,A,},     // 2    gbra    arbg
@@ -993,7 +993,7 @@ void BppCnvImg_T<A>::swapARGB(unsigned rotNo, bool fromMode)
         {A,G,R,B,},     // 9    agrb    brga
         {A,R,B,G,},     //10    arbg    gbra
         {A,R,G,B,},     //11    argb    bgra
-        // ª‚Ìƒe[ƒuƒ‹“à‚ÌA,R,G,B‚ÍˆÓ–¡‚Æ‚µ‚Ä‚Í”’l‚Ì‚Ù‚¤‚ª‚æ‚¢‚ª...
+        // â†‘ã®ãƒ†ãƒ¼ãƒ–ãƒ«å†…ã®A,R,G,Bã¯æ„å‘³ã¨ã—ã¦ã¯æ•°å€¤ã®ã»ã†ãŒã‚ˆã„ãŒ...
     };
     const unsigned char* d  = tbl[rotNo];
     const unsigned char* s  = tbl[0];
@@ -1048,7 +1048,7 @@ void BppCnvImg_T<A>::swapARGB(unsigned rotNo, bool fromMode)
 
 
 
-/** ‰¡•,bpp,ƒAƒ‰ƒCƒƒ“ƒg‚©‚ç‰¡•ƒoƒCƒg”‚ğ‹‚ß‚é.
+/** æ¨ªå¹…,bpp,ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆã‹ã‚‰æ¨ªå¹…ãƒã‚¤ãƒˆæ•°ã‚’æ±‚ã‚ã‚‹.
  */
 template<class A>
 unsigned BppCnvImg_T<A>::widthToBytes(unsigned w, unsigned bpp, unsigned algn) {
@@ -1059,7 +1059,7 @@ unsigned BppCnvImg_T<A>::widthToBytes(unsigned w, unsigned bpp, unsigned algn) {
 
 
 
-/** ƒtƒH[ƒ}ƒbƒg‚©‚çbpp‚ğ‹‚ß‚é.
+/** ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‹ã‚‰bppã‚’æ±‚ã‚ã‚‹.
  */
 template<class A>
 unsigned BppCnvImg_T<A>::fmtToBpp(Fmt fmt) {
@@ -1070,7 +1070,7 @@ unsigned BppCnvImg_T<A>::fmtToBpp(Fmt fmt) {
 
 // ---------------------------------------------------------------------------
 
-/** ‘½FƒtƒH[ƒ}ƒbƒg‚¾‚ªclutSizeˆÈ‰º‚µ‚©F”‚ª‚È‚¢‚È‚çA•ÏŠ·‚·‚é. ˆì‚ê‚é‚È‚ç•ÏŠ·‚µ‚È‚¢.
+/** å¤šè‰²ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã ãŒclutSizeä»¥ä¸‹ã—ã‹è‰²æ•°ãŒãªã„ãªã‚‰ã€å¤‰æ›ã™ã‚‹. æº¢ã‚Œã‚‹ãªã‚‰å¤‰æ›ã—ãªã„.
  */
 template<class A>
 bool BppCnvImg_T<A>::convToClutImage(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox, int oy)
@@ -1078,8 +1078,8 @@ bool BppCnvImg_T<A>::convToClutImage(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& 
     if (dst.clut() == 0 || dst.clutSize() == 0 || dst.bpp() > 8)
         return false;
 
-    /// ÀÛ‚ÌF”‚ªAclutSizeˆÈ“à‚Éû‚Ü‚é‚©‚ğƒ`ƒFƒbƒN.
-    unsigned clut[256+1];       // ˆêŒÂ—]•ª‚ÉŠm•Û.
+    /// å®Ÿéš›ã®è‰²æ•°ãŒã€clutSizeä»¥å†…ã«åã¾ã‚‹ã‹ã‚’ãƒã‚§ãƒƒã‚¯.
+    unsigned clut[256+1];       // ä¸€å€‹ä½™åˆ†ã«ç¢ºä¿.
     unsigned clutSize = dst.clutSize();
     unsigned num = 0;
     if (clutSize > 256)
@@ -1090,12 +1090,12 @@ bool BppCnvImg_T<A>::convToClutImage(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& 
         for (unsigned x = 0; x < w; ++x) {
             unsigned c = src.getPixArgb(x+ox,y+oy);
             binary_insert_tbl_n(clut, num, c);
-            if (num > clutSize) // F”‚ª’´‚¦‚Ä‚½‚çA•ÏŠ·‚µ‚È‚¢.
+            if (num > clutSize) // è‰²æ•°ãŒè¶…ãˆã¦ãŸã‚‰ã€å¤‰æ›ã—ãªã„.
                 return false;
         }
     }
 
-    // clut“à‚Éû‚Ü‚éF”‚¾‚Á‚½ê‡.
+    // clutå†…ã«åã¾ã‚‹è‰²æ•°ã ã£ãŸå ´åˆ.
     dst.setClut(&clut[0], num);
     for (unsigned y = 0; y < h; ++y) {
         for (unsigned x = 0; x < w; ++x) {
@@ -1129,8 +1129,8 @@ unsigned BppCnvImg_T<A>::binary_find_tbl_n(T* tbl, unsigned num, const T& key)
 }
 
 
-/** ƒe[ƒuƒ‹pTbl‚É’lkey‚ğ’Ç‰Á. ”ÍˆÍƒ`ƒFƒbƒN‚Í—\‚ßs‚Á‚Ä‚¢‚é‚±‚Æ‘O’ñI
- *  @return ƒe[ƒuƒ‹’†‚Ìkey‚ÌˆÊ’u.
+/** ãƒ†ãƒ¼ãƒ–ãƒ«pTblã«å€¤keyã‚’è¿½åŠ . ç¯„å›²ãƒã‚§ãƒƒã‚¯ã¯äºˆã‚è¡Œã£ã¦ã„ã‚‹ã“ã¨å‰æï¼
+ *  @return ãƒ†ãƒ¼ãƒ–ãƒ«ä¸­ã®keyã®ä½ç½®.
  */
 template<class A>
 template<typename T>
@@ -1146,19 +1146,19 @@ static unsigned BppCnvImg_T<A>::binary_insert_tbl_n(T* pTbl, unsigned& rNum, con
             ++mid;
             low = mid;
         } else {
-            return mid; /* “¯‚¶‚à‚Ì‚ª‚İ‚Â‚©‚Á‚½‚Ì‚Å’Ç‰Á‚µ‚È‚¢ */
+            return mid; /* åŒã˜ã‚‚ã®ãŒã¿ã¤ã‹ã£ãŸã®ã§è¿½åŠ ã—ãªã„ */
         }
     }
 
-    // V‹K“o˜^
+    // æ–°è¦ç™»éŒ².
     ++rNum;
 
-    // “o˜^‰ÓŠ‚Ìƒƒ‚ƒŠ‚ğ‹ó‚¯‚é
+    // ç™»éŒ²ç®‡æ‰€ã®ãƒ¡ãƒ¢ãƒªã‚’ç©ºã‘ã‚‹.
     for (hi = rNum; --hi > mid;) {
         pTbl[hi] = pTbl[hi-1];
     }
 
-    // “o˜^
+    // ç™»éŒ².
     pTbl[mid] = key;
     return mid;
 }
@@ -1169,19 +1169,19 @@ static unsigned BppCnvImg_T<A>::binary_insert_tbl_n(T* pTbl, unsigned& rNum, con
 // ---------------------------------------------------------------------------
 
 
-/** src‚Ì‰æ‘œ‚ğAdst‚ÖAdst‚Ì”İ’è‚Å•ÏŠ·‚µ‚Äİ’è. (ox,oy)‚Ísrc’†‚ÌŠJn“_.
- *  - ‘½F‚©‚çclut‰æ‚âAF”‚Ì­‚È‚¢clut‰æ‚Ö‚Ì•ÏŠ·‚Å‚ÍŒ¸Fˆ—‚ğs‚¤(ŠÈˆÕ).
+/** srcã®ç”»åƒã‚’ã€dstã¸ã€dstã®è«¸è¨­å®šã§å¤‰æ›ã—ã¦è¨­å®š. (ox,oy)ã¯srcä¸­ã®é–‹å§‹ç‚¹.
+ *  - å¤šè‰²ã‹ã‚‰clutç”»ã‚„ã€è‰²æ•°ã®å°‘ãªã„clutç”»ã¸ã®å¤‰æ›ã§ã¯æ¸›è‰²å‡¦ç†ã‚’è¡Œã†(ç°¡æ˜“).
  */
 template<class A>
 bool BppCnvImg_T<A>::convEx(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox, int oy)
 {
-    // ‚Ü‚¸‚Íclut‚ÌƒRƒs[.
+    // ã¾ãšã¯clutã®ã‚³ãƒ”ãƒ¼.
     if ( dst.bpp() <= 8 && src.clut() && src.clutSize() )
         dst.setClut(src.clut(), src.clutSize());
 
     unsigned  dstFmt = dst.fmt();
 
-    // “¯ˆêƒtƒH[ƒ}ƒbƒg‚Ì‚ÍƒAƒ‰ƒCƒƒ“ƒg’²®‚Ì‚İÀs.
+    // åŒä¸€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®æ™‚ã¯ã‚¢ãƒ©ã‚¤ãƒ¡ãƒ³ãƒˆèª¿æ•´ã®ã¿å®Ÿè¡Œ.
     if (src.fmt() == dstFmt && ox == 0 && oy == 0)
         return conv_sameFmt(dst, src);
 
@@ -1190,9 +1190,9 @@ bool BppCnvImg_T<A>::convEx(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int 
     int      x;
     int      y;
     unsigned c;
-    if (src.fmt() <= 8) {   // “ü—Í‚ªclut‰æ‚ÅA
-        if (dstFmt <= 8) {  // o—Í‚àclut‰æ‚Ì.
-            if (dstFmt >= src.fmt()) {  // Œ¸F‚Ì•K—v‚Ì‚È‚¢.
+    if (src.fmt() <= 8) {   // å…¥åŠ›ãŒclutç”»ã§,
+        if (dstFmt <= 8) {  // å‡ºåŠ›ã‚‚clutç”»ã®æ™‚.
+            if (dstFmt >= src.fmt()) {  // æ¸›è‰²ã®å¿…è¦ã®ãªã„æ™‚.
                 for (y = 0; y < h; ++y) {
                     for (x = 0; x < w; ++x) {
                         c = src.getPixXY(x+ox,y+oy);
@@ -1200,10 +1200,10 @@ bool BppCnvImg_T<A>::convEx(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int 
                     }
                 }
                 return true;
-            } else {        // Œ¸F‚Ì•K—v‚ª‚ ‚é‚Æ‚«.
+            } else {        // æ¸›è‰²ã®å¿…è¦ãŒã‚ã‚‹ã¨ã.
                 return decreaseColor(dst,src,ox,oy);
             }
-        } else {            // clut‰æ‚©‚ç‘½F‰æ‚Ö‚Ì•ÏŠ·.
+        } else {            // clutç”»ã‹ã‚‰å¤šè‰²ç”»ã¸ã®å¤‰æ›æ™‚.
             for (y = 0; y < h; ++y) {
                 for (x = 0; x < w; ++x) {
                     c = src.getPixXY(x+ox,y+oy);
@@ -1214,7 +1214,7 @@ bool BppCnvImg_T<A>::convEx(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int 
             return true;
         }
     } else {
-        if (dstFmt > 8) {   // ‘½F‰æŠÔ‚Ìbpp•ÏŠ·‚Ì.
+        if (dstFmt > 8) {   // å¤šè‰²ç”»é–“ã®bppå¤‰æ›ã®æ™‚.
             for (y = 0; y < h; ++y) {
                 for (x = 0; x < w; ++x) {
                     c = src.getPixXY(x+ox,y+oy);
@@ -1222,8 +1222,8 @@ bool BppCnvImg_T<A>::convEx(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int 
                 }
             }
             return true;
-        } else {            // ‘½F‰æ‚©‚çclut‰æ‚Ö‚Ì.
-            // F”‚ªclut‚Éû‚Ü‚éê‡‚Ì‚İ•ÏŠ·.
+        } else {            // å¤šè‰²ç”»ã‹ã‚‰clutç”»ã¸ã®æ™‚.
+            // è‰²æ•°ãŒclutã«åã¾ã‚‹å ´åˆã®ã¿å¤‰æ›.
 
             return decreaseColor(dst,src,ox,oy);
         }
@@ -1232,7 +1232,7 @@ bool BppCnvImg_T<A>::convEx(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int 
 
 
 
-/// 32ƒrƒbƒgF‰æ‚ğ8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+/// 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
 template<class A>
 bool BppCnvImg_T<A>::decreaseColor(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox, int oy, int alpNum)
 {
@@ -1242,11 +1242,11 @@ bool BppCnvImg_T<A>::decreaseColor(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& sr
     unsigned w = dst.width();
     unsigned h = dst.height();
 
-    // ƒsƒNƒZƒ‹•clut‰Šú‰». (“§–¾‰æ‘œó‘Ô‚É‚·‚é)
+    // ãƒ”ã‚¯ã‚»ãƒ«ï¼†clutåˆæœŸåŒ–. (é€æ˜ç”»åƒçŠ¶æ…‹ã«ã™ã‚‹)
     dst.clearImage();
     dst.clearClut();
 
-    // “§–¾,”¼“§–¾,•s“§–¾‚Ì‘¶İƒ`ƒFƒbƒN
+    // é€æ˜,åŠé€æ˜,ä¸é€æ˜ã®å­˜åœ¨ãƒã‚§ãƒƒã‚¯.
     enum { ALP_D = 4 };
     enum { MIN_A = ALP_D, MAX_A = 255-ALP_D };
     bool tranf = false;
@@ -1270,15 +1270,15 @@ bool BppCnvImg_T<A>::decreaseColor(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& sr
 
     unsigned clutSize = dst.clutSize();
     if (nalpf == 0) {
-        // •s“§–¾‚ª‚È‚¢ê‡‚ÍA‚·‚×‚Ä‚ÌƒpƒŒƒbƒg‚ğ”¼“§–¾ˆµ‚¢.
+        // ä¸é€æ˜ãŒãªã„å ´åˆã¯ã€ã™ã¹ã¦ã®ãƒ‘ãƒ¬ãƒƒãƒˆã‚’åŠé€æ˜æ‰±ã„.
         return decreaseColor_1(dst,src,ox,oy, clutSize, tranf, MIN_A, 255) != 0;
     } else if (alpf == false || clutSize < 32) {
-        // •s“§–¾‚Æ”²‚«F‚Ì‚İ‚Ì‚Æ‚«
+        // ä¸é€æ˜ã¨æŠœãè‰²ã®ã¿ã®ã¨ã.
         return decreaseColor_1(dst,src,ox,oy, clutSize, tranf, MAX_A+1, 255) != 0;
     } else {
-        // •s“§–¾‚Æ”¼“§–¾‚ª‚ ‚é‚Æ‚« (ƒoƒXƒgƒAƒbƒv‰æ/•£”¼“§–¾‚ğ‘z’è)
+        // ä¸é€æ˜ã¨åŠé€æ˜ãŒã‚ã‚‹ã¨ã (ãƒã‚¹ãƒˆã‚¢ãƒƒãƒ—ç”»/æ·µåŠé€æ˜ã‚’æƒ³å®š)
         unsigned idx = (unsigned)alpNum;
-        if (alpNum < 0) {       // “K“–‚É”¼“§–¾”‚ğŒˆ‚ß‚éw’è‚¾‚Á‚½.(256F‚É32F).
+        if (alpNum < 0) {       // é©å½“ã«åŠé€æ˜æ•°ã‚’æ±ºã‚ã‚‹æŒ‡å®šã ã£ãŸ.(256è‰²æ™‚ã«32è‰²).
             idx = clutSize / 8;
             if (idx < 16)
                 idx = 16;
@@ -1291,11 +1291,11 @@ bool BppCnvImg_T<A>::decreaseColor(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& sr
 
 
 
-/// Œ¸F‚Ì•p“xƒJƒEƒ“ƒg‚Ì‚½‚ß‚Ì\‘¢‘Ì.
+/// æ¸›è‰²æ™‚ã®é »åº¦ã‚«ã‚¦ãƒ³ãƒˆã®ãŸã‚ã®æ§‹é€ ä½“.
 template<class A>
 struct BppCnvImg_T<A>::DecreaseColor_Hst {
-  #if defined _WIN32                // vc‚Éstdint.h‚ª‚È‚¢‚Ì‚Å‚»‚Ì‘Îô.
-    typedef unsigned __int64 sum_t; // winŒnƒRƒ“ƒpƒCƒ‰‚ÍvcŒİŠ·‚ÅŒÃ‚­‚©‚ç__int64‚ª‚ ‚é.
+  #if defined _WIN32                // vcã«stdint.hãŒãªã„ã®ã§ãã®å¯¾ç­–.
+    typedef unsigned __int64 sum_t; // winç³»ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã¯vcäº’æ›ã§å¤ãã‹ã‚‰__int64ãŒã‚ã‚‹.
   #else
     typedef uint64_t         sum_t;
   #endif
@@ -1312,14 +1312,14 @@ struct BppCnvImg_T<A>::DecreaseColor_Hst {
 
 
 
-/// 32ƒrƒbƒgF‰æ‚ğ8ƒrƒbƒgF‰æ‚É•ÏŠ·.
+/// 32ãƒ“ãƒƒãƒˆè‰²ç”»ã‚’8ãƒ“ãƒƒãƒˆè‰²ç”»ã«å¤‰æ›.
 template<class A>
 unsigned BppCnvImg_T<A>::decreaseColor_1(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox, int oy, unsigned clutSize, int idx, int minA, int maxA)
 {
     assert(clutSize <= 256 && clutSize >= idx+1);
     enum { ALP_D = 4 };
     unsigned    bi = 4;
-    if (maxA == 255)    // ƒ¿‚Å‚È‚¢’Êí‚ÌŒ¸F‚ÅF”‚ª­‚È‚¢.
+    if (maxA == 255)    // Î±ã§ãªã„é€šå¸¸ã®æ¸›è‰²ã§è‰²æ•°ãŒå°‘ãªã„æ™‚.
         bi = (clutSize <= 8) ? 1 : (clutSize <= 12) ? 2 : (clutSize <= 48) ? 3 : 4;
   RETRY:
     unsigned    l=1<<bi, sh=8-bi;
@@ -1353,13 +1353,13 @@ unsigned BppCnvImg_T<A>::decreaseColor_1(BppCnvImg_T<A>& dst, const BppCnvImg_T<
     }
 
     unsigned colNum = clutSize - idx;
-    // ‘½‚¢ƒ‚ƒm‚©‚çclutSizeŒÂ‚ğ‘Io(æ“ª‚ÉˆÚ“®).
+    // å¤šã„ãƒ¢ãƒã‹ã‚‰clutSizeå€‹ã‚’é¸å‡º(å…ˆé ­ã«ç§»å‹•).
     std::nth_element( &pHst[0], &pHst[colNum], &pHst[hstNum], std::less<DecreaseColor_Hst>() );
 
     unsigned* pClut = dst.clut();
     std::memset(pClut+idx, 0, colNum*sizeof(pClut[0]));
 
-    // ‘½‚¢‚à‚Ì‚©‚çF‚ğæ“¾.
+    // å¤šã„ã‚‚ã®ã‹ã‚‰è‰²ã‚’å–å¾—.
     unsigned n = 0;
     for (unsigned j = 0; j < colNum; ++j) {
         const DecreaseColor_Hst*    h = &pHst[j];
@@ -1376,24 +1376,24 @@ unsigned BppCnvImg_T<A>::decreaseColor_1(BppCnvImg_T<A>& dst, const BppCnvImg_T<
     }
 
     if (clutSize >= 128 && n <= clutSize-32 && (bi >= 4 && bi < 7) ) {
-        // clut‚ª‘½‚­‚ ‚Ü‚Á‚Ä‚½‚çF[“x‚ğ‘‚â‚·(‚¨‚»‚ç‚­’PF‚âƒc[ƒgƒ“ƒJƒ‰[Œn‚Ì‰æ‘œ‚¾‚ë‚¤)
+        // clutãŒå¤šãã‚ã¾ã£ã¦ãŸã‚‰è‰²æ·±åº¦ã‚’å¢—ã‚„ã™(ãŠãã‚‰ãå˜è‰²ã‚„ãƒ„ãƒ¼ãƒˆãƒ³ã‚«ãƒ©ãƒ¼ç³»ã®ç”»åƒã ã‚ã†)
         ++bi;
         goto RETRY;
     }
 
-    // ÀÛ‚Ég—p‚³‚ê‚Ä‚¢‚éclut”‚ğ‹‚ß‚é.
-    if (n < 2)  // ‚½‚¾‚µÅ’á2F‚Íg‚¤‚±‚Æ‚É.
+    // å®Ÿéš›ã«ä½¿ç”¨ã•ã‚Œã¦ã„ã‚‹clutæ•°ã‚’æ±‚ã‚ã‚‹.
+    if (n < 2)  // ãŸã ã—æœ€ä½2è‰²ã¯ä½¿ã†ã“ã¨ã«.
         n = 2;
     clutSize = n + idx;
 
-    // ˆÃ‚¢‚à‚Ì‡‚É•À‚×’¼‚·.
+    // æš—ã„ã‚‚ã®é †ã«ä¸¦ã¹ç›´ã™.
     std::sort( &pClut[idx], &pClut[clutSize] );
 
-    // Œ»ó‚Ìclut‚ÅA‚·‚×‚Ä‚ÌƒsƒNƒZƒ‹‚ğclutSizeF‰».
-    // ‹ß‚¢F‚ÌğŒ‚Æ‚µ‚ÄA
-    //   - a,r,g,b‚Ì’l‚ª‹ß‚¢ƒ‚ƒm(F“¯m‚Ì·‚ª¬‚³‚¢ƒ‚ƒm)
-    //   - 1F“à‚Ìr,g,b‚Ì‹P“x‚Ì‘å¬ŠÖŒW‚ªA‹ß‚¢ƒ‚ƒm
-    // ‚ğƒ`ƒFƒbƒN.
+    // ç¾çŠ¶ã®clutã§ã€ã™ã¹ã¦ã®ãƒ”ã‚¯ã‚»ãƒ«ã‚’clutSizeè‰²åŒ–.
+    // è¿‘ã„è‰²ã®æ¡ä»¶ã¨ã—ã¦,
+    //   - a,r,g,bã®å€¤ãŒè¿‘ã„ãƒ¢ãƒ(è‰²åŒå£«ã®å·®ãŒå°ã•ã„ãƒ¢ãƒ)
+    //   - 1è‰²å†…ã®r,g,bã®è¼åº¦ã®å¤§å°é–¢ä¿‚ãŒã€è¿‘ã„ãƒ¢ãƒ.
+    // ã‚’ãƒã‚§ãƒƒã‚¯.
     std::memset(pHst, 0, sizeof(DecreaseColor_Hst) * clutSize);
     for (unsigned y = 0; y < h; ++y) {
         for (unsigned x = 0; x < w; ++x) {
@@ -1435,7 +1435,7 @@ unsigned BppCnvImg_T<A>::decreaseColor_1(BppCnvImg_T<A>& dst, const BppCnvImg_T<
                 }
                 dst.setPixXY(x,y,ii);
 
-                // g—p”‚âF’l‚Ì‡Œv‚ğ‚·‚é.
+                // ä½¿ç”¨æ•°ã‚„è‰²å€¤ã®åˆè¨ˆã‚’ã™ã‚‹.
                 DecreaseColor_Hst* t = &pHst[ ii ];
                 ++t->num;
                 t->a += a;
@@ -1446,7 +1446,7 @@ unsigned BppCnvImg_T<A>::decreaseColor_1(BppCnvImg_T<A>& dst, const BppCnvImg_T<
         }
     }
 
-    // clut‚ÌŠeF‚ğÀÛ‚ÌƒsƒNƒZƒ‹‚ÌF‚Ì•½‹Ï‚É‚·‚é.
+    // clutã®å„è‰²ã‚’å®Ÿéš›ã®ãƒ”ã‚¯ã‚»ãƒ«ã®è‰²ã®å¹³å‡ã«ã™ã‚‹.
     for (unsigned i = idx; i < clutSize; ++i) {
         const DecreaseColor_Hst*    t    = &pHst[i];
         unsigned    n    = t->num;
@@ -1489,7 +1489,7 @@ bool convGRB332(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox=0, int oy
         dst.clut()[c] = (0xff << 24) | (r << 16) | (g << 8) | b;
     }
 
-    bool dither = dst.ditherMode(); // ditherƒ‚[ƒh‚Ì
+    bool dither = dst.ditherMode(); // ditherãƒ¢ãƒ¼ãƒ‰ã®æ™‚.
     for (unsigned y = 0; y < dst.height(); ++y) {
         for (unsigned x = 0; x < dst.width(); ++x) {
             c = src.getPixArgb(x+ox,y+oy);
@@ -1532,7 +1532,7 @@ bool convGRB111(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox=0, int oy
         dst.clut()[i] = clutG1R1B1[i&7];
     }
 
-    bool dither = dst.ditherMode(); // ditherƒ‚[ƒh‚Ì
+    bool dither = dst.ditherMode(); // ditherãƒ¢ãƒ¼ãƒ‰ã®æ™‚.
     for (unsigned y = 0; y < dst.height(); ++y) {
         for (unsigned x = 0; x < dst.width(); ++x) {
             unsigned c = src.getPixArgb(x+ox,y+oy);
@@ -1540,7 +1540,7 @@ bool convGRB111(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox=0, int oy
             int      g = (unsigned char)(c >>  8);
             int      b = (unsigned char)c;
             if (dither) {
-                // “K“–‚Èİ’è.
+                // é©å½“ãªè¨­å®š.
                 static const signed char dit7[2][2] = { {  -96,   +48}, {  +96,   - 48} };
                 int u = x & 1, v = y & 1;
                 r = (r + dit7[v][u]) >= 128;

@@ -1,6 +1,6 @@
 /**
  *  @file   tga_wrt.h
- *  @brief  tga‰æ‘œo—Í.
+ *  @brief  tgaç”»åƒå‡ºåŠ›.
  *  @author Masashi Kitamura
  */
 #ifndef TGA_WRT_H
@@ -10,25 +10,25 @@
 extern "C" {
 #endif
 
-/// tga‰æ‘œƒCƒ[ƒW‚Ì¶¬.
-int  tga_write( void *tga_data,                             // tgaƒCƒ[ƒW‚ğŠi”[‚·‚éƒoƒbƒtƒ@.
-                int w, int h, int bpp,                      // o—Í‚Ì‰¡•,c•, bpp
-                const void *src, int srcWb, int srcBpp,     // “ü—Í‚ÌƒsƒNƒZƒ‹,‰¡•ƒoƒCƒg”,bpp
-                const void *clut, int dir);                 // “ü—Í‚Ì clut, “ü—ÍƒsƒNƒZƒ‹‚Ìƒ‰ƒCƒ“‚Ìã‰º.
+/// tgaç”»åƒã‚¤ãƒ¡ãƒ¼ã‚¸ã®ç”Ÿæˆ.
+int  tga_write( void *tga_data,                             // tgaã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡.
+                int w, int h, int bpp,                      // å‡ºåŠ›ã®æ¨ªå¹…,ç¸¦å¹…, bpp
+                const void *src, int srcWb, int srcBpp,     // å…¥åŠ›ã®ãƒ”ã‚¯ã‚»ãƒ«,æ¨ªå¹…ãƒã‚¤ãƒˆæ•°,bpp
+                const void *clut, int dir);                 // å…¥åŠ›ã® clut, å…¥åŠ›ãƒ”ã‚¯ã‚»ãƒ«ã®ãƒ©ã‚¤ãƒ³ã®ä¸Šä¸‹.
 
-/// tga‰æ‘œƒCƒ[ƒW‚Ì¶¬.
-int  tga_writeEx(void *tga_data, int dataSiz,               // tgaƒCƒ[ƒW‚ğŠi”[‚·‚éƒoƒbƒtƒ@, ‚Æ‚»‚ÌƒTƒCƒY,
-                int w, int h, int dstBpp,                   // o—Í‚Ì‰¡•,c•, bpp
-                const void* src, int srcWb, int srcBpp,     // “ü—Í‚ÌƒsƒNƒZƒ‹,‰¡•ƒoƒCƒg”,c•,bpp
-                const void *clut0, int clutBpp,             // “ü—Í‚Ì clut ‚ÆAo—Í‚Ìclut‚Ìbpp
-                int dir,                                    // “ü—Í‚ÌƒsƒNƒZƒ‹ 0:ãƒ‰ƒCƒ“‚©‚ç 1:‰ºƒ‰ƒCƒ“‚©‚ç.
-                int x0, int y0);                            // o—Í‚Ìƒwƒbƒ_‚É“ü‚ê‚én“_ x,y. •’Ê0,0.
+/// tgaç”»åƒã‚¤ãƒ¡ãƒ¼ã‚¸ã®ç”Ÿæˆ.
+int  tga_writeEx(void *tga_data, int dataSiz,               // tgaã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’æ ¼ç´ã™ã‚‹ãƒãƒƒãƒ•ã‚¡, ã¨ãã®ã‚µã‚¤ã‚º,
+                int w, int h, int dstBpp,                   // å‡ºåŠ›ã®æ¨ªå¹…,ç¸¦å¹…, bpp
+                const void* src, int srcWb, int srcBpp,     // å…¥åŠ›ã®ãƒ”ã‚¯ã‚»ãƒ«,æ¨ªå¹…ãƒã‚¤ãƒˆæ•°,ç¸¦å¹…,bpp
+                const void *clut0, int clutBpp,             // å…¥åŠ›ã® clut ã¨ã€å‡ºåŠ›ã®clutã®bpp
+                int dir,                                    // å…¥åŠ›ã®ãƒ”ã‚¯ã‚»ãƒ« 0:ä¸Šãƒ©ã‚¤ãƒ³ã‹ã‚‰ 1:ä¸‹ãƒ©ã‚¤ãƒ³ã‹ã‚‰.
+                int x0, int y0);                            // å‡ºåŠ›ã®ãƒ˜ãƒƒãƒ€ã«å…¥ã‚Œã‚‹å§‹ç‚¹ x,y. æ™®é€š0,0.
 
 
-/// w’èbpp‚ğA‚»‚ê‚ğ–‚½‚·ÀÛ‚É tga ‚ÅƒTƒ|[ƒg‚³‚ê‚é bpp ‚É•ÏŠ·.
+/// æŒ‡å®šbppã‚’ã€ãã‚Œã‚’æº€ãŸã™å®Ÿéš›ã« tga ã§ã‚µãƒãƒ¼ãƒˆã•ã‚Œã‚‹ bpp ã«å¤‰æ›.
 int  tga_chkDstBpp(int bpp);
 
-/// w,h,bpp‚©‚çtgaƒCƒ[ƒW‚É•K—v‚ÈƒoƒCƒg”‚ğ•Ô‚·(‘å–Ú‚É•Ô‚·).
+/// w,h,bppã‹ã‚‰tgaã‚¤ãƒ¡ãƒ¼ã‚¸ã«å¿…è¦ãªãƒã‚¤ãƒˆæ•°ã‚’è¿”ã™(å¤§ç›®ã«è¿”ã™).
 int  tga_encodeWorkSize(int w, int h, int bpp);
 
 
@@ -41,25 +41,25 @@ int  tga_encodeWorkSize(int w, int h, int bpp);
 
 
 // ===========================================================================
-// (ã‹LŠÖ”‚Ìg—p—á)
+// (ä¸Šè¨˜é–¢æ•°ã®ä½¿ç”¨ä¾‹)
 
-// inline ‚ªw’è‚Å‚«‚éê‡.
+// inline ãŒæŒ‡å®šã§ãã‚‹å ´åˆ.
 #if (defined __cplusplus) || (defined inline) || (__STDC_VERSION__ >= 199901L) || (defined __GNUC__)
 
-// —\‚ß stdlib.h ‚ğinclude‚µ‚Ä‚¢‚é‚Æ‚«‚Ì‚İ—˜—p‰Â”\.
+// äºˆã‚ stdlib.h ã‚’includeã—ã¦ã„ã‚‹ã¨ãã®ã¿åˆ©ç”¨å¯èƒ½.
 #if (defined _INC_STDLIB/*VC,BCC*/) || (defined __STDLIB_H/*DMC,BCC*/) || (defined _STDLIB_H_/*GCC*/) \
     || (defined _STDLIB_H_INCLUDED/*watcom*/) || (defined _MSL_STDLIB_H/*CW*/)
-#include <stdlib.h>     // calloc,free‚Ì‚½‚ß.
+#include <stdlib.h>     // calloc,freeã®ãŸã‚.
 
-/** w’è‚µ‚½‰æ‘œ‚ğAmalloc‚µ‚½ƒƒ‚ƒŠ‚Étga‰æ‘œ‚É‚µ‚Ä•Ô‚·. ¸”s‚·‚é‚ÆNULL.
- *  ¦ srcWidByt‚ÍŒ³‰æ‘œ‚Ì‰¡•ƒoƒCƒg”‚ÅA0 ‚¾‚Æw‚Æbpp‚©‚çƒWƒƒƒXƒg‚Ì’l‚ğ‹‚ß‚é.
+/** æŒ‡å®šã—ãŸç”»åƒã‚’ã€mallocã—ãŸãƒ¡ãƒ¢ãƒªã«tgaç”»åƒã«ã—ã¦è¿”ã™. å¤±æ•—ã™ã‚‹ã¨NULL.
+ *  â€» srcWidBytã¯å…ƒç”»åƒã®æ¨ªå¹…ãƒã‚¤ãƒˆæ•°ã§ã€0 ã ã¨wã¨bppã‹ã‚‰ã‚¸ãƒ£ã‚¹ãƒˆã®å€¤ã‚’æ±‚ã‚ã‚‹.
  */
 static inline void* tga_writeMalloc(
-        int w, int h, int dstBpp,                   // o—Í‚Ì‰¡•,c•, bpp
-        const void* src, int srcWidByt, int srcBpp, // “ü—Í‚ÌƒsƒNƒZƒ‹,‰¡•ƒoƒCƒg”,c•,bpp
-        const void *clut,                           // “ü—Í‚Ì clut ‚Æ
-        int dir,                                    // ƒsƒNƒZƒ‹‚Í 0:ãƒ‰ƒCƒ“‚©‚ç 1:‰ºƒ‰ƒCƒ“‚©‚ç.
-        unsigned* pSize)                            // ¶¬‚µ‚½ƒTƒCƒY
+        int w, int h, int dstBpp,                   // å‡ºåŠ›ã®æ¨ªå¹…,ç¸¦å¹…, bpp
+        const void* src, int srcWidByt, int srcBpp, // å…¥åŠ›ã®ãƒ”ã‚¯ã‚»ãƒ«,æ¨ªå¹…ãƒã‚¤ãƒˆæ•°,ç¸¦å¹…,bpp
+        const void *clut,                           // å…¥åŠ›ã® clut ã¨.
+        int dir,                                    // ãƒ”ã‚¯ã‚»ãƒ«ã¯ 0:ä¸Šãƒ©ã‚¤ãƒ³ã‹ã‚‰ 1:ä¸‹ãƒ©ã‚¤ãƒ³ã‹ã‚‰.
+        unsigned* pSize)                            // ç”Ÿæˆã—ãŸã‚µã‚¤ã‚º.
 {
     unsigned    dbpp = (dstBpp > 0) ? dstBpp : srcBpp;
     unsigned    bpp  = tga_chkDstBpp(dbpp);
@@ -80,7 +80,7 @@ static inline void* tga_writeMalloc(
 #endif
 
 
-// —\‚ß stdio.h ‚ğinclude‚µ‚Ä‚¢‚é‚Æ‚«‚Ì‚İ—˜—p‰Â”\.
+// äºˆã‚ stdio.h ã‚’includeã—ã¦ã„ã‚‹ã¨ãã®ã¿åˆ©ç”¨å¯èƒ½.
 #if (defined _INC_STDIO/*VC,BCC*/) || (defined __STDIO_H/*DMC,BCC*/) || (defined _STDIO_H_/*GCC*/) \
     || (defined _STDIO_H_INCLUDED/*watcom*/) || (defined _MSL_STDIO_H/*CW*/)
 #include <stdio.h>
@@ -90,15 +90,15 @@ static int tga_write_file(const char *fname, int w, int h, int dstBpp,
          const void* src, int srcWidByt=0, int srcBpp=0, const void* clut=0, int dir=0);
 #endif
 
-/** tgaƒtƒ@ƒCƒ‹¶¬.
- *  ¦ srcWidByt‚ÍŒ³‰æ‘œ‚Ì‰¡•ƒoƒCƒg”‚ÅA0 ‚¾‚Æw‚Æbpp‚©‚çƒWƒƒƒXƒg‚Ì’l‚ğ‹‚ß‚é.
+/** tgaãƒ•ã‚¡ã‚¤ãƒ«ç”Ÿæˆ.
+ *  â€» srcWidBytã¯å…ƒç”»åƒã®æ¨ªå¹…ãƒã‚¤ãƒˆæ•°ã§ã€0 ã ã¨wã¨bppã‹ã‚‰ã‚¸ãƒ£ã‚¹ãƒˆã®å€¤ã‚’æ±‚ã‚ã‚‹.
  */
 static inline int tga_write_file(
-    const char* fname,                          // o—Íƒtƒ@ƒCƒ‹–¼
-    int w, int h, int dstBpp,                   // o—Í‚Ì‰¡•,c•, bpp
-    const void* src, int srcWidByt, int srcBpp, // “ü—Í‚ÌƒsƒNƒZƒ‹,‰¡•ƒoƒCƒg”,c•,bpp
-    const void *clut,                           // “ü—Í‚Ì clut
-    int dir)                                    // ƒsƒNƒZƒ‹‚Í 0:ãƒ‰ƒCƒ“‚©‚ç 1:‰ºƒ‰ƒCƒ“‚©‚ç.
+    const char* fname,                          // å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«å.
+    int w, int h, int dstBpp,                   // å‡ºåŠ›ã®æ¨ªå¹…,ç¸¦å¹…, bpp
+    const void* src, int srcWidByt, int srcBpp, // å…¥åŠ›ã®ãƒ”ã‚¯ã‚»ãƒ«,æ¨ªå¹…ãƒã‚¤ãƒˆæ•°,ç¸¦å¹…,bpp
+    const void *clut,                           // å…¥åŠ›ã® clut.
+    int dir)                                    // ãƒ”ã‚¯ã‚»ãƒ«ã¯ 0:ä¸Šãƒ©ã‚¤ãƒ³ã‹ã‚‰ 1:ä¸‹ãƒ©ã‚¤ãƒ³ã‹ã‚‰.
 {
     size_t   l  = (unsigned)-1;
     unsigned sz = 0;
@@ -117,7 +117,7 @@ static inline int tga_write_file(
 }
 #endif
 
-#endif  // inline‚ªg‚¦‚éê‡.
+#endif  // inlineãŒä½¿ãˆã‚‹å ´åˆ.
 
 
 

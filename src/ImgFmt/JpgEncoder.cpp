@@ -1,12 +1,12 @@
 /**
  *  @file JpgEncoder.cpp
- *  @brief  ‰æ‘œ‚ğjpgƒf[ƒ^‚É•ÏŠ·.
+ *  @brief  ç”»åƒã‚’jpgãƒ‡ãƒ¼ã‚¿ã«å¤‰æ›.
  *  @author Masashi KITAMURA
  *  @note
- *      - Independent JPEG Group‚Ìlibjpeg.lib‚ğ—p‚¢‚Ä‚¢‚Ü‚·B
+ *      - Independent JPEG Groupã®libjpeg.libã‚’ç”¨ã„ã¦ã„ã¾ã™ã€‚
  *
- *      - ‚Ü‚¾AƒGƒ‰[ˆ—‚ğ’[Ü‚Á‚ÄƒfƒtƒHƒ‹ƒg‚Ì‚Ü‚Ü‚È‚Ì‚ÅA
- *        ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ƒc[ƒ‹ˆÈŠO‚Å‚Íg‚¦‚È‚¢.
+ *      - ã¾ã ã€ã‚¨ãƒ©ãƒ¼å‡¦ç†ã‚’ç«¯æŠ˜ã£ã¦ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã¾ã¾ãªã®ã§ã€
+ *        ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ãƒ„ãƒ¼ãƒ«ä»¥å¤–ã§ã¯ä½¿ãˆãªã„.
  */
 
 #include <stdio.h>
@@ -29,7 +29,7 @@ extern "C" {
 
 // ===========================================================================
 // ===========================================================================
-// ƒƒ‚ƒŠã‚Ìjpegƒf[ƒ^‚ğˆµ‚¤‚½‚ß‚Ìƒ‹[ƒ`ƒ“.
+// ãƒ¡ãƒ¢ãƒªä¸Šã®jpegãƒ‡ãƒ¼ã‚¿ã‚’æ‰±ã†ãŸã‚ã®ãƒ«ãƒ¼ãƒãƒ³.
 
 // namespace JpgOnMem {
 
@@ -75,12 +75,12 @@ static void jpgOnMem_dst(j_compress_ptr cinfo, void *data, size_t size)
 
     dest = (JpgOnMemMgr*) cinfo->dest;
 
-    // g—p‚·‚éƒ‹[ƒ`ƒ“‚ğİ’è.
+    // ä½¿ç”¨ã™ã‚‹ãƒ«ãƒ¼ãƒãƒ³ã‚’è¨­å®š.
     dest->pub.init_destination    = jpgOnMem_init_destination;
     dest->pub.empty_output_buffer = jpgOnMem_empty_output_buffer;
     dest->pub.term_destination    = jpgOnMem_term_destination;
 
-    // ƒoƒbƒtƒ@‚Ì€”õ.
+    // ãƒãƒƒãƒ•ã‚¡ã®æº–å‚™.
     dest->pub.next_output_byte    = (JOCTET *) data;
     dest->pub.free_in_buffer      = size;
 }
@@ -97,10 +97,10 @@ static void jpgOnMem_dst(j_compress_ptr cinfo, void *data, size_t size)
 
 // ===========================================================================
 // ===========================================================================
-// ŠO•”‚ÉŒ©‚¹‚éƒNƒ‰ƒX.
+// å¤–éƒ¨ã«è¦‹ã›ã‚‹ã‚¯ãƒ©ã‚¹.
 
-/** ƒƒ‚ƒŠã‚Ìjpgƒf[ƒ^‚ğİ’è.
- * ƒ|ƒCƒ“ƒ^‚ğ•Û‚·‚é‚¾‚¯‚È‚Ì‚Åread()‚ğI‚¦‚é‘O‚ÉbinData‚ğ”j‰ó‚µ‚È‚¢‚±‚Æ.
+/** ãƒ¡ãƒ¢ãƒªä¸Šã®jpgãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®š.
+ * ãƒã‚¤ãƒ³ã‚¿ã‚’ä¿æŒã™ã‚‹ã ã‘ãªã®ã§read()ã‚’çµ‚ãˆã‚‹å‰ã«binDataã‚’ç ´å£Šã—ãªã„ã“ã¨.
  */
 unsigned JpgEncoder::write(
         unsigned char*  binData,
@@ -142,7 +142,7 @@ unsigned JpgEncoder::write(
 
     JSAMPROW    row_pointer[2];
     row_pointer[1] = NULL;
-    if ((dir & 1) == 0) {   // ¶ã‚©‚çƒsƒNƒZƒ‹‚ğ‹l‚ß‚é.
+    if ((dir & 1) == 0) {   // å·¦ä¸Šã‹ã‚‰ãƒ”ã‚¯ã‚»ãƒ«ã‚’è©°ã‚ã‚‹.
         while (info.next_scanline < info.image_height) {
             row_pointer[0] = &pix[info.next_scanline * widByt];
             jpeg_write_scanlines(&info, row_pointer, 1);
@@ -162,14 +162,14 @@ unsigned JpgEncoder::write(
 }
 
 
-/// write‚Åƒ|ƒCƒ“ƒ^‚ğó‚¯æ‚Á‚½ê‡‚Ì‘Î‚Æ‚È‚éƒƒ‚ƒŠŠJ•ú.
+/// writeã§ãƒã‚¤ãƒ³ã‚¿ã‚’å—ã‘å–ã£ãŸå ´åˆã®å¯¾ã¨ãªã‚‹ãƒ¡ãƒ¢ãƒªé–‹æ”¾.
 void JpgEncoder::deallocate(void* p) {
     if (p)
         free(p);
 }
 
 
-/** malloc ‚µ‚½ƒƒ‚ƒŠ‚Éjpgƒf[ƒ^‚ğ“ü‚ê‚Ä•Ô‚·. ƒƒ‚ƒŠ‚ÍA‚©‚È‚è‘å‚«‚ß‚Éæ‚Á‚Ä‚¢‚é‚Ì‚Å’ˆÓ.
+/** malloc ã—ãŸãƒ¡ãƒ¢ãƒªã«jpgãƒ‡ãƒ¼ã‚¿ã‚’å…¥ã‚Œã¦è¿”ã™. ãƒ¡ãƒ¢ãƒªã¯ã€ã‹ãªã‚Šå¤§ãã‚ã«å–ã£ã¦ã„ã‚‹ã®ã§æ³¨æ„.
  */
 unsigned char* JpgEncoder::write(const void* src, unsigned w, unsigned h, unsigned quality, unsigned widByt, unsigned dir, unsigned* pSz) {
     if (widByt == 0)

@@ -1,6 +1,6 @@
 /**
  *  @file   pix8.c
- *  @biref  8ƒrƒbƒgF‰æ‘œ‚ğ‚¢‚ë‚¢‚ë•ÏŠ·
+ *  @biref  8ãƒ“ãƒƒãƒˆè‰²ç”»åƒã‚’ã„ã‚ã„ã‚å¤‰æ›
  *  @author Masashi Kitamura
  *  @date   2000
  */
@@ -13,8 +13,8 @@ void pix8_copyRect(void *dst, int dstW, int dstH, int dstX, int dstY, void *src,
 {
     int n;
 
-    // ƒ\[ƒX”ÍˆÍƒ`ƒFƒbƒN
-    if (rctX+rctW <= 0 || rctX >= srcW || rctY+rctH <= 0 || rctY >= srcH) { // ‰æ–Ê‚Ì”ÍˆÍŠO‚¾‚©‚ç•`‰æ‚µ‚È‚¢
+    // ã‚½ãƒ¼ã‚¹ç¯„å›²ãƒã‚§ãƒƒã‚¯.
+    if (rctX+rctW <= 0 || rctX >= srcW || rctY+rctH <= 0 || rctY >= srcH) { // ç”»é¢ã®ç¯„å›²å¤–ã ã‹ã‚‰æç”»ã—ãªã„.
         return;
     }
     if (rctX < 0) {
@@ -29,15 +29,15 @@ void pix8_copyRect(void *dst, int dstW, int dstH, int dstX, int dstY, void *src,
         dstY += n;
         rctY =  0;
     }
-    if (rctX+rctW > srcW) {         // Œã‚ë‚ªØ‚ê‚é‚È‚çA•\¦•‚ğŒ¸‚ç‚·
+    if (rctX+rctW > srcW) {         // å¾Œã‚ãŒåˆ‡ã‚Œã‚‹ãªã‚‰ã€è¡¨ç¤ºå¹…ã‚’æ¸›ã‚‰ã™.
         rctW = srcW - rctX;
     }
-    if (rctY+rctH > srcH) {         // Œã‚ë‚ªØ‚ê‚é‚È‚çA•\¦•‚ğŒ¸‚ç‚·
+    if (rctY+rctH > srcH) {         // å¾Œã‚ãŒåˆ‡ã‚Œã‚‹ãªã‚‰ã€è¡¨ç¤ºå¹…ã‚’æ¸›ã‚‰ã™.
         rctH = srcH - rctY;
     }
 
-    // o—Í”ÍˆÍƒ`ƒFƒbƒN
-    if (dstX+rctW <= 0 || dstX >= dstW || dstY+rctH <= 0 || dstY >= dstH) { // ‰æ–Ê‚Ì”ÍˆÍŠO‚¾‚©‚ç•`‰æ‚µ‚È‚¢
+    // å‡ºåŠ›ç¯„å›²ãƒã‚§ãƒƒã‚¯.
+    if (dstX+rctW <= 0 || dstX >= dstW || dstY+rctH <= 0 || dstY >= dstH) { // ç”»é¢ã®ç¯„å›²å¤–ã ã‹ã‚‰æç”»ã—ãªã„.
         return;
     }
     if (dstX < 0) {
@@ -60,8 +60,8 @@ void pix8_copyRect(void *dst, int dstW, int dstH, int dstX, int dstY, void *src,
 
 
 
-/** src‰æ‘œ(‰¡•srcW)‚Ì‹éŒ`(rctW*rctH)‚ğdst‰æ‘œ(‰¡•dstW)‚ÉƒRƒs[
- *  ”ÍˆÍƒ`ƒFƒbƒN‚È‚Ç‚Í‚µ‚È‚¢‚Ì‚Åg‚¢è‘¤‚Å’²®‚Ì‚±‚Æ
+/** srcç”»åƒ(æ¨ªå¹…srcW)ã®çŸ©å½¢(rctW*rctH)ã‚’dstç”»åƒ(æ¨ªå¹…dstW)ã«ã‚³ãƒ”ãƒ¼
+ *  ç¯„å›²ãƒã‚§ãƒƒã‚¯ãªã©ã¯ã—ãªã„ã®ã§ä½¿ã„æ‰‹å´ã§èª¿æ•´ã®ã“ã¨
  */
 void pix8_copyWH(void *dst, int dstW, void *src, int srcW, int rctW, int rctH)
 {
@@ -81,7 +81,7 @@ void pix8_copyWH(void *dst, int dstW, void *src, int srcW, int rctW, int rctH)
 
 
 #if 0
-/** ”wŒiFˆÈŠO‚ªg‚Á‚Ä‚¢‚é‹éŒ`‚ğ‹‚ß‚éB”²‚«F‚ÍƒCƒ“ƒfƒbƒNƒXEƒJƒ‰[ */
+/** èƒŒæ™¯è‰²ä»¥å¤–ãŒä½¿ã£ã¦ã„ã‚‹çŸ©å½¢ã‚’æ±‚ã‚ã‚‹ã€‚æŠœãè‰²ã¯ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒ»ã‚«ãƒ©ãƒ¼ */
 int pix8_getNukiRectI(void *pix0, int xsz, int ysz, int nukiClut, int *x_p, int *y_p, int *w_p, int *h_p)
 {
     int x,y,x0,y0,x1,y1;
@@ -105,7 +105,7 @@ int pix8_getNukiRectI(void *pix0, int xsz, int ysz, int nukiClut, int *x_p, int 
         }
     }
 
-    if (x0 == 0x7fff || x1 == -0x7fff) {    /* ”wŒiF‚Ì‚İ‚Ì‚Æ‚« */
+    if (x0 == 0x7fff || x1 == -0x7fff) {    /* èƒŒæ™¯è‰²ã®ã¿ã®ã¨ã */
         *w_p = 0;
         *h_p = 0;
         *x_p = 0;
@@ -122,7 +122,7 @@ int pix8_getNukiRectI(void *pix0, int xsz, int ysz, int nukiClut, int *x_p, int 
 
 
 #if 0
-/** ”wŒiFˆÈŠO‚ªg‚Á‚Ä‚¢‚é‹éŒ`‚ğ‹‚ß‚é. ”²‚«F‚Íƒtƒ‹ƒJƒ‰[ */
+/** èƒŒæ™¯è‰²ä»¥å¤–ãŒä½¿ã£ã¦ã„ã‚‹çŸ©å½¢ã‚’æ±‚ã‚ã‚‹. æŠœãè‰²ã¯ãƒ•ãƒ«ã‚«ãƒ©ãƒ¼ */
 int pix8_getNukiRectF(void *pix0, int xsz, int ysz, int *clut, int colKey, int *x_p, int *y_p, int *w_p, int *h_p)
 {
     int x,y,x0,y0,x1,y1;
@@ -146,7 +146,7 @@ int pix8_getNukiRectF(void *pix0, int xsz, int ysz, int *clut, int colKey, int *
         }
     }
 
-    if (x0 == 0x7fff || x1 == -0x7fff) {    /* ”wŒiF‚Ì‚İ‚Ì‚Æ‚« */
+    if (x0 == 0x7fff || x1 == -0x7fff) {    /* èƒŒæ™¯è‰²ã®ã¿ã®ã¨ã */
         *w_p = 0;
         *h_p = 0;
         *x_p = 0;
@@ -164,7 +164,7 @@ int pix8_getNukiRectF(void *pix0, int xsz, int ysz, int *clut, int colKey, int *
 
 
 #if 0
-/** ƒOƒŠƒbƒhƒTƒCƒY gw*gh ‚Æ‚µ‚ÄAƒOƒŠƒbƒh‚É‡‚¤‚æ‚¤‚É‹éŒ`ƒTƒCƒY‚ğ’²® */
+/** ã‚°ãƒªãƒƒãƒ‰ã‚µã‚¤ã‚º gw*gh ã¨ã—ã¦ã€ã‚°ãƒªãƒƒãƒ‰ã«åˆã†ã‚ˆã†ã«çŸ©å½¢ã‚µã‚¤ã‚ºã‚’èª¿æ•´ */
 int pix8_gridRect(int gw, int gh, int *x_p, int *y_p, int *w_p, int *h_p)
 {
     int x0,y0,x1,y1;
@@ -249,7 +249,7 @@ void pix8_bitCom(void *pix, int w, int h)
 #endif
 
 
-/// ’Pƒ‚ÈŠg‘å
+/// å˜ç´”ãªæ‹¡å¤§.
 void pix8_resize(uint8_t *pix2, unsigned rszW, unsigned rszH, const uint8_t *pix, unsigned w, unsigned h)
 {
     unsigned nw = rszW / w;
@@ -257,11 +257,11 @@ void pix8_resize(uint8_t *pix2, unsigned rszW, unsigned rszH, const uint8_t *pix
     unsigned x,y,u,v,c;
 
     if (nw == 0 || nh == 0) {
-        printf("CLUT•t‰æ‘œ‚Ì‚Ü‚Ü‚Å‚Í®””{Šg‘åˆÈŠO‚ÌŠgk‚Å‚«‚È‚¢\n");
+        printf("CLUTä»˜ç”»åƒã®ã¾ã¾ã§ã¯æ•´æ•°å€æ‹¡å¤§ä»¥å¤–ã®æ‹¡ç¸®ã§ããªã„\n");
         return;
     }
     if (rszW % w != 0 || rszH % h != 0) {
-        printf("CLUT•t‰æ‘œ‚Ì‚Ü‚Ü‚Å‚Í®””{Šg‘åˆÈŠO‚ÌŠgk‚Å‚«‚È‚¢\n");
+        printf("CLUTä»˜ç”»åƒã®ã¾ã¾ã§ã¯æ•´æ•°å€æ‹¡å¤§ä»¥å¤–ã®æ‹¡ç¸®ã§ããªã„\n");
     }
 
     for (y = 0; y < h; ++y) {
@@ -277,7 +277,7 @@ void pix8_resize(uint8_t *pix2, unsigned rszW, unsigned rszH, const uint8_t *pix
 }
 
 
-/// src‰æ‘œ’†‚É bpp ‚Ì”ÍˆÍŠO‚É‚È‚é”Ô†‚ª‚ ‚é‚©ƒ`ƒFƒbƒN. ‚ ‚ê‚Î³”‚ğ•Ô‚·.
+/// srcç”»åƒä¸­ã« bpp ã®ç¯„å›²å¤–ã«ãªã‚‹ç•ªå·ãŒã‚ã‚‹ã‹ãƒã‚§ãƒƒã‚¯. ã‚ã‚Œã°æ­£æ•°ã‚’è¿”ã™.
 int pix8_hasPixOutOfIdx(uint8_t const* src, int w, int h, int idxMax) {
     unsigned wh = w * h;
     unsigned i;

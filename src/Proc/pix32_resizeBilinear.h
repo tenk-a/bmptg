@@ -1,6 +1,6 @@
 /**
  *  @file   pix32_resizeBilinear.h
- *  @brief  ƒoƒCƒŠƒjƒAƒTƒ“ƒvƒŠƒ“ƒO‚ÅŠg‘åk¬.
+ *  @brief  ãƒã‚¤ãƒªãƒ‹ã‚¢ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ã§æ‹¡å¤§ç¸®å°.
  *  @author Masashi KITAMURA
  */
 
@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-/** Šg‘åk¬
+/** æ‹¡å¤§ç¸®å°.
  */
 int  pix32_resizeBilinear(unsigned *dst, unsigned dstW, unsigned dstH, const unsigned *src, unsigned srcW, unsigned srcH);
 
@@ -22,8 +22,8 @@ int  pix32_resizeBilinearAlpha(unsigned *dst, unsigned dstW, unsigned dstH, cons
 #endif
 
 #if defined __cplusplus
-// C++Œü
-// image(), witdh(),height(),bpp() ‚ğƒƒ“ƒo[‚É‚Â‰æ‘œƒNƒ‰ƒX‚ğ‘€ì.
+// C++å‘.
+// image(), witdh(),height(),bpp() ã‚’ãƒ¡ãƒ³ãƒãƒ¼ã«æŒã¤ç”»åƒã‚¯ãƒ©ã‚¹ã‚’æ“ä½œ.
 
 template<class IMG>
 int  pix32_resizeBilinear(IMG& dst, const IMG& src) {
