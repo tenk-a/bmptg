@@ -1152,7 +1152,7 @@ void ConvOne::patternDither() {
 /// 誤差拡散.
 void ConvOne::errorDiffusion1b(int dpp) {
     // RGBを何階調にするか.
-    unsigned const tonesTbl[][3] = {
+    unsigned const toneSizeTbl[][3] = {
         // r   g   b
         {  2,  2,  2, },    // 0 :  3bit r1g1b1     8色.
         {  3,  3,  3, },    // 1 :  4bit           27色.
@@ -1200,22 +1200,44 @@ void ConvOne::errorDiffusion1b(int dpp) {
     }
     if (noErrDif)
         ditType |= 0x1000;
-    unsigned const* tones = tonesTbl[toneType];
-    ErrorDiffusion1b ed;
-    ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, tones, dpp);
 
-    if (opts_.decreaseColorMode == DCM_FIX_JP && mono_ && dstBpp_ == 2) {
-        static const unsigned clut[] = { 0xFF000000, 0xFF0000ff, 0xFF00ffff, 0xFFffffff, };
-		enum { d = 255 / 4 };
+    unsigned const* toneSize = toneSizeTbl[toneType];
+    ErrorDiffusion1b ed;
+
+    bool digJpMonoTone4 = (opts_.decreaseColorMode == DCM_FIX_JP && mono_ && dstBpp_ == 3 && opts_.colNum == 4);
+    if (digJpMonoTone4 == false) {
+	    ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, dpp, toneSize, NULL);
+    } else {
+    #if 1
+        static const unsigned clut[] = { 0xFF000000, 0xFF0000ff, 0xFF00ffff, 0xFFffffff, };	// 黒 青 水 白.
+        //enum { K=0, B=0xFFFF*1/10, S=0xFFFF*(1+6)/10, W=0xFFFF };   // G6R3B1 黒青水白.
+        //enum { K=0, B=0xFFFF*2/16, S=0xFFFF*(2+9)/16, W=0xFFFF };   // G9R5B2 黒青水白.
+        enum { K=0, B=0xFFFF*3/16, S=0xFFFF*(3+8)/16, W=0xFFFF };   // G8R5B2 黒青水白.
+    #elif 0
+        static const unsigned clut[] = { 0xFF000000, 0xFF0000ff, 0xFFff00ff, 0xFFffffff, };	// 黒 青 紫 白.
+        enum { K=0, B=0xFFFF*1/10, S=0xFFFF*(1+3)/10, W=0xFFFF };   // G6R3B1 黒青紫白.
+    #else
+        // static const unsigned clut[] = { 0xFF000000, 0xFF0000ff, 0xFFff00ff, 0xFFff0000, };
+        // enum { K=0, B=0xFFFF*2/16, S=0xFFFF*(2+5)/16, W=0xFFFF };   // G9R5B2 黒青紫赤.
+    #endif
+		unsigned toneTbl[3][64] = {
+            { K, B, S, W },
+            { K, B, S, W },
+            { K, B, S, W },
+		};
+        unsigned toneNums[3] = { 4, 4, 4, };
+
+        ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, dpp, toneNums, toneTbl);
+
+        enum { d = 255 / 4 };
+        enum { KB = K >> 8, BB = B >> 8, SB = S >> 8, WB = W >> 8 };
         UINT32_T* p = (UINT32_T*)pix_;
 		for (size_t y = 0; y < h_; ++y) {
 			for (size_t x = 0; x < w_; ++x) {
 				unsigned c = p[ y * w_ + x ];
                 c &= 0xff;
-				unsigned i = c / d;
-				//unsigned i = (c < d) ? 0 : (c < d*2) ? 1 : (c < d*3) ? 2 : 3;
-				if (i > 3) i = 3;
-			 #if 0
+				unsigned i = (c < BB) ? 0 : (c < SB) ? 1 : (c < WB) ? 2 : 3;
+			 #if 1
                 if (i == 1) {
                     static int s_i = 0;
                     ++s_i;
@@ -1229,7 +1251,8 @@ void ConvOne::errorDiffusion1b(int dpp) {
                     ++s_i;
                 }
              #endif
-				p[ y * w_ + x ] = clut[i];
+                c = clut[i];
+				p[ y * w_ + x ] = c;
 			}
 		}
 	}
@@ -1280,7 +1303,8 @@ void ConvOne::decreaseColor() {
                     //if (alpNum)
                     //  clut_[0] &= 0xFFFFFF;
 
-                    if (dstBpp_ == 3 && decrType == 2) {
+                    if (dstBpp_ == 3 && (decrType == 2 || (mono_ && colNum == 4))) {
+                        //colNum = 8;
                         FixedClut256<>::decreaseColorRGB111(p, (UINT32_T*)pix_, w_, h_, (md == 1));
                     } else {
                         unsigned  idx  = 0;

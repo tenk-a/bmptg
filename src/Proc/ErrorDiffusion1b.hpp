@@ -29,6 +29,15 @@ class ErrorDiffusion1b {
         unsigned num_;
         int      tbl_[64 + 4];
     public:
+		void init(unsigned const tbl[64], unsigned n) {
+			assert(2 <= n && n <= 64);
+            memset((void*)this, 0, sizeof *this);
+            num_ = n;
+            for (unsigned i = 0; i < n; ++i)
+            	tbl_[i] = int(tbl[i]);
+            tbl_[n] = 0xffff;
+		}
+
         void init(unsigned n, bool xterm) {
             memset((void*)this, 0, sizeof *this);
             if (n <  2) n = 2;
@@ -85,14 +94,16 @@ public:
         //Opt() : type(0), alpha(false), ditRev(false), edRev(false) {}
     };
  #endif
+
     bool conv(
             unsigned*       dst,        ///< 出力バッファ.
             const unsigned* src,        ///< 入力バッファ.
             unsigned        w,          ///< 横幅.
             unsigned        h,          ///< 縦幅.
             unsigned        ditTyp,
-            const unsigned* tones,      ///< 階調数. tones[3]
-            unsigned        dpp
+            unsigned        dpp,
+            unsigned const  toneSizes[3], ///< 階調数. tones[3]
+            unsigned const  tones[3][64]  ///< 階調.
             //int           flgs
     ) {
         enum { R  = 0, G  = 1, B  = 2, A  = 3, };
@@ -104,8 +115,13 @@ public:
         bool errDif = (ditTyp & 0x1000) == 0;   // noErrDif フラグが立っていなければ誤差拡散する.
         bool mono   = (ditTyp & 0x100) != 0;
         bool xterm  = (ditTyp & 0x10) != 0;
-        for (unsigned i = 0; i < 3; ++i)
-            toneTbl_[i].init(tones[i], xterm);
+		if (tones) {
+	        for (unsigned i = 0; i < 3; ++i)
+    	        toneTbl_[i].init(tones[i], toneSizes[i]);
+		} else {
+	        for (unsigned i = 0; i < 3; ++i)
+    	        toneTbl_[i].init(toneSizes[i], xterm);
+    	}
 
         for (unsigned y = 0; y < h; ++y) {
             for (unsigned x = 0; x < w; ++x) {

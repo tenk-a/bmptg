@@ -546,13 +546,16 @@ void FixedClut256<A>::getFixedClut256(unsigned *clut, unsigned clutSize, unsigne
     unsigned        l;
     const unsigned* s;
     if (bpp < 6) {
+        #if 0
         if (bpp <= 1) {
             l = 2;
             s = clut2();
         } else if (bpp <= 2) {
             l = 4;
             s = clut4();
-        } else if (bpp < 4) {
+        } else 
+        #endif
+        if (bpp < 4) {
             l = 8;
             s = typ ? clutBGR111() : clutGRB111();
         } else {
@@ -736,9 +739,9 @@ bool FixedClut256<A>::decreaseColorRGB111(unsigned char* pDst, const unsigned* p
 
   #if 0 // test2
   #else // test3
-    ri = (ri + rd) / 2;
-    gi = (gi + gd) / 2;
-    bi = (bi + bd) / 2;
+    ri = (ri + rd) / 2; if (ri == 0) ri = 0xff;
+    gi = (gi + gd) / 2; if (gi == 0) gi = 0xff;
+    bi = (bi + bd) / 2; if (bi == 0) bi = 0xff;
   #endif
  #else // test1
     ri = rd;
@@ -772,6 +775,5 @@ bool FixedClut256<A>::decreaseColorRGB111(unsigned char* pDst, const unsigned* p
 
     return true;
 }
-
 
 #endif
