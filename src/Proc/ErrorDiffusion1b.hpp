@@ -4,12 +4,18 @@
 #include <stdlib.h>
 
 #undef ERRORDIFFUSION1B_SET_DIF
+#ifdef NDEBUG
 #define ERRORDIFFUSION1B_SET_DIF(buf,w,h,i,x,y,d) do {  \
     if (0 <= (y) && (y) < int(h)) { \
-        if (0 <= (x) && (x) < int(w))   \
-            (buf)[(y)*(w)+(x)].pl[i].dif += (d);    \
+        if (0 <= (x) && (x) < int(w)) {   \
+            Plane& pp = (buf)[(y)*(w)+(x)].pl[i]; \
+            pp.dif += (d);    \
+        } \
     }   \
 } while(0)
+#else
+#define ERRORDIFFUSION1B_SET_DIF(buf,w,h,i,x,y,d)   setDif(buf, w, h, i, x, y, d)
+#endif
 
 class ErrorDiffusion1b {
     typedef unsigned short  lum_t;
@@ -208,13 +214,13 @@ public:
                     pli.dst = lum >> 8;
                     if (errDif) {
                      #if 0
-                     #elif 1    // Floyd-Steinberg
+                     #elif 0    // Floyd-Steinberg
                         ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+0, dif * 7 / 16);
                         ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-1*add, y+1, dif * 3 / 16);
                         ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0    , y+1, dif * 5 / 16);
                         ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+1, dif * 1 / 16);
-                     #elif 0    // my3: Floyd-Steinberg mod. ref. http://www.st.nanzan-u.ac.jp/info/gr-thesis/2014/11se309.pdf
-                        unsigned idx = clamp((f ? -dif : dif) >> 13, 0, 7);
+                     #elif 1    // my3: Floyd-Steinberg mod. ref. http://www.st.nanzan-u.ac.jp/info/gr-thesis/2014/11se309.pdf
+                        unsigned idx = clamp((dif<0 ? -dif : dif) >> 13, 0, 7);
                         static const int ktbl[8][4] = {
                             { 256 - 3*28 - 5*28 - 1*28, 3*28, 5*28, 1*28 },
                             //{ 256 - 3*26 - 5*26 - 1*26, 3*26, 5*26, 1*26 },
@@ -282,6 +288,15 @@ public:
     }
 
 private:
+
+    static void setDif(Pix* buf, size_t w, size_t h, int i, int x, int y, int d) {
+        if (0 <= (y) && (y) < int(h)) { 
+            if (0 <= (x) && (x) < int(w)) {   
+                Plane& pp = (buf)[(y)*(w)+(x)].pl[i]; 
+                pp.dif += (d);    
+            } 
+        }   
+    }
 
     static unsigned argb(unsigned char a, unsigned char r, unsigned char g, unsigned char b) {
         return (a << 24) | (r << 16) | (g << 8) | (b);

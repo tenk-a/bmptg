@@ -1166,23 +1166,28 @@ void ConvOne::errorDiffusion1b(int dpp) {
         { 32, 64, 32, },    // 9 : 16bit r5g6b5 65536色.
         { 64, 64, 64, },    //10 : 18bit r6g6b6 262144色.
         {  7,  9,  4, },    //11 :  8bit         252色. win clut
+        {  7,  7,  7, },    //12 :  9bit
     };
     bool noErrDif = (opts_.ditTyp & 0x8000) == 0;
 //noErrDif = true;
     int ditType  = opts_.ditTyp & 3;
     int toneType;
     if (mono_) {
-        toneType = (dstBpp_ <=  1) ? 0
-                 : (dstBpp_ <=  2) ? 2
-                 : (dstBpp_ <=  3) ? 6
+        toneType = (dstBpp_ <=  1 || colNum_ <= 2) ? 0
+                 : (                 colNum_ <= 3) ? 1
+                 : (dstBpp_ <=  2 || colNum_ <= 4) ? 2
+                 : (                 colNum_ <= 5) ? 3
+                 : (                 colNum_ <= 6) ? 4
+                 : (                 colNum_ <= 7) ? 12
+                 : (dstBpp_ <=  3 || colNum_ <= 8) ? 6
                  : (dstBpp_ <=  4) ? 7
                  : (dstBpp_ <=  5) ? 8
                  :                  10;
         ditType |= 0x100;
     } else {
-        toneType = (dstBpp_ <=  5) ? 0
-                 : (dstBpp_ <=  6) ? 2
-                 : (dstBpp_ <=  7) ? 3
+        toneType = (dstBpp_ <=  5 || colNum_ <= 32) ? 0
+                 : (dstBpp_ <=  6 || colNum_ <= 64) ? 2
+                 : (dstBpp_ <=  7 || colNum_ <= 128) ? 3
                  : (dstBpp_ <=  8) ? 5
                  : (dstBpp_ <= 11) ? 6
                  : (dstBpp_ <= 12) ? 7
@@ -1204,22 +1209,23 @@ void ConvOne::errorDiffusion1b(int dpp) {
     unsigned const* toneSize = toneSizeTbl[toneType];
     ErrorDiffusion1b ed;
 
-    bool digJpMonoTone4 = (opts_.decreaseColorMode == DCM_FIX_JP && mono_ && dstBpp_ == 3 && opts_.colNum == 4);
+    bool digJpMonoTone4 = (opts_.decreaseColorMode == DCM_FIX_JP && mono_ && dstBpp_ == 3 && opts_.colNum <= 4);
     if (digJpMonoTone4 == false) {
 	    ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, dpp, toneSize, NULL);
     } else {
-    #if 1
+     #if 1
+      #if 1
         static const unsigned clut[] = { 0xFF000000, 0xFF0000ff, 0xFF00ffff, 0xFFffffff, };	// 黒 青 水 白.
         //enum { K=0, B=0xFFFF*1/10, S=0xFFFF*(1+6)/10, W=0xFFFF };   // G6R3B1 黒青水白.
         //enum { K=0, B=0xFFFF*2/16, S=0xFFFF*(2+9)/16, W=0xFFFF };   // G9R5B2 黒青水白.
         enum { K=0, B=0xFFFF*3/16, S=0xFFFF*(3+8)/16, W=0xFFFF };   // G8R5B2 黒青水白.
-    #elif 0
+      #elif 0
         static const unsigned clut[] = { 0xFF000000, 0xFF0000ff, 0xFFff00ff, 0xFFffffff, };	// 黒 青 紫 白.
         enum { K=0, B=0xFFFF*1/10, S=0xFFFF*(1+3)/10, W=0xFFFF };   // G6R3B1 黒青紫白.
-    #else
+      #else
         // static const unsigned clut[] = { 0xFF000000, 0xFF0000ff, 0xFFff00ff, 0xFFff0000, };
         // enum { K=0, B=0xFFFF*2/16, S=0xFFFF*(2+5)/16, W=0xFFFF };   // G9R5B2 黒青紫赤.
-    #endif
+      #endif
 		unsigned toneTbl[3][64] = {
             { K, B, S, W },
             { K, B, S, W },
@@ -1255,6 +1261,44 @@ void ConvOne::errorDiffusion1b(int dpp) {
 				p[ y * w_ + x ] = c;
 			}
 		}
+     #else
+        static const unsigned clut[] = { 0xFF000000, 0xFFFF00ff, 0xFFffffff, };	// 黒 青 白.
+        enum { K=0, B=0xFFFF*8/16, W=0xFFFF };
+		unsigned toneTbl[3][64] = {
+            { K, B, W },
+            { K, B, W },
+            { K, B, W },
+		};
+        unsigned toneNums[3] = { 3, 3, 3, };
+
+        ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, dpp, toneNums, toneTbl);
+
+        enum { KB = K >> 8, BB = B >> 8, WB = W >> 8 };
+        UINT32_T* p = (UINT32_T*)pix_;
+		for (size_t y = 0; y < h_; ++y) {
+			for (size_t x = 0; x < w_; ++x) {
+				unsigned c = p[ y * w_ + x ];
+                c &= 0xff;
+				unsigned i = (c < BB) ? 0 : (c < WB) ? 1 : 2;
+			 #if 1
+                if (i == 1) {
+                    static int s_i = 0;
+                    ++s_i;
+                }
+                if (i == 2) {
+                    static int s_i = 0;
+                    ++s_i;
+                }
+                if (i == 3) {
+                    static int s_i = 0;
+                    ++s_i;
+                }
+             #endif
+                c = clut[i];
+				p[ y * w_ + x ] = c;
+			}
+		}
+     #endif
 	}
 }
 
