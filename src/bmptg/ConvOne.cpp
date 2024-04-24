@@ -15,7 +15,7 @@
 #include "beta.h"
 #include "mem_mac.h"
 #include "PaternDither.hpp"
-#include "ErrorDiffusion1b.hpp"
+#include "ErrorDiffusion.hpp"
 #include "DecreaseColorMC.hpp"
 #include "DecreaseColorHst.hpp"
 #include "DecreaseColorIfWithin256.hpp"
@@ -1207,98 +1207,12 @@ void ConvOne::errorDiffusion1b(int dpp) {
         ditType |= 0x1000;
 
     unsigned const* toneSize = toneSizeTbl[toneType];
-    ErrorDiffusion1b ed;
+    ErrorDiffusion ed;
 
-    bool digJpMonoTone4 = (opts_.decreaseColorMode == DCM_FIX_JP && mono_ && dstBpp_ == 3 && opts_.colNum <= 4);
-    if (digJpMonoTone4 == false) {
-	    ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, dpp, toneSize, NULL);
+    if (opts_.decreaseColorMode == DCM_FIX_JP && mono_ && dstBpp_ == 3 && opts_.colNum <= 4) {
+	    ed.convDigital4((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, dpp, opts_.colNum);
     } else {
-     #if 1
-      #if 1
-        static const unsigned clut[] = { 0xFF000000, 0xFF0000ff, 0xFF00ffff, 0xFFffffff, };	// 黒 青 水 白.
-        //enum { K=0, B=0xFFFF*1/10, S=0xFFFF*(1+6)/10, W=0xFFFF };   // G6R3B1 黒青水白.
-        //enum { K=0, B=0xFFFF*2/16, S=0xFFFF*(2+9)/16, W=0xFFFF };   // G9R5B2 黒青水白.
-        enum { K=0, B=0xFFFF*3/16, S=0xFFFF*(3+8)/16, W=0xFFFF };   // G8R5B2 黒青水白.
-      #elif 0
-        static const unsigned clut[] = { 0xFF000000, 0xFF0000ff, 0xFFff00ff, 0xFFffffff, };	// 黒 青 紫 白.
-        enum { K=0, B=0xFFFF*1/10, S=0xFFFF*(1+3)/10, W=0xFFFF };   // G6R3B1 黒青紫白.
-      #else
-        // static const unsigned clut[] = { 0xFF000000, 0xFF0000ff, 0xFFff00ff, 0xFFff0000, };
-        // enum { K=0, B=0xFFFF*2/16, S=0xFFFF*(2+5)/16, W=0xFFFF };   // G9R5B2 黒青紫赤.
-      #endif
-		unsigned toneTbl[3][64] = {
-            { K, B, S, W },
-            { K, B, S, W },
-            { K, B, S, W },
-		};
-        unsigned toneNums[3] = { 4, 4, 4, };
-
-        ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, dpp, toneNums, toneTbl);
-
-        enum { d = 255 / 4 };
-        enum { KB = K >> 8, BB = B >> 8, SB = S >> 8, WB = W >> 8 };
-        UINT32_T* p = (UINT32_T*)pix_;
-		for (size_t y = 0; y < h_; ++y) {
-			for (size_t x = 0; x < w_; ++x) {
-				unsigned c = p[ y * w_ + x ];
-                c &= 0xff;
-				unsigned i = (c < BB) ? 0 : (c < SB) ? 1 : (c < WB) ? 2 : 3;
-			 #if 1
-                if (i == 1) {
-                    static int s_i = 0;
-                    ++s_i;
-                }
-                if (i == 2) {
-                    static int s_i = 0;
-                    ++s_i;
-                }
-                if (i == 3) {
-                    static int s_i = 0;
-                    ++s_i;
-                }
-             #endif
-                c = clut[i];
-				p[ y * w_ + x ] = c;
-			}
-		}
-     #else
-        static const unsigned clut[] = { 0xFF000000, 0xFFFF00ff, 0xFFffffff, };	// 黒 青 白.
-        enum { K=0, B=0xFFFF*8/16, W=0xFFFF };
-		unsigned toneTbl[3][64] = {
-            { K, B, W },
-            { K, B, W },
-            { K, B, W },
-		};
-        unsigned toneNums[3] = { 3, 3, 3, };
-
-        ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, dpp, toneNums, toneTbl);
-
-        enum { KB = K >> 8, BB = B >> 8, WB = W >> 8 };
-        UINT32_T* p = (UINT32_T*)pix_;
-		for (size_t y = 0; y < h_; ++y) {
-			for (size_t x = 0; x < w_; ++x) {
-				unsigned c = p[ y * w_ + x ];
-                c &= 0xff;
-				unsigned i = (c < BB) ? 0 : (c < WB) ? 1 : 2;
-			 #if 1
-                if (i == 1) {
-                    static int s_i = 0;
-                    ++s_i;
-                }
-                if (i == 2) {
-                    static int s_i = 0;
-                    ++s_i;
-                }
-                if (i == 3) {
-                    static int s_i = 0;
-                    ++s_i;
-                }
-             #endif
-                c = clut[i];
-				p[ y * w_ + x ] = c;
-			}
-		}
-     #endif
+	    ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, dpp, toneSize, NULL);
 	}
 }
 

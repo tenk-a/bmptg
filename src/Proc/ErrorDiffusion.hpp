@@ -1,12 +1,11 @@
-#ifndef ERRORDIFFUSION1B_HPP
-#define ERRORDIFFUSION1B_HPP
+#ifndef ERRORDIFFUSION_HPP
+#define ERRORDIFFUSION_HPP
 
 #include <stdlib.h>
-#include <assert.h>
 
-#undef ERRORDIFFUSION1B_SET_DIF
+#undef ERRORDIFFUSION_SET_DIF
 #ifdef NDEBUG
-#define ERRORDIFFUSION1B_SET_DIF(buf,w,h,i,x,y,d) do {  \
+#define ERRORDIFFUSION_SET_DIF(buf,w,h,i,x,y,d) do {  \
     if (0 <= (y) && (y) < int(h)) { \
         if (0 <= (x) && (x) < int(w)) {   \
             Plane& pp = (buf)[(y)*(w)+(x)].pl[i]; \
@@ -15,13 +14,15 @@
     }   \
 } while(0)
 #else
-#define ERRORDIFFUSION1B_SET_DIF(buf,w,h,i,x,y,d)   setDif(buf, w, h, i, x, y, d)
+#define ERRORDIFFUSION_SET_DIF(buf,w,h,i,x,y,d)   setDif(buf, w, h, i, x, y, d)
 #endif
 
-class ErrorDiffusion1b {
+
+class ErrorDiffusion {
     typedef unsigned short  lum_t;
     typedef int             dif_t;
     typedef unsigned char   dst_t;
+
     struct Plane {
         dif_t   dif;
         lum_t   lum;
@@ -64,7 +65,7 @@ class ErrorDiffusion1b {
             tbl_[n]   = 0xffff;
         }
 
-        unsigned toLumDif(int val, int dt, int& lum, int& dif) const {
+        unsigned toLumIdx(int val) const {
             unsigned    low = 0;
             unsigned    hi  = num_;
             unsigned    mid = 0;
@@ -76,49 +77,46 @@ class ErrorDiffusion1b {
                     low = mid + 1;
                 }
             }
-            unsigned cur = mid;
-            int fst = tbl_[cur];
-            int lst = tbl_[cur+1];
+			return mid;
+		}
+
+        unsigned valToIdx(int val, int dt) const {
+            unsigned idx = toLumIdx(val);
+            int fst = tbl_[idx];
+            int lst = tbl_[idx+1];
             int len = lst - fst;
             int thr = fst + (len * dt >> 8);
-            cur += (val >= thr);
-            lum = tbl_[cur];
+            idx += (val >= thr);
+			return idx;
+        }
+
+        unsigned idxValToLum(int idx, int val, int& dif) const {
+            unsigned lum = tbl_[idx];
             dif = val - lum;
-            return cur;
+            return lum;
         }
     };
 
 public:
-    ErrorDiffusion1b() : buf_(NULL) {}
-    ~ErrorDiffusion1b() { free(buf_); }
-
- #if 0
-    struct Opt {
-        unsigned char   type;   // 0=ディザ無 1=2x2 2=4x4 3=8x8.
-        bool            mono;
-        bool            errDif; // 誤差拡散 1:する 0:しない.
-        bool            edRev;  // 誤差拡散で偶数列反転 1:する. 0:しない.
-        bool            ditRev; // AGとRBとでマトリクスを逆に 1:する 0:しない.
-        //Opt() : type(0), alpha(false), ditRev(false), edRev(false) {}
-    };
- #endif
+    ErrorDiffusion() : buf_(NULL) {}
+    ~ErrorDiffusion() { free(buf_); }
 
     bool conv(
-            unsigned*       dst,        ///< 出力バッファ.
-            const unsigned* src,        ///< 入力バッファ.
-            unsigned        w,          ///< 横幅.
-            unsigned        h,          ///< 縦幅.
+            unsigned*       dst,        	///< 出力バッファ.
+            const unsigned* src,        	///< 入力バッファ.
+            unsigned        w,          	///< 横幅.
+            unsigned        h,    			///< 縦幅.
             unsigned        ditTyp,
             unsigned        dpp,
-            unsigned const  toneSizes[3], ///< 階調数. tones[3]
-            unsigned const  tones[3][64]  ///< 階調.
-            //int           flgs
+            unsigned const  toneSizes[3],	///< 階調数. tones[3]
+            unsigned const  tones[3][64]	///< 階調.
     ) {
         enum { R  = 0, G  = 1, B  = 2, A  = 3, };
         Pix* buf = (Pix*)realloc(buf_, w * h * sizeof(Pix));
         buf_ = buf;
         if (buf == NULL)
             return false;
+
         memset(buf, 0, w * h * sizeof(Pix));
         bool errDif = (ditTyp & 0x1000) == 0;   // noErrDif フラグが立っていなければ誤差拡散する.
         bool mono   = (ditTyp & 0x100) != 0;
@@ -147,82 +145,57 @@ public:
             }
         }
 
-     #if 1 //defined(OTAMESHI_DIT)
         ditTyp &= 3;
-        //ditTyp = clamp(ditTyp, 0, 3);
-        static const short dmPtn[4][8][8] = {
-            {       // パターンディザ無し.
-                { 128, 128, 128, 128, 128, 128, 128, 128, },
-                { 128, 128, 128, 128, 128, 128, 128, 128, },
-                { 128, 128, 128, 128, 128, 128, 128, 128, },
-                { 128, 128, 128, 128, 128, 128, 128, 128, },
-                { 128, 128, 128, 128, 128, 128, 128, 128, },
-                { 128, 128, 128, 128, 128, 128, 128, 128, },
-                { 128, 128, 128, 128, 128, 128, 128, 128, },
-                { 128, 128, 128, 128, 128, 128, 128, 128, },
-            }, {    //Bayer 2x2
-                { 0*64+32, 2*64+32, 0*64+32, 2*64+32,  0*64+32, 2*64+32, 0*64+32, 2*64+32, },   // 1 5
-                { 3*64+32, 1*64+32, 3*64+32, 1*64+32,  3*64+32, 1*64+32, 3*64+32, 1*64+32, },   // 7 3
-                { 0*64+32, 2*64+32, 0*64+32, 2*64+32,  0*64+32, 2*64+32, 0*64+32, 2*64+32, },
-                { 3*64+32, 1*64+32, 3*64+32, 1*64+32,  3*64+32, 1*64+32, 3*64+32, 1*64+32, },
-                { 0*64+32, 2*64+32, 0*64+32, 2*64+32,  0*64+32, 2*64+32, 0*64+32, 2*64+32, },   // 1 5
-                { 3*64+32, 1*64+32, 3*64+32, 1*64+32,  3*64+32, 1*64+32, 3*64+32, 1*64+32, },   // 7 3
-                { 0*64+32, 2*64+32, 0*64+32, 2*64+32,  0*64+32, 2*64+32, 0*64+32, 2*64+32, },
-                { 3*64+32, 1*64+32, 3*64+32, 1*64+32,  3*64+32, 1*64+32, 3*64+32, 1*64+32, },
-            }, {    //Bayer 4x4
-                {  0*16+8, 8*16+8,  2*16+8, 10*16+8,   0*16+8, 8*16+8,  2*16+8, 10*16+8, },
-                { 12*16+8, 4*16+8, 14*16+8,  6*16+8,  12*16+8, 4*16+8, 14*16+8,  6*16+8, },
-                {  3*16+8,11*16+8,  1*16+8,  9*16+8,   3*16+8,11*16+8,  1*16+8,  9*16+8, },
-                { 15*16+8, 7*16+8, 13*16+8,  5*16+8,  15*16+8, 7*16+8, 13*16+8,  5*16+8, },
-                {  0*16+8, 8*16+8,  2*16+8, 10*16+8,   0*16+8, 8*16+8,  2*16+8, 10*16+8, },
-                { 12*16+8, 4*16+8, 14*16+8,  6*16+8,  12*16+8, 4*16+8, 14*16+8,  6*16+8, },
-                {  3*16+8,11*16+8,  1*16+8,  9*16+8,   3*16+8,11*16+8,  1*16+8,  9*16+8, },
-                { 15*16+8, 7*16+8, 13*16+8,  5*16+8,  15*16+8, 7*16+8, 13*16+8,  5*16+8, },
-            }, {    //Bayer 8x8
-                {   0*4+2, 48*4+2, 12*4+2, 60*4+2,  3*4+2, 51*4+2, 15*4+2, 63*4+2, },
-                {  32*4+2, 16*4+2, 44*4+2, 28*4+2, 35*4+2, 19*4+2, 47*4+2, 31*4+2, },
-                {   8*4+2, 56*4+2,  4*4+2, 52*4+2, 11*4+2, 59*4+2,  7*4+2, 55*4+2, },
-                {  40*4+2, 24*4+2, 36*4+2, 20*4+2, 43*4+2, 27*4+2, 39*4+2, 23*4+2, },
-                {   2*4+2, 50*4+2, 14*4+2, 62*4+2,  1*4+2, 49*4+2, 13*4+2, 61*4+2, },
-                {  34*4+2, 18*4+2, 46*4+2, 30*4+2, 33*4+2, 17*4+2, 45*4+2, 29*4+2, },
-                {  10*4+2, 58*4+2,  6*4+2, 54*4+2,  9*4+2, 57*4+2,  5*4+2, 53*4+2, },
-                {  42*4+2, 26*4+2, 38*4+2, 22*4+2, 41*4+2, 25*4+2, 37*4+2, 21*4+2, },
-            },
-        };
-     #endif
 
+        bool spFlag = true && mono;
+ 
         unsigned plane = mono ? 1 : 3;
-        for (unsigned i = 0; i < plane; ++i) {
-            ToneTbl& toneTbl = toneTbl_[i];
-            for (unsigned y = 0; y < h; ++y) {
-                int  add = 1;
-                int  xb  = 0;
-                int  xe  = w;
-                //bool rev = ((y & 1) ^ (i & 1));
-                bool rev = (y & 1);
-                if (rev) {
-                    add = -1;
-                    xb  = w - 1;
-                    xe  = -1;
-                }
-                for (int x = xb; x != xe; x += add) {
-                    Plane&  pli = buf[y * w + x].pl[i];
+        for (unsigned y = 0; y < h; ++y) {
+            int  add = 1;
+            int  xb  = 0;
+            int  xe  = w;
+          #if 0
+            //bool rev = ((y & 1) ^ (i & 1));
+            bool rev = (y & 1);
+            if (rev) {
+                add = -1;
+                xb  = w - 1;
+                xe  = -1;
+            }
+          #endif
+			unsigned char colidx[3] = {0};
+            unsigned vals[3] = {0};
+            for (int x = xb; x != xe; x += add) {
+				Pix& pi = buf[y * w + x];
+		        for (unsigned i = 0; i < plane; ++i) {
+                    int     dt  = getDmPtn(ditTyp, x & 7, y & 7);
+		            ToneTbl& toneTbl = toneTbl_[i];
+                    Plane&  pli = pi.pl[i];
                     dif_t   lum = pli.lum;
                     dif_t   dif = pli.dif;
-                 #if 1 //defined(OTAMESHI_DIT)
-                    int     dt  = dmPtn[ditTyp][y & 7][x & 7];
-                 #endif
-                    pli.idx = toneTbl.toLumDif(lum + dif, dt, lum, dif);
-                    pli.dst = lum >> 8;
+                    dif_t   val = lum + dif;
+                    vals[i]     = val;
+                    colidx[i]   = toneTbl.valToIdx(val, dt);
+                }
+                if (spFlag) {
+                    
+                }
+		        for (unsigned i = 0; i < plane; ++i) {
+		            ToneTbl& toneTbl = toneTbl_[i];
+                    Plane&  pli = pi.pl[i];
+                    unsigned ci = colidx[i];
+                    pli.idx     = ci;
+                    int     dif;
+					dif_t   lum = toneTbl.idxValToLum(ci, vals[i], dif);
+                    pli.dst     = lum >> 8;
                     if (errDif) {
-                     #if 0
-                     #elif 0    // Floyd-Steinberg
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+0, dif * 7 / 16);
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-1*add, y+1, dif * 3 / 16);
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0    , y+1, dif * 5 / 16);
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+1, dif * 1 / 16);
+                     #if 0    // Floyd-Steinberg
+                        ERRORDIFFUSION_SET_DIF(buf,w,h,i, x+1*add, y+0, dif * 7 / 16);
+                        ERRORDIFFUSION_SET_DIF(buf,w,h,i, x-1*add, y+1, dif * 3 / 16);
+                        ERRORDIFFUSION_SET_DIF(buf,w,h,i, x+0    , y+1, dif * 5 / 16);
+                        ERRORDIFFUSION_SET_DIF(buf,w,h,i, x+1*add, y+1, dif * 1 / 16);
                      #elif 1    // my3: Floyd-Steinberg mod. ref. http://www.st.nanzan-u.ac.jp/info/gr-thesis/2014/11se309.pdf
-                        unsigned idx = clamp((dif<0 ? -dif : dif) >> 13, 0, 7);
+                        unsigned kidx = clamp((dif<0 ? -dif : dif) >> 13, 0, 7);
                         static const int ktbl[8][4] = {
                             { 256 - 3*28 - 5*28 - 1*28, 3*28, 5*28, 1*28 },
                             //{ 256 - 3*26 - 5*26 - 1*26, 3*26, 5*26, 1*26 },
@@ -235,14 +208,14 @@ public:
                             //{ 256 - 3* 2 - 5* 2 - 1* 2, 3* 2, 5* 0, 1* 2 },
                             { 256 - 3* 0 - 5* 0 - 1* 0, 3* 0, 5* 0, 1* 0 },
                         };
-                        int const* k = ktbl[idx];
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+0, k[0] * dif >> 8);
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-1*add, y+1, k[1] * dif >> 8);
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0    , y+1, k[2] * dif >> 8);
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+1, k[3] * dif >> 8);
+                        int const* k = ktbl[kidx];
+                        ERRORDIFFUSION_SET_DIF(buf,w,h,i, x+1*add, y+0, k[0] * dif >> 8);
+                        ERRORDIFFUSION_SET_DIF(buf,w,h,i, x-1*add, y+1, k[1] * dif >> 8);
+                        ERRORDIFFUSION_SET_DIF(buf,w,h,i, x+0    , y+1, k[2] * dif >> 8);
+                        ERRORDIFFUSION_SET_DIF(buf,w,h,i, x+1*add, y+1, k[3] * dif >> 8);
                      #elif 1    // see. http://www.st.nanzan-u.ac.jp/info/gr-thesis/2014/11se309.pdf
-                        unsigned idx = clamp((f ? -dif : dif) >> (5+8), 0, 7);
-                        //unsigned idx = clamp((f ? -dif : dif) >> (4+8), 0, 7);
+                        unsigned kidx = clamp((f ? -dif : dif) >> (5+8), 0, 7);
+                        //unsigned kidx = clamp((f ? -dif : dif) >> (4+8), 0, 7);
                         static const int ktbl[8][4] = {
                             {  9, 21, 35, 7 },  // [0]
                             { 18, 18, 30, 6 },  // [1]
@@ -253,25 +226,18 @@ public:
                             { 63,  3,  5, 1 },  // [6]
                             { 72,  0,  0, 0 },  // [7]
                         };
-                        int const* k = ktbl[idx];
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+0, dif * k[0] / 72);
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-1*add, y+1, dif * k[1] / 72);
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0    , y+1, dif * k[2] / 72);
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+1, dif * k[3] / 72);
-                     #elif 1    // my1
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1*add, y+0, dif * 18 / 64);
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+2*add, y+0, dif *  2 / 64);
-
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x-1, y+1, dif * 12 / 64);
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0, y+1, dif * 18 / 64);
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+1, y+1, dif * 12 / 64);
-
-                        ERRORDIFFUSION1B_SET_DIF(buf,w,h,i, x+0, y+2, dif *  2 / 64);
+                        int const* k = ktbl[kidx];
+                        ERRORDIFFUSION_SET_DIF(buf,w,h,i, x+1*add, y+0, dif * k[0] / 72);
+                        ERRORDIFFUSION_SET_DIF(buf,w,h,i, x-1*add, y+1, dif * k[1] / 72);
+                        ERRORDIFFUSION_SET_DIF(buf,w,h,i, x+0    , y+1, dif * k[2] / 72);
+                        ERRORDIFFUSION_SET_DIF(buf,w,h,i, x+1*add, y+1, dif * k[3] / 72);
                      #endif
                     }
                 }
             }
         }
+
+        //pixBufToPix32(dst, buf, w, h);
         for (unsigned y = 0; y < h; ++y) {
             for (int x = 0; unsigned(x) < w; ++x) {
                 Plane* pl = buf[y * w + x].pl;
@@ -286,6 +252,7 @@ public:
                 dst[y * w + x] = argb(pl[0].sub, r, g, b);
             }
         }
+       
         return true;
     }
 
@@ -379,6 +346,24 @@ public:
 	}
 
 private:
+#if 0
+	void pixBufToPix32(uint32_t* dst, Pix* buf, size_t w, size_t h) {
+        for (unsigned y = 0; y < h; ++y) {
+            for (int x = 0; unsigned(x) < w; ++x) {
+                Plane* pl = buf[y * w + x].pl;
+                unsigned char r, g, b;
+                r = pl[R].dst;
+                if (!mono) {
+                    g = pl[G].dst;
+                    b = pl[B].dst;
+                } else {
+                    b = g = r;
+                }
+                dst[y * w + x] = argb(pl[0].sub, r, g, b);
+            }
+        }
+	}
+#endif
 
     static void setDif(Pix* buf, size_t w, size_t h, int i, int x, int y, int d) {
         if (0 <= (y) && (y) < int(h)) { 
@@ -406,11 +391,56 @@ private:
         return val;
     }
 
+
+	static short getDmPtn(unsigned typ, unsigned x, unsigned y) {
+        static const short dmPtn[4][8][8] = {
+            {       // パターンディザ無し.
+                { 128, 128, 128, 128, 128, 128, 128, 128, },
+                { 128, 128, 128, 128, 128, 128, 128, 128, },
+                { 128, 128, 128, 128, 128, 128, 128, 128, },
+                { 128, 128, 128, 128, 128, 128, 128, 128, },
+                { 128, 128, 128, 128, 128, 128, 128, 128, },
+                { 128, 128, 128, 128, 128, 128, 128, 128, },
+                { 128, 128, 128, 128, 128, 128, 128, 128, },
+                { 128, 128, 128, 128, 128, 128, 128, 128, },
+            }, {    //Bayer 2x2
+                { 0*64+32, 2*64+32, 0*64+32, 2*64+32,  0*64+32, 2*64+32, 0*64+32, 2*64+32, },   // 1 5
+                { 3*64+32, 1*64+32, 3*64+32, 1*64+32,  3*64+32, 1*64+32, 3*64+32, 1*64+32, },   // 7 3
+                { 0*64+32, 2*64+32, 0*64+32, 2*64+32,  0*64+32, 2*64+32, 0*64+32, 2*64+32, },
+                { 3*64+32, 1*64+32, 3*64+32, 1*64+32,  3*64+32, 1*64+32, 3*64+32, 1*64+32, },
+                { 0*64+32, 2*64+32, 0*64+32, 2*64+32,  0*64+32, 2*64+32, 0*64+32, 2*64+32, },   // 1 5
+                { 3*64+32, 1*64+32, 3*64+32, 1*64+32,  3*64+32, 1*64+32, 3*64+32, 1*64+32, },   // 7 3
+                { 0*64+32, 2*64+32, 0*64+32, 2*64+32,  0*64+32, 2*64+32, 0*64+32, 2*64+32, },
+                { 3*64+32, 1*64+32, 3*64+32, 1*64+32,  3*64+32, 1*64+32, 3*64+32, 1*64+32, },
+            }, {    //Bayer 4x4
+                {  0*16+8, 8*16+8,  2*16+8, 10*16+8,   0*16+8, 8*16+8,  2*16+8, 10*16+8, },
+                { 12*16+8, 4*16+8, 14*16+8,  6*16+8,  12*16+8, 4*16+8, 14*16+8,  6*16+8, },
+                {  3*16+8,11*16+8,  1*16+8,  9*16+8,   3*16+8,11*16+8,  1*16+8,  9*16+8, },
+                { 15*16+8, 7*16+8, 13*16+8,  5*16+8,  15*16+8, 7*16+8, 13*16+8,  5*16+8, },
+                {  0*16+8, 8*16+8,  2*16+8, 10*16+8,   0*16+8, 8*16+8,  2*16+8, 10*16+8, },
+                { 12*16+8, 4*16+8, 14*16+8,  6*16+8,  12*16+8, 4*16+8, 14*16+8,  6*16+8, },
+                {  3*16+8,11*16+8,  1*16+8,  9*16+8,   3*16+8,11*16+8,  1*16+8,  9*16+8, },
+                { 15*16+8, 7*16+8, 13*16+8,  5*16+8,  15*16+8, 7*16+8, 13*16+8,  5*16+8, },
+            }, {    //Bayer 8x8
+                {   0*4+2, 48*4+2, 12*4+2, 60*4+2,  3*4+2, 51*4+2, 15*4+2, 63*4+2, },
+                {  32*4+2, 16*4+2, 44*4+2, 28*4+2, 35*4+2, 19*4+2, 47*4+2, 31*4+2, },
+                {   8*4+2, 56*4+2,  4*4+2, 52*4+2, 11*4+2, 59*4+2,  7*4+2, 55*4+2, },
+                {  40*4+2, 24*4+2, 36*4+2, 20*4+2, 43*4+2, 27*4+2, 39*4+2, 23*4+2, },
+                {   2*4+2, 50*4+2, 14*4+2, 62*4+2,  1*4+2, 49*4+2, 13*4+2, 61*4+2, },
+                {  34*4+2, 18*4+2, 46*4+2, 30*4+2, 33*4+2, 17*4+2, 45*4+2, 29*4+2, },
+                {  10*4+2, 58*4+2,  6*4+2, 54*4+2,  9*4+2, 57*4+2,  5*4+2, 53*4+2, },
+                {  42*4+2, 26*4+2, 38*4+2, 22*4+2, 41*4+2, 25*4+2, 37*4+2, 21*4+2, },
+            },
+        };
+		return dmPtn[typ][y][x];
+	}
+
 private:
     Pix*    buf_;
     ToneTbl toneTbl_[3];
+
 };
 
-#undef ERRORDIFFUSION1B_SET_DIF
+#undef ERRORDIFFUSION_SET_DIF
 
 #endif
