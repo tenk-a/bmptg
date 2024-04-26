@@ -1210,9 +1210,9 @@ void ConvOne::errorDiffusion1b(int dpp) {
     ErrorDiffusion ed;
 
     if (opts_.decreaseColorMode == DCM_FIX_JP && mono_ && dstBpp_ == 3 && opts_.colNum <= 4) {
-	    ed.convDigital4((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, dpp, opts_.colNum);
+	    ed.convDigital8((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, opts_.colNum);
     } else {
-	    ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, dpp, toneSize, NULL);
+	    ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, toneSize, NULL);
 	}
 }
 

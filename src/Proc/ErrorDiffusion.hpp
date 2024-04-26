@@ -97,8 +97,39 @@ class ErrorDiffusion {
         }
     };
 
+	struct Rgb333ToIdx16 {
+		Rgb333ToIdx16() {
+			for (unsigned g = 0; g < 3; ++g) {
+				for (unsigned r = 0; r < 3; ++r) {
+					for (unsigned b = 0; b < 3; ++b) {
+						if (  (g == r && b == 0)
+							||(b == g && r == 0)
+							||(r == b && g == 0)
+						) {
+							tbl_[g][r][b] = (g << 16) | (r << 8) | b;
+						} else {
+							unsigned g2 = g > 0 ? 2 : 0;
+							unsigned r2 = r > 0 ? 2 : 0;
+							unsigned b2 = b > 0 ? 2 : 0;
+							tbl_[g][r][b] = (g2 << 16) | (r2 << 8) | b2;
+						}
+					}
+				}
+			}
+		}
+		void adjust(uint8_t& ri, uint8_t& gi, uint8_t& bi) {
+			unsigned t = tbl_[ri][gi][bi];
+			ri = uint8_t(t >> 16);
+			gi = uint8_t(t >>  8);
+			bi = uint8_t(t >>  0);
+		}
+	public:
+		uint32_t	tbl_[3][3][3];
+	};
+
 public:
-    ErrorDiffusion() : buf_(NULL) {}
+    ErrorDiffusion() : buf_(NULL)
+    {}
     ~ErrorDiffusion() { free(buf_); }
 
     bool conv(
@@ -107,17 +138,18 @@ public:
             unsigned        w,          	///< 横幅.
             unsigned        h,    			///< 縦幅.
             unsigned        ditTyp,
-            unsigned        dpp,
             unsigned const  toneSizes[3],	///< 階調数. tones[3]
-            unsigned const  tones[3][64]	///< 階調.
+            unsigned const  tones[3][64],	///< 階調.
+            uint32_t const* monoClut = NULL
     ) {
         enum { R  = 0, G  = 1, B  = 2, A  = 3, };
         Pix* buf = (Pix*)realloc(buf_, w * h * sizeof(Pix));
         buf_ = buf;
         if (buf == NULL)
             return false;
-
         memset(buf, 0, w * h * sizeof(Pix));
+
+        bool rgb444toC16 = (ditTyp & 0x200000);
         bool errDif = (ditTyp & 0x1000) == 0;   // noErrDif フラグが立っていなければ誤差拡散する.
         bool mono   = (ditTyp & 0x100) != 0;
         bool xterm  = (ditTyp & 0x10) != 0;
@@ -147,8 +179,6 @@ public:
 
         ditTyp &= 3;
 
-        bool spFlag = true && mono;
- 
         unsigned plane = mono ? 1 : 3;
         for (unsigned y = 0; y < h; ++y) {
             int  add = 1;
@@ -175,10 +205,11 @@ public:
                     dif_t   dif = pli.dif;
                     dif_t   val = lum + dif;
                     vals[i]     = val;
-                    colidx[i]   = toneTbl.valToIdx(val, dt);
+                    unsigned idx= toneTbl.valToIdx(val, dt);
+                    colidx[i]   = (idx < toneSizes[i]) ? idx : toneSizes[i] - 1;
                 }
-                if (spFlag) {
-                    
+                if (rgb444toC16) {	// Digital RGB333 to 16 color
+                    rgb333toIdx16_.adjust(colidx[0],colidx[1],colidx[2]);
                 }
 		        for (unsigned i = 0; i < plane; ++i) {
 		            ToneTbl& toneTbl = toneTbl_[i];
@@ -238,111 +269,86 @@ public:
         }
 
         //pixBufToPix32(dst, buf, w, h);
-        for (unsigned y = 0; y < h; ++y) {
-            for (int x = 0; unsigned(x) < w; ++x) {
-                Plane* pl = buf[y * w + x].pl;
-                unsigned char r, g, b;
-                r = pl[R].dst;
-                if (!mono) {
-                    g = pl[G].dst;
-                    b = pl[B].dst;
-                } else {
-                    b = g = r;
-                }
-                dst[y * w + x] = argb(pl[0].sub, r, g, b);
-            }
-        }
-       
+		if (mono == false) {
+	        for (unsigned y = 0; y < h; ++y) {
+	            for (int x = 0; unsigned(x) < w; ++x) {
+	                Plane* pl = buf[y * w + x].pl;
+	                uint8_t r = pl[R].dst;
+	                uint8_t g = pl[G].dst;
+	                uint8_t b = pl[B].dst;
+	                dst[y * w + x] = argb(pl[0].sub, r, g, b);
+	            }
+	        }
+		} else if (monoClut) {
+	        for (unsigned y = 0; y < h; ++y) {
+	            for (int x = 0; unsigned(x) < w; ++x) {
+	                Plane* pl = buf[y * w + x].pl;
+	                uint8_t i = pl[R].idx;
+                    if (i >= 4)
+                        assert(i < 4);
+	                dst[y * w + x] = monoClut[i];
+	            }
+	        }
+		} else {
+	        for (unsigned y = 0; y < h; ++y) {
+	            for (int x = 0; unsigned(x) < w; ++x) {
+	                Plane* pl = buf[y * w + x].pl;
+	                uint8_t i = pl[R].dst;
+	                dst[y * w + x] = argb(pl[0].sub, i, i, i);
+	            }
+	        }
+		}
         return true;
     }
 
 
-    bool convDigital4(
+    bool convDigital8(
             unsigned*       dst,        ///< 出力バッファ.
             const unsigned* src,        ///< 入力バッファ.
             unsigned        w,          ///< 横幅.
             unsigned        h,          ///< 縦幅.
             unsigned        ditTyp,
-            unsigned        dpp,
-            unsigned		colNum
+            unsigned		colNum,
+            uint32_t		monoCol = 0xffffff
     ) {
-		if (colNum == 4) {
-	      #if 1
-	        static const unsigned clut[] = { 0xFF000000, 0xFF0000ff, 0xFF00ffff, 0xFFffffff, };	// 黒 青 水 白.
-	        //enum { K=0, B=0xFFFF*1/10, S=0xFFFF*(1+6)/10, W=0xFFFF };   // G6R3B1 黒青水白.
-	        //enum { K=0, B=0xFFFF*2/16, S=0xFFFF*(2+9)/16, W=0xFFFF };   // G9R5B2 黒青水白.
-	        enum { K=0, B=0xFFFF*3/16, S=0xFFFF*(3+8)/16, W=0xFFFF };   // G8R5B2 黒青水白.
-	      #elif 0
-	        static const unsigned clut[] = { 0xFF000000, 0xFF0000ff, 0xFFff00ff, 0xFFffffff, };	// 黒 青 紫 白.
-	        enum { K=0, B=0xFFFF*1/10, S=0xFFFF*(1+3)/10, W=0xFFFF };   // G6R3B1 黒青紫白.
-	      #else
-	        // static const unsigned clut[] = { 0xFF000000, 0xFF0000ff, 0xFFff00ff, 0xFFff0000, };
-	        // enum { K=0, B=0xFFFF*2/16, S=0xFFFF*(2+5)/16, W=0xFFFF };   // G9R5B2 黒青紫赤.
-	      #endif
-			static unsigned const toneTbl[3][64] = {
-	            { K, B, S, W },
-	            { K, B, S, W },
-	            { K, B, S, W },
-			};
-	        static unsigned const toneNums[3] = { 4, 4, 4, };
-
-	        conv((uint32_t*)dst, (uint32_t const*)src, w, h, ditTyp, dpp, toneNums, toneTbl);
-
-	        enum { d = 255 / 4 };
-	        enum { KB = K >> 8, BB = B >> 8, SB = S >> 8, WB = W >> 8 };
-	        uint32_t* p = (uint32_t*)dst;
-			for (size_t y = 0; y < h; ++y) {
-				for (size_t x = 0; x < w; ++x) {
-					unsigned c = p[ y * w + x ];
-	                c &= 0xff;
-					unsigned i = (c < BB) ? 0 : (c < SB) ? 1 : (c < WB) ? 2 : 3;
-				 #if 1
-	                static int s_i = 0;
-	                if (i == 1)
-	                    ++s_i;
-	                if (i == 2)
-	                    ++s_i;
-	                if (i == 3)
-	                    ++s_i;
-	             #endif
-	                c = clut[i];
-					p[ y * w + x ] = c;
-				}
+        bool mono   = (ditTyp & 0x100) != 0;
+		if (mono || colNum < 4) {
+			if (colNum == 2) {
+				unsigned toneSize[3] = { 2, 2, 2, };
+				uint32_t clut[2] = { 0, monoCol };
+				return conv(dst, src, w, h, ditTyp, toneSize, NULL, clut);
+			} else if (colNum == 3) {
+				if (monoCol == 0 || monoCol == 0xffffff)
+					monoCol = 0x00ffff;	// 水色.
+		        const uint32_t clut[] = { 0xFF000000, 0xFFFF00ff, 0xFFffffff, };	// 黒 (色) 白.
+		        enum { K=0, B=0xFFFF*8/16, W=0xFFFF };
+				static unsigned const toneTbl[3][64] = {
+		            { K, B, W },
+		            { K, B, W },
+		            { K, B, W },
+				};
+		        static unsigned const toneNums[3] = { 3, 3, 3, };
+		        return conv((uint32_t*)dst, (uint32_t const*)src, w, h, ditTyp, toneNums, toneTbl, clut);
+			} else {	// colNum4
+		      #if 1
+		        static const uint32_t clut[] = { 0xFF000000, 0xFF0000ff, 0xFF00ffff, 0xFFffffff, };	// 黒 青 水 白.
+		        //enum { K=0, B=0xFFFF*1/10, S=0xFFFF*(1+6)/10, W=0xFFFF };   // G6R3B1 黒青水白.
+		        //enum { K=0, B=0xFFFF*2/16, S=0xFFFF*(2+9)/16, W=0xFFFF };   // G9R5B2 黒青水白.
+		        enum { K=0, B=0xFFFF*3/16, S=0xFFFF*(3+8)/16, W=0xFFFF };   // G8R5B2 黒青水白.
+		      #endif
+				static unsigned const toneTbl[3][64] = {
+		            { K, B, S, W },
+		            { K, B, S, W },
+		            { K, B, S, W },
+				};
+		        static unsigned const toneNums[3] = { 4, 4, 4, };
+		        return conv((uint32_t*)dst, (uint32_t const*)src, w, h, ditTyp, toneNums, toneTbl, clut);
 			}
 		} else {
-	        static const unsigned clut[] = { 0xFF000000, 0xFFFF00ff, 0xFFffffff, };	// 黒 青 白.
-	        enum { K=0, B=0xFFFF*8/16, W=0xFFFF };
-			static unsigned const toneTbl[3][64] = {
-	            { K, B, W },
-	            { K, B, W },
-	            { K, B, W },
-			};
-	        static unsigned const toneNums[3] = { 3, 3, 3, };
-
-	        conv((uint32_t*)dst, (uint32_t const*)src, w, h, ditTyp, dpp, toneNums, toneTbl);
-
-	        enum { KB = K >> 8, BB = B >> 8, WB = W >> 8 };
-	        uint32_t* p = (uint32_t*)dst;
-			for (size_t y = 0; y < h; ++y) {
-				for (size_t x = 0; x < w; ++x) {
-					unsigned c = p[ y * w + x ];
-	                c &= 0xff;
-					unsigned i = (c < BB) ? 0 : (c < WB) ? 1 : 2;
-				 #if 1
-	                static int s_i = 0;
-	                if (i == 1)
-	                    ++s_i;
-	                if (i == 2)
-	                    ++s_i;
-	                if (i == 3)
-	                    ++s_i;
-	             #endif
-	                c = clut[i];
-					p[ y * w + x ] = c;
-				}
-			}
+	        static unsigned const toneNums[3] = { 2, 2, 2, };
+	        return conv((uint32_t*)dst, (uint32_t const*)src, w, h, ditTyp, toneNums, NULL);
 		}
-		return true;
+        return true;
 	}
 
 private:
@@ -436,9 +442,9 @@ private:
 	}
 
 private:
-    Pix*    buf_;
-    ToneTbl toneTbl_[3];
-
+    Pix*    		buf_;
+    ToneTbl 		toneTbl_[3];
+	Rgb333ToIdx16	rgb333toIdx16_;
 };
 
 #undef ERRORDIFFUSION_SET_DIF

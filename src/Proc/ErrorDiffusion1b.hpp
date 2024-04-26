@@ -290,7 +290,7 @@ public:
     }
 
 
-    bool convDigital4(
+    bool convDigital8(
             unsigned*       dst,        ///< 出力バッファ.
             const unsigned* src,        ///< 入力バッファ.
             unsigned        w,          ///< 横幅.
