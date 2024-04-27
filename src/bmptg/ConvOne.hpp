@@ -33,7 +33,7 @@ enum Dcm_t {
 
 struct ConvOne_Opts {
 public:
-    int         verbose;
+    bool        verbose;
 
     int         bpp;
     int         dstFmt;
@@ -52,19 +52,19 @@ public:
     int         tone;
     int         toneType;   // 0=rgb操作, yuv-y操作.
     int         encMode;
-    int         fullColFlg;
+    bool        fullColFlg;
     int         srcBpp;
     int         ditBpp;
     int         ditTyp;
-    int         ditAlpFlg;
-    int         dir;
+    bool        ditAlpFlg;
+    unsigned    dir;
     int         rotR90;
     double      rotR;
     struct vv_t {
-        int     flg;
-        int     lcr;        // 0=left 1=center 2=right
-        int     umd;        // 0=up   1=mid    2=down
-        int     lcr_ex;     // 0=通常 1=ファイル名本体の最後の一時が奇数なら左詰め(l)偶数なら右詰め(r)にする.
+        bool    flg;
+        uint8_t lcr;        // 0=left 1=center 2=right
+        uint8_t umd;        // 0=up   1=mid    2=down
+        uint8_t lcr_ex;     // 0=通常 1=ファイル名本体の最後の一時が奇数なら左詰め(l)偶数なら右詰め(r)にする.
         int     w , h , x , y;
         int     wf, hf, xf, yf;
         int     sw, sh, sx, sy;
@@ -85,13 +85,14 @@ public:
     int         clutAlpNum;
     int         clutBpp;
     int         saveInfFile;
-    int         mono;
-    int         monoNear;           // ほぼグレイならグレイとみなす.
+    bool        mono;
+    bool        monoNear;           // ほぼグレイならグレイとみなす.
     int         monoChRGB;
     int         monoToAlp;
     double      monoToAlp_rate;
     int         monoToAlp_ofs;
-    int         colMul;
+    unsigned    monoCol;			// デジタル8色のモノラル化用.
+    unsigned    colMul;
     int         colChSquare;
     double      pixScale[4];
     int         pixScaleType;
@@ -112,9 +113,9 @@ public:
     Dcm_t       decreaseColorMode;
     int         decreaseColorMode2;
     double      decreaseColorParam[4];
-    int         bitCom;
-    int         kizu;
-    int         filterType;
+    bool        bitCom;
+    //int       kizu;
+    unsigned    filterType;
     int         bokashiCnt;
     int         bokashiAlpSikii;
     unsigned    bokashiMergeRateRGB;    // R,G,B 別にレートを指定できるようにカラー指定にする.

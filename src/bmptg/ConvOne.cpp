@@ -1172,7 +1172,8 @@ void ConvOne::errorDiffusion1b(int dpp) {
 //noErrDif = true;
     int ditType  = opts_.ditTyp & 3;
     int toneType;
-    if (mono_) {
+    bool mono = mono_; //|| opts_.mono;
+    if (mono) {
         toneType = (dstBpp_ <=  1 || colNum_ <= 2) ? 0
                  : (                 colNum_ <= 3) ? 1
                  : (dstBpp_ <=  2 || colNum_ <= 4) ? 2
@@ -1209,8 +1210,19 @@ void ConvOne::errorDiffusion1b(int dpp) {
     unsigned const* toneSize = toneSizeTbl[toneType];
     ErrorDiffusion ed;
 
-    if (opts_.decreaseColorMode == DCM_FIX_JP && mono_ && dstBpp_ == 3 && opts_.colNum <= 4) {
-	    ed.convDigital8((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, opts_.colNum);
+	bool digColorMode = (opts_.decreaseColorMode == DCM_FIX_JP) || (opts_.decreaseColorMode == DCM_FIX_WIN);
+    if (digColorMode && dstBpp_ <= 4) {
+        unsigned colNum  = 1 << dstBpp_;
+        if (colNum > opts_.colNum && opts_.colNum)
+            colNum = opts_.colNum;
+        unsigned monoCol = opts_.monoCol;
+        if ((monoCol&0xffffff) == 0)
+            monoCol = 0xffffffff;
+		if (dstBpp_ <= 3) {
+		    ed.convDigital8( (UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, colNum, monoCol);
+		} else {
+		    ed.convDigital16((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, colNum, monoCol);
+		}
     } else {
 	    ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, toneSize, NULL);
 	}
@@ -1260,11 +1272,12 @@ void ConvOne::decreaseColor() {
                     FixedClut256<>::getFixedClut256(clut_, 256, dstBpp_, md);
                     //if (alpNum)
                     //  clut_[0] &= 0xFFFFFF;
-
-                    if (dstBpp_ == 3 && (decrType == 2 || (mono_ && colNum == 4))) {
+                    bool mono = mono_ || opts_.mono;
+                    if (dstBpp_ == 3 && (decrType == 2 /*|| (mono && colNum <= 4)*/)) {
                         //colNum = 8;
                         FixedClut256<>::decreaseColorRGB111(p, (UINT32_T*)pix_, w_, h_, (md == 1));
                     } else {
+                        colNum = 1 << dstBpp_;
                         unsigned  idx  = 0;
                         if (dstBpp_ == 7) {         // 128色のとき.
                             idx = 1;                // 先頭の抜き色スキップ.

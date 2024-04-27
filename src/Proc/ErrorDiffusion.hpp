@@ -132,6 +132,13 @@ public:
     {}
     ~ErrorDiffusion() { free(buf_); }
 
+	enum {
+		F_XTERM 	= 0x10,
+		F_MONO  	= 0x100,
+		F_ERRDIF	= 0x1000,
+		F_444TO16	= 0x1000000,
+	};
+
     bool conv(
             unsigned*       dst,        	///< 出力バッファ.
             const unsigned* src,        	///< 入力バッファ.
@@ -149,10 +156,10 @@ public:
             return false;
         memset(buf, 0, w * h * sizeof(Pix));
 
-        bool rgb444toC16 = (ditTyp & 0x200000);
-        bool errDif = (ditTyp & 0x1000) == 0;   // noErrDif フラグが立っていなければ誤差拡散する.
-        bool mono   = (ditTyp & 0x100) != 0;
-        bool xterm  = (ditTyp & 0x10) != 0;
+        bool rgb444toC16 = (ditTyp & F_444TO16);
+        bool errDif = (ditTyp & F_ERRDIF) == 0;   // noErrDif フラグが立っていなければ誤差拡散する.
+        bool mono   = (ditTyp & F_MONO) != 0;
+        bool xterm  = (ditTyp & F_XTERM) != 0;
 		if (tones) {
 	        for (unsigned i = 0; i < 3; ++i)
     	        toneTbl_[i].init(tones[i], toneSizes[i]);
@@ -284,8 +291,6 @@ public:
 	            for (int x = 0; unsigned(x) < w; ++x) {
 	                Plane* pl = buf[y * w + x].pl;
 	                uint8_t i = pl[R].idx;
-                    if (i >= 4)
-                        assert(i < 4);
 	                dst[y * w + x] = monoClut[i];
 	            }
 	        }
@@ -309,27 +314,18 @@ public:
             unsigned        h,          ///< 縦幅.
             unsigned        ditTyp,
             unsigned		colNum,
-            uint32_t		monoCol = 0xffffff
+            uint32_t		monoCol = 0xFFffffff
     ) {
+        unsigned monoColIdx = ((monoCol >> (16+7)) & 1) << 1
+                            | ((monoCol >> ( 8+7)) & 1) << 2
+                            | ((monoCol >> (   7)) & 1) ;
         bool mono   = (ditTyp & 0x100) != 0;
 		if (mono || colNum < 4) {
 			if (colNum == 2) {
 				unsigned toneSize[3] = { 2, 2, 2, };
 				uint32_t clut[2] = { 0, monoCol };
 				return conv(dst, src, w, h, ditTyp, toneSize, NULL, clut);
-			} else if (colNum == 3) {
-				if (monoCol == 0 || monoCol == 0xffffff)
-					monoCol = 0x00ffff;	// 水色.
-		        const uint32_t clut[] = { 0xFF000000, 0xFFFF00ff, 0xFFffffff, };	// 黒 (色) 白.
-		        enum { K=0, B=0xFFFF*8/16, W=0xFFFF };
-				static unsigned const toneTbl[3][64] = {
-		            { K, B, W },
-		            { K, B, W },
-		            { K, B, W },
-				};
-		        static unsigned const toneNums[3] = { 3, 3, 3, };
-		        return conv((uint32_t*)dst, (uint32_t const*)src, w, h, ditTyp, toneNums, toneTbl, clut);
-			} else {	// colNum4
+			} else if (colNum == 4 && (monoColIdx == 7 || monoColIdx == 0 || monoColIdx == 5 || monoColIdx == 1)) {
 		      #if 1
 		        static const uint32_t clut[] = { 0xFF000000, 0xFF0000ff, 0xFF00ffff, 0xFFffffff, };	// 黒 青 水 白.
 		        //enum { K=0, B=0xFFFF*1/10, S=0xFFFF*(1+6)/10, W=0xFFFF };   // G6R3B1 黒青水白.
@@ -343,10 +339,87 @@ public:
 				};
 		        static unsigned const toneNums[3] = { 4, 4, 4, };
 		        return conv((uint32_t*)dst, (uint32_t const*)src, w, h, ditTyp, toneNums, toneTbl, clut);
+			} else /*if (colNum == 3)*/ {
+    			if (monoColIdx == 0 || monoColIdx == 7)
+	    		    monoCol = 0xff00ffff;	// 水色.
+                const uint32_t clut[] = { 0xFF000000, 0xFF000000|monoCol, 0xFFffffff, };	// 黒 (色) 白.
+                unsigned B = (uint8_t(monoCol >> 8) * 6 + uint8_t(monoCol >> 16) * 3 + uint8_t(monoCol) * 1) / 10u;
+                B = (B << 8) | B;
+				unsigned const toneTbl[3][64] = {
+		            { 0, B, 0xFFFF },
+		            { 0, B, 0xFFFF },
+		            { 0, B, 0xFFFF },
+				};
+		        static unsigned const toneNums[3] = { 3, 3, 3, };
+		        return conv((uint32_t*)dst, (uint32_t const*)src, w, h, ditTyp, toneNums, toneTbl, clut);
 			}
 		} else {
 	        static unsigned const toneNums[3] = { 2, 2, 2, };
 	        return conv((uint32_t*)dst, (uint32_t const*)src, w, h, ditTyp, toneNums, NULL);
+		}
+        return true;
+	}
+
+    bool convDigital16(
+            unsigned*       dst,        ///< 出力バッファ.
+            const unsigned* src,        ///< 入力バッファ.
+            unsigned        w,          ///< 横幅.
+            unsigned        h,          ///< 縦幅.
+            unsigned        ditTyp,
+            unsigned		colNum,
+            uint32_t		monoCol = 0xffffff
+    ) {
+        static unsigned const monoColBase[] = {
+            0x000000, 0x0000ff, 0xff0000, 0xff00ff,
+            0x00ff00, 0x00ffff, 0xffff00, 0xffffff,
+        };
+        static unsigned const monoCols4[][4] = {
+            { 0x000000, 0x888888, 0xcccccc, 0xffffff },
+            { 0x000000, 0x000088, 0x0000ff, 0xffffff },
+            { 0x000000, 0x880000, 0xff0000, 0xffffff },
+            { 0x000000, 0x880088, 0xff00ff, 0xffffff },
+            { 0x000000, 0x008800, 0x00ff00, 0xffffff },
+            { 0x000000, 0x008888, 0x00ffff, 0xffffff },
+            { 0x000000, 0x888800, 0xffff00, 0xffffff },
+            { 0x000000, 0x888888, 0xcccccc, 0xffffff },
+        };
+        if (colNum == 0)
+            colNum = 256;
+        unsigned monoColIdx = (((monoCol >> (16+7)) & 1) << 1)
+                            | (((monoCol >> ( 8+7)) & 1) << 2)
+                            |  ((monoCol >> (   7)) & 1);
+        monoCol   = monoColBase[monoColIdx];
+        bool mono = (ditTyp & 0x100) != 0;
+		if (mono || colNum < 4) {
+		    enum { K=0, /* B=0xFFFF*8/16, */ W=0xFFFF };
+            unsigned C = (uint8_t(monoCol >> 8) * 6 + uint8_t(monoCol >> 16) * 3 + uint8_t(monoCol) * 1) / 10u;
+            unsigned B = C >> 1;
+            C = (C << 8) | C;
+            B = (B << 8) | B;
+			if (colNum == 2) {
+				unsigned toneSize[3] = { 2, 2, 2, };
+				uint32_t clut[2] = { 0, monoCol };
+				return conv(dst, src, w, h, ditTyp, toneSize, NULL, clut);
+			} else if (colNum == 3) {
+				unsigned const toneTbl[3][64] = {
+		            { 0, B, C },
+		            { 0, B, C },
+		            { 0, B, C },
+				};
+		        static unsigned const toneNums[3] = { 3, 3, 3, };
+		        return conv((uint32_t*)dst, (uint32_t const*)src, w, h, ditTyp, toneNums, toneTbl, monoCols4[monoColIdx]);
+			} else {	// colNum4
+				static unsigned const toneTbl[3][64] = {
+		            { 0, B, C, 0xFFFF },
+		            { 0, B, C, 0xFFFF },
+		            { 0, B, C, 0xFFFF },
+				};
+		        static unsigned const toneNums[3] = { 4, 4, 4, };
+		        return conv((uint32_t*)dst, (uint32_t const*)src, w, h, ditTyp, toneNums, toneTbl, monoCols4[monoColIdx]);
+			}
+		} else {
+	        static unsigned const toneNums[3] = { 3, 3, 3, };
+	        return conv((uint32_t*)dst, (uint32_t const*)src, w, h, F_444TO16 | ditTyp, toneNums, NULL);
 		}
         return true;
 	}

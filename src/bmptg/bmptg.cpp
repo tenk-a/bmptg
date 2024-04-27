@@ -380,6 +380,12 @@ int Opts::scan(const char *a)
                 o->monoNear  = 1;
                 o->monoChRGB = (t == 'B') + (t == 'G')*2 + (t == 'R')*3 + (t == 'A')*4;
             }
+            if (*p != '\0') {
+                ++p;
+				o->monoCol = strToUI(p, 16);
+	            if ((o->monoCol & 0xFF000000) == 0)
+	                o->monoCol |= 0xFF000000;
+			}
             break;
 
         case 'M':   //-cm
