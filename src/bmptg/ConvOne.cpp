@@ -1255,12 +1255,12 @@ void ConvOne::decreaseColor() {
 
         if (opts_.alpBitForBpp8 == 0) {
             switch (dcm) {
-            case DCM_FIX_JP:        //0 日本の80年代パソコン由来の 16色,256色(G3R3B2)固定パレット.
-            case DCM_FIX_WIN:       //1 固定 Winシステムパレット.
-            case DCM_FIX_XTERM:     //2 固定 xterm256.
-            case DCM_FIX_G6R6B6C40: //3 固定 rgb 6*6*6+40.
-            //case DCM_FIX_OTAMESHI1: //4 お試しパレットO
-            //case DCM_FIX_OTAMESHI2: //5 お試しパレットP
+            case DCM_FIX_JP:        // ->0 日本の80年代パソコン由来の 16色,256色(G3R3B2)固定パレット.
+            case DCM_FIX_WIN:       // ->1 固定 Winシステムパレット.
+            case DCM_FIX_XTERM:     // ->2 固定 xterm256.
+            case DCM_FIX_G6R6B6C40: // ->3 固定 rgb 6*6*6+40.
+            //case DCM_FIX_OTAMESHI1: //->4 お試しパレットO
+            //case DCM_FIX_OTAMESHI2: //->5 お試しパレットP
                 {
                     int md = int(dcm);
                     if (md >= 7) md = md - 7 + 3;
@@ -1270,12 +1270,12 @@ void ConvOne::decreaseColor() {
                         printf("->DftlClt%c%d", tbl[md], dstBpp_);
                     }
                     FixedClut256<>::getFixedClut256(clut_, 256, dstBpp_, md);
-                    //if (alpNum)
-                    //  clut_[0] &= 0xFFFFFF;
-                    bool mono = mono_ || opts_.mono;
-                    if (dstBpp_ == 3 && (decrType == 2 /*|| (mono && colNum <= 4)*/)) {
+                    bool mono = mono_; // || opts_.mono;
+                    if (dstBpp_ == 3) {
                         //colNum = 8;
-                        FixedClut256<>::decreaseColorRGB111(p, (UINT32_T*)pix_, w_, h_, (md == 1));
+                        FixedClut256<>::decreaseColorRGB111(p, (UINT32_T*)pix_, w_, h_, (md == 1), (decrType == 2));
+                    } else if (dstBpp_ == 4) {
+                        FixedClut256<>::decreaseColorRGB_bpp4(p, (UINT32_T*)pix_, w_, h_, (md == 1));
                     } else {
                         colNum = 1 << dstBpp_;
                         unsigned  idx  = 0;

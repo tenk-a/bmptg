@@ -27,7 +27,10 @@ public:
                     , const unsigned* pClut, unsigned clutSize, unsigned idx=0, int alp1=0, int alp2=0, int type=0);
 
     /// 8色への減色.
-    static bool decreaseColorRGB111(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, bool type=false);
+    static bool decreaseColorRGB111(unsigned char* dst, const unsigned* src, unsigned w, unsigned h, bool win, bool ex=false);
+
+	/// 32ビット色画を固定16色画に変換.
+	static bool decreaseColorRGB_bpp4(unsigned char* dst, const unsigned* src, unsigned w, unsigned h, bool win);
 
 public:
     /// g1r1b1 デジタル8色. (古い日本のパソコンのパレット番号に合わせたもの)
@@ -689,69 +692,72 @@ bool FixedClut256<A>::decreaseColor(unsigned char* pDst, const unsigned* pSrc, u
 }
 
 
-/// 32ビット色画を8色画に変換.
-template<class A>
-bool FixedClut256<A>::decreaseColorRGB111(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, bool clutType)
+/// 32ビット色画をデジタル8色画に変換.
+template<class A> bool
+FixedClut256<A>::decreaseColorRGB111(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, bool winFlag, bool ex)
 {
     assert(w > 0 && h > 0);
     size_t wh = w * h;
-    size_t rd = 0, gd = 0, bd = 0;
-    size_t rn[256] = {0}, gn[256] = {0}, bn[256] = {0};
-    for (unsigned j = 0; j < wh; ++j) {
-        unsigned c  = pSrc[j];
-        int      a  = c >> 24;
-        int      r  = (unsigned char)(c >> 16);
-        int      g  = (unsigned char)(c >>  8);
-        int      b  = (unsigned char)(c);
-        ++rn[r];
-        ++gn[g];
-        ++bn[b];
-        rd += r;
-        gd += g;
-        bd += b;
-    }
-    rd /= wh;
-    gd /= wh;
-    bd /= wh;
+    size_t ri = 0x80, gi = 0x80, bi = 0x80;
+    if (ex) {
+	    size_t rd = 0, gd = 0, bd = 0;
+	    size_t rn[256] = {0}, gn[256] = {0}, bn[256] = {0};
+	    for (unsigned j = 0; j < wh; ++j) {
+	        unsigned c  = pSrc[j];
+	        int      a  = c >> 24;
+	        int      r  = (unsigned char)(c >> 16);
+	        int      g  = (unsigned char)(c >>  8);
+	        int      b  = (unsigned char)(c);
+	        ++rn[r];
+	        ++gn[g];
+	        ++bn[b];
+	        rd += r;
+	        gd += g;
+	        bd += b;
+	    }
+	    rd /= wh;
+	    gd /= wh;
+	    bd /= wh;
 
-    size_t ri = 0, gi = 0, bi = 0;
- #if 1
-    size_t rt = 0, gt = 0, bt = 0;
-    size_t tt = wh / 2;
-    for (ri = 0; ri < 256; ++ri) {
-        rt += rn[ri];
-        if (rt >= tt) {
-            break;
-        }
-    }
-    for (gi = 0; gi < 256; ++gi) {
-        gt += gn[gi];
-        if (gt >= tt) {
-            break;
-        }
-    }
-    for (bi = 0; bi < 256; ++bi) {
-        bt += bn[bi];
-        if (bt >= tt) {
-            break;
-        }
-    }
+	 #if 1
+	    ri = 0, gi = 0, bi = 0;
+	    size_t rt = 0, gt = 0, bt = 0;
+	    size_t tt = wh / 2;
+	    for (ri = 0; ri < 256; ++ri) {
+	        rt += rn[ri];
+	        if (rt >= tt) {
+	            break;
+	        }
+	    }
+	    for (gi = 0; gi < 256; ++gi) {
+	        gt += gn[gi];
+	        if (gt >= tt) {
+	            break;
+	        }
+	    }
+	    for (bi = 0; bi < 256; ++bi) {
+	        bt += bn[bi];
+	        if (bt >= tt) {
+	            break;
+	        }
+	    }
 
-  #if 0 // test2
-  #else // test3
-    ri = (ri + rd) / 2; if (ri == 0) ri = 0xff;
-    gi = (gi + gd) / 2; if (gi == 0) gi = 0xff;
-    bi = (bi + bd) / 2; if (bi == 0) bi = 0xff;
-  #endif
- #else // test1
-    ri = rd;
-    gi = gd;
-    bi = bd;
- #endif
+	  #if 0 // test2
+	  #else // test3
+	    ri = (ri + rd) / 2; if (ri == 0) ri = 0xff;
+	    gi = (gi + gd) / 2; if (gi == 0) gi = 0xff;
+	    bi = (bi + bd) / 2; if (bi == 0) bi = 0xff;
+	  #endif
+	 #else // test1
+	    ri = rd;
+	    gi = gd;
+	    bi = bd;
+	 #endif
+	}
 
-    unsigned bm = 1, rm = 2, gm = 4;
-    if (clutType) {
-        rm = 1, gm = 2, bm = 4;
+    unsigned bm = 1, rm = 2, gm = 4;	// JP  GRB
+    if (winFlag) {
+        rm = 1, gm = 2, bm = 4;			// Win RGB
     }
     for (unsigned j = 0; j < wh; ++j) {
         unsigned ii = 0;
@@ -761,16 +767,72 @@ bool FixedClut256<A>::decreaseColorRGB111(unsigned char* pDst, const unsigned* p
         int      g  = (unsigned char)(c >>  8);
         int      b  = (unsigned char)(c);
         unsigned tc = 0;
-        if (g >= gi) {
+        if (g >= gi)
             tc |= gm;
-        }
-        if (r >= ri) {
+        if (r >= ri)
             tc |= rm;
-        }
-        if (b >= bi) {
+        if (b >= bi)
             tc |= bm;
-        }
         pDst[j] = tc;
+    }
+
+    return true;
+}
+
+
+/// 32ビット色画を固定16色画に変換.
+template<class A> bool
+FixedClut256<A>::decreaseColorRGB_bpp4(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, bool winFlag)
+{
+	enum { D = (255 / 3)+1 };
+	unsigned const* clut = winFlag ? clutWin16() : clutJpn16();
+    signed char tbl222[2*2*2];
+	for (unsigned i = 0; i < 2*2*2; ++i)
+		tbl222[i] = -1;
+	signed char tbl333[3*3*3];
+	for (unsigned i = 0; i < 3*3*3; ++i)
+		tbl333[i] = -1;
+	int whtCC = -1;
+	for (unsigned i = 0; i < 16; ++i) {
+        unsigned c  = clut[i];
+        unsigned r  = (unsigned char)(c >> 16);
+        unsigned g  = (unsigned char)(c >>  8);
+        unsigned b  = (unsigned char)(c);
+		unsigned ri = r / D;
+		unsigned gi = g / D;
+		unsigned bi = b / D;
+		if (ri > 1 && gi > 1 && bi > 1 && r < 0xd4 && g < 0xd4 && b < 0xd4) {
+			whtCC = i;
+		} else {
+			tbl333[ri * 9 + gi * 3 + bi] = i;
+    		auto& t2 = tbl222[(r == 0xff) * 4u + (g == 0xff) * 2u + (b == 0xff)];
+    		if (t2 < 0)
+    			t2 = i;
+        }
+	}
+
+	size_t wh = w * h;
+    for (size_t j = 0; j < wh; ++j) {
+        unsigned c  = pSrc[j];
+        //int    a  = c >> 24;
+        int      r  = (unsigned char)(c >> 16);
+        int      g  = (unsigned char)(c >>  8);
+        int      b  = (unsigned char)(c);
+		int		 ri = r / D;
+		int		 gi = g / D;
+		int		 bi = b / D;
+        if (ri == 0 && bi > 0) {
+            static int s_i;
+            ++s_i;
+        }
+		if (ri > 1 && gi > 1 && bi > 1 && r < 0xd4 && g < 0xd4 && b < 0xd4) {
+			pDst[j] = whtCC;
+		} else {
+			int ii = tbl333[ri*9+gi*3+bi];
+			if (ii < 0)
+				ii = tbl222[(r>>7)*4u + (g>>7)*2u + (b>>7)];
+			pDst[j] = ii;
+		}
     }
 
     return true;

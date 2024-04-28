@@ -10,7 +10,8 @@ bmptg_smp/src_*
 bmptg_smp/dst_*
 bmptg_smp/tst_*
 bmptg_smp/tmp*
-smp
+smp/*
+!smp/*.bat
 tst
 test
 obj_*
