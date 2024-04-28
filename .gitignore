@@ -12,6 +12,7 @@ bmptg_smp/tst_*
 bmptg_smp/tmp*
 smp/*
 !smp/*.bat
+!smp/*.txt
 tst
 test
 obj_*
