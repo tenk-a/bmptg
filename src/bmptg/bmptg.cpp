@@ -736,17 +736,20 @@ int Opts::scan(const char *a)
         case 'D':   //-xd
             {
                 o->fullColFlg      = 1;
-                if (*p == 'A' || *p == 'a') {   // -xda
-                    o->ditAlpFlg = 1;
-                    p++;
-                }
                 unsigned errDif = 0;
+                if (*p == 'O' || *p == 'o') {   // -xdo
+                    p++;
+                } else
                 if (*p == 'E' || *p == 'e') {   // -xde 誤差拡散.
                     errDif |= 0x8000;
                     p++;
-                }
+                } else
                 if (*p == 'P' || *p == 'p') {   // -xdp 誤差拡散処理側のパターンディザを使う.
                     errDif |= 0x4000;
+                    p++;
+                }
+                if (*p == 'A' || *p == 'a') {   // -xda
+                    o->ditAlpFlg = 1;
                     p++;
                 }
                 o->ditBpp = strToI(p,0);

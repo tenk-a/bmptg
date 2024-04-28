@@ -287,6 +287,12 @@ bool ConvOne::imageLoad() {
                 h_  = (sz_ + wb - 1) / wb;
         }
     }
+ #if 0
+    if (colNum_ > opts_.colNum && opts_.colNum > 0)
+        colNum_ = opts_.colNum;
+    if (colNum_ == 0)
+        colNum_ = (bpp_ < 9) ? (1<<bpp_) : 0;
+ #endif
     if (varbose_) {
         printf("[%d:%d*%d]",bpp_,w_,h_);
       #ifdef MY_H
@@ -1170,25 +1176,32 @@ void ConvOne::errorDiffusion1b(int dpp) {
     };
     bool noErrDif = (opts_.ditTyp & 0x8000) == 0;
 //noErrDif = true;
+    uint32_t colNum = colNum_;
+    if (colNum == 0) {
+        colNum = 1 << dstBpp_;
+        if (colNum == 0)
+            colNum = 0xffffffff;
+    }
     int ditType  = opts_.ditTyp & 3;
     int toneType;
-    bool mono = mono_; //|| opts_.mono;
+    bool mono = mono_ || opts_.mono;
     if (mono) {
-        toneType = (dstBpp_ <=  1 || colNum_ <= 2) ? 0
-                 : (                 colNum_ <= 3) ? 1
-                 : (dstBpp_ <=  2 || colNum_ <= 4) ? 2
-                 : (                 colNum_ <= 5) ? 3
-                 : (                 colNum_ <= 6) ? 4
-                 : (                 colNum_ <= 7) ? 12
-                 : (dstBpp_ <=  3 || colNum_ <= 8) ? 6
+        mono_    = mono;
+        toneType = (dstBpp_ <=  1 || colNum <= 2) ? 0
+                 : (                 colNum <= 3) ? 1
+                 : (dstBpp_ <=  2 || colNum <= 4) ? 2
+                 : (                 colNum <= 5) ? 3
+                 : (                 colNum <= 6) ? 4
+                 : (                 colNum <= 7) ? 12
+                 : (dstBpp_ <=  3 || colNum <= 8) ? 6
                  : (dstBpp_ <=  4) ? 7
                  : (dstBpp_ <=  5) ? 8
                  :                  10;
         ditType |= 0x100;
     } else {
-        toneType = (dstBpp_ <=  5 || colNum_ <= 32) ? 0
-                 : (dstBpp_ <=  6 || colNum_ <= 64) ? 2
-                 : (dstBpp_ <=  7 || colNum_ <= 128) ? 3
+        toneType = (dstBpp_ <=  5 || colNum <= 32) ? 0
+                 : (dstBpp_ <=  6 || colNum <= 64) ? 2
+                 : (dstBpp_ <=  7 || colNum <= 128) ? 3
                  : (dstBpp_ <=  8) ? 5
                  : (dstBpp_ <= 11) ? 6
                  : (dstBpp_ <= 12) ? 7

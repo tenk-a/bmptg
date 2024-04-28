@@ -397,18 +397,23 @@ public:
             C = (C << 8) | C;
             B = (B << 8) | B;
 			if (colNum == 2) {
-				unsigned toneSize[3] = { 2, 2, 2, };
+				unsigned toneNums[3] = { 2, 2, 2, };
 				uint32_t clut[2] = { 0, monoCol };
-				return conv(dst, src, w, h, ditTyp, toneSize, NULL, clut);
+				return conv(dst, src, w, h, ditTyp, toneNums, NULL, clut);
 			} else if (colNum == 3) {
+			    //if (monoColIdx == 0 || monoColIdx == 7) { B = 0x8888; }
 				unsigned const toneTbl[3][64] = {
-		            { 0, B, C },
-		            { 0, B, C },
-		            { 0, B, C },
+		            { 0, 0x8888/*B*/, 0xffff },
+		            { 0, 0x8888/*B*/, 0xffff },
+		            { 0, 0x8888/*B*/, 0xffff },
 				};
 		        static unsigned const toneNums[3] = { 3, 3, 3, };
 		        return conv((uint32_t*)dst, (uint32_t const*)src, w, h, ditTyp, toneNums, toneTbl, monoCols4[monoColIdx]);
 			} else {	// colNum4
+			    if (monoColIdx == 0 || monoColIdx == 7) {
+				    C = 0xcccc;
+				    B = 0x8888;
+			    }
 				static unsigned const toneTbl[3][64] = {
 		            { 0, B, C, 0xFFFF },
 		            { 0, B, C, 0xFFFF },
