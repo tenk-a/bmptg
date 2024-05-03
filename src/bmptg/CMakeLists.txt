@@ -13,6 +13,17 @@ set(ZLIB_DIR       "${THIRDPARTY_DIR}/zlib")
 
 add_compile_options(-DUSE_JPG -DUSE_PNG)
 
+include(ExternalProject)
+
+ExternalProject_Add(libjpeg-turbo
+    SOURCE_DIR "${THIRDPARTY_DIR}/libjpeg-turbo"
+    BINARY_DIR "${CMAKE_BINARY_DIR}/libjpeg-turbo-build"
+    CONFIGURE_COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" "${THIRDPARTY_DIR}/libjpeg-turbo"
+    BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> -DCMAKE_BUILD_TYPE=Release
+    INSTALL_COMMAND ""
+    TEST_COMMAND ""
+)
+
 if(WIN32 AND MSVC)
   set(ADD_SRCS "${THIRDPARTY_DIR}/ms/ActiveCodePageUTF8.manifest")
   add_compile_options(-D_ANSI)
@@ -24,7 +35,10 @@ if(WIN32 AND MSVC)
     set(THIRDPARTY_PNG_LIB_DIR  ${THIRDPARTY_LIB_DIR}/libpng)
     set(THIRDPARTY_ZLIB_LIB_DIR ${THIRDPARTY_LIB_DIR}/zlib)
 
-    set(JPEG_LIB ${THIRDPARTY_JPEG_LIB_DIR}/turbojpeg-static.lib)
+    # set(JPEG_LIB ${THIRDPARTY_JPEG_LIB_DIR}/turbojpeg-static.lib)
+#    set(JPEG_LIB ${CMAKE_BINARY_DIR}/libjpeg-turbo-build/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/turbojpeg-static.lib)
+    set(JPEG_LIB ${CMAKE_BINARY_DIR}/libjpeg-turbo-build/Release/turbojpeg-static.lib)
+
     # set(PNG_LIB  ${THIRDPARTY_PNG_LIB_DIR}/libpng16_static.lib)
     # set(ZLIB_LIB ${THIRDPARTY_ZLIB_LIB_DIR}/zlibstatic.lib)
 
@@ -170,6 +184,7 @@ set(PNG_SRCS
     ${PNG_DIR}/pngwtran.c
     ${PNG_DIR}/pngwutil.c
 )
+
 
 #set_target_properties(${PROJECT_NAME} PROPERTIES
 #  RUNTIME_OUTPUT_DIRECTORY ${ROOT_DIR}/bin
