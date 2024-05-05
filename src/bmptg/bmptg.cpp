@@ -11,6 +11,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#if defined(_WIN32)
+#include <windows.h>
+#endif
+
 #include "subr.h"
 #include "ConvOne.hpp"
 #ifdef USE_MY_FMT
@@ -19,8 +23,6 @@
 #define MY_USAGE_1
 #define MY_USAGE_2
 #endif
-
-#define TOUPPER(c)      (((unsigned)(c) < 0x80) ? toupper(c) : (c))
 
 char *g_appName;
 
@@ -323,11 +325,11 @@ int Opts::scan(const char *a)
                 err_abortMsg("-b の指定値が想定外(%d)\n", c);
         } else {
             c = 0;
-            if      (stricmp(p, "A2I6") == 0) c = 2;
-            else if (stricmp(p, "A3I5") == 0) c = 3;
-            else if (stricmp(p, "A4I4") == 0) c = 4;
-            else if (stricmp(p, "A5I3") == 0) c = 5;
-            else if (stricmp(p, "A6I2") == 0) c = 6;
+            if      (strcasecmp(p, "A2I6") == 0) c = 2;
+            else if (strcasecmp(p, "A3I5") == 0) c = 3;
+            else if (strcasecmp(p, "A4I4") == 0) c = 4;
+            else if (strcasecmp(p, "A5I3") == 0) c = 5;
+            else if (strcasecmp(p, "A6I2") == 0) c = 6;
             if (c) {
                 o->fullColFlg      = 1;
                 o->bpp             = 8;
@@ -490,14 +492,14 @@ int Opts::scan(const char *a)
                     "agbr", "gabr", "abgr", "bagr", "gbar", "bgar",
                     "rgba", "grba", "rbga", "brga", "gbra", "bgra",
                 };
-                if (stricmp(p,"rgb") == 0) p = "argb";
-                if (stricmp(p,"rbg") == 0) p = "arbg";
-                if (stricmp(p,"grb") == 0) p = "agrb";
-                if (stricmp(p,"gbr") == 0) p = "agbr";
-                if (stricmp(p,"brg") == 0) p = "abrg";
-                if (stricmp(p,"bgr") == 0) p = "abgr";
+                if (strcasecmp(p,"rgb") == 0) p = "argb";
+                if (strcasecmp(p,"rbg") == 0) p = "arbg";
+                if (strcasecmp(p,"grb") == 0) p = "agrb";
+                if (strcasecmp(p,"gbr") == 0) p = "agbr";
+                if (strcasecmp(p,"brg") == 0) p = "abrg";
+                if (strcasecmp(p,"bgr") == 0) p = "abgr";
                 for (c = 0; c < 24; c++) {
-                    if (stricmp(p, tbl[c]) == 0) {
+                    if (strcasecmp(p, tbl[c]) == 0) {
                         o->colrot = c;
                         break;
                     }
@@ -530,35 +532,35 @@ int Opts::scan(const char *a)
 
     case ':':
     case 'F':
-        if (stricmp(p, "NON") == 0) {
+        if (strcasecmp(p, "NON") == 0) {
             o->dstFmt    = BM_FMT_NON;
             this->dstExt = "";
-        } else if (stricmp(p, "BMP") == 0) {
+        } else if (strcasecmp(p, "BMP") == 0) {
             o->dstFmt    = BM_FMT_BMP;
             this->dstExt = "bmp";
-        } else if (stricmp(p, "DIB") == 0) {
+        } else if (strcasecmp(p, "DIB") == 0) {
             o->dstFmt    = BM_FMT_BMP;
             this->dstExt = "dib";
       #if 1
-        } else if (stricmp(p, "RLE") == 0) {
+        } else if (strcasecmp(p, "RLE") == 0) {
             o->dstFmt    = BM_FMT_BMP;
             this->dstExt = "rle";
             o->encMode = 1;
       #endif
-        } else if (stricmp(p, "TGA") == 0) {
+        } else if (strcasecmp(p, "TGA") == 0) {
             o->dstFmt    = BM_FMT_TGA;
             this->dstExt = "tga";
       #if defined USE_JPG
-        } else if (stricmp(p, "JPG") == 0 || stricmp(p, "JPEG") == 0) {
+        } else if (strcasecmp(p, "JPG") == 0 || strcasecmp(p, "JPEG") == 0) {
             o->dstFmt    = BM_FMT_JPG;
             this->dstExt = "jpg";
       #endif
       #if defined USE_PNG
-        } else if (stricmp(p, "PNG") == 0) {
+        } else if (strcasecmp(p, "PNG") == 0) {
             o->dstFmt    = BM_FMT_PNG;
             this->dstExt = "png";
       #endif
-        } else if (stricmp(p, "BIN") == 0) {
+        } else if (strcasecmp(p, "BIN") == 0) {
             o->dstFmt    = BM_FMT_BETA;
             this->dstExt = "bin";
       #ifdef MY_H
@@ -1199,7 +1201,10 @@ static int Main(int argc, char *argv[])
     slist_t     *fnames = NULL;
     slist_t     *fl;
 
-    g_appName = strlwr(strdupE(fname_baseName(argv[0])));
+    g_appName = strdupE(fname_baseName(argv[0]));
+ #if defined(_WIN32)
+    fname_strUpr(g_appName);
+ #endif
     if (argc < 2)
         usage();
 

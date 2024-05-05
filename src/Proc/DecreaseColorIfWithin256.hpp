@@ -26,7 +26,7 @@ public:
 
     static bool conv(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, unsigned* pClut, unsigned clutSize, bool transf=false);
 
-    static unsigned char*  convToNewArray(const unsigned* pSrc, unsigned w, unsigned h, unsigned* pClut, unsigned& rClutSize, bool transf=false, uint32_t dfltCol=0);
+    static unsigned char*  convToNewArray(const unsigned* pSrc, unsigned w, unsigned h, unsigned* pClut, unsigned& rClutSize, bool transf, uint32_t dfltCol=0x000000);
 
     static unsigned countColor(const unsigned* pSrc, unsigned w, unsigned h, unsigned* pClut, unsigned clutSize, bool transf=false);
 
@@ -133,7 +133,7 @@ bool DecreaseColorIfWithin256<DMY>::conv(unsigned char* pDst, const unsigned* pS
  *  new char[] を返す(のでdelete[] char_p で開放すること)
  */
 template<class DMY>
-unsigned char* DecreaseColorIfWithin256<DMY>::convToNewArray(const unsigned* pSrc, unsigned w, unsigned h, unsigned* pClut, unsigned& rClutSize, bool transf, uint32_t dfltCol=0x000000)
+unsigned char* DecreaseColorIfWithin256<DMY>::convToNewArray(const unsigned* pSrc, unsigned w, unsigned h, unsigned* pClut, unsigned& rClutSize, bool transf, uint32_t dfltCol)
 {
     using namespace std;
     /// 実際の色数が、clutSize以内に収まるかをチェック.

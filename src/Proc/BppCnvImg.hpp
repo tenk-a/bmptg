@@ -61,8 +61,8 @@ struct BppCnvImg_byte_allocator {
 /** bppや横幅アライメントの変換用の画像クラス.
  *  ※ templateにしてるのは、ヘッダのみにルーチンをおきたい為....
  */
-template<class A=BppCnvImg_byte_allocator>
-class BppCnvImg_T : private A {
+template<class T=BppCnvImg_byte_allocator>
+class BppCnvImg_T : private T {
 public:
     // bppを元に.
     enum Fmt {          // bppに対する補助的なフォーマット種別.
@@ -231,7 +231,7 @@ public:
 private:
     void            zeroclear() { memset(&pix_, 0, (char*)&flags_+sizeof(flags_) - (char*)&pix_); }
 
-    static bool     conv_sameFmt(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src);
+    static bool     conv_sameFmt(BppCnvImg_T<T>& dst, const BppCnvImg_T<T>& src);
     struct          DecreaseColor_Hst;
     static bool     decreaseColor(BppCnvImg_T& dst, const BppCnvImg_T& src, int ox, int oy, int alpNum=-1);
     static unsigned decreaseColor_1(BppCnvImg_T& dst, const BppCnvImg_T& src, int ox, int oy, unsigned clutSize, int idx, int minA, int maxA);
@@ -245,13 +245,13 @@ private:
     static unsigned revByteU16(unsigned c) { return ((unsigned char)(c >> 8)) | ((unsigned char)c << 8); }
     static unsigned revByteU32(unsigned c) { return ((unsigned char)(c >> 24))| ((c >> 8) & 0xff00)| ((c&0xff00) << 8) | ((unsigned char)c << 24); }
 
-    template<typename T>
-    static T        clamp(T v, T mi, T ma) { return (v < mi) ? mi : (ma < v) ? ma : v; }
+    template<typename U>
+    static U        clamp(U v, U mi, U ma) { return (v < mi) ? mi : (ma < v) ? ma : v; }
 
-    template<typename T>
-    static unsigned binary_find_tbl_n(T* tbl, unsigned num, const T& key);
-    template<typename T>
-    static unsigned binary_insert_tbl_n(T* pTbl, unsigned& rNum, const T& key);
+    template<typename U>
+    static unsigned binary_find_tbl_n(U* tbl, unsigned num, const U& key);
+    template<typename U>
+    static unsigned binary_insert_tbl_n(U* pTbl, unsigned& rNum, const U& key);
 
 private:    // メンバー変数.
     unsigned char*  pix_;           ///< 画像ピクセル.
@@ -273,8 +273,8 @@ private:    // メンバー変数.
 
 
 /// コピーコンストラクタ. イメージはw*h>0ならばメモリ確保してコピー.
-template<class A>
-BppCnvImg_T<A>::BppCnvImg_T(const BppCnvImg_T& src)
+template<class T>
+BppCnvImg_T<T>::BppCnvImg_T(const BppCnvImg_T& src)
     : pix_(0), clut_(0)
 {
     create(true, src.pix_, src.w_, src.h_, src.fmt_, src.align_, src.clut_, src.clutSz_);
@@ -284,8 +284,8 @@ BppCnvImg_T<A>::BppCnvImg_T(const BppCnvImg_T& src)
 
 /** 作成.
  */
-template<class A>
-bool BppCnvImg_T<A>::create(bool alcRq, void* pix, unsigned w, unsigned h, unsigned fmtBpp, unsigned algn, unsigned* clut, unsigned clutSz)
+template<class T>
+bool BppCnvImg_T<T>::create(bool alcRq, void* pix, unsigned w, unsigned h, unsigned fmtBpp, unsigned algn, unsigned* clut, unsigned clutSz)
 {
     assert(w > 0 && h > 0 && fmtBpp > 0);
     assert(algn == 1 || algn == 2 || algn == 4 || algn == 8 || algn == 16);
@@ -303,7 +303,7 @@ bool BppCnvImg_T<A>::create(bool alcRq, void* pix, unsigned w, unsigned h, unsig
     clutSz_ = clutSz;
     fmt_    = (unsigned char) fmtBpp;
     if (alcRq) {    // メモリ開放義務のある場合は、メモリー確保.
-        pix_ = A::allocate(wb_ * h_);
+        pix_ = T::allocate(wb_ * h_);
         if (pix_) {
             if (pix == 0)
                 std::memset(pix_, 0, wb_ * h_);
@@ -317,11 +317,11 @@ bool BppCnvImg_T<A>::create(bool alcRq, void* pix, unsigned w, unsigned h, unsig
             unsigned cn = clutSz;
             if (cn < 256)
                 cn = 256;
-            clut_ = (unsigned*)A::allocate(sizeof(*clut) * cn);
+            clut_ = (unsigned*)T::allocate(sizeof(*clut) * cn);
             if (clut_) {
                 setClut(clut, clutSz);
             } else {
-                A::deallocate(pix_, wb_ * h_);
+                T::deallocate(pix_, wb_ * h_);
                 return false;
             }
         }
@@ -331,8 +331,8 @@ bool BppCnvImg_T<A>::create(bool alcRq, void* pix, unsigned w, unsigned h, unsig
 
 
 
-template<class A>
-bool BppCnvImg_T<A>::create(const BppCnvImg_T<A>& src, unsigned bppFmt, unsigned algn) {
+template<class T>
+bool BppCnvImg_T<T>::create(const BppCnvImg_T<T>& src, unsigned bppFmt, unsigned algn) {
     if (create(src.width(), src.height(), bppFmt, algn)) {
         if (conv(src))
             return true;
@@ -344,13 +344,13 @@ bool BppCnvImg_T<A>::create(const BppCnvImg_T<A>& src, unsigned bppFmt, unsigned
 
 /** 開放.
  */
-template<class A>
-void BppCnvImg_T<A>::release() {
+template<class T>
+void BppCnvImg_T<T>::release() {
     if (flags_ & 1) {   // pixのメモリの開放責任があるなら.
         if (pix_)
-            A::deallocate(pix_, wb_ * h_ );
+            T::deallocate(pix_, wb_ * h_ );
         if (clut_)
-            A::deallocate((unsigned char*)clut_, sizeof(*clut_) * clutSz_ );
+            T::deallocate((unsigned char*)clut_, sizeof(*clut_) * clutSz_ );
     }
     zeroclear();
     return;
@@ -361,20 +361,20 @@ void BppCnvImg_T<A>::release() {
 #if 0
 /** 動的に確保したイメージのメモリを返し、クラス自体は初期化.
  */
-template<class A>
+template<class T>
 unsigned char* BppCnvImg_T::removeImage(unsigned** ppClut=0) {
     unsigned char* p;
     if (ppClut) {
         *ppClut = clut_;
         if ((flags_&1) == false) {
-            p = A::allocator(sizeof(*clut_)*clutSz_);
+            p = T::allocator(sizeof(*clut_)*clutSz_);
             if (p)
                 memcpy(p, clut_, sizeof(*clut_)*clutSz_);
         }
     }
     p = pix_;
     if ((flags_&1) == false) {
-        p = A::allocator(wb_*h_);
+        p = T::allocator(wb_*h_);
         if (p)
             memcpy(p, pix_, wb_*h_);
     }
@@ -386,8 +386,8 @@ unsigned char* BppCnvImg_T::removeImage(unsigned** ppClut=0) {
 
 
 
-template<class A>
-void BppCnvImg_T<A>::getClut(unsigned* clut, unsigned clutSize) {
+template<class T>
+void BppCnvImg_T<T>::getClut(unsigned* clut, unsigned clutSize) {
     if (clutSize > clutSz_ || clutSize == 0)
         clutSize = clutSz_;
     memcpy(clut, clut_, clutSize * sizeof(unsigned));
@@ -395,8 +395,8 @@ void BppCnvImg_T<A>::getClut(unsigned* clut, unsigned clutSize) {
 
 
 
-template<class A>
-void BppCnvImg_T<A>::setClut(const unsigned* clut, unsigned clutSize) {
+template<class T>
+void BppCnvImg_T<T>::setClut(const unsigned* clut, unsigned clutSize) {
     if (clutSize > clutSz_ || clutSize == 0)
         clutSize = clutSz_;
     if (clutSize && clut_) {
@@ -415,8 +415,8 @@ void BppCnvImg_T<A>::setClut(const unsigned* clut, unsigned clutSize) {
  *  w,h,fmtBpp,algn は 0 だと、クラス自身の値を採用.
  *  呼び元がpix,clutに必要サイズのメモリを用意していること.
  */
-template<class A>
-bool BppCnvImg_T<A>::getImage(void* pix, unsigned w, unsigned h, unsigned fmtBpp, unsigned algn, unsigned* clut, unsigned clutSize, int ox, int oy) {
+template<class T>
+bool BppCnvImg_T<T>::getImage(void* pix, unsigned w, unsigned h, unsigned fmtBpp, unsigned algn, unsigned* clut, unsigned clutSize, int ox, int oy) {
     if (w == 0)
         w = w_;
     if (h == 0)
@@ -437,8 +437,8 @@ bool BppCnvImg_T<A>::getImage(void* pix, unsigned w, unsigned h, unsigned fmtBpp
  *  - clut画から色数の減るclut画への変換は、単純に上位ビットを捨てるだけ.
  *    減色が必要ならばconvExを用いるか、予め減色しておくこと.
  */
-template<class A>
-bool BppCnvImg_T<A>::conv(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox, int oy)
+template<class T>
+bool BppCnvImg_T<T>::conv(BppCnvImg_T<T>& dst, const BppCnvImg_T<T>& src, int ox, int oy)
 {
     // まずはclutのコピー.
     if ( dst.bpp() <= 8 && src.clut() && src.clutSize() )
@@ -493,8 +493,8 @@ bool BppCnvImg_T<A>::conv(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox
 
 
 /// 同じフォーマット同士の変換(横幅調整).
-template<class A>
-bool BppCnvImg_T<A>::conv_sameFmt(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src)
+template<class T>
+bool BppCnvImg_T<T>::conv_sameFmt(BppCnvImg_T<T>& dst, const BppCnvImg_T<T>& src)
 {
     const unsigned char*    s = src.image();
     unsigned char*          d = dst.image();
@@ -516,8 +516,8 @@ bool BppCnvImg_T<A>::conv_sameFmt(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src
 
 /** x,yの位置のピクセルを取得. (bpp <= 8の場合、color index 番号).
  */
-template<class A>
-unsigned BppCnvImg_T<A>::getPixXY(int x, int y) const
+template<class T>
+unsigned BppCnvImg_T<T>::getPixXY(int x, int y) const
 {
     //※ 条件別の関数に小分けして関数ポインタ経由で呼び出すべきだろうが、面倒なんで後回し.
     const unsigned char*    pix = pix_;
@@ -633,8 +633,8 @@ unsigned BppCnvImg_T<A>::getPixXY(int x, int y) const
 
 
 /// x,yの位置の色を取得.
-template<class A> inline
-unsigned BppCnvImg_T<A>::getPixArgb(int x, int y) const         ///< (x,y)の位置のピクセル(color index 番号).
+template<class T> inline
+unsigned BppCnvImg_T<T>::getPixArgb(int x, int y) const         ///< (x,y)の位置のピクセル(color index 番号).
 {
     unsigned c = getPixXY(x,y);
     if (bpp_ <= 8)
@@ -645,8 +645,8 @@ unsigned BppCnvImg_T<A>::getPixArgb(int x, int y) const         ///< (x,y)の位
 
 
 /// x,yの位置のピクセルを取得. (bpp <= 8の場合、color index 番号).
-template<class A>
-void     BppCnvImg_T<A>::setPixXY(int x, int y, unsigned c)
+template<class T>
+void     BppCnvImg_T<T>::setPixXY(int x, int y, unsigned c)
 {
     //※ 条件別の関数に小分けして関数ポインタ経由で呼び出すべきだろうが、面倒なんで後回し.
     unsigned        bppFmt = fmt_;
@@ -781,8 +781,8 @@ void     BppCnvImg_T<A>::setPixXY(int x, int y, unsigned c)
 
 /** 交換.
  */
-template<class A>
-void BppCnvImg_T<A>::swap(BppCnvImg_T<A>& rhs) {
+template<class T>
+void BppCnvImg_T<T>::swap(BppCnvImg_T<T>& rhs) {
     unsigned char*  p;
     unsigned*       c;
     unsigned        i;
@@ -802,8 +802,8 @@ void BppCnvImg_T<A>::swap(BppCnvImg_T<A>& rhs) {
 
 /** clut画のときの、1バイト中の詰め順を逆にする.
  */
-template<class A>
-void BppCnvImg_T<A>::swapBitOrder() {
+template<class T>
+void BppCnvImg_T<T>::swapBitOrder() {
     unsigned char*  p = pix_;
     unsigned        l = wb_ * h_;
     unsigned        c;
@@ -849,8 +849,8 @@ void BppCnvImg_T<A>::swapBitOrder() {
 
 /** 多色の時の1ピクセルのバイト順を逆にする.
  */
-template<class A>
-void BppCnvImg_T<A>::swapByteOrder() {
+template<class T>
+void BppCnvImg_T<T>::swapByteOrder() {
     unsigned char*  p = pix_;
     unsigned        l = wb_ * h_;
     unsigned        c;
@@ -891,8 +891,8 @@ void BppCnvImg_T<A>::swapByteOrder() {
 
 /** 画像に半透明(α情報)が使われている画像か? (全てα=0か全てα=0xffなら未使用扱い)
  */
-template<class A>
-bool BppCnvImg_T<A>::isUseAlpha() const
+template<class T>
+bool BppCnvImg_T<T>::isUseAlpha() const
 {
     unsigned  w = width();
     unsigned  h = height();
@@ -905,7 +905,7 @@ bool BppCnvImg_T<A>::isUseAlpha() const
         unsigned*       clt= clut();
         unsigned*       p  = (unsigned*)image();
         const unsigned* e  = p + num;
-        chk = (unsigned char)(clt[ *p++ ] >> 24);
+        unsigned char  chk = (unsigned char)(clt[ *p++ ] >> 24);
         if (0 < chk && chk < 255)
             return true;
         while (p < e) {
@@ -916,7 +916,7 @@ bool BppCnvImg_T<A>::isUseAlpha() const
     } else if (fmt_ == 32) {
         unsigned*       p  = (unsigned*)image();
         const unsigned* e  = p + num;
-        chk = (unsigned char)(*p++ >> 24);
+        unsigned char  chk = (unsigned char)(*p++ >> 24);
         if (0 < chk && chk < 255)
             return true;
         while (p < e) {
@@ -927,7 +927,7 @@ bool BppCnvImg_T<A>::isUseAlpha() const
     } else if (fmt_ == FMT_ARGB4444) {
         unsigned*       p  = (unsigned*)image();
         const unsigned* e  = p + num;
-        chk = (*p++ >> 12) & 15;
+        unsigned char  chk = (*p++ >> 12) & 15;
         if (0 < chk && chk < 15)
             return true;
         while (p < e) {
@@ -938,7 +938,7 @@ bool BppCnvImg_T<A>::isUseAlpha() const
     } else if (fmt_ == FMT_ARGB1555) {
         unsigned short*         p  = (unsigned*)image();
         const unsigned short*   e  = p + num;
-        chk = *p++ >> 15;
+        unsigned char          chk = *p++ >> 15;
         while (p < e) {
             int a = *p++ >> 15;
             if (a != chk)
@@ -952,8 +952,8 @@ bool BppCnvImg_T<A>::isUseAlpha() const
 
 /** 上下反転する.
  */
-template<class A>
-void BppCnvImg_T<A>::revY()
+template<class T>
+void BppCnvImg_T<T>::revY()
 {
     assert(pix_ && wb_ > 0 && h_ );
     unsigned        wb = wb_;
@@ -975,8 +975,8 @@ void BppCnvImg_T<A>::revY()
 
 /** argbの順番を入れ替える.
  */
-template<class A>
-void BppCnvImg_T<A>::swapARGB(unsigned rotNo, bool fromMode)
+template<class T>
+void BppCnvImg_T<T>::swapARGB(unsigned rotNo, bool fromMode)
 {
     enum { B=0,G=1,R=2,A=3};
     static const unsigned char tbl[][4] = {
@@ -1050,8 +1050,8 @@ void BppCnvImg_T<A>::swapARGB(unsigned rotNo, bool fromMode)
 
 /** 横幅,bpp,アライメントから横幅バイト数を求める.
  */
-template<class A>
-unsigned BppCnvImg_T<A>::widthToBytes(unsigned w, unsigned bpp, unsigned algn) {
+template<class T>
+unsigned BppCnvImg_T<T>::widthToBytes(unsigned w, unsigned bpp, unsigned algn) {
     unsigned wb = (w * fmtToBpp(Fmt(bpp)) + 7) >> 3;
     wb = (wb + algn-1) & ~(algn-1);
     return wb;
@@ -1061,8 +1061,8 @@ unsigned BppCnvImg_T<A>::widthToBytes(unsigned w, unsigned bpp, unsigned algn) {
 
 /** フォーマットからbppを求める.
  */
-template<class A>
-unsigned BppCnvImg_T<A>::fmtToBpp(Fmt fmt) {
+template<class T>
+unsigned BppCnvImg_T<T>::fmtToBpp(Fmt fmt) {
     return "\1\2\4\4\10\10\10\10\20\20\20\20\20\20\20\20\30\30\30\30\30\30\30\30\40\40\40\40\40\40\40\40\40\40\40\40\40\40\40\40\40\40"[fmt-1];
 }
 
@@ -1072,8 +1072,8 @@ unsigned BppCnvImg_T<A>::fmtToBpp(Fmt fmt) {
 
 /** 多色フォーマットだがclutSize以下しか色数がないなら、変換する. 溢れるなら変換しない.
  */
-template<class A>
-bool BppCnvImg_T<A>::convToClutImage(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox, int oy)
+template<class T>
+bool BppCnvImg_T<T>::convToClutImage(BppCnvImg_T<T>& dst, const BppCnvImg_T<T>& src, int ox, int oy)
 {
     if (dst.clut() == 0 || dst.clutSize() == 0 || dst.bpp() > 8)
         return false;
@@ -1109,9 +1109,9 @@ bool BppCnvImg_T<A>::convToClutImage(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& 
 
 
 
-template<class A>
-template<typename T>
-unsigned BppCnvImg_T<A>::binary_find_tbl_n(T* tbl, unsigned num, const T& key)
+template<class T>
+template<typename U>
+unsigned BppCnvImg_T<T>::binary_find_tbl_n(U* tbl, unsigned num, const U& key)
 {
     unsigned    low = 0;
     unsigned    hi  = num;
@@ -1132,9 +1132,9 @@ unsigned BppCnvImg_T<A>::binary_find_tbl_n(T* tbl, unsigned num, const T& key)
 /** テーブルpTblに値keyを追加. 範囲チェックは予め行っていること前提！
  *  @return テーブル中のkeyの位置.
  */
-template<class A>
-template<typename T>
-static unsigned BppCnvImg_T<A>::binary_insert_tbl_n(T* pTbl, unsigned& rNum, const T& key) {
+template<class T>
+template<typename U>
+unsigned BppCnvImg_T<T>::binary_insert_tbl_n(U* pTbl, unsigned& rNum, const U& key) {
     unsigned    hi  = rNum;
     unsigned    low = 0;
     unsigned    mid = 0;
@@ -1172,8 +1172,8 @@ static unsigned BppCnvImg_T<A>::binary_insert_tbl_n(T* pTbl, unsigned& rNum, con
 /** srcの画像を、dstへ、dstの諸設定で変換して設定. (ox,oy)はsrc中の開始点.
  *  - 多色からclut画や、色数の少ないclut画への変換では減色処理を行う(簡易).
  */
-template<class A>
-bool BppCnvImg_T<A>::convEx(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox, int oy)
+template<class T>
+bool BppCnvImg_T<T>::convEx(BppCnvImg_T<T>& dst, const BppCnvImg_T<T>& src, int ox, int oy)
 {
     // まずはclutのコピー.
     if ( dst.bpp() <= 8 && src.clut() && src.clutSize() )
@@ -1233,8 +1233,8 @@ bool BppCnvImg_T<A>::convEx(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int 
 
 
 /// 32ビット色画を8ビット色画に変換.
-template<class A>
-bool BppCnvImg_T<A>::decreaseColor(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox, int oy, int alpNum)
+template<class T>
+bool BppCnvImg_T<T>::decreaseColor(BppCnvImg_T<T>& dst, const BppCnvImg_T<T>& src, int ox, int oy, int alpNum)
 {
     if (convToClutImage(dst,src,ox,oy))
         return true;
@@ -1292,8 +1292,8 @@ bool BppCnvImg_T<A>::decreaseColor(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& sr
 
 
 /// 減色時の頻度カウントのための構造体.
-template<class A>
-struct BppCnvImg_T<A>::DecreaseColor_Hst {
+template<class T>
+struct BppCnvImg_T<T>::DecreaseColor_Hst {
   #if defined _WIN32                // vcにstdint.hがないのでその対策.
     typedef unsigned __int64 sum_t; // win系コンパイラはvc互換で古くから__int64がある.
   #else
@@ -1313,8 +1313,8 @@ struct BppCnvImg_T<A>::DecreaseColor_Hst {
 
 
 /// 32ビット色画を8ビット色画に変換.
-template<class A>
-unsigned BppCnvImg_T<A>::decreaseColor_1(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox, int oy, unsigned clutSize, int idx, int minA, int maxA)
+template<class T>
+unsigned BppCnvImg_T<T>::decreaseColor_1(BppCnvImg_T<T>& dst, const BppCnvImg_T<T>& src, int ox, int oy, unsigned clutSize, int idx, int minA, int maxA)
 {
     assert(clutSize <= 256 && clutSize >= idx+1);
     enum { ALP_D = 4 };
@@ -1326,7 +1326,7 @@ unsigned BppCnvImg_T<A>::decreaseColor_1(BppCnvImg_T<A>& dst, const BppCnvImg_T<
     unsigned    hstNum = 1 + l*l*l;
     if (hstNum < 257)
         hstNum = 257;
-    DecreaseColor_Hst* pHst = (DecreaseColor_Hst*)A::allocate( sizeof(DecreaseColor_Hst) *  hstNum );
+    DecreaseColor_Hst* pHst = (DecreaseColor_Hst*)T::allocate( sizeof(DecreaseColor_Hst) *  hstNum );
     std::memset(pHst, 0, sizeof(DecreaseColor_Hst) * hstNum);
     unsigned w = dst.width();
     unsigned h = dst.height();
@@ -1461,7 +1461,7 @@ unsigned BppCnvImg_T<A>::decreaseColor_1(BppCnvImg_T<A>& dst, const BppCnvImg_T<
         pClut[i] = argb(a,r,g,b);
     }
 
-    A::deallocate((unsigned char*)pHst, hstNum);
+    T::deallocate((unsigned char*)pHst, hstNum);
     return clutSize;
 }
 
@@ -1471,8 +1471,8 @@ unsigned BppCnvImg_T<A>::decreaseColor_1(BppCnvImg_T<A>& dst, const BppCnvImg_T<
 // ---------------------------------------------------------------------------
 
 
-template<class A>
-bool convGRB332(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox=0, int oy=0)
+template<class T>
+bool convGRB332(BppCnvImg_T<T>& dst, const BppCnvImg_T<T>& src, int ox=0, int oy=0)
 {
     if (dst.bpp() != 8 || dst.clut() == 0 || dst.clutSize() < 256)
         return false;
@@ -1518,8 +1518,8 @@ bool convGRB332(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox=0, int oy
 
 
 
-template<class A>
-bool convGRB111(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox=0, int oy=0)
+template<class T>
+bool convGRB111(BppCnvImg_T<T>& dst, const BppCnvImg_T<T>& src, int ox=0, int oy=0)
 {
     if ((dst.bpp() > 8) || dst.clut() == 0 || dst.clutSize() < 8 || dst.bpp() < 3)
         return false;
@@ -1558,8 +1558,8 @@ bool convGRB111(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox=0, int oy
 
 
 
-template<class A>
-bool convGray(BppCnvImg_T<A>& dst, const BppCnvImg_T<A>& src, int ox=0, int oy=0)
+template<class T>
+bool convGray(BppCnvImg_T<T>& dst, const BppCnvImg_T<T>& src, int ox=0, int oy=0)
 {
     if (dst.bpp() > 8) {
         for (unsigned y = 0; y < dst.height(); ++y) {

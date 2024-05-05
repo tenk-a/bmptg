@@ -5,7 +5,6 @@
  *  @date   199?-??-??
  */
 
-#include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,6 +12,9 @@
 #include <direct.h>
 #include <io.h>
 #include <sys/stat.h>
+#if defined(_WIN32)
+#include <windows.h>
+#endif
 
 #include "subr.h"
 
@@ -21,7 +23,12 @@
 extern "C" {
 #endif
 
-
+#if 1
+#define FNAM_ISKANJI(c) (0) 
+#else
+#define FNAM_ISKANJI(c) (fname_sjisFlag && ISKANJI(c))
+#define ISKANJI(c)      (((unsigned char)(c) >= 0x81 && (unsigned char)(c) <= 0x9F) || ((unsigned char)(c) >= 0xE0 && (unsigned char)(c) <= 0xFC))
+#endif
 
 /*--------------------------------------------------------------------------*/
 
@@ -302,7 +309,7 @@ char *fname_baseName(const char *adr)
     while (*p != '\0') {
         if (*p == ':' || *p == '/' || *p == '\\')
             adr = p + 1;
-        if (ISKANJI((*(unsigned char *)p)) && *(p+1) )
+        if (FNAM_ISKANJI((*(unsigned char *)p)) && *(p+1) )
             p++;
         p++;
     }
@@ -379,7 +386,7 @@ char *fname_delLastDirSep(char *dir)
                     int f = 0;
                     while (*s) {
                         f = 0;
-                        if (ISKANJI(*s) && s[1]) {
+                        if (FNAM_ISKANJI(*s) && s[1]) {
                             s++;
                             f = 1;
                         }
@@ -395,8 +402,6 @@ char *fname_delLastDirSep(char *dir)
 }
 
 
-
-#if 0
 /** 全角２バイト目を考慮した strupr
  */
 char *fname_strUpr(char *s0)
@@ -415,8 +420,6 @@ char *fname_strUpr(char *s0)
     }
     return s0;
 }
-#endif
-
 
 
 /** ディレクトリ名とファイル名をくっつけたものをstrdupする
@@ -1506,7 +1509,7 @@ int STBL_search(void *tbl[], int nn, void *key)
 
 
 
-
+#if 1
 /*--------------------------------------------------------------------------*/
 /* 一つのテキストファイル読みこみ                                           */
 
@@ -1576,7 +1579,7 @@ void TXT1_close(void)
 {
     fcloseE(TXT1_fp);
 }
-
+#endif
 
 
 

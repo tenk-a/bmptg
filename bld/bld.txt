@@ -1,8 +1,34 @@
-bmptg, ruig ビルド.
-  gen_*.bat で、cmake生成。
-生成されたフォルダに移り、
+bmptg ビルド.
+
+コンパイラにパスを通し、
+git で submodule 込でclone 済の状態で、
+build フォルダでも作って
+
+cmake ../src/bmptg
+
+そのフォルダで msbuild なり make なり.
+
+UTF8対応の都合、win は windows10 1903 以降前提。
+
+
+■ Win での bld_*.bat バッチ
+
+vc 14.x のパスを通した状態で
+bld フォルダにて、
+  bmptg_bld.bat
+をすれば
+  bmptg-コンパイル環境名
+フォルダを作って、 cmake 生成&ビルドをする.
+
+再ビルドは各フォルダの
 mk_rel.bat mk_dbg.bat で実行ファイル生成.
 
-Win 64bit環境前提.
-CMakeFiles.txt で jpeg関係をx64前提のフォルダにしているので
-32bit(x86)版を生成するには修正が必要.
+※ msys64 gcc でもビルド可能.
+msys64環境へのパスを通したコマンドプロンプトで
+  bmptg_bld.bat [Release|Debug]
+Release か Debug を指定してビルド.(指定無しはDebug)
+
+※ ヘルプやエラーメッセージが文字化けするが
+あらかじめ thirdparty フォルダに
+ccwrap のインストールをすませれば
+vc8-vc12 でもビルド可能のはず。

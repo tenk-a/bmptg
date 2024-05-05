@@ -6,6 +6,9 @@ tmp
 *.tmp
 *.t
 build
+bld/*
+!bld/*.bat
+!bld/*.txt
 bmptg_smp/src_*
 bmptg_smp/dst_*
 bmptg_smp/tst_*

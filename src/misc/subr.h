@@ -21,11 +21,21 @@
 extern "C" {
 #endif
 
+#define TOUPPER(c)      (((unsigned)(c) < 0x80) ? toupper(c) : (c))
+
+#if defined(_WIN32) || defined(_MSC_VER)
+#define strcasecmp		_stricmp
+#define strncasecmp		_strnicmp
+#endif
+
 /*--------------------------------------------------------------------------*/
 /* 文字列操作等 */
 
+
+#if 0
 #define ISKANJI(c)      (((unsigned char)(c) >= 0x81 && (unsigned char)(c) <= 0x9F) || ((unsigned char)(c) >= 0xE0 && (unsigned char)(c) <= 0xFC))
 #define ISKANJI2(c)     ((unsigned char)(c) >= 0x40 && (unsigned char)(c) <= 0xfc && (c) != 0x7f)
+#endif
 
 //x char *strNCpyZ(char *dst, const char *src, unsigned size);
 //x long  strtolKM(const char *s, char **d, int r);
@@ -64,7 +74,6 @@ int freeE(void *p);
 /* ファイル関係 */
 
 extern int  fname_sjisFlag;
-#define FNAM_ISKANJI(c) (fname_sjisFlag && ISKANJI(c))
 
 int   fname_setSjisMode(int sw);                                                // ファイル名はMS全角(SJIS)を対応する(1)か否(0)か.
 char *fname_baseName(const char *adr);
@@ -79,6 +88,7 @@ char *fname_dirNameAddExt(char *nam, const char *dir, const char *name, const ch
 char *fname_dirNameChgExt(char *nam, const char *dir, const char *name, const char *chgext);
 char *fname_dirDirNameChgExt(char *onam, const char *dir, const char *mdir, const char *name, const char *chgext);
 char *fname_getMidDir(char mdir[], const char *name);
+char *fname_strUpr(char *s0);
 
 //x int   fil_getTmpDir(char *t);
 //x int   fil_getTmpDirE(char *t);
@@ -168,6 +178,7 @@ void strExpr_setNameChkFunc(int (*name2valFnc)(char *name, double *valp));
 
 #define FIL_NMSZ        4096
 
+#if 1
 int  TXT1_open(const char *name);
 void TXT1_openE(const char *name);
 void TXT1_close(void);
@@ -177,6 +188,7 @@ void TXT1_errorE(const char *fmt, ...);
 extern unsigned int    TXT1_line;
 extern char     TXT1_name[FIL_NMSZ];
 extern FILE     *TXT1_fp;
+#endif
 
 
 /*--------------------------------------------------------------------------*/
