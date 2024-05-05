@@ -3,6 +3,7 @@
  *  @brief 簡易類似画像 検出・並替ツール
  *  @author Masashi Kitamura (tenka@6809.net)
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "../ImgFmt/JpgDecoder.hpp"
@@ -36,7 +37,7 @@ public:
     {
     }
 
-    /// メイン処理
+    /// メイン処理.
     int main(int argc, char* argv[]) {
         if (argc < 2)
             return usage();
@@ -70,7 +71,7 @@ public:
     }
 
 private:
-    /// ヘルプ表示
+    /// ヘルプ表示.
     int usage() {
         printf("usage: ruig [-opts] jpeg-files...     # " __DATE__ " by tenk*\n");
         printf(" -?            help(this message).\n"
@@ -88,7 +89,7 @@ private:
         return 1;
     }
 
-    /// オプション走査
+    /// オプション走査.
     int scanOption(char const* opt) {
         char const* p = opt + 1;
         int  c = *(unsigned char*)p;
@@ -137,7 +138,7 @@ private:
         return 0;
     }
 
-    /// 1ファイル処理
+    /// 1ファイル処理.
     void oneFile(const char* name) {
         NamedImgPtr         imgPtr  = jpgLoad(name);
         BppCnvImg const&    rImg    = imgPtr->img();
@@ -148,7 +149,7 @@ private:
         sortIniTime_ += PerfCnt_get() - tm;
     }
 
-    /// jpg画像ロード
+    /// jpg画像ロード.
     NamedImgPtr jpgLoad(const char* name) {
         buf_.clear();
         PerfCnt_t tm  = PerfCnt_get();
@@ -164,7 +165,7 @@ private:
         return p;
     }
 
-    /// すべて表示する場合
+    /// すべて表示する場合.
     struct PrintAll {
         PrintAll(App& rApp) : rApp_(rApp) {}
         bool operator()(RuigFactor const* factor) {
@@ -175,7 +176,7 @@ private:
         App&    rApp_;
     };
 
-    /// すべて表示する場合
+    /// すべて表示する場合.
     struct PrintDebugLog {
         PrintDebugLog(App& rApp) : rApp_(rApp) {}
         bool operator()(RuigFactor const* factor) {
@@ -189,7 +190,7 @@ private:
         App&    rApp_;
     };
 
-    /// 近い画像のあるものだけ出力
+    /// 近い画像のあるものだけ出力.
     struct PrintNears {
         PrintNears(App& rApp) : rApp_(rApp), prevMajorNo_(0) { }
         bool operator()(RuigFactor const* factor) {
@@ -206,7 +207,7 @@ private:
         uint32_t    prevMajorNo_;
     };
 
-    /// 似た画像のあるものだけ出力
+    /// 似た画像のあるものだけ出力.
     struct PrintSames {
         PrintSames(App& rApp) : rApp_(rApp), prevMajorNo_(0), prevMinorNo_(0) { }
         bool operator()(RuigFactor const* factor) {
@@ -225,7 +226,7 @@ private:
         uint32_t    prevMinorNo_;
     };
 
-    /// 違うフォルダの類似画像のみの標示
+    /// 違うフォルダの類似画像のみの標示.
     struct PrintNears_NotMatchSameDir {
         typedef std::vector<RuigFactor const*>  Factors;
 
@@ -277,7 +278,7 @@ private:
         uint32_t    prevMajorNo_;
     };
 
-    /// タイムスタンプを付け替える
+    /// タイムスタンプを付け替える.
     struct ChangeTimestamp {
         enum { SKIP_SEC = 60 };
 
@@ -301,7 +302,7 @@ private:
         fks_file_time_t time_;
     };
 
-    /// 画像情報取得後の、各種処理
+    /// 画像情報取得後の、各種処理.
     void body() {
         if (vflag_)
             fprintf(stderr, "sorting...\n");
@@ -317,26 +318,28 @@ private:
         if (vflag_)
             fprintf(stderr, "outputs...\n");
 
-        if (changeTimestamp_)
+        if (changeTimestamp_) {
             ruigMgr_.for_each(ChangeTimestamp(*this));
-        else if (allFlag_)
+        } else if (allFlag_) {
             ruigMgr_.for_each(PrintAll(*this));
-        else if (notsamedir_)
+        } else if (notsamedir_) {
             ruigMgr_.for_each(PrintNears_NotMatchSameDir(*this));
-        else if (nearSame_)
+        } else if (nearSame_) {
             ruigMgr_.for_each(PrintSames(*this));
-        else
+        } else {
             ruigMgr_.for_each(PrintNears(*this));
+        }
 
         PerfCnt_t outputTime = PerfCnt_get();
         fprintf(stderr, "\toutput:   %10.4f sec.\n", PERFCNT_TO_SEC(double(outputTime - sortingTime_)));
         fprintf(stderr, "\tTOTAL:    %10.4f sec.\n", PERFCNT_TO_SEC(double(outputTime - startTime_  )));
 
-        if (vflag_)
+        if (vflag_) {
             ruigMgr_.for_each(PrintDebugLog(*this));
+        }
     }
 
-    /// 画像一つの情報標示
+    /// 画像一つの情報標示.
     void printFactor1(uint32_t majorNo, uint32_t minorNo, uint32_t subNo, RuigFactor const& rFactor) {
         char    newName[2048];
         if (execType_) {
@@ -352,7 +355,7 @@ private:
         }
     }
 
-    /// 画像一つの情報標示
+    /// 画像一つの情報標示.
     void execFactor1(uint32_t majorNo, uint32_t minorNo, uint32_t subNo, RuigFactor const& rFactor) {
         if (!execType_) {
             printf("\"%s\"\n", rFactor.name().c_str());
@@ -387,7 +390,7 @@ private:
         }
     }
 
-    /// パス名の中のファイル名の位置を返す
+    /// パス名の中のファイル名の位置を返す.
     static char* fname_baseName(char const* adr)
     {
         char const* p = adr;
@@ -423,11 +426,19 @@ private:
 };
 
 
-
+extern "C"
 int main(int argc, char* argv[])
 {
+    int rc;
+ #if defined(_WIN32)
+    int savCP = GetConsoleOutputCP();
+    SetConsoleOutputCP(65001);
+ #endif
     ExArgv_conv(&argc, &argv);
-    App     app;
-    return app.main(argc, argv);
+    App app;
+    rc = app.main(argc, argv);
+ #if defined(_WIN32)
+    SetConsoleOutputCP(savCP);
+ #endif
+    return rc;
 }
-

@@ -15,9 +15,9 @@
 #define DBGPRINTF(...)      printf(__VA_ARGS__)
 #endif
 
-// 整数値中のonビットの数を数える
+// 整数値中のonビットの数を数える.
 #if defined(__GNUC__) && (defined _WIN64 || defined __x86_64__)
-#define FORCE_INLINE    __attribute__((always_inline))
+#define FORCE_INLINE inline __attribute__((always_inline))
 static FORCE_INLINE uint32_t bit_popcount16(uint32_t x) { return __builtin_popcount((uint16_t)(x)); }
 static FORCE_INLINE uint32_t bit_popcount32(uint32_t x) { return __builtin_popcount(x); }
 static FORCE_INLINE uint32_t bit_popcount64(uint64_t x) { return __builtin_popcountl(x); }
@@ -55,14 +55,14 @@ static FORCE_INLINE uint32_t bit_popcount64(uint64_t bits) {
 }
 #endif
 
-/** 四捨五入
+/** 四捨五入.
  */
-static FORCE_INLINE double round(double x)
+static FORCE_INLINE double Round(double x)
 {
     return (x >= 0) ? floor(x + 0.5) : ceil(x - 0.5);
 }
 
-/// 近似評価値の判定に使う閾値等
+/// 近似評価値の判定に使う閾値等.
 enum CmpVal {
     CMPVAL_SAME = 6,
     CMPVAL_NEAR = 20, //16,
@@ -75,7 +75,7 @@ enum CmpVal {
 
 int g_debug_flag = 0;
 
-/** デフォルト・コンストラクタの下請け
+/** デフォルト・コンストラクタの下請け.
  */
 void RuigFactor::defaultConstruct()
 {
@@ -133,14 +133,14 @@ void RuigFactor::defaultConstruct()
 }
 
 
-/** デフォルト・コンストラクタ
+/** デフォルト・コンストラクタ.
  */
 RuigFactor::RuigFactor()
 {
     defaultConstruct();
 }
 
-/** コンストラクタ
+/** コンストラクタ.
  */
 RuigFactor::RuigFactor(NamedImgPtr imgPtr, uint32_t fsize)
 {
@@ -161,7 +161,7 @@ RuigFactor::RuigFactor(NamedImgPtr imgPtr, uint32_t fsize)
 }
 
 /** 初期化.
- *  画像から 近似チェック用の各種情報を生成
+ *  画像から 近似チェック用の各種情報を生成.
  */
 bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned bpp)
 {
@@ -179,22 +179,22 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
     unsigned        wid[LSZ];
     unsigned        hig[LSZ];
 
-    // アスペクト比関係
+    // アスペクト比関係.
     width_  = srcW;
     height_ = srcH;
-    aspW_   = int(round(ASPECT_K * double(srcH) / double(srcW)));
-    aspH_   = int(round(ASPECT_K * double(srcW) / double(srcH)));
+    aspW_   = int(Round(ASPECT_K * double(srcH) / double(srcW)));
+    aspH_   = int(Round(ASPECT_K * double(srcW) / double(srcH)));
     if (srcW >= srcH) {
         lsize_ = width_;
-        asp_   = -int(aspH_);   // 横幅のほうが長いほど 値は小さくなる
+        asp_   = -int(aspH_);   // 横幅のほうが長いほど 値は小さくなる.
     } else {
         lsize_ = height_;
-        asp_   = int(aspW_);    // 縦幅のほうが長いほど 値は大きくなる
+        asp_   = int(aspW_);    // 縦幅のほうが長いほど 値は大きくなる.
     }
 
     DBGPRINTF("%s %d*%d asp=%d lsize_=%d\n", name_.c_str(), width_, height_, asp_, lsize_);
 
-    // 平均を取るための１範囲の縦横ピクセル数を調整
+    // 平均を取るための１範囲の縦横ピクセル数を調整.
     unsigned        x1 = 0;
     unsigned        y1 = 0;
     for (unsigned i = 0; i < LSZ; ++i) {
@@ -310,7 +310,7 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
     DBGPRINTF("\n");
 #endif
 
-    // 16x16 を元に 8x8 縮小をつくり、類似チェック用bitパターンを作る
+    // 16x16 を元に 8x8 縮小をつくり、類似チェック用bitパターンを作る.
     uint8_t (*pixM)[8][3] = pix8x8_;
     {
         uint64_t    ptnY = 0;
@@ -404,7 +404,7 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
         uint64_t        m         = uint64_t(1) << (MSZ*MSZ - 1);
         for (unsigned dy = 0; dy < MSZ; ++dy) {
             for (unsigned dx = 0; dx < MSZ; ++dx) {
-                //pix_t threshold = pixM[dy][dx][0];    // 8x8の1点は 16x16の4点の平均値->閾値扱い
+                //pix_t threshold = pixM[dy][dx][0];    // 8x8の1点は 16x16の4点の平均値->閾値扱い.
                 for (unsigned ey = 0; ey < 2; ++ey) {
                     for (unsigned ex = 0; ex < 2; ++ex) {
                         pix_t pix = pixL[dy*2+ey][dx*2+ex][0];
@@ -424,7 +424,7 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
         DBGPRINTF("\t      %016llx %016llx\n", ptnY16x16_[1][0], ptnY16x16_[1][1]);
     }
 
-    // 8x8 の補助パターンの作成
+    // 8x8 の補助パターンの作成.
     {
         // 明るい方と暗い方別々に、輝度の平均を求める.
         uint64_t subMidVal[2]   = { 0 };
@@ -466,7 +466,7 @@ bool RuigFactor::init(uint8_t const* src, unsigned srcW, unsigned srcH, unsigned
     return true;
 }
 
-/** デバッグ用のログ表示
+/** デバッグ用のログ表示.
  */
 void RuigFactor::debugPrintLog() const
 {
@@ -480,7 +480,7 @@ void RuigFactor::debugPrintLog() const
     DBGPRINTF("\tsame %d+%d=%d\n", sameCount_, nearCount_, sameCount_+nearCount_);
 }
 
-/** 最初の画像登録時のソート用比較
+/** 最初の画像登録時のソート用比較.
  */
 inline bool RuigFactor::isLess4FirstSort(RuigFactor const& r) const {
     int dif = asp_ - r.asp_;
@@ -509,7 +509,7 @@ inline bool RuigFactor::isLess4FirstSort(RuigFactor const& r) const {
     return fsize_ > r.fsize_;
 }
 
-/** 指定 Factorとの似て具合の評価値計算
+/** 指定 Factorとの似て具合の評価値計算.
  */
 uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
 {
@@ -594,7 +594,7 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
             return 10000;
     }
 
-    // y,u,v 閾値(平均値) の、相手との差を求める
+    // y,u,v 閾値(平均値) の、相手との差を求める.
     enum { THR_SAME = 4 };
     enum { THR_NEAR = 10 };
     int difThrY = packKey_.thresholdY_ - rhs.packKey_.thresholdY_;
@@ -616,7 +616,7 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
     if (li8 <= ML_NEAR) {
         if (difThrU <= THR_NEAR && difThrV <= THR_NEAR) { // u,v
             bool issameuv = (difThrU <= THR_SAME && difThrV <= THR_SAME);
-            if (luv <= ML_NEAR) {                         // u,v はほぼ一緒とみなす
+            if (luv <= ML_NEAR) {                         // u,v はほぼ一緒とみなす.
                 if (issameuv && luv <= ML_SAME && difThrY <= THR_SAME) {
                     rc = difAsp/2 + (li8+luv) / 2 + (difThrY+difThrU+difThrV) / (3*8) + li16/4 + li8s/4;
                     DBGPRINTF("\tyuv-same %d\n", rc);
@@ -650,7 +650,7 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
                 rc = difAsp + li8 + luv + (difThrY + difThrU + difThrV) / 3 + li16/2 + li8s/2;
                 DBGPRINTF("\ti-near %d\n", rc);
             }
-        } else if (unsigned(mono_) | unsigned(rhs.mono_)) {               // 片方がモノクロの時
+        } else if (unsigned(mono_) | unsigned(rhs.mono_)) {               // 片方がモノクロの時.
             if (difThrY <= THR_SAME) {
                 rc = difAsp + li8*4/3 + li16 / 4 + li8s/4;
                 DBGPRINTF("\tkatamono-same %d\n", rc);
@@ -670,7 +670,7 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
         DBGPRINTF("\tetc %d\n", rc);
     }
  #if 1
-    // あまり同じではないけれど似てるかもしれない範囲にあるなら、8x8画像のyuv比較
+    // あまり同じではないけれど似てるかもしれない範囲にあるなら、8x8画像のyuv比較.
     if (CMPVAL_SAME < rc && rc <= CMPVAL_LARGE && !skip) {
         uint32_t        isum = 0, usum = 0, vsum = 0;
         uint32_t        icnt = 0, uvcnt = 0, iuvcnt = 0;
@@ -755,7 +755,7 @@ uint32_t RuigFactor::calcCmpVal(RuigFactor const& rhs) const
     return rc;
 }
 
-/** 近同評価値リンクに登録
+/** 近同評価値リンクに登録.
  */
 void RuigFactor::addLink(RuigFactor* child, uint32_t cmpVal)
 {
@@ -770,7 +770,7 @@ void RuigFactor::addLink(RuigFactor* child, uint32_t cmpVal)
     valueLinks_.insert(ValueLinks::value_type(cmpVal, child));
 }
 
-/** なるべく似てる画像が近くに並ぶようにして、sortFactorsに登録
+/** なるべく似てる画像が近くに並ぶようにして、sortFactorsに登録.
  */
 void RuigFactor::checkAndGenSameLinks(RuigFactors& sortFactors, uint32_t& majorNo)
 {
@@ -788,12 +788,12 @@ void RuigFactor::checkAndGenSameLinks(RuigFactors& sortFactors, uint32_t& majorN
     RuigFactors nearSameLinks;
     genNearSameLinks(nearSameLinks);
 
-    // 近同順の一覧の作成
+    // 近同順の一覧の作成.
     uint32_t minorNo = 0;
     for (size_t i = 0; i < nearSameLinks.size(); ++i) {
         RuigFactor* cur = nearSameLinks[i];
         if (!cur->parent_) {
-            if (i && !cur->hasNearLinks()) {    // 登録済みに近いか？
+            if (i && !cur->hasNearLinks()) {    // 登録済みに近いか?
               #ifndef USE_NATIVE_MINOR_NO
                 if (minorNo == 1) {
                     RuigFactor* prev = sortFactors.back();
@@ -839,17 +839,17 @@ struct RuigFactor::NearSameLinksCmp {
         else if (l->mono_ && !r->mono_)
             return false;
 
-        // 面積大きいのを優先
+        // 面積大きいのを優先.
         size_t   lsz = l->origWidth_ * l->origHeight_;
         size_t   rsz = r->origWidth_ * r->origHeight_;
         if (lsz != rsz)
             return lsz > rsz;
 
-        // 同一画像が多いものを優先
+        // 同一画像が多いものを優先.
         if (l->sameCount_ != r->sameCount_)
             return l->sameCount_ > r->sameCount_;
 
-        // 近い画像が多いものを優先
+        // 近い画像が多いものを優先.
         size_t lv = l->sameCount_ + l->nearCount_;
         size_t rv = r->sameCount_ + r->nearCount_;
         if (lv != rv)
@@ -859,7 +859,7 @@ struct RuigFactor::NearSameLinksCmp {
         if (lv != rv)
             return lv > rv;
 
-        // ファイルサイズが大きいものを優先
+        // ファイルサイズが大きいものを優先.
         // (jpgの高クロリティだとサイズが大きくなる傾向を考慮. 低クオリティの再jpg化による悪化物もあるので注意だけど)
         return l->fsize_ > r->fsize_;
     }
@@ -872,7 +872,7 @@ void RuigFactor::genNearSameLinks(RuigFactors& nearSameLinks)
     FactorVals factorVals;
     convValueLinks(factorVals);
 
-    // 近いモノが多い順位並べる
+    // 近いモノが多い順位並べる.
     typedef std::multiset<RuigFactor*, RuigFactor::NearSameLinksCmp> NaerSameLinkSet;
     NaerSameLinkSet links;
     for (FactorVals::iterator ite = factorVals.begin(); ite != factorVals.end(); ++ite) {
@@ -884,7 +884,7 @@ void RuigFactor::genNearSameLinks(RuigFactors& nearSameLinks)
 
  #if 1
     size_t size = links.size();
-    // 既出のFactorに近い物順に並べる
+    // 既出のFactorに近い物順に並べる.
     int*   cmpVals = reinterpret_cast<int*>(alloca(size * sizeof(int)));
     if (!cmpVals) {
         std::vector<int> cmpValTmp(size);
@@ -934,7 +934,7 @@ void RuigFactor::genNearSameLinks(RuigFactors& nearSameLinks)
  #endif
 }
 
-/** 各Factorの近同リンクを (Factor*,評価値) な近同リンク一覧にリンクを辿りながら再帰登録
+/** 各Factorの近同リンクを (Factor*,評価値) な近同リンク一覧にリンクを辿りながら再帰登録.
  */
 void RuigFactor::convValueLinks(FactorVals& factorVals)
 {
@@ -947,7 +947,7 @@ void RuigFactor::convValueLinks(FactorVals& factorVals)
     }
 }
 
-/** 登録済みのリンクと近いかどうか
+/** 登録済みのリンクと近いかどうか.
  */
 bool RuigFactor::hasNearLinks()
 {
@@ -956,7 +956,7 @@ bool RuigFactor::hasNearLinks()
         if (cur->parent_ && ite->first <= CMPVAL_NEAR)
             return true;    // 登録済みのものと近いものがあれば true
     }
-    // 登録済みのもので近いものはなかった
+    // 登録済みのもので近いものはなかった.
     return false;
 }
 
@@ -972,10 +972,10 @@ void RuigFactor::setSameLinks(RuigFactors const& nearSameLinks, size_t idx, uint
     //sameLinks_.push_back(this);
     resultFactors.push_back(this);
     for (ValueLinks::iterator ite = valueLinks_.begin(); ite != valueLinks_.end(); ++ite) {
-        if (ite->first > CMPVAL_SAME)  // 同じとみなすには違いが大きいものはスキップ
+        if (ite->first > CMPVAL_SAME)  // 同じとみなすには違いが大きいものはスキップ.
             continue;
         RuigFactor* cur = ite->second;
-        if (cur->parent_)               // すでに処理済みならスキップ
+        if (cur->parent_)               // すでに処理済みならスキップ.
             continue;
         RuigFactors::const_iterator fnd = std::find(nearSameLinks.begin()+idx+1, nearSameLinks.end(), cur);
         if (fnd == nearSameLinks.end()) // 統一の一覧になければスキップ(処理済は検査対象にしてないので見つからない場合有り)
@@ -996,13 +996,13 @@ void RuigFactor::setSameLinks(RuigFactors const& nearSameLinks, size_t idx, uint
 
 // ---------------------------------------------------------------------------------
 
-/** デフォルトコンストラクタ
+/** デフォルトコンストラクタ.
  */
 RuigMgr::RuigMgr()
 {
 }
 
-/** 画像(情報)登録
+/** 画像(情報)登録.
  */
 bool RuigMgr::insert(NamedImgPtr img, uint32_t fsize)
 {
@@ -1011,7 +1011,7 @@ bool RuigMgr::insert(NamedImgPtr img, uint32_t fsize)
     return true;
 }
 
-/** 登録済みのものを近似順に並べる
+/** 登録済みのものを近似順に並べる.
  */
 bool RuigMgr::run()
 {
@@ -1045,7 +1045,7 @@ bool RuigMgr::initAllFactors()
     return !allFactors_.empty();
 }
 
-/** 全てのFactorの 近同評価を行う
+/** 全てのFactorの 近同評価を行う.
  */
 void RuigMgr::checkNearSameLinks()
 {
@@ -1081,11 +1081,11 @@ void RuigMgr::sortFactors()
             ip->checkAndGenSameLinks(factors, majorNo);
         }
     }
-    // 結果を反映
+    // 結果を反映.
     factors.swap(allFactors_);
 }
 
-/** 近同イメージがある画像の数を数える
+/** 近同イメージがある画像の数を数える.
  */
 size_t RuigMgr::countNearSameFactors()
 {

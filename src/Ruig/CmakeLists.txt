@@ -8,24 +8,66 @@ set(SRC_DIR        "${CMAKE_SOURCE_DIR}/..")
 set(PNG_DIR        "${THIRDPARTY_DIR}/libpng")
 set(ZLIB_DIR       "${THIRDPARTY_DIR}/zlib")
 
+set(LIBJPEG_TURBO_INSTALL_DIR "${CMAKE_BINARY_DIR}/libjpeg-turbo-install")
+set(JPEG_LIB ${LIBJPEG_TURBO_INSTALL_DIR}/lib/libturbojpeg.a)
+
+set(RUIG_SRCS
+    ${SRC_DIR}/Ruig/Ruig.cpp
+    ${SRC_DIR}/Ruig/RuigMgr.cpp
+    ${SRC_DIR}/Ruig/RuigMgr.hpp
+    ${SRC_DIR}/Ruig/stdafx.h
+    ${SRC_DIR}/Ruig/targetver.h
+)
+
+set(IMGFMT_SRCS
+    ${SRC_DIR}/ImgFmt/JpgEncoder.hpp
+    ${SRC_DIR}/ImgFmt/JpgEncoder.cpp
+    ${SRC_DIR}/ImgFmt/JpgDecoder.hpp
+    ${SRC_DIR}/ImgFmt/JpgDecoder.cpp
+)
+
+set(PROC_SRCS
+    ${SRC_DIR}/Proc/BppCnvImg.hpp
+    ${SRC_DIR}/Proc/DecreaseColorHst.hpp
+    ${SRC_DIR}/Proc/DecreaseColorIfWithin256.hpp
+    ${SRC_DIR}/Proc/DecreaseColorMC.hpp
+    ${SRC_DIR}/Proc/FixedClut256.hpp
+    ${SRC_DIR}/Proc/PaternDither.hpp
+    ${SRC_DIR}/Proc/pix32_bokashi.h
+    ${SRC_DIR}/Proc/pix32_colCnv.h
+    ${SRC_DIR}/Proc/pix32_filter.h
+    ${SRC_DIR}/Proc/pix32_paint.hpp
+    ${SRC_DIR}/Proc/pix32_resize.h
+    ${SRC_DIR}/Proc/pix_subr.h
+)
+
+set(MISC_SRCS
+    ${SRC_DIR}/misc/def.h
+    ${SRC_DIR}/misc/subr.h
+    ${SRC_DIR}/misc/subr.c
+    ${SRC_DIR}/misc/StrExpr.c
+    ${SRC_DIR}/misc/intrusive_ptr.hpp
+    ${SRC_DIR}/misc/intrusive_ptr_ref_count.hpp
+    ${SRC_DIR}/misc/File.hpp
+    ${SRC_DIR}/misc/ExArgv.c
+    ${SRC_DIR}/misc/ExArgv.h
+    ${SRC_DIR}/misc/fks_file_time.c
+    ${SRC_DIR}/misc/fks_file_time.h
+    ${SRC_DIR}/misc/mem_mac.h
+    ${SRC_DIR}/misc/misc.hpp
+)
+
 # set(CMAKE_CXX_STANDARD 11)
 # set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if(WIN32 AND MSVC)
+add_compile_options(-DUSE_JPG -DUSE_PNG)
+
+if(WIN32)
   set(ADD_SRCS "${THIRDPARTY_DIR}/ms/ActiveCodePageUTF8.manifest")
   add_compile_options(-D_ANSI)
 
   if(MSVC)
-    set(THIRDPARTY_LIB_DIR   ${THIRDPARTY_DIR}/lib/x64_Release)
-
-    set(THIRDPARTY_JPEG_LIB_DIR ${THIRDPARTY_LIB_DIR}/libjpeg-turbo)
-    set(THIRDPARTY_PNG_LIB_DIR  ${THIRDPARTY_LIB_DIR}/libpng)
-    set(THIRDPARTY_ZLIB_LIB_DIR ${THIRDPARTY_LIB_DIR}/zlib)
-
-    set(JPEG_LIB ${THIRDPARTY_JPEG_LIB_DIR}/turbojpeg-static.lib)
-    # set(PNG_LIB  ${THIRDPARTY_PNG_LIB_DIR}/libpng16_static.lib)
-    # set(ZLIB_LIB ${THIRDPARTY_ZLIB_LIB_DIR}/zlibstatic.lib)
-
+    set(JPEG_LIB ${LIBJPEG_TURBO_INSTALL_DIR}/lib/turbojpeg-static.lib)
     # set(ADD_LIBS kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib)
     set(ADD_LIBS kernel32.lib user32.lib shell32.lib advapi32.lib)
 
@@ -48,106 +90,36 @@ if(WIN32 AND MSVC)
         message(FATAL_ERROR "thirdparty/ccwrap directory is missing. For vc12 and earlier, run thirdparty/install_ccwap.bat")
       endif()
       set(ADD_INC_DIRS "${THIRDPARTY_DIR}/ccwrap/vc/" "${THIRDPARTY_DIR}/ccwrap/ccwrap/")
-      add_compile_options(-FIccwrap_header.h)
+      add_compile_options(-FI${THIRDPARTY_DIR}/ccwrap/vc/ccwrap_header.h)
       add_compile_options(-D_UNICODE)
     endif()
+  else()
+    # g++
+    add_compile_options(-finput-charset=utf-8 -fexec-charset=utf-8 -fwide-exec-charset=utf-32LE)
   endif()
   #if(CMAKE_C_COMPILER_ID MATCHES "Watcom" OR CMAKE_CXX_COMPILER_ID MATCHES "Watcom")
   #  # message(STATUS "Using Watcom C/C++ Compiler!!!")
-  #  set(THIRDPARTY_LIB_DIR   ${THIRDPARTY_DIR}/lib/Release)
   #endif()
 else()
-# TODO:
-#   if(APPLE)
-#       #add_compile_options(--std=c++20)
-#   else()
-#       add_compile_options(-finput-charset=utf-8 -fexec-charset=utf-8 -fwide-exec-charset=utf-32LE)
-#   endif()
-#
-#   set(THIRDPARTY_LIB_DIR      ${THIRDPARTY_DIR}/lib)
-#
-#   set(THIRDPARTY_JPEG_LIB_DIR ${THIRDPARTY_LIB_DIR}/libjpeg-turbo)
-#   set(THIRDPARTY_PNG_LIB_DIR  ${THIRDPARTY_LIB_DIR}/libpng)
-#   set(THIRDPARTY_ZLIB_LIB_DIR ${THIRDPARTY_LIB_DIR}/zlib)
-#
-#   set(JPEG_LIB ${THIRDPARTY_JPEG_LIB_DIR}/turbojpeg-static.a)
-#   # set(PNG_LIB  ${THIRDPARTY_PNG_LIB_DIR}/libpng16_static.a)
-#   # set(ZLIB_LIB ${THIRDPARTY_ZLIB_LIB_DIR}/zlibstatic.a)
+  if(APPLE)
+    #add_compile_options(--std=c++20)
+  else()
+    add_compile_options(-finput-charset=utf-8 -fexec-charset=utf-8 -fwide-exec-charset=utf-32LE)
+  endif()
 endif()
 
+include(ExternalProject)
 
-set(RUIG_SRCS
-    ${SRC_DIR}/Ruig/Ruig.cpp
-    ${SRC_DIR}/Ruig/RuigMgr.cpp
-    ${SRC_DIR}/Ruig/RuigMgr.hpp
-    ${SRC_DIR}/Ruig/stdafx.h
-    ${SRC_DIR}/Ruig/targetver.h
-    ${SRC_DIR}/ImgFmt/JpgDecoder.cpp
-    ${SRC_DIR}/ImgFmt/JpgDecoder.hpp
-    ${SRC_DIR}/ImgFmt/JpgEncoder.cpp
-    ${SRC_DIR}/ImgFmt/JpgEncoder.hpp
-    ${SRC_DIR}/ImgFmt/PngDecoder.cpp
-    ${SRC_DIR}/ImgFmt/PngDecoder.hpp
-    ${SRC_DIR}/ImgFmt/PngEncoder.cpp
-    ${SRC_DIR}/ImgFmt/PngEncoder.hpp
-    ${SRC_DIR}/misc/ExArgv.c
-    ${SRC_DIR}/misc/ExArgv.h
-    ${SRC_DIR}/misc/StrExpr.c
-    ${SRC_DIR}/misc/File.hpp
-    ${SRC_DIR}/misc/fks_file_time.c
-    ${SRC_DIR}/misc/fks_file_time.h
-    ${SRC_DIR}/misc/intrusive_ptr.hpp
-    ${SRC_DIR}/misc/intrusive_ptr_ref_count.hpp
-    ${SRC_DIR}/misc/mem_mac.h
-    ${SRC_DIR}/misc/misc.hpp
-    ${SRC_DIR}/misc/subr.c
-    ${SRC_DIR}/misc/subr.h
-    ${SRC_DIR}/Proc/BppCnvImg.hpp
-    ${SRC_DIR}/Proc/DecreaseColorHst.hpp
-    ${SRC_DIR}/Proc/DecreaseColorIfWithin256.hpp
-    ${SRC_DIR}/Proc/DecreaseColorMC.hpp
-    ${SRC_DIR}/Proc/FixedClut256.hpp
-    ${SRC_DIR}/Proc/PaternDither.hpp
-    ${SRC_DIR}/Proc/pix32_bokashi.h
-    ${SRC_DIR}/Proc/pix32_colCnv.h
-    ${SRC_DIR}/Proc/pix32_filter.h
-    ${SRC_DIR}/Proc/pix32_paint.hpp
-    ${SRC_DIR}/Proc/pix32_resize.h
-    ${SRC_DIR}/Proc/pix_subr.h
 
-    ${ADD_SRCS}
-)
-
-set(ZLIB_SRCS
-    ${ZLIB_DIR}/adler32.c
-    ${ZLIB_DIR}/compress.c
-    ${ZLIB_DIR}/crc32.c
-    ${ZLIB_DIR}/deflate.c
-    ${ZLIB_DIR}/infback.c
-    ${ZLIB_DIR}/inffast.c
-    ${ZLIB_DIR}/inflate.c
-    ${ZLIB_DIR}/inftrees.c
-    ${ZLIB_DIR}/trees.c
-    ${ZLIB_DIR}/uncompr.c
-    ${ZLIB_DIR}/zutil.c
-)
-
-set(PNG_SRCS
-    ${PNG_DIR}/png.c
-    ${PNG_DIR}/pngerror.c
-    ${PNG_DIR}/pngget.c
-    ${PNG_DIR}/pngmem.c
-    ${PNG_DIR}/pngpread.c
-    ${PNG_DIR}/pngread.c
-    ${PNG_DIR}/pngrio.c
-    ${PNG_DIR}/pngrtran.c
-    ${PNG_DIR}/pngrutil.c
-    ${PNG_DIR}/pngset.c
-    ${PNG_DIR}/pngtrans.c
-    ${PNG_DIR}/pngwio.c
-    ${PNG_DIR}/pngwrite.c
-    ${PNG_DIR}/pngwtran.c
-    ${PNG_DIR}/pngwutil.c
+ExternalProject_Add(
+    libjpeg-turbo
+    SOURCE_DIR "${THIRDPARTY_DIR}/libjpeg-turbo"
+    BINARY_DIR "${CMAKE_BINARY_DIR}/libjpeg-turbo-build"
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${LIBJPEG_TURBO_INSTALL_DIR}
+#    BUILD_COMMAND "${CMAKE_COMMAND}" --build <BINARY_DIR> --target turbojpeg-static
+    INSTALL_COMMAND "${CMAKE_COMMAND}" --build <BINARY_DIR> --target install --config $<CONFIG>
+    STEP_TARGETS build
+    EXCLUDE_FROM_ALL TRUE
 )
 
 #set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -156,27 +128,26 @@ set(PNG_SRCS
 
 add_executable(${PROJECT_NAME}
     ${RUIG_SRCS}
-    ${PNG_SRCS}
-    ${ZLIB_SRCS}
+    ${IMGFMT_SRCS}
+    ${PROC_SRCS}
+    ${MISC_SRCS}
+    ${ADD_SRCS}
 )
 
+add_dependencies(${PROJECT_NAME} libjpeg-turbo)
+
 target_include_directories(${PROJECT_NAME} PRIVATE
-    ${SRC_DIR}/ruig
+    $(ADD_INC_DIRS)
+    ${SRC_DIR}/bmptg
     ${SRC_DIR}/ImgFmt
-    ${SRC_DIR}/proc
+    ${SRC_DIR}/Proc
     ${SRC_DIR}/misc
+    ${LIBJPEG_TURBO_INSTALL_DIR}/include
     ${THIRDPARTY_DIR}
-    ${THIRDPARTY_JPEG_LIB_DIR}
-    ${THIRDPARTY_ZLIB_LIB_DIR}
-    ${THIRDPARTY_PNG_LIB_DIR}
     ${THIRDPARTY_DIR}/libjpeg-turbo
-    ${THIRDPARTY_DIR}/zlib
-    ${THIRDPARTY_DIR}/libpng
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     ${JPEG_LIB}
-#   ${PNG_LIB}
-#   ${ZLIB_LIB}
     ${ADD_LIBS}
 )
