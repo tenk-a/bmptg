@@ -1,4 +1,7 @@
-libjpeg、libpng、zlib のビルド・バッチ.
-x64 環境用.
-あらかじめ x64 でビルド可能な
-vc、nasm の実行パスを通して置くこと.
+bld.bat
+libjpeg、libpng、zlib をビルドするバッチ.
+
+bmptg.exe ruig.exe を作る場合には実行不要.
+
+ビルドする場合はあらかじめ x64 でビルド可能な
+vc、nasm の実行パスを通して置く.

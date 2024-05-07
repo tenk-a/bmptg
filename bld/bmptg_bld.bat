@@ -67,6 +67,8 @@ set make=make
 goto ARG_LOOP
 :ARG_LOOP_EXIT
 
+if /I "%BldTyp%"=="" set BldTyp=Debug
+
 if /I "%Compiler%"=="vc" goto L_VCVER
 if /I not "%Compiler%"=="" goto L_COMPILER
 @if /I not "%PATH:borland=%"=="%PATH%" set Compiler=borland
@@ -157,8 +159,8 @@ cmake -G "%Gen%" %Opt% %Tgt%
 for %%i in (*.sln) do set TGT=%%i
 echo msbuild %TGT% -Property:Configuration=Release;Platform=%Arch% -m >mk_rel.bat
 echo msbuild %TGT% -Property:Configuration=Debug;Platform=%Arch% -m  >mk_dbg.bat
-call mk_dbg.bat
-call mk_rel.bat
+  call mk_dbg.bat
+  call mk_rel.bat
 popd
 goto END
 
@@ -198,7 +200,6 @@ set make=tmake
 goto L_MAKE
 
 :L_MAKE
-if /I "%BldTyp%"=="" set BldTyp=Debug
 if /I "%BldTyp%"=="Release" set "Opt=%Opt% -DCMAKE_BUILD_TYPE=Release"
 if /I "%BldTyp%"=="Debug"   set "Opt=%Opt% -DCMAKE_BUILD_TYPE=Debug"
 set WORK=%App%-%Compiler%

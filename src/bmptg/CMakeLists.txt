@@ -148,34 +148,19 @@ if(WIN32)
       add_compile_options(-FI${THIRDPARTY_DIR}/ccwrap/vc/ccwrap_header.h)
       add_compile_options(-D_UNICODE)
     endif()
+  #elseif(CMAKE_C_COMPILER_ID MATCHES "Watcom" OR CMAKE_CXX_COMPILER_ID MATCHES "Watcom")
+  #  # message(STATUS "Using Watcom C/C++ Compiler!!!")
   else()
     # g++
     add_compile_options(-finput-charset=utf-8 -fexec-charset=utf-8 -fwide-exec-charset=utf-32LE)
   endif()
-  #if(CMAKE_C_COMPILER_ID MATCHES "Watcom" OR CMAKE_CXX_COMPILER_ID MATCHES "Watcom")
-  #  # message(STATUS "Using Watcom C/C++ Compiler!!!")
-  #endif()
+elseif(APPLE)
+  #add_compile_options(--std=c++20)
 else()
-  if(APPLE)
-      #add_compile_options(--std=c++20)
-  else()
-      add_compile_options(-finput-charset=utf-8 -fexec-charset=utf-8 -fwide-exec-charset=utf-32LE)
-  endif()
+  add_compile_options(-finput-charset=utf-8 -fexec-charset=utf-8 -fwide-exec-charset=utf-32LE)
 endif()
 
 include(ExternalProject)
-
-
-ExternalProject_Add(
-    libjpeg-turbo
-    SOURCE_DIR "${THIRDPARTY_DIR}/libjpeg-turbo"
-    BINARY_DIR "${CMAKE_BINARY_DIR}/libjpeg-turbo-build"
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${LIBJPEG_TURBO_INSTALL_DIR}
-#    BUILD_COMMAND "${CMAKE_COMMAND}" --build <BINARY_DIR> --target turbojpeg-static
-    INSTALL_COMMAND "${CMAKE_COMMAND}" --build <BINARY_DIR> --target install --config $<CONFIG>
-    STEP_TARGETS build
-    EXCLUDE_FROM_ALL TRUE
-)
 
 #set_target_properties(${PROJECT_NAME} PROPERTIES
 #  RUNTIME_OUTPUT_DIRECTORY ${ROOT_DIR}/bin
@@ -191,6 +176,17 @@ add_executable(${PROJECT_NAME}
     ${ADD_SRCS}
 )
 
+ExternalProject_Add(
+    libjpeg-turbo
+    SOURCE_DIR  "${THIRDPARTY_DIR}/libjpeg-turbo"
+    BINARY_DIR  "${CMAKE_BINARY_DIR}/libjpeg-turbo-build"
+    INSTALL_DIR "${LIBJPEG_TURBO_INSTALL_DIR}"
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+#    BUILD_COMMAND "${CMAKE_COMMAND}" --build <BINARY_DIR> --target turbojpeg-static
+    INSTALL_COMMAND "${CMAKE_COMMAND}" --build <BINARY_DIR> --target install --config $<CONFIG>
+    STEP_TARGETS build
+    EXCLUDE_FROM_ALL TRUE
+)
 add_dependencies(${PROJECT_NAME} libjpeg-turbo)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -201,6 +197,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${SRC_DIR}/misc
     ${LIBJPEG_TURBO_INSTALL_DIR}/include
     ${THIRDPARTY_DIR}
+    ${THIRDPARTY_DIR}/include
     ${THIRDPARTY_DIR}/libjpeg-turbo
     ${THIRDPARTY_DIR}/zlib
     ${THIRDPARTY_DIR}/libpng
