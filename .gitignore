@@ -45,7 +45,6 @@ Job/
 set_old_vc.bat
 my_*
 tmp_*
-pnglibconf.h
 thirdparty/lib
 thirdparty/ccwrap
 MyEx*
