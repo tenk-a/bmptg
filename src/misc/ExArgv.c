@@ -119,9 +119,9 @@
 
 
 #if defined _WIN32
- #if !defined(EXARGV_USE_MBC) && !defined(UNICODE)
-  #define UNICODE
- #endif
+ //#if !defined(EXARGV_USE_MBC) && !defined(UNICODE)
+ // #define UNICODE
+ //#endif
  #include <windows.h>
  #if defined _MSC_VER && defined EXARGV_USE_MBC // CharNext()で必要.
   #pragma comment(lib, "User32.lib")
@@ -166,9 +166,12 @@
 #endif
 
 
+#if defined(EXARGV_USE_WCHAR)
 #define MAC_TO_STR(x)	MAC_TO_STR_2(x)
 #define MAC_TO_STR_2(x)	L##x
-
+#else
+#define MAC_TO_STR(x)	x
+#endif
 
 
 // ===========================================================================
@@ -984,7 +987,7 @@ static BOOL ExArgv_getResFile(char_t const* fpath, ExArgv_Vector* pVec, BOOL not
 		 #if defined(EXARGV_USE_WCHAR)
 			char* fnm = ExArgv_u8strdupFromWcs(fpath);
 		 #else
-		 	char* fnm = fpath;
+		 	char const* fnm = fpath;
 	     #endif
 			fprintf(stderr, "%s (%u): Argument too long.\n", fnm, lno);
 		 #if defined(EXARGV_USE_WCHAR)

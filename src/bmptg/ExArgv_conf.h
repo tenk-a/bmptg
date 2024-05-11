@@ -9,7 +9,9 @@
 
 //[] 定義すると、EXARGV_USE_WCHAR を有効、ExArgv_wargvToU8等を利用可能に.
 //#define EXARGV_USE_WCHAR_TO_UTF8
+#if defined(_WIN32) && defined(UNICODE) && !defined(_ANSI)
 #define EXARGV_USE_WCHAR_TO_UTF8
+#endif
 
 //[] 定義され かつ UNICODE 未定義なら MBCS として2バイト目\文字対処を行う.
 //#define EXARGV_USE_MBC

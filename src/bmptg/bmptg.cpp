@@ -1339,9 +1339,10 @@ public:
 
 };
 
-#if !defined(_WIN32)
+#if !defined(EXARGV_USE_WCHAR)
 int main(int argc, char* argv[])
 {
+	scoped_console_output_utf8 sav_cp;
 	static App app;
     int rc = app.main(argc, argv);
     return rc;
@@ -1349,8 +1350,7 @@ int main(int argc, char* argv[])
 #else
 int wmain(int argc, wchar_t* wargv[])
 {
-    int savCP = GetConsoleOutputCP();
-    SetConsoleOutputCP(65001);
+	scoped_console_output_utf8 sav_cp;
 
 	int rc = 1;
     char** argv = ExArgv_wargvToUtf8(argc, wargv);
@@ -1359,8 +1359,6 @@ int wmain(int argc, wchar_t* wargv[])
     	rc = app.main(argc, argv);
     }
 	ExArgv_Free(&argv);
-
-    SetConsoleOutputCP(savCP);
     return rc;
 }
 #endif

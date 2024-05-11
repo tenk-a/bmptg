@@ -16,6 +16,9 @@
 #ifdef __BORLANDC__
 #include <memory.h>
 #endif
+#if defined(_WIN32)
+#include <windows.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -174,6 +177,23 @@ extern int  dbgExLog_sw__;                              ///< [直接使用しち
 
 #ifdef __cplusplus
 }
+#endif
+
+
+#ifdef __cplusplus
+#if defined(_WIN32)
+struct scoped_console_output_utf8 {
+	scoped_console_output_utf8() : cp_(GetConsoleOutputCP()) { SetConsoleOutputCP(65001); }
+	~scoped_console_output_utf8() { SetConsoleOutputCP(cp_); }
+private:
+	int cp_;
+};
+#else
+#include <locale.h>
+struct scoped_console_output_utf8 {
+	scoped_console_output_utf8() { setlocale(LC_ALL, nullptr); }
+};
+#endif
 #endif
 
 #endif  /* SUBR_H */

@@ -456,19 +456,19 @@ char *fil_findNextName(char dst[])
 int fil_fdateCmp(const char *tgt, const char *src)
 {
  #if defined(_WIN32)
-    WIN32_FIND_DATA     srcData;
-    WIN32_FIND_DATA     tgtData;
+    WIN32_FIND_DATAA    srcData;
+    WIN32_FIND_DATAA    tgtData;
     HANDLE              srcFindHdl;
     HANDLE              tgtFindHdl;
     uint64_t            srcTm;
     uint64_t            tgtTm;
 
-    srcFindHdl = FindFirstFile((char *)src, &srcData);
+    srcFindHdl = FindFirstFileA((char *)src, &srcData);
     srcTm = ((uint64_t)srcData.ftLastWriteTime.dwHighDateTime<<32) | (uint64_t)srcData.ftLastWriteTime.dwLowDateTime;
     if (srcFindHdl == INVALID_HANDLE_VALUE)
         srcTm = 0;
 
-    tgtFindHdl = FindFirstFile((char *)tgt, &tgtData);
+    tgtFindHdl = FindFirstFileA((char *)tgt, &tgtData);
     tgtTm = ((uint64_t)tgtData.ftLastWriteTime.dwHighDateTime<<32) | (uint64_t)tgtData.ftLastWriteTime.dwLowDateTime;
     if (tgtFindHdl == INVALID_HANDLE_VALUE)
         tgtTm = 0;
@@ -576,6 +576,11 @@ int fil_fdateCmp(const char *tgt, const char *src)
 /* ------------------------- */
 /*--------------------------------------------------------------------------*/
 
+#if defined(_WIN32)
+#undef mkdir
+#define mkdir(a,b)	mkdir(a)
+#endif
+
 /// ディレクトリ掘り機能付きのfopen
 FILE *fopenMD(const char *name, char *mode)
 {
@@ -596,16 +601,15 @@ FILE *fopenMD(const char *name, char *mode)
             return NULL;
         --s;
         *s = '\0';
-    } while (mkdir(nm) != 0);
+    } while (mkdir(nm, 755) != 0);
     do {
         *s = '/';
         s += strlen(s);
         if (s >= e)
             return fopen(name, mode);
-    } while (mkdir(nm) == 0);
+    } while (mkdir(nm, 755) == 0);
     return NULL;
 }
-
 
 
 void *fil_save(const char *name, void *buf, int size)
@@ -655,11 +659,10 @@ void *fil_loadMalloc(const char* name, size_t* rdszp)
 FILE *fopenE(const char *name, const char *mod)
 {
     /* エラーがあれば即exitの fopen() */
-    FILE *fp;
-
-    fp = fopen(name,mod);
+    FILE *fp = fopen(name,mod);
     if (fp == NULL) {
         err_abortMsg("ファイル %s をオープンできません\n",name);
+        return NULL;
     }
     setvbuf(fp, NULL, _IOFBF, 1024*1024);
     return fp;
