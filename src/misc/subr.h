@@ -93,8 +93,9 @@ char *fname_getMidDir(char mdir[], const char *name);
 char *fname_strLwr(char *s0);
 char *fname_backslashToSlash(char filePath[]);
 
-void *fil_load(const char *name, void *buf, int bufsz, int *rdszp);
-void *fil_loadE(const char *name, void *buf, int bufsz, int *rdszp);
+void *fil_loadMalloc(const char *name, size_t *rdszp);
+void *fil_loadMallocE(const char *name,size_t *rdszp);
+
 void *fil_save(const char *name, void *buf, int size);
 void *fil_saveE(const char *name, void *buf, int size);
 

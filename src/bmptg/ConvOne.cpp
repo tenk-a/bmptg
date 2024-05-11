@@ -86,9 +86,9 @@ ConvOne_Opts::ConvOne_Opts() {
 
 void ConvOne_Opts::readFixedClut(const char* fname)
 {
-    int sz = 0;
-    char* src = (char*)fil_loadE(fname, 0, 0, &sz);
-    if (sz == 0)
+    size_t sz = 0;
+    char* src = (char*)fil_loadMallocE(fname, &sz);
+    if (src == 0 || sz == 0)
         return;
     unsigned n = 0;
     char*    s = strtok(src, ", \t\r\n{};");
@@ -247,7 +247,7 @@ bool ConvOne::readFile() {
         else
             printf("%-20s ", srcName_);
     }
-    src_ = (UINT8_T*)fil_load(srcName_, NULL, 0, &sz_);
+    src_ = (UINT8_T*)fil_loadMalloc(srcName_, &sz_);
     if (src_ == NULL) {
         if (varbose_) printf("\n");
         printf("%s をオープンできません.\n", srcName_);
@@ -376,8 +376,8 @@ void ConvOne::loadAlphaPlaneFile()
 {
     if (!opts_.alphaPlaneFileName)
         return;
-    int         sz   = 0;
-    void*       dat  = fil_load(opts_.alphaPlaneFileName, NULL, 0, &sz);
+    size_t sz   = 0;
+    void*  dat  = fil_loadMalloc(opts_.alphaPlaneFileName, &sz);
     if (dat) {
         int         w    = 0;
         int         h    = 0;

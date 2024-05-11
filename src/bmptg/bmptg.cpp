@@ -1095,6 +1095,7 @@ int Opts::scan(const char *a)
             } else {
                 goto OPT_ERR;
             }
+            break;
 
         case 'O':
             o->startX = strToI(p,0);
@@ -1122,11 +1123,12 @@ int Opts::scan(const char *a)
 
     case '\0':
     case '?':
-        usage();
+        return usage();
 
     default:
   OPT_ERR:
         err_abortMsg("Incorrect command line option : %s\n", a);
+        return 1;
     }
     return 0;
 }
@@ -1147,9 +1149,9 @@ double Opts::strExprD(const char *p, const char ** a_p, int* a_err)
 void Opts::readClutBin(char const* fname, int clutbpp)
 {
     ConvOne_Opts*   o = convOne_opts;
-    int sz = 0;
-    unsigned* src = (unsigned*)fil_loadE(fname, 0, 0, &sz);
-    if (sz == 0)
+    size_t sz = 0;
+    unsigned* src = (unsigned*)fil_loadMallocE(fname, &sz);
+    if (src == 0 || sz == 0)
         return;
 
     int w=0, h=0, bpp=0, clutNum=0;
@@ -1186,7 +1188,10 @@ class App {
 
 	enum { Ok = 0, Er = 1 };
 public:
-	App() : convOne_(), opts_(convOne_.opts()) {}
+	App() : convOne_(), opts_(convOne_.opts()) {
+        memset(nameBuf_, 0, sizeof nameBuf_);
+        memset(tempBuf_, 0, sizeof tempBuf_);
+    }
 
 	int main(int argc, char *argv[]) {
         // アプリ名取得.

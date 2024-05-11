@@ -9,12 +9,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#if defined(_WIN32)
 #include <direct.h>
 #include <io.h>
-#include <sys/stat.h>
-#if defined(_WIN32)
 #include <windows.h>
+#else
+#include <unistd.h>
 #endif
+
+#include "ExArgv.h"
 
 #include "subr.h"
 
@@ -452,6 +455,7 @@ char *fil_findNextName(char dst[])
  */
 int fil_fdateCmp(const char *tgt, const char *src)
 {
+ #if defined(_WIN32)
     WIN32_FIND_DATA     srcData;
     WIN32_FIND_DATA     tgtData;
     HANDLE              srcFindHdl;
@@ -476,6 +480,18 @@ int fil_fdateCmp(const char *tgt, const char *src)
     else if (tgtTm > srcTm)
         return 1;
     return 0;
+ #else
+	struct stat tgt_st = {0};
+	struct stat src_st = {0};
+	int    tgt_rc = stat(tgt, &tgt_st);
+	int    src_rc = stat(src, &src_st);
+	if (tgt_rc < 0) {
+		return (src_rc < 0) ? 0 : -1;
+	} else if (src_rc < 0) {
+		return 1;
+	}
+	return tgt_st.st_mtime - src_st.st_mtime;
+ #endif
 }
 
 
@@ -612,11 +628,9 @@ void *fil_save(const char *name, void *buf, int size)
 }
 
 
-void *fil_loadE(const char *name, void *buf, int bufsz, int *rdszp)
+void *fil_loadMallocE(const char *name, size_t *rdszp)
 {
-    void *p;
-
-    p = fil_load(name, buf, bufsz, rdszp);
+    void *p = fil_loadMalloc(name, rdszp);
     if (p == NULL) {
         err_abortMsg("%sのロードに失敗しました\n", name);
     }
@@ -628,38 +642,9 @@ void *fil_loadE(const char *name, void *buf, int bufsz, int *rdszp)
 /** ファイル・ロード.
  *  @return bufのアドレスかmallocされたアドレス. エラー時はNULLを返す.
  */
-void *fil_load(
-    const char  *name,  ///< 読みこむファイル.
-    void        *buf,   ///< 読みこむメモリ。NULLが指定されれば mallocし、16バイト余分に確保する.
-    int         bufsz,  ///< bufのサイズ。0が指定されれば ファイルサイズとなる.
-    int         *rdszp) ///< NULLでなければ、読みこんだファイルサイズを入れて返す.
+void *fil_loadMalloc(const char* name, size_t* rdszp)
 {
-    FILE *fp;
-    int  l;
-
-    fp = fopen(name, "rb");
-    if (fp == NULL)
-        return NULL;
-    l = filelength(fileno(fp));
-    if (rdszp)
-        *rdszp = l;
-    if (bufsz == 0)
-        bufsz = l;
-    if (l > bufsz)
-        l = bufsz;
-    if (buf == NULL) {
-        bufsz = (bufsz + 15 + 16) & ~15;
-        buf = calloc(1, bufsz);
-        if (buf == NULL)
-            return NULL;
-    }
-    fread(buf, 1, l, fp);
-    if (ferror(fp)) {
-        fclose(fp);
-        buf = NULL;
-    }
-    fclose(fp);
-    return buf;
+	return ExArgv_fileLoadMalloc(name, rdszp);
 }
 
 

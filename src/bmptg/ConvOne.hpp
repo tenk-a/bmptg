@@ -226,7 +226,7 @@ private:
     bool            varbose_;
     bool            fullColFlg_;
     bool            mono_;
-    int             sz_;
+    size_t          sz_;
     int             w_;
     int             h_;
     int             bpp_;
