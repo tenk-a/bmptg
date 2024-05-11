@@ -24,6 +24,7 @@ set(BMPTG_SRCS
     ${SRC_DIR}/bmptg/gen_clmp.c
     ${SRC_DIR}/bmptg/gen_clm8.c
     ${SRC_DIR}/bmptg/stdafx.h
+    ${SRC_DIR}/bmptg/ExArgv_conf.h
 )
 
 set(IMGFMT_SRCS
@@ -78,6 +79,8 @@ set(MISC_SRCS
     ${SRC_DIR}/misc/subr.h
     ${SRC_DIR}/misc/subr.c
     ${SRC_DIR}/misc/StrExpr.c
+    ${SRC_DIR}/misc/ExArgv.h
+    ${SRC_DIR}/misc/ExArgv.c
 )
 
 set(ZLIB_SRCS
@@ -112,10 +115,12 @@ set(PNG_SRCS
     ${PNG_DIR}/pngwutil.c
 )
 
-# set(CMAKE_CXX_STANDARD 11)
-# set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_compile_options(-DUSE_JPG -DUSE_PNG -DEXARGV_USE_CONF_H)
 
-add_compile_options(-DUSE_JPG -DUSE_PNG)
+if(NOT MSVC)
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
 
 if(WIN32)
   set(ADD_SRCS "${THIRDPARTY_DIR}/ms/ActiveCodePageUTF8.manifest")
@@ -131,6 +136,11 @@ if(WIN32)
 
     add_compile_options(-Zc:wchar_t -Zc:forScope)
 
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.0")
+      set(CMAKE_CXX_STANDARD 17)
+      set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    endif()
+
     if(CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL "19.0.24215.1")
       add_compile_options(-utf-8)
     endif()
@@ -144,8 +154,8 @@ if(WIN32)
       if(NOT EXISTS "${THIRDPARTY_DIR}/ccwrap")
         message(FATAL_ERROR "thirdparty/ccwrap directory is missing. For vc12 and earlier, run thirdparty/install_ccwap.bat")
       endif()
-      set(ADD_INC_DIRS "${THIRDPARTY_DIR}/ccwrap/vc/" "${THIRDPARTY_DIR}/ccwrap/ccwrap/")
       add_compile_options(-FI${THIRDPARTY_DIR}/ccwrap/vc/ccwrap_header.h)
+      set(ADD_INC_DIRS "${THIRDPARTY_DIR}/ccwrap/vc/" "${THIRDPARTY_DIR}/ccwrap/ccwrap/")
       add_compile_options(-D_UNICODE)
     endif()
   #elseif(CMAKE_C_COMPILER_ID MATCHES "Watcom" OR CMAKE_CXX_COMPILER_ID MATCHES "Watcom")
@@ -190,7 +200,7 @@ ExternalProject_Add(
 add_dependencies(${PROJECT_NAME} libjpeg-turbo)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-    $(ADD_INC_DIRS)
+    ${ADD_INC_DIRS}
     ${SRC_DIR}/bmptg
     ${SRC_DIR}/ImgFmt
     ${SRC_DIR}/Proc

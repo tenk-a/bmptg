@@ -805,7 +805,7 @@ FixedClut256<A>::decreaseColorRGB_bpp4(unsigned char* pDst, const unsigned* pSrc
 			whtCC = i;
 		} else {
 			tbl333[ri * 9 + gi * 3 + bi] = i;
-    		auto& t2 = tbl222[(r == 0xff) * 4u + (g == 0xff) * 2u + (b == 0xff)];
+    		signed char& t2 = tbl222[(r == 0xff) * 4u + (g == 0xff) * 2u + (b == 0xff)];
     		if (t2 < 0)
     			t2 = i;
         }

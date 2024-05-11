@@ -90,7 +90,7 @@
 // stdint は未だに vc は未サポートで不便なので、最低限の型を定義.
 // (boostやSDLを使うほうが無難かも)
 
-#if (defined _MSC_VER && _MSC_VER < 1600) || (defined __BORLANDC__ && __BORLANDC__ <= 0x0551)
+#if 0 //(defined _MSC_VER && _MSC_VER < 1600) || (defined __BORLANDC__ && __BORLANDC__ <= 0x0551)
 typedef __int8              int8_t;
 typedef unsigned __int8     uint8_t;
 typedef __int16             int16_t;
@@ -223,9 +223,10 @@ static inline int err_abort() {
 /// Winのデバッグログ窓へ出力&終了.
 static inline int err_abortMsg(const char *fmt, ...) {
     char    buf[0x1000];
-    va_list     args;
+    va_list args;
+    int		n;
     va_start(args, fmt);
-    int n = vsnprintf(buf, sizeof buf, fmt, args);
+    n = vsnprintf(buf, sizeof buf, fmt, args);
     va_end(args);
     OutputDebugStringA(buf);
     return err_abort();
@@ -235,9 +236,10 @@ static inline int err_abortMsg(const char *fmt, ...) {
 /// Winのデバッグログ窓へ出力.
 static inline int err_printf(const char *fmt, ...) {
     char    buf[0x1000];
-    va_list     args;
+    va_list args;
+    int		n;
     va_start(args, fmt);
-    int n = vsnprintf(buf, sizeof buf, fmt, args);
+    n = vsnprintf(buf, sizeof buf, fmt, args);
     va_end(args);
     OutputDebugStringA(buf);
     return n;

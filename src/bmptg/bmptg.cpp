@@ -2,20 +2,24 @@
  *  @file   bmptg.cpp
  *  @brief  画像コンバータ.
  *  @author Masashi Kitamura
- *  @date   2000-2021
+ *  @date   2000-2024
  *  @note
  */
 
-
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <vector>
+
 #if defined(_WIN32)
 #include <windows.h>
 #endif
 
+//#include "fsys.hpp"
 #include "subr.h"
+#include "ExArgv.h"
 #include "ConvOne.hpp"
 #ifdef USE_MY_FMT
 #include "my.h"
@@ -26,8 +30,10 @@
 
 char *g_appName;
 
+using namespace std;
 
-void usage(void)
+
+int usage(void)
 {
     printf("https://github.com/tenk-a/bmptg/\n"
            "usage> %s [-opts] file(s)   // v2.40 " __DATE__ "  by tenk*\n", g_appName);
@@ -177,7 +183,7 @@ void usage(void)
         MY_USAGE_2
        "\n"
     );
-    exit(1);
+    return 1;
 }
 
 
@@ -195,6 +201,7 @@ public:
     char const*     dstExt;
     int             updateFlg;
     int             dispInfo;
+	bool			dstRec;
 
 public:
     Opts(ConvOne_Opts& coo);
@@ -232,13 +239,13 @@ int Opts::scan(const char *a)
 {
     ConvOne_Opts* o = this->convOne_opts;
     const char  *p;
-    int         c;
 
     p = a;
     if (*p == '-')
         p++;
-    c = *p++;
-    c = TOUPPER(c);
+
+    int b = *p++;
+    int c = TOUPPER(b);
     switch (c) {
     case 'A':
         c = *p++, c = TOUPPER(c);
@@ -296,7 +303,7 @@ int Opts::scan(const char *a)
             else
                 o->alpModeI = 1;
         } else if (c == 'I') {  // -ai
-            o->alphaPlaneFileName = strdup(p);
+            o->alphaPlaneFileName = strdupE(p);
             o->fullColFlg         = 1;
         } else if (c == 'Z') {  // -az
             o->clearColIfAlp0 = (*p != '-');
@@ -695,16 +702,20 @@ int Opts::scan(const char *a)
 
     case 'O': // -o
         this->oname = strdupE(p);
+        fname_backslashToSlash(this->oname);
         break;
 
     case 'D': // -d
+    	this->dstRec = (b == 'D');
         this->dstDir = strdupE(p);
         fname_delLastDirSep(this->dstDir);
+        fname_backslashToSlash(this->dstDir);
         break;
 
     case 'S': // -s
         this->srcDir = strdupE(p);
         fname_delLastDirSep(this->srcDir);
+        fname_backslashToSlash(this->srcDir);
         break;
 
     case 'T':   // -t
@@ -1167,136 +1178,184 @@ void Opts::readClutBin(char const* fname, int clutbpp)
 
 /* ------------------------------------------------------------------------ */
 
-/// レスポンスファイルの入力.
-static void getResFile(char *name, slist_t **a_fnames, Opts& opts)
-{
-    char        buf[1024*64];
-    char        *p;
+class App {
+	ConvOne convOne_;
+	Opts    opts_;
+	char   	nameBuf_[ FIL_NMSZ  ];
+	char   	tempBuf_[ FIL_NMSZ  ];
 
-    TXT1_openE(name);
-    while (TXT1_getsE(buf, sizeof buf)) {
-        p = strtok(buf, " \t\n");
-        do {
-            if (*p == ';') {
-                break;
-            } else if (*p == '-') {
-                opts.scan(p);
-            } else if (*p == ':') {
-                opts.scan(p);
+	enum { Ok = 0, Er = 1 };
+public:
+	App() : convOne_(), opts_(convOne_.opts()) {}
+
+	int main(int argc, char *argv[]) {
+        // アプリ名取得.
+        g_appName = strdupE(fname_baseName(argv[0]));
+	    if (g_appName == NULL)
+	    	return Er;
+     #if 0 //defined(_WIN32)
+		if (g_appName)
+	    	fname_strLwr(g_appName);
+	 #endif
+
+        // コマンド引数調整(レスポンスファイル展開).
+        if (ExArgv_convEx(&argc, &argv, 0) == 0)
+	    	return Er;
+
+        if (argc < 2)
+	        return usage();
+
+		size_t	n = 0;
+		bool 	optCk = true;
+	    // 引数解析.
+	    for (int i = 1; i < argc; i++) {
+	        char* p = argv[i];
+	        if (optCk && *p == '-') {
+				if (*p == '-' && p[1] == '-' && p[2] == 0) {
+					optCk = false;
+					continue;
+				}
+	            opts_.scan(p);
+	        } else if (*p == ':') {
+	            opts_.scan(p);
+	        } else {
+				++n;
+			}
+	    }
+	    if (n == 0) {
+	        err_abortMsg("ファイル名を指定してください\n");
+			return Er;
+	    }
+
+	    if (opts_.convOne_opts->mapMode >= 2) {  // 合体mapファイルの拡張子を設定する.
+	        if (opts_.convOne_opts->exDstExt == NULL)
+	            opts_.convOne_opts->exDstExt = "mp";
+	        opts_.dstExt = opts_.convOne_opts->exDstExt;
+	    }
+
+		// -s 指定がある場合は、相対パスにソースディレクトリを付加.
+		char const* srcDir = opts_.srcDir;
+		size_t srcDirLen = 0;
+		if (srcDir) {
+			srcDirLen = strlen(srcDir);
+			optCk = true;
+			for (size_t idx = 1; idx < argc; ++idx) {
+		        char* arg = argv[idx];
+		        if (optCk && *arg == '-') {
+					if (*arg == '-' && arg[1] == '-' && arg[2] == 0)
+						optCk = false;
+					continue;
+				} else if (*arg == ':') {
+					continue;
+				}
+				if (!fnameIsAbsolutePath(arg)) {
+					snprintf(nameBuf_, FIL_NMSZ, "%s/%s", srcDir, arg);
+					free(arg);
+					argv[idx] = arg = strdupE(nameBuf_);
+					if (arg == NULL)
+						return Er;
+				}
+				if (*fname_getExt(arg) == 0 && opts_.srcExt) {
+					snprintf(nameBuf_, FIL_NMSZ, "%s.%s", arg, opts_.srcExt);
+					free(arg);
+					argv[idx] = arg = strdupE(nameBuf_);
+					if (arg == NULL)
+						return Er;
+				}
+			}
+		}
+
+        // ワイルドカード展開.
+	    if (ExArgv_convEx(&argc, &argv, 1) == 0)
+	    	return Er;
+
+        optCk = true;
+		for (size_t idx = 1; idx < argc; ++idx) {
+	        char* arg = argv[idx];
+	        if (optCk && *arg == '-') {
+				if (*arg == '-' && arg[1] == '-' && arg[2] == 0)
+					optCk = false;
+				continue;
+			} else if (*arg == ':') {
+				continue;
+            }
+
+			char const* srcpath = arg;
+            // 出力名を設定.
+            if (opts_.oname) {  // -o 指定有.
+                char*   tgtname  = opts_.oname;
+                char*   basename = fname_baseName(tgtname);
+                if (opts_.dstDir && (tgtname[0] == '/' || tgtname[1] == ':'))   // 出力フォルダ指定があればそっち優先.
+                    tgtname = basename;
+                if (strchr(basename, '.') == NULL && opts_.dstExt) {    // 拡張子がなければつける.
+					snprintf(tempBuf_, FIL_NMSZ, "%s.%s", tgtname, opts_.dstExt);
+					tgtname = tempBuf_;
+                }
+				if (opts_.dstDir && opts_.dstDir[0])
+					snprintf(nameBuf_, FIL_NMSZ, "%s/%s", opts_.dstDir, tgtname);
+				else
+					snprintf(nameBuf_, FIL_NMSZ, "%s", tgtname);
             } else {
-                slist_add(a_fnames, p);
+				char const* tgtname = srcpath;
+				if (srcDirLen && fnameStartsWith(srcpath, srcDir)) {    // -sソースディレクトリファイル?
+					tgtname += srcDirLen + 1;
+				} else {
+					tgtname =  fname_baseName(srcpath);                 // 違えば入力のフォルダは無視.
+				}
+				char const* ext = opts_.dstExt;
+				size_t      extSize = strlen(ext) + 1;
+				if (opts_.dstDir && opts_.dstDir[0])    // 出力ディレクトリ有?
+					snprintf(nameBuf_, FIL_NMSZ - 1 - extSize, "%s/%s", opts_.dstDir, tgtname);
+				else
+					snprintf(nameBuf_, FIL_NMSZ - 1 - extSize, "%s", tgtname);
+                // 拡張子を付け替える.
+                char* basename = fname_baseName(nameBuf_);
+                char* e = strchr(basename, '.');
+				if (e) {
+					memcpy(e+1, ext, extSize);
+				} else {
+					strcat(nameBuf_, ext);
+				}
             }
-            p = strtok(NULL, " \t\n");
-        } while (p);
-    }
-    TXT1_close();
-}
 
-
-static int Main(int argc, char *argv[])
-{
-    char        inam[FIL_NMSZ];
-    char        onam[FIL_NMSZ];
-    char        tmpnam[FIL_NMSZ];
-    slist_t     *fnames = NULL;
-    slist_t     *fl;
-
-    g_appName = strdupE(fname_baseName(argv[0]));
- #if defined(_WIN32)
-    fname_strUpr(g_appName);
- #endif
-    if (argc < 2)
-        usage();
-
-    static ConvOne convOne;
-    static Opts    opts(convOne.opts());
-
-    /* コマンドライン解析 */
-    for (int i = 1; i < argc; i++) {
-        char* p = argv[i];
-        if (*p == '-') {
-            opts.scan(p);
-        } else if (*p == ':') {
-            opts.scan(p);
-        } else if (*p == '@') {
-            getResFile(p+1, &fnames, opts);
-        } else {
-            slist_add(&fnames, p);
-        }
-    }
-
-    if (fnames == NULL) {
-        err_abortMsg("ファイル名を指定してください\n");
-    }
-
-    if (opts.convOne_opts->mapMode >= 2) {  // 合体mapファイルの拡張子を設定する.
-        if (opts.convOne_opts->exDstExt == NULL)
-            opts.convOne_opts->exDstExt = "mp";
-        opts.dstExt = opts.convOne_opts->exDstExt;
-    }
-
-    if (opts.dispInfo) {
-        for (fl = fnames; fl != NULL; fl = fl->link) {
-            char nm[FIL_NMSZ], mdir[FIL_NMSZ];
-            mdir[0] = 0;
-            if (opts.srcDir)
-                fname_getMidDir(mdir, fl->s);
-            fname_dirNameAddExt(inam, opts.srcDir, fl->s, opts.srcExt);
-            if (fil_findFirstName(nm, inam)) {      // ファイル名が見つかった.
-                do {
-                    // 出力名を設定.
-                    convOne.run(nm, NULL);
-                } while (fil_findNextName(nm));
+            //常に変換の指定か、onamBufの日付が古ければ変換を行う.
+            if (opts_.updateFlg == 0 || fil_fdateCmp(nameBuf_, arg) < 0) {
+				char* onm = (opts_.dispInfo) ? NULL : nameBuf_;
+                // 実際の変換処理.
+                convOne_.run(srcpath, onm);
             }
-        }
-    } else {
-        for (fl = fnames; fl != NULL; fl = fl->link) {
-            char nm[FIL_NMSZ], mdir[FIL_NMSZ];
-            mdir[0] = 0;
-            if (opts.srcDir)
-                fname_getMidDir(mdir, fl->s);
-            fname_dirNameAddExt(inam, opts.srcDir, fl->s, opts.srcExt);
-            if (fil_findFirstName(nm, inam)) {      // ファイル名が見つかった.
-                do {
-                    // 出力名を設定.
-                    if (opts.oname) {
-                        char*   p = opts.oname;
-                        if ((p[0] == '\\' || p[1] == ':') && opts.dstDir)
-                            p = strcpy(tmpnam, fname_baseName(p));
-                        if (opts.oname)
-                            fname_dirNameAddExt(onam, opts.dstDir, p, opts.dstExt);
-                        else
-                            fname_dirNameChgExt(onam, opts.dstDir, p, opts.dstExt);
-                    } else {
-                        fname_dirDirNameChgExt(onam, opts.dstDir, mdir, fname_baseName(nm), opts.dstExt);
-                    }
-                    if (opts.updateFlg == 0 || fil_fdateCmp(onam, nm) < 0) {    //常に変換か、onamの日付が古ければ.
-                        // 実際の変換処理.
-                        convOne.run(nm, onam);
-                    }
-                    if (opts.oname) // 出力ファイル名が指定されていた場合は１ファイルのみ.
-                        break;
-                } while (fil_findNextName(nm));
-            }
-        }
-    }
-    return 0;
-}
 
+            if (opts_.oname) // 出力ファイル名が指定されていた場合は１ファイルのみ.
+                break;
+		}
 
+	    return 0;
+	}
+
+};
+
+#if !defined(_WIN32)
 int main(int argc, char* argv[])
 {
-    int rc;
- #if defined(_WIN32)
-    int savCP = GetConsoleOutputCP();
-    SetConsoleOutputCP(65001);
- #endif
- #if 0 //ndef NO_USE_EXARGV
-    ExArgv_conv(&argc, &argv);
- #endif
-    rc = Main(argc, argv);
- #if defined(_WIN32)
-    SetConsoleOutputCP(savCP);
- #endif
+	static App app;
+    int rc = app.main(argc, argv);
     return rc;
 }
+#else
+int wmain(int argc, wchar_t* wargv[])
+{
+    int savCP = GetConsoleOutputCP();
+    SetConsoleOutputCP(65001);
+
+	int rc = 1;
+    char** argv = ExArgv_wargvToUtf8(argc, wargv);
+	if (argv) {
+		static App app;
+    	rc = app.main(argc, argv);
+    }
+	ExArgv_Free(&argv);
+
+    SetConsoleOutputCP(savCP);
+    return rc;
+}
+#endif

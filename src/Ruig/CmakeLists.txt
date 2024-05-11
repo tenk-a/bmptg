@@ -17,6 +17,7 @@ set(RUIG_SRCS
     ${SRC_DIR}/Ruig/RuigMgr.hpp
     ${SRC_DIR}/Ruig/stdafx.h
     ${SRC_DIR}/Ruig/targetver.h
+    ${SRC_DIR}/Ruig/ExArgv_conf.h
 )
 
 set(IMGFMT_SRCS
@@ -49,12 +50,12 @@ set(MISC_SRCS
     ${SRC_DIR}/misc/intrusive_ptr.hpp
     ${SRC_DIR}/misc/intrusive_ptr_ref_count.hpp
     ${SRC_DIR}/misc/File.hpp
-    ${SRC_DIR}/misc/ExArgv.c
-    ${SRC_DIR}/misc/ExArgv.h
     ${SRC_DIR}/misc/fks_file_time.c
     ${SRC_DIR}/misc/fks_file_time.h
     ${SRC_DIR}/misc/mem_mac.h
     ${SRC_DIR}/misc/misc.hpp
+    ${SRC_DIR}/misc/ExArgv.c
+    ${SRC_DIR}/misc/ExArgv.h
 )
 
 # set(CMAKE_CXX_STANDARD 11)
@@ -137,7 +138,7 @@ add_executable(${PROJECT_NAME}
 add_dependencies(${PROJECT_NAME} libjpeg-turbo)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-    $(ADD_INC_DIRS)
+    ${ADD_INC_DIRS}
     ${SRC_DIR}/bmptg
     ${SRC_DIR}/ImgFmt
     ${SRC_DIR}/Proc
