@@ -14,6 +14,8 @@
 #include <io.h>
 #include <windows.h>
 #else
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
 #endif
 
@@ -578,7 +580,7 @@ int fil_fdateCmp(const char *tgt, const char *src)
 
 #if defined(_WIN32)
 #undef mkdir
-#define mkdir(a,b)	mkdir(a)
+#define mkdir(a,b)	_mkdir(a)
 #endif
 
 /// ディレクトリ掘り機能付きのfopen

@@ -636,7 +636,7 @@ static inline int bmp_getPix8(const uint8_t *s, int x, int bpp, uint32_t *dmy_cl
     int     c;
     int     r,g,b;
 
-    dmy_clut;
+    (void)dmy_clut;
 
     if (bpp <= 1) {
         int n = x & 7;
@@ -723,7 +723,7 @@ static inline int bmp_getPix42(const uint8_t *s, int x, int bpp, uint32_t *dmy_c
     int     m = (1<<bpp)-1;
     int     j = 12-bpp;
 
-    dmy_clut;
+    (void)dmy_clut;
 
     if (bpp <= 1) {
         //c = (s[x>>3] & (0x80 >> (x&7))) ? 1 : 0;
@@ -800,7 +800,7 @@ static int bmp_getPix1(const uint8_t *s, int x, int bpp, uint32_t *dmy_clut, int
     // 多色の 256色化は G3R3B2 形式への簡易変換.
     int c, n;
 
-    dmy_clut;
+    (void)dmy_clut;
 
     if (bpp <= 1) {
         n = x & 7;

@@ -263,7 +263,7 @@ unsigned DecreaseColorHst<A>::conv1(unsigned char* pDst, const unsigned* pSrc, u
         pClut[i] = argb(a,r,g,b);
     }
 
-    delete pHst;
+    delete[] pHst;
     return clutSize;
 }
 

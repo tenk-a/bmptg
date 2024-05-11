@@ -420,7 +420,7 @@ static inline int bmp_getPix8(const uint8_t *s, int x, int bpp, uint32_t *dmy_cl
 {
     int c,r,g,b;
 
-    dmy_clut;
+    (void)dmy_clut;
 
     if (bpp <= 1) {
         int n = x & 7;
@@ -457,7 +457,7 @@ static inline int bmp_getPix42(const uint8_t *s, int x, int bpp, uint32_t *dmy_c
 {
     int c,r,g,b, m = (1<<bpp)-1, j=12-bpp;
 
-    dmy_clut;
+    (void)dmy_clut;
 
     if (bpp <= 1) {
         //c = (s[x>>3] & (0x80 >> (x&7))) ? 1 : 0;
@@ -495,7 +495,7 @@ static int bmp_getPix1(const uint8_t *s, int x, int bpp, uint32_t *dmy_clut, int
 {
     int c, n;
 
-    dmy_clut;
+    (void)dmy_clut;
 
     if (bpp <= 1) {
         n = x & 7;

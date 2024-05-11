@@ -1090,7 +1090,7 @@ int Opts::scan(const char *a)
             if (*p == 'a' || *p == 'A') {
                 ++p;
                 o->genAlpEx = 8;
-                if (*p < 0x80 && isdigit(*p))
+                if (*p < 0x80U && isdigit(*p))
                     o->genAlpEx = strToUI(p, 10);
             } else {
                 goto OPT_ERR;
@@ -1159,7 +1159,7 @@ void Opts::readClutBin(char const* fname, int clutbpp)
     if (fmt > 0 && clutNum > 0) {
         if (clutNum > 256)
             clutNum = 256;
-        int n = bm_getClut(src, o->clutChg, clutNum);
+        unsigned n = bm_getClut(src, o->clutChg, clutNum);
         for (unsigned i = 0; i < n; ++i)
             o->clutChgFlg[i] = 1;
      #ifdef MY_H

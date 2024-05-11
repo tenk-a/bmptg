@@ -127,6 +127,7 @@ if(WIN32)
 
   if(MSVC)
     add_compile_options(-DUNICODE -D_UNICODE)
+    add_compile_options(-D_CRT_SECURE_NO_WARNINGS)
     set(JPEG_LIB ${LIBJPEG_TURBO_INSTALL_DIR}/lib/turbojpeg-static.lib)
     # set(ADD_LIBS kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib)
     set(ADD_LIBS kernel32.lib user32.lib shell32.lib advapi32.lib)

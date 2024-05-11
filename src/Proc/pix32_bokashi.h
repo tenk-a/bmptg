@@ -209,7 +209,7 @@ inline void pix32_bokashiAlpLtEqThreshold(unsigned *dst, const unsigned *src, in
             c = ps[-1];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa > thre);
+                af &= (aa > unsigned(thre));
                 a += aa        * K1;
                 r += PIX32_GET_R(c) * K1;
                 g += PIX32_GET_G(c) * K1;
@@ -220,7 +220,7 @@ inline void pix32_bokashiAlpLtEqThreshold(unsigned *dst, const unsigned *src, in
             c = ps[1];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa > thre);
+                af &= (aa > unsigned(thre));
                 a += aa        * K1;
                 r += PIX32_GET_R(c) * K1;
                 g += PIX32_GET_G(c) * K1;
@@ -231,7 +231,7 @@ inline void pix32_bokashiAlpLtEqThreshold(unsigned *dst, const unsigned *src, in
             c = ps[-w];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa > thre);
+                af &= (aa > unsigned(thre));
                 a += aa        * K1;
                 r += PIX32_GET_R(c) * K1;
                 g += PIX32_GET_G(c) * K1;
@@ -242,7 +242,7 @@ inline void pix32_bokashiAlpLtEqThreshold(unsigned *dst, const unsigned *src, in
             c = ps[w];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa > thre);
+                af &= (aa > unsigned(thre));
                 a += aa        * K1;
                 r += PIX32_GET_R(c) * K1;
                 g += PIX32_GET_G(c) * K1;
@@ -253,7 +253,7 @@ inline void pix32_bokashiAlpLtEqThreshold(unsigned *dst, const unsigned *src, in
             c = ps[-w-1];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa > thre);
+                af &= (aa > unsigned(thre));
                 a += aa        * K2;
                 r += PIX32_GET_R(c) * K2;
                 g += PIX32_GET_G(c) * K2;
@@ -264,7 +264,7 @@ inline void pix32_bokashiAlpLtEqThreshold(unsigned *dst, const unsigned *src, in
             c = ps[-w+1];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa > thre);
+                af &= (aa > unsigned(thre));
                 a += aa        * K2;
                 r += PIX32_GET_R(c) * K2;
                 g += PIX32_GET_G(c) * K2;
@@ -275,7 +275,7 @@ inline void pix32_bokashiAlpLtEqThreshold(unsigned *dst, const unsigned *src, in
             c = ps[ w-1];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa > thre);
+                af &= (aa > unsigned(thre));
                 a += aa        * K2;
                 r += PIX32_GET_R(c) * K2;
                 g += PIX32_GET_G(c) * K2;
@@ -286,7 +286,7 @@ inline void pix32_bokashiAlpLtEqThreshold(unsigned *dst, const unsigned *src, in
             c = ps[ w+1];
             aa = PIX32_GET_A(c);
             if (aa) {
-                af &= (aa > thre);
+                af &= (aa > unsigned(thre));
                 a += aa        * K2;
                 r += PIX32_GET_R(c) * K2;
                 g += PIX32_GET_G(c) * K2;
@@ -338,7 +338,7 @@ inline void pix32_alpBokasi(unsigned *pix, unsigned wid, unsigned hei, int dmy_s
     #define P(x,y)          pix[(y)*w + (x)]
     #define R(x,y)          (((x) >= 0 && (y) >= 0 && (x) < w && (y) < h))
     #define K(c)            ((PIX32_GET_G(c) * 9 + PIX32_GET_R(c) * 5 + PIX32_GET_B(c) * 2)>>4)
-    #define A(x,y)          ((qr = R(x,y)) == 0 || (qr && PIX32_GET_A(P(x,y))))
+    #define A(x,y)          (((qr = R(x,y))) == 0 || (qr && PIX32_GET_A(P(x,y))))
     //#define DK(x,y,kk,k)  {if (A(x,y)) {int c_ = P(x,y); kk += K(c_) - k;}}
     #define DK(x,y,kk,k)    {if (R(x,y) && PIX32_GET_A(P(x,y))) {int c_ = P(x,y); kk += K(c_) - k;}}
     (void)dmy_sikii;

@@ -30,7 +30,7 @@ public:
 template<class A>
 bool DecreaseColorLowBpp<A>::convPix32ToBpp1(uint8_t* pDst, const uint32_t* pSrc, unsigned w, unsigned h, unsigned* clut)
 {
-    int             wh   = w * h;
+    unsigned        wh   = w * h;
     pix32_kyuv_t*   kyuv = new pix32_kyuv_t[ wh ];
     if (!kyuv)
         return false;

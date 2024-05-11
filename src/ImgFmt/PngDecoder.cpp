@@ -380,7 +380,7 @@ bool    PngDecoder::read(void* pix)
     png_read_end(png_ptr_, info_ptr_);
 
     png_destroy_read_struct(&png_ptr_, &info_ptr_, NULL);
-    delete row_pointers;
+    delete[] row_pointers;
 
     return 1;
 }

@@ -166,7 +166,7 @@ bool GrayClut<A>::fromGreyToBppN(unsigned char* pDst, const unsigned* pSrc, unsi
 template<class A>
 bool GrayClut<A>::fromGreyToBpp1Clut(unsigned char* pDst, const unsigned* pSrc, unsigned w, unsigned h, unsigned* clut)
 {
-    int c;
+    unsigned c;
     unsigned wh = w * h;
     // まず bpp8 にする.
     uint64_t total = 0;
@@ -174,7 +174,7 @@ bool GrayClut<A>::fromGreyToBpp1Clut(unsigned char* pDst, const unsigned* pSrc, 
         pDst[j] = c = (uint8_t)pSrc[j];
         total += c;
     }
-    int thr = total / wh;
+    unsigned thr = total / wh;
     uint64_t u_total = 0;
     uint64_t l_total = 0;
     uint32_t u_count = 0;

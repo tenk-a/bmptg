@@ -26,7 +26,7 @@
 #include "pix32_kyuv.h"
 #include "pix32_resize.h"
 #include "pix32_rotate.h"
-#include "Pix32_Paint.hpp"
+#include "pix32_paint.hpp"
 #include "pix32_bokashi.h"
 #include "pix32_filter.h"
 #include "pix_subr.h"
@@ -1669,7 +1669,7 @@ int ConvOne::writeFile() {
             // ファイル生成.
             if (strlen(dstName_) < FIL_NMSZ-4) {        // すでにファイルがあった場合、.bak生成.
                 char            tmpName[FIL_NMSZ];
-                sprintf(tmpName,"%s.bak", dstName_);
+                snprintf(tmpName,FIL_NMSZ,"%s.bak", dstName_);
                 remove(tmpName);
                 rename(dstName_, tmpName);
             }
@@ -1707,7 +1707,7 @@ void ConvOne::saveMapFile(const char *name, const char *ext, UINT8_T *map, int m
     //  ext = "mp";
     fname_chgExt(strcpy(nm, name), (pix) ?ext:"mh");
     if (strlen(nm) < FIL_NMSZ-4) {
-        sprintf(tmpName,"%s.bak", nm);
+        snprintf(tmpName,FIL_NMSZ,"%s.bak", nm);
         remove(tmpName);
         rename(nm, tmpName);
     }

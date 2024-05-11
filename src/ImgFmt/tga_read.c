@@ -616,7 +616,7 @@ static inline int tga_getPix8(const uint8_t *s, int x, int bpp, uint32_t *dmy_cl
     int     c;
     int     r,g,b;
 
-    dmy_clut;
+    (void)dmy_clut;
 
     if (bpp <= 8) {
         return s[x] + ofs;

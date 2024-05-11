@@ -133,6 +133,7 @@
 #else   // linux
  #include <dirent.h>
  #include <sys/stat.h>
+ #include <sys/types.h>
  #include <fnmatch.h>
 #endif
 
@@ -942,7 +943,6 @@ static BOOL ExArgv_getResFile(char_t const* fpath, ExArgv_Vector* pVec, BOOL not
 	while (s < src_e) {
 		unsigned char*  d;
 		unsigned char*  p;
-		char_t*			arg;
 		BOOL            dst_ovr = 0;
         unsigned        f = 0;
         unsigned        c;
@@ -1036,8 +1036,8 @@ static size_t ExArgv_fileSizeAW(char_t const* fpath)
 	return (size_t)(-1);
  #else
     struct stat st;
-    int   rc = ::stat(fpath, &st);
-    return (rc == 0) ? std::size_t(st.st_size) : size_t(-1);
+    int   rc = stat(fpath, &st);
+    return (rc == 0) ? (size_t)st.st_size : (size_t)-1;
  #endif
 }
 
@@ -1094,6 +1094,15 @@ static void* ExArgv_fileLoadMallocAW(char_t const* fpath, size_t* pSize)
     }
  #else
 	{
+	 #if 1
+	    FILE* fp = fopen(fpath, "rb");
+	    if (fp == NULL) {
+			ExArgv_free(buf);
+	        return NULL;
+	    }
+	    rbytes = fread(buf, 1, bytes, fp);
+	    fclose(fp);
+	 #else
 	    int fd = open(fpath, O_RDONLY);
 	    if (fd == -1) {
 			ExArgv_free(buf);
@@ -1101,6 +1110,7 @@ static void* ExArgv_fileLoadMallocAW(char_t const* fpath, size_t* pSize)
 	    }
 	    rbytes = read(fd, buf, bytes);
 	    close(fd);
+	 #endif
     }
  #endif
 	if (rbytes == bytes) {
