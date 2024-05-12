@@ -115,6 +115,16 @@ set(PNG_SRCS
     ${PNG_DIR}/pngwutil.c
 )
 
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm|aarch64")
+  set(PNG_SRCS
+    ${PNG_SRCS}
+    ${PNG_DIR}/arm/arm_init.c
+    ${PNG_DIR}/arm/palette_neon_intrinsics.c
+    ${PNG_DIR}/arm/filter_neon_intrinsics.c
+    ${PNG_DIR}/arm/filter_neon.S
+  )
+endif()
+
 add_compile_options(-DUSE_JPG -DUSE_PNG -DEXARGV_USE_CONF_H)
 
 if(NOT MSVC)
