@@ -1059,6 +1059,8 @@ size_t ExArgv_fileSize(char_t const* fpath)
 }
 #endif
 
+/** Load the file, add '\0'*4 to the end and return malloced memory.
+ */
 static void* ExArgv_fileLoadMallocAW(char_t const* fpath, size_t* pSize)
 {
 	char*  buf;
@@ -1075,26 +1077,17 @@ static void* ExArgv_fileLoadMallocAW(char_t const* fpath, size_t* pSize)
 	{
 		DWORD  r   = 0;
 		HANDLE hdl = CreateFile(fpath, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-		if (!hdl || hdl == INVALID_HANDLE_VALUE)
+		if (!hdl || hdl == INVALID_HANDLE_VALUE) {
+			ExArgv_free(buf);
 			return NULL;
+		}
 		if (!ReadFile(hdl, buf, (DWORD)bytes, &r, 0))
 		 	r = 0;
 		rbytes = r;
 		CloseHandle(hdl);
 	}
- #elif defined(DOSWIN32)
+ #elif 1
 	{
-	    int fd = _open(fpath, _O_RDONLY|_O_BINARY);
-	    if (fd == -1) {
-			ExArgv_free(buf);
-	        return NULL;
-	    }
-	    rbytes = read(fd, buf, bytes);
-	    close(fd);
-    }
- #else
-	{
-	 #if 1
 	    FILE* fp = fopen(fpath, "rb");
 	    if (fp == NULL) {
 			ExArgv_free(buf);
@@ -1102,7 +1095,9 @@ static void* ExArgv_fileLoadMallocAW(char_t const* fpath, size_t* pSize)
 	    }
 	    rbytes = fread(buf, 1, bytes, fp);
 	    fclose(fp);
-	 #else
+	}
+ #else
+	{
 	    int fd = open(fpath, O_RDONLY);
 	    if (fd == -1) {
 			ExArgv_free(buf);
@@ -1110,14 +1105,14 @@ static void* ExArgv_fileLoadMallocAW(char_t const* fpath, size_t* pSize)
 	    }
 	    rbytes = read(fd, buf, bytes);
 	    close(fd);
-	 #endif
     }
  #endif
 	if (rbytes == bytes) {
-		buf[bytes] = 0;
+		buf[bytes] = buf[bytes+1] = buf[bytes+2] = buf[bytes+3] = 0;
 	} else {
 		ExArgv_free(buf);
-		buf = NULL;
+		buf   = NULL;
+		pSize = NULL;
 	}
 	if (pSize)
 		*pSize = bytes;
@@ -1523,7 +1518,7 @@ static int  ExArgv_Vector_findFname(ExArgv_Vector* pVec, char_t const* srchName,
     size_t              baseNameSz;
 
 	if (!hdl || hdl == INVALID_HANDLE_VALUE)
-		return -1;
+		return 0;
 
     pathBuf  = EXARGV_ALLOC(char_t, FILEPATH_SZ);
     if (pathBuf == NULL)
