@@ -41,19 +41,6 @@ int     dbgExLog_sw__ = 0;      ///< [直接使用しちゃダメ] dbg_printf等
 
 
 
-
-/*--------------------------------------------------------------------------*/
-/* 文字列処理関係                                                           */
-
-#if 0
-static inline char *strNCpyZ(char *dst, const char *src, size_t size)
-{
-    strncpy(dst, src, size);
-    dst[size-1] = 0;
-    return dst;
-}
-#endif
-
 /*--------------------------------------------------------------------------*/
 /* エラー処理付きの標準関数                                                 */
 
@@ -123,14 +110,41 @@ int freeE(void *p)
 int  fname_sjisFlag = 0;
 
 
-
+#if 0
 int   fname_setSjisMode(int sw)
 {
     int n = fname_sjisFlag;
     fname_sjisFlag = sw;
     return n;
 }
+#endif
 
+
+int fname_startsWith(char const* a, char const* prefix)
+{
+ #if defined(_WIN32) || defined(_MSC_VER)
+	return strncasecmp(a, prefix, strlen(prefix)) == 0;
+ #else
+	return strncmp(a, prefix, strlen(prefix)) == 0;
+ #endif
+}
+
+
+int fname_isAbsolutePath(char const* s)
+{
+ #if defined(_WIN32) || defined(_MSC_VER)
+    if (fname_isDirSep(*s))
+        return 1;
+    if (*s && s[1] == ':' && fname_isDirSep(s[2])
+        && (*s >= 'A' && *s <= 'Z' || *s >= 'a' && *s <= 'z')
+    ) {
+        return 1;
+    }
+    return 0;
+  #else
+    return fname_isDirSep(*s);
+  #endif
+}
 
 
 char *fname_baseName(const char *adr)
@@ -145,7 +159,6 @@ char *fname_baseName(const char *adr)
     }
     return (char*)adr;
 }
-
 
 
 char *fname_getExt(const char *name)
@@ -182,7 +195,7 @@ char *fname_chgExt(char filename[], const char *ext)
 }
 
 
-
+#if 0
 char *fname_addExt(char filename[], const char *ext)
 {
     if (strrchr(fname_baseName(filename), '.') == NULL) {
@@ -191,7 +204,7 @@ char *fname_addExt(char filename[], const char *ext)
     }
     return filename;
 }
-
+#endif
 
 
 
@@ -271,186 +284,7 @@ char *fname_backslashToSlash(char filePath[])
 }
 
 
-#if 0
-/** ディレクトリ名とファイル名をくっつけたものをstrdupする
- *  拡張子の付け替えができるよう、+5バイトは余分にメモリは確保する
- */
-char *fname_dirNameDupE(const char *dir, const char *name)
-{
-    const char *m;
-
-    m = fname_dirNameDup(dir,name);
-    if (m == NULL) {
-        err_abortMsg("メモリが足りません\n");
-    }
-    return (char*)m;
-}
-
-
-
-/** ディレクトリ名とファイル名をくっつけたものをstrdupする.
- *  拡張子の付け替えができるよう、+5バイトは余分にメモリは確保する.
- */
-char *fname_dirNameDup(const char *dir, const char *name)
-{
-    size_t  l,n;
-    char *m;
-
-    l = (dir) ? strlen(dir) : 0;
-    n = (name) ? strlen(name) : 0;
-    m = (char*)calloc(1, l+n+1+7);
-    if (m == NULL)
-        return NULL;
-    if (l) {
-        strcpy(m, dir);
-        fname_delLastDirSep(m);
-        strcat(m, "/");
-    }
-    if (n) {
-        strcat(m, name);
-    }
-    return m;
-}
-#endif
-
-
-#if 0
-char *fname_dirDirNameChgExt(char *onam, const char *dir, const char *mdir, const char *name, const char *chgext)
-{
-    if (onam == NULL || name == NULL || strcmp(name,".") == 0)
-        return NULL;
-    onam[0] = 0;
-    if (dir && dir[0])
-        strcpy(onam, dir);
-    if (mdir && mdir[0]) {      // ソースディレクトリが指定されていれば、元の指定名のディレクトリも付ける.
-        if (onam[0])
-            strcat(onam, "/");
-        strcat(onam, mdir);
-    }
-    /*if (name)*/ {
-        if (onam[0])
-            strcat(onam, "/");
-        strcat(onam, name);
-        fname_chgExt(onam, chgext);
-    }
-    return onam;
-}
-
-
-char *fname_dirNameChgExt(char *nam, const char *dir, const char *name, const char *chgext)
-{
-    if (name == NULL || strcmp(name,".") == 0)
-        return NULL;
-    if (dir && *dir && name[0] != '/' && name[1] != ':') {
-        sprintf(nam, "%s/%s", dir, name);
-    } else {
-        sprintf(nam, "%s", name);
-    }
-    fname_chgExt(nam, chgext);
-    //strupr(nam);
-    return nam;
-}
-
-
-
-char *fname_dirNameAddExt(char *nam, const char *dir, const char *name, const char *addext)
-{
-    if (name == NULL || strcmp(name,".") == 0)
-        return NULL;
-    if (dir && *dir && name[0] != '/' && name[1] != ':') {
-        sprintf(nam, "%s/%s", dir, name);
-    } else {
-        sprintf(nam, "%s", name);
-    }
-    fname_addExt(nam, addext);
-    //strupr(nam);
-    return nam;
-}
-
-
-/// name 中のドライブ名とベース名を抜いたディレクトリ名をmdir[]に入れて返す.
-char *fname_getMidDir(char mdir[], const char *name)
-{
-    char *d;
-
-    if (mdir == NULL || name == NULL)
-        return NULL;
-    if (name[1] == ':')     // ドライブ名付きだった.
-        name += 2;
-    if (name[0] == '/')    // ルート指定されてた.
-        name += 1;
-    strcpy(mdir, name);
-    d = fname_baseName(mdir);
-    if (d <= mdir) {
-        mdir[0] = 0;
-    } else if (d[-1] == '/') {
-        *d = '\0';
-    }
-    return mdir;
-}
-#endif
-
-
 /*--------------------------------------------------------------------------*/
-
-#if 0
-int fil_isWildC(const char *onam)
-{
-    return (strpbrk(onam, "*?") != NULL);
-}
-#endif
-
-#if 1 //defined(__SC__) || defined(__LCC__) // dmc, lcc
-// _finddatai64_t が無い場合用...
-// なんだが windows 系だとむしろ、このほうが汎用的だろう...
-// が、コンパイル通しただけで、変換テスト等していないので、とりあえず暫定物.
-
-#if 0
-static WIN32_FIND_DATA  fil_findData;
-static char             fil_findDir[FIL_NMSZ];
-static char *           fil_findBase;
-static HANDLE           fil_findHdl;
-
-char *fil_findFirstName(char dst[], const char *src)
-{
-    fil_findHdl = FindFirstFile(src, &fil_findData);
-    if (fil_findHdl == INVALID_HANDLE_VALUE) {
-        fil_findDir[0] = 0;
-        return NULL;
-    }
-    strNCpyZ(fil_findDir, src, FIL_NMSZ);
-    fil_findBase   = fname_baseName(fil_findDir);
-    *fil_findBase  = 0;
-
-    //
-    strcpy(dst, fil_findDir);
-    strNCpyZ(dst+strlen(dst), fil_findData.cFileName, FIL_NMSZ-strlen(dst));
-
-    if (fil_findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-        return fil_findNextName(dst);
-    }
-    return dst;
-}
-
-
-
-char *fil_findNextName(char dst[])
-{
-    if (fil_findHdl == INVALID_HANDLE_VALUE)
-        return NULL;
-    do {
-        if (FindNextFile(fil_findHdl, &fil_findData) == 0) {
-            FindClose(fil_findHdl);
-            fil_findHdl = INVALID_HANDLE_VALUE;
-            return NULL;
-        }
-        strcpy(dst, fil_findDir);
-        strNCpyZ(dst+strlen(dst), fil_findData.cFileName, FIL_NMSZ-strlen(dst));
-    } while (fil_findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY);
-    return dst;
-}
-
-#endif
 
 /** 二つのファイルの日付の大小を比較する.
  *  tgt が新しければ 1(正), 同じならば 0, tgt が古ければ -1(負)
@@ -495,84 +329,6 @@ int fil_fdateCmp(const char *tgt, const char *src)
 	return tgt_st.st_mtime - src_st.st_mtime;
  #endif
 }
-
-
-
-#else   // VC BC GCC WatcomC
-
-#if 0
-static struct _finddatai64_t fil_findData;
-static char                  fil_findDir[FIL_NMSZ];
-static char *                fil_findBase;
-static ptrdiff_t             fil_findHdl;
-
-char *fil_findFirstName(char dst[], const char *src)
-{
-    fil_findHdl = _findfirsti64((char *)src, &fil_findData);
-    if (fil_findHdl == -1) {
-        fil_findDir[0] = 0;
-        return NULL;
-    }
-    strNCpyZ(fil_findDir, src, FIL_NMSZ);
-    fil_findBase   = fname_baseName(fil_findDir);
-    *fil_findBase  = 0;
-    //
-
-    strcpy(dst, fil_findDir);
-    strNCpyZ(dst+strlen(dst), fil_findData.name, FIL_NMSZ-strlen(dst));
-
-    if (fil_findData.attrib & _A_SUBDIR) {
-        return fil_findNextName(dst);
-    }
-    return dst;
-}
-
-
-char *fil_findNextName(char dst[])
-{
-    if (fil_findHdl == -1)
-        return NULL;
-    do {
-        if (_findnexti64(fil_findHdl, &fil_findData)) {
-            _findclose(fil_findHdl);
-            fil_findHdl = -1;
-            return NULL;
-        }
-        strcpy(dst, fil_findDir);
-        strNCpyZ(dst+strlen(dst), fil_findData.name, FIL_NMSZ-strlen(dst));
-    } while (fil_findData.attrib & _A_SUBDIR);
-    return dst;
-}
-
-#endif
-
-/** 二つのファイルの日付の大小を比較する.
- *  tgt が新しければ 1(正), 同じならば 0, tgt が古ければ -1(負)
- */
-int fil_fdateCmp(const char *tgt, const char *src)
-{
-    struct _finddatai64_t srcData;
-    struct _finddatai64_t tgtData;
-    ptrdiff_t   srcFindHdl, tgtFindHdl;
-    time_t srcTm, tgtTm;
-
-    srcFindHdl = _findfirsti64((char *)src, &srcData);
-    srcTm = (srcFindHdl == -1) ? 0 : srcData.time_write;
-
-    tgtFindHdl = _findfirsti64((char *)tgt, &tgtData);
-    tgtTm = (tgtFindHdl == -1) ? 0 : tgtData.time_write;
-
-    // DBG_PRINTF(("%x - %x = %d\n", tgtTm, srcTm, tgtTm - srcTm));
-
-    if (tgtTm < srcTm)
-        return -1;
-    else if (tgtTm > srcTm)
-        return 1;
-    return 0;
-}
-
-#endif
-
 
 
 /* ------------------------- */
@@ -708,124 +464,6 @@ void fcloseE(FILE *fp)
         }
     }
 }
-
-
-/* ------------------------------------------------------------------------ */
-/* エラーexitする fgetc,fputcファイル関数                                   */
-
-
-/* ------------------------------------------------------------------------ */
-/* 文字列のリストを作成     */
-#if 0
-/** 文字列のリストを追加        */
-slist_t *slist_add(slist_t **p0, char *s)
-{
-    slist_t* p;
-
-    p = *p0;
-    if (p == NULL) {
-        p = (slist_t*)callocE(1, sizeof(slist_t));
-        p->s = strdupE(s);
-        *p0 = p;
-    } else {
-        while (p->link != NULL) {
-            p = p->link;
-        }
-        p->link = (slist_t*)callocE(1, sizeof(slist_t));
-        p = p->link;
-        p->s = strdupE(s);
-    }
-    return p;
-}
-
-
-/** 文字列のリストを削除    */
-void slist_free(slist_t **p0)
-{
-    slist_t *p, *q;
-
-    for (p = *p0; p; p = q) {
-        q = p->link;
-        freeE(p->s);
-        freeE(p);
-    }
-    *p0 = NULL;
-}
-
-#endif
-
-
-#if 0
-/*--------------------------------------------------------------------------*/
-/* 一つのテキストファイル読みこみ                                           */
-
-unsigned int    TXT1_line;
-char    TXT1_name[FIL_NMSZ];
-FILE    *TXT1_fp;
-
-
-void TXT1_error(const char *fmt, ...)
-{
-    va_list app;
-
-    va_start(app, fmt);
-    fprintf(stdout, "%-12s(%5d): ", TXT1_name, TXT1_line);
-    vfprintf(stdout, fmt, app);
-    va_end(app);
-    return;
-}
-
-
-void TXT1_errorE(const char *fmt, ...)
-{
-    va_list app;
-
-    va_start(app, fmt);
-    fprintf(stdout, "%-12s(%5d): ", TXT1_name, TXT1_line);
-    vfprintf(stdout, fmt, app);
-    va_end(app);
-    exit(1);
-}
-
-
-int TXT1_open(const char *name)
-{
-    TXT1_fp = fopen(name,"rt");
-    if (TXT1_fp == 0)
-        return -1;
-    strcpy(TXT1_name, name);
-    TXT1_line = 0;
-    return 0;
-}
-
-
-void TXT1_openE(const char *name)
-{
-    TXT1_fp = fopenE(name,"rt");
-    strcpy(TXT1_name, name);
-    TXT1_line = 0;
-}
-
-
-char *TXT1_getsE(char *buf, int sz)
-{
-    char *p;
-
-    p = fgets(buf, sz, TXT1_fp);
-    if (ferror(TXT1_fp)) {
-        TXT1_error("file read error\n");
-        exit(1);
-    }
-    TXT1_line++;
-    return p;
-}
-
-
-void TXT1_close(void)
-{
-    fcloseE(TXT1_fp);
-}
-#endif
 
 
 /*--------------------------------------------------------------------------*/

@@ -1253,7 +1253,7 @@ public:
 				} else if (*arg == ':') {
 					continue;
 				}
-				if (!fnameIsAbsolutePath(arg)) {
+				if (!fname_isAbsolutePath(arg)) {
 					snprintf(nameBuf_, FIL_NMSZ, "%s/%s", srcDir, arg);
 					free(arg);
 					argv[idx] = arg = strdupE(nameBuf_);
@@ -1302,7 +1302,7 @@ public:
 					snprintf(nameBuf_, FIL_NMSZ, "%s", tgtname);
             } else {
 				char const* tgtname = srcpath;
-				if (srcDirLen && fnameStartsWith(srcpath, srcDir)) {    // -sソースディレクトリファイル?
+				if (srcDirLen && fname_startsWith(srcpath, srcDir)) {    // -sソースディレクトリファイル?
 					tgtname += srcDirLen + 1;
 				} else {
 					tgtname =  fname_baseName(srcpath);                 // 違えば入力のフォルダは無視.
