@@ -1,4 +1,4 @@
-if "%BmpTgExe%"=="" set BmpTgExe=..\bld\bmptg\Release\bmptg.exe
+if "%BmpTgExe%"=="" set BmpTgExe=..\bld\Release\bmptg.exe
 set SRCDIR=src_book
 set DSTDIR=dst_book
 set JPG_OPTS=:jpg -xq80 -xqg33

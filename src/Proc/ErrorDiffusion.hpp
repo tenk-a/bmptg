@@ -340,9 +340,14 @@ public:
 		        static unsigned const toneNums[3] = { 4, 4, 4, };
 		        return conv((uint32_t*)dst, (uint32_t const*)src, w, h, ditTyp, toneNums, toneTbl, clut);
 			} else /*if (colNum == 3)*/ {
-    			if (monoColIdx == 0 || monoColIdx == 7)
+				uint32_t W = 0xFFffffff;
+    			if (monoColIdx == 7) {
 	    		    monoCol = 0xff00ffff;	// 水色.
-                const uint32_t clut[] = { 0xFF000000, 0xFF000000|monoCol, 0xFFffffff, };	// 黒 (色) 白.
+	    		} else if (monoColIdx == 0) {
+	    		    monoCol = 0xff0000ff;	// 青.
+	    			W = 0xFF00FFFF;			// 水色.
+	    		}
+                const uint32_t clut[] = { 0xFF000000, 0xFF000000|monoCol, W, };	// 黒 (色) 白.
                 unsigned B = (uint8_t(monoCol >> 8) * 6 + uint8_t(monoCol >> 16) * 3 + uint8_t(monoCol) * 1) / 10u;
                 B = (B << 8) | B;
 				unsigned const toneTbl[3][64] = {

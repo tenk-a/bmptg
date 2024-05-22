@@ -1148,7 +1148,7 @@ void ConvOne::patternDither() {
         if (opts_.ditTyp & 0xC000) {
             errorDiffusion1b(dbpp);
         } else {
-        if (varbose_) printf("->dit%d:0x%x", dbpp,opts_.ditTyp);
+            if (varbose_) printf("->dit%d:0x%x", dbpp,opts_.ditTyp);
             PaternDither    paternDither;
             paternDither.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, dbpp, opts_.ditTyp | (opts_.ditAlpFlg << 8));
         }
@@ -1158,7 +1158,7 @@ void ConvOne::patternDither() {
 /// 誤差拡散.
 void ConvOne::errorDiffusion1b(int dpp) {
     // RGBを何階調にするか.
-    unsigned const toneSizeTbl[][3] = {
+    static unsigned const toneSizeTbl[][3] = {
         // r   g   b
         {  2,  2,  2, },    // 0 :  3bit r1g1b1     8色.
         {  3,  3,  3, },    // 1 :  4bit           27色.

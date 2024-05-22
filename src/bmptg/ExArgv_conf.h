@@ -1,62 +1,62 @@
 #ifndef EXARGV_CONF_H_INCLUDED__
 #define EXARGV_CONF_H_INCLUDED__
 
-//[] 定義すると、WinMain 用に ExArgv_forWinMain を生成.
+// ---------------------------------------------------------------------------
+// Configuration settings.
+
+// [] Define to generate ExArgv_forWinMain for use with WinMain.
 //#define EXARGV_FOR_WINMAIN
 
-//[] 定義すると、wchar_t 用として生成. UNICODE 定義時は自動で定義される.
-//#define EXARGV_USE_WCHAR
+// [] Define one of the following for path string character encoding.
+//    If omitted, WCHAR is used if UNICODE is defined, otherwise UTF8.
+//    Assumes UTF8 for non-Windows. MBC is for considering SJIS, etc.
+//#define EXARGV_ENCODE_ANSI    // Use A-type API on Windows. Assumes UTF8 for non-Windows.
+//#define EXARGV_ENCODE_MBC     // Use A-type API on Windows. Considers 2nd byte of DBC.
+//#define EXARGV_ENCODE_UTF8    // Use W-type API on Windows for UTF8 encoding. Same as ANSI for non-Windows.
+//#define EXARGV_ENCODE_WCHAR   // Use W-type API on Windows. Not for non-Windows.
+#define EXARGV_ENCODE_UTF8      // Use W-type API on Windows for UTF8 encoding. Same as ANSI for non-Windows.
 
-//[] 定義すると、EXARGV_USE_WCHAR を有効、ExArgv_wargvToU8等を利用可能に.
-//#define EXARGV_USE_WCHAR_TO_UTF8
-#if defined(_WIN32) && defined(UNICODE) && !defined(_ANSI)
-#define EXARGV_USE_WCHAR_TO_UTF8
-#endif
+// [] Enable wildcard specification: 1=enabled, 0=disabled, undefined=1
+//#define EXARGV_USE_WC             1
 
-//[] 定義され かつ UNICODE 未定義なら MBCS として2バイト目\文字対処を行う.
-//#define EXARGV_USE_MBC
+// [] For wildcard enabled, recursive search if wildcard ** is present:
+//      1=enabled, 0=disabled, undefined=1
+//#define EXARGV_USE_WC_REC         1
 
-//[] ワイルドカード指定を 1=有効  0=無効  未定義=デフォルト設定(1)
-//#define EXARGV_USE_WC         1
+// [] Enable @response files:
+//      1=enabled, 0=disabled, undefined=0
+//#define EXARGV_USE_RESFILE        0
+#define EXARGV_USE_RESFILE          1
 
-//[] ワイルドカードon時に、ワイルドカード文字 ** があれば再帰検索に,
-//      1=する 0=しない 未定義=デフォルト設定(1)
-//#define EXARGV_USE_WC_REC     1
+// [] Enable simple config (response) file input:
+//      1=enabled, 0=disabled, undefined=0
+//    When enabled, replaces .exe with .ini for win/dos.
+//    For non-Windows, assumes unix-style ~/.executable_name.ini
+//#define EXARGV_USE_CONFIG         0
+#define EXARGV_USE_CONFIG           1
 
-//[] @レスポンスファイルを,
-//      1=有効   0=無効  未定義=デフォルト設定(0)
-//#define EXARGV_USE_RESFILE    0
-#define EXARGV_USE_RESFILE    1
+// [] When config file input is enabled, define this to set the config file extension.
+//#define EXARGV_CONFIG_EXT         ".ini"
+#define EXARGV_CONFIG_EXT           ".ini"
 
-//[] 簡易コンフィグ(レスポンス)ファイル入力を,
-//      1=有効  0=無効  未定義=デフォルト(0)
-//   有効時は、win/dosなら .exe を .cfg に置換したパス名.
-//             以外なら unix 系だろうで ~/.実行ファイル名.cfg
-//#define EXARGV_USE_CONFIG     0
-#define EXARGV_USE_CONFIG     1
+// [] Define to use this environment variable as the command line string.
+//#define EXARGV_ENVNAME            "your_app_env_name"
 
-//[] コンフィグファイル入力有効のとき、これを定義すれば,
-//      コンフィグファイルの拡張子をこれにする.
-//#define EXARGV_CONFIG_EXT     ".ini"
-#define EXARGV_CONFIG_EXT     ".ini"
+// [] Windows only. Full path for argv[0] executable name:
+//      1=enabled, 0=disabled, undefined=0
+//    Note: bcc, dmc, watcom already use full path, so this is for vc, gcc.
+//#define EXARGV_USE_FULLPATH_ARGV0  0
 
-//[] 定義すると、この名前の環境変数をコマンドライン文字列として利用.
-//#define EXARGV_ENVNAME    "your_app_env_name"
-
-
-//[] win環境のみ. argv[0] の実行ファイル名をフルパス化.
-//      1=有効  0=無効      未定義=デフォルト(0)
-//   ※bcc,dmc,watcomは元からフルパスなので何もしません. のでvc,gcc向.
-//#define EXARGV_USE_FULLPATH_ARGV0
-
-//[] 定義すれば、filePath中の \ を / に置換.
+// [] Define to replace \ with / in filepath.
 //#define EXARGV_TOSLASH
 #define EXARGV_TOSLASH
 
-//[] 定義すれば、filePath中の / を \ に置換.
+// [] Define to replace / with \ in filepath.
 //#define EXARGV_TOBACKSLASH
 
-//[] 定義すれば、/ もオプション開始文字とみなす.
-//#define EXARGV_USE_SLASH_OPT
+// [] Treat / as option start character (1) or not (0)
+//#define EXARGV_USE_SLASH_OPT      0
 
+
+// ---------------------------------------------------------------------------
 #endif

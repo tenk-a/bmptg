@@ -765,7 +765,7 @@ int Opts::scan(const char *a)
                     o->ditAlpFlg = 1;
                     p++;
                 }
-                o->ditBpp = strToI(p,0);
+                o->ditBpp = strToI(p,10);
                 if (o->ditBpp <= 0)
                     o->ditBpp = -1;
                 else if (o->ditBpp >= 24)
@@ -773,7 +773,7 @@ int Opts::scan(const char *a)
                 o->ditTyp = errDif ? 0 /*none*/ : 2 /* 2x2 */;
                 if (*p) {
                     p++;
-                    o->ditTyp = strToI(p,0);
+                    o->ditTyp = strToI(p,10);
                 }
                 if (errDif)
                     o->ditTyp |= errDif;
@@ -1358,7 +1358,7 @@ int wmain(int argc, wchar_t* wargv[])
 		static App app;
     	rc = app.main(argc, argv);
     }
-	ExArgv_Free(&argv);
+	ExArgv_release(&argv);
     return rc;
 }
 #endif

@@ -1,5 +1,5 @@
 rem %1 ‚Í -xrc or -xrb ‚ð‘z’è
-if "%BmpTgExe%"=="" set BmpTgExe=..\bld\bmptg\Release\bmptg.exe
+if "%BmpTgExe%"=="" set BmpTgExe=..\bld\Release\bmptg.exe
 set SRCDIR=src_img_for_resize_to_large
 set DSTDIR=dst_resize_to_large
 set CMN_OPTS=:png -s%SRCDIR% -if

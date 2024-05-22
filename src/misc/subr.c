@@ -263,8 +263,6 @@ char *fname_strLwr(char *s0)
     return s0;
 }
 
-/** 全角２バイト目を考慮した strupr
- */
 /** filePath中の \ を / に置換.
  */
 char *fname_backslashToSlash(char filePath[])
