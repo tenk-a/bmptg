@@ -6,50 +6,115 @@ rem set CMN_OPTS=:png -s%SRCDIR% -b8 -if -cpm2
 
 if not exist %DSTDIR% mkdir %DSTDIR%
 
-call :CONV col008jp3            -b3 -cp1
+call :CONV col004jp2-xdp-x      -b2 -cp1 -xdpx:0
+call :CONV col004jp2-xdpx2-x    -b2 -cp1 -xdpx:1
+call :CONV col004jp2-xdpx4-x    -b2 -cp1 -xdpx:2
+call :CONV col004jp2-xdpx8-x    -b2 -cp1 -xdpx:3
+
+call :CONV col004jp2-xdh-x      -b2 -cp1 -xdhx:0
+call :CONV col004jp2-xdhx2-x    -b2 -cp1 -xdhx:1
+call :CONV col004jp2-xdhx4-x    -b2 -cp1 -xdhx:2
+call :CONV col004jp2-xdhx8-x    -b2 -cp1 -xdhx:3
+
+call :CONV col004jp2-xde-x      -b2 -cp1 -xdex:0
+call :CONV col004jp2-xdex2-x    -b2 -cp1 -xdex:1
+call :CONV col004jp2-xdex4-x    -b2 -cp1 -xdex:2
+call :CONV col004jp2-xdex8-x    -b2 -cp1 -xdex:3
+
+call :CONV col004jp2-xdp-y      -b2 -cp1 -xdpy:0
+call :CONV col004jp2-xdpx2-y    -b2 -cp1 -xdpy:1
+call :CONV col004jp2-xdpx4-y    -b2 -cp1 -xdpy:2
+call :CONV col004jp2-xdpx8-y    -b2 -cp1 -xdpy:3
+
+call :CONV col004jp2-xdh-y      -b2 -cp1 -xdhy:0
+call :CONV col004jp2-xdhx2-y    -b2 -cp1 -xdhy:1
+call :CONV col004jp2-xdhx4-y    -b2 -cp1 -xdhy:2
+call :CONV col004jp2-xdhx8-y    -b2 -cp1 -xdhy:3
+
+call :CONV col004jp2-xde-y      -b2 -cp1 -xdey:0
+call :CONV col004jp2-xdex2-y    -b2 -cp1 -xdey:1
+call :CONV col004jp2-xdex4-y    -b2 -cp1 -xdey:2
+call :CONV col004jp2-xdex8-y    -b2 -cp1 -xdey:3
+
+call :CONV col004jp2-xdp-xy      -b2 -cp1 -xdpxy:0
+call :CONV col004jp2-xdpx2-xy    -b2 -cp1 -xdpxy:1
+call :CONV col004jp2-xdpx4-xy    -b2 -cp1 -xdpxy:2
+call :CONV col004jp2-xdpx8-xy    -b2 -cp1 -xdpxy:3
+
+call :CONV col004jp2-xdh-xy      -b2 -cp1 -xdhxy:0
+call :CONV col004jp2-xdhx2-xy    -b2 -cp1 -xdhxy:1
+call :CONV col004jp2-xdhx4-xy    -b2 -cp1 -xdhxy:2
+call :CONV col004jp2-xdhx8-xy    -b2 -cp1 -xdhxy:3
+
+call :CONV col004jp2-xde-xy      -b2 -cp1 -xdexy:0
+call :CONV col004jp2-xdex2-xy    -b2 -cp1 -xdexy:1
+call :CONV col004jp2-xdex4-xy    -b2 -cp1 -xdexy:2
+call :CONV col004jp2-xdex8-xy    -b2 -cp1 -xdexy:3
+
+goto END
 
 call :CONV col008win3           -b3 -cp2
-call :CONV col016win4           -b4 -cp2
+call :CONV col008jp3            -b3 -cp1
+call :CONV col008jp3-xdpx2      -b3 -cp1 -xdp:1
+call :CONV col008jp3-xdpx4      -b3 -cp1 -xdp:2
+call :CONV col008jp3-xdpx8      -b3 -cp1 -xdp:3
+
+call :CONV col008jp3-xdh        -b3 -cp1 -xdh
+call :CONV col008jp3-xdhx2      -b3 -cp1 -xdh:1
+call :CONV col008jp3-xdhx4      -b3 -cp1 -xdh:2
+call :CONV col008jp3-xdhx8      -b3 -cp1 -xdh:3
 
 call :CONV col008jp3-xde        -b3 -cp1 -xde
 call :CONV col008jp3-xdex2      -b3 -cp1 -xde:1
 call :CONV col008jp3-xdex4      -b3 -cp1 -xde:2
 call :CONV col008jp3-xdex8      -b3 -cp1 -xde:3
-call :CONV col008jp3-xdpx2      -b3 -cp1 -xdp:1
-call :CONV col008jp3-xdpx4      -b3 -cp1 -xdp:2
-call :CONV col008jp3-xdpx8      -b3 -cp1 -xdp:3
-call :CONV col008jp3-xdo09x2    -b3 -cp1 -xdo09:1
-call :CONV col008jp3-xdo09x4    -b3 -cp1 -xdo09:2
-call :CONV col008jp3-xdo09x8    -b3 -cp1 -xdo09:3
-call :CONV col008jp3-xdo12x2    -b3 -cp1 -xdo12:1
-call :CONV col008jp3-xdo12x4    -b3 -cp1 -xdo12:2
-call :CONV col008jp3-xdo12x8    -b3 -cp1 -xdo12:3
-call :CONV col008jp3-xdo15x2    -b3 -cp1 -xdo15:1
-call :CONV col008jp3-xdo15x4    -b3 -cp1 -xdo15:2
-call :CONV col008jp3-xdo15x8    -b3 -cp1 -xdo15:3
 
-call :CONV m2col008jp3          -b3 -cp1         -cpm2
-call :CONV m2col008jp3-xde      -b3 -cp1 -xde    -cpm2
-call :CONV m2col008jp3-xdo09x8  -b3 -cp1 -xdo9:3 -cpm2
-call :CONV m2col008jp3-xdpx8    -b3 -cp1 -xdp:3  -cpm2
+call :CONV col008jp3-xdp09x2    -b3 -cp1 -xdp09:1
+call :CONV col008jp3-xdp09x4    -b3 -cp1 -xdp09:2
+call :CONV col008jp3-xdp09x8    -b3 -cp1 -xdp09:3
+call :CONV col008jp3-xdp12x2    -b3 -cp1 -xdp12:1
+call :CONV col008jp3-xdp12x4    -b3 -cp1 -xdp12:2
+call :CONV col008jp3-xdp12x8    -b3 -cp1 -xdp12:3
+call :CONV col008jp3-xdp15x2    -b3 -cp1 -xdp15:1
+call :CONV col008jp3-xdp15x4    -b3 -cp1 -xdp15:2
+call :CONV col008jp3-xdp15x8    -b3 -cp1 -xdp15:3
 
+call :CONV col008jp3m2          -b3 -cp1         -cpm2
+call :CONV col008jp3m2-xde      -b3 -cp1 -xde    -cpm2
+call :CONV col008jp3m2-xde09x8  -b3 -cp1 -xde9:3 -cpm2
+call :CONV col008jp3m2-xdh09x8  -b3 -cp1 -xdh9:3 -cpm2
+call :CONV col008jp3m2-xdp09x8  -b3 -cp1 -xdp9:3 -cpm2
+
+call :CONV col016jp4             -b4 -cp1
 call :CONV col016win4            -b4 -cp2
+call :CONV col016win4-xdpx2      -b4 -cp2 -xdp:1
+call :CONV col016win4-xdpx4      -b4 -cp2 -xdp:2
+call :CONV col016win4-xdpx8      -b4 -cp2 -xdp:3
+
+call :CONV col016win4-xdh        -b4 -cp2 -xdh
+call :CONV col016win4-xdhx2      -b4 -cp2 -xdh:1
+call :CONV col016win4-xdhx4      -b4 -cp2 -xdh:2
+call :CONV col016win4-xdhx8      -b4 -cp2 -xdh:3
+
 call :CONV col016win4-xde        -b4 -cp2 -xde
 call :CONV col016win4-xdex2      -b4 -cp2 -xde:1
 call :CONV col016win4-xdex4      -b4 -cp2 -xde:2
 call :CONV col016win4-xdex8      -b4 -cp2 -xde:3
-call :CONV col016win4-xdpx2      -b4 -cp2 -xdp:1
-call :CONV col016win4-xdpx4      -b4 -cp2 -xdp:2
-call :CONV col016win4-xdpx8      -b4 -cp2 -xdp:3
-call :CONV col016win4-xdo09x2    -b4 -cp2 -xdo09:1
-call :CONV col016win4-xdo09x4    -b4 -cp2 -xdo09:2
-call :CONV col016win4-xdo09x8    -b4 -cp2 -xdo09:3
-call :CONV col016win4-xdo12x2    -b4 -cp2 -xdo12:1
-call :CONV col016win4-xdo12x4    -b4 -cp2 -xdo12:2
-call :CONV col016win4-xdo12x8    -b4 -cp2 -xdo12:3
-call :CONV col016win4-xdo15x2    -b4 -cp2 -xdo15:1
-call :CONV col016win4-xdo15x4    -b4 -cp2 -xdo15:2
-call :CONV col016win4-xdo15x8    -b4 -cp2 -xdo15:3
+
+call :CONV col004jp2-xdp        -b2 -cp1 -xdp
+call :CONV col004jp2-xdpx2      -b2 -cp1 -xdp:1
+call :CONV col004jp2-xdpx4      -b2 -cp1 -xdp:2
+call :CONV col004jp2-xdpx8      -b2 -cp1 -xdp:3
+
+call :CONV col004jp2-xdh        -b2 -cp1 -xdh
+call :CONV col004jp2-xdhx2      -b2 -cp1 -xdh:1
+call :CONV col004jp2-xdhx4      -b2 -cp1 -xdh:2
+call :CONV col004jp2-xdhx8      -b2 -cp1 -xdh:3
+
+call :CONV col004jp2-xde        -b2 -cp1 -xde
+call :CONV col004jp2-xdex2      -b2 -cp1 -xde:1
+call :CONV col004jp2-xdex4      -b2 -cp1 -xde:2
+call :CONV col004jp2-xdex8      -b2 -cp1 -xde:3
 
 goto END
 

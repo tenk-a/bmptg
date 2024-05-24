@@ -21,6 +21,7 @@
 #include "subr.h"
 #include "ExArgv.h"
 #include "ConvOne.hpp"
+#include "../Proc/PaternDither.hpp"
 #ifdef USE_MY_FMT
 #include "my.h"
 #else
@@ -748,19 +749,27 @@ int Opts::scan(const char *a)
         switch (c) {
         case 'D':   //-xd
             {
-                o->fullColFlg      = 1;
-                unsigned errDif = 0;
-                if (*p == 'O' || *p == 'o') {   // -xdo
+                o->fullColFlg   = 1;
+                unsigned flag	= 0;
+                if (*p == 'P' || *p == 'p' || *p == 'O' || *p == 'o') {   // -xdp
                     p++;
                 } else
                 if (*p == 'E' || *p == 'e') {   // -xde 誤差拡散.
-                    errDif |= 0x8000;
+                    flag |= PaternDither::F_ERRDIF;
                     p++;
                 } else
-                if (*p == 'P' || *p == 'p') {   // -xdp 誤差拡散処理側のパターンディザを使う.
-                    errDif |= 0x4000;
+                if (*p == 'H' || *p == 'h') {   // -xdh 誤差拡散 ハーフ反映.
+                    flag |= PaternDither::F_HALF_ED;
                     p++;
                 }
+                if (*p == 'X' || *p == 'x') {
+					flag |= PaternDither::F_RGB_2BIT_X;
+                    p++;
+				}
+                if (*p == 'Y' || *p == 'y') {
+					flag |= PaternDither::F_RGB_2BIT_Y;
+                    p++;
+				}
                 if (*p == 'A' || *p == 'a') {   // -xda
                     o->ditAlpFlg = 1;
                     p++;
@@ -770,13 +779,12 @@ int Opts::scan(const char *a)
                     o->ditBpp = -1;
                 else if (o->ditBpp >= 24)
                     err_abortMsg("-xd[%d] だとディザを行えません\n");
-                o->ditTyp = errDif ? 0 /*none*/ : 2 /* 2x2 */;
+                o->ditTyp = flag ? 0 /*none*/ : 2 /* 2x2 */;
                 if (*p) {
                     p++;
                     o->ditTyp = strToI(p,10);
                 }
-                if (errDif)
-                    o->ditTyp |= errDif;
+                o->ditTyp |= flag;
             }
             break;
 

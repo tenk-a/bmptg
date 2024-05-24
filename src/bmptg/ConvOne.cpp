@@ -15,7 +15,7 @@
 #include "beta.h"
 #include "mem_mac.h"
 #include "PaternDither.hpp"
-#include "ErrorDiffusion.hpp"
+//#include "ErrorDiffusion.hpp"
 #include "DecreaseColorMC.hpp"
 #include "DecreaseColorHst.hpp"
 #include "DecreaseColorIfWithin256.hpp"
@@ -1116,130 +1116,62 @@ void ConvOne::aptRect() {
     }
 }
 
-/// パターンディザを施す.
+/// パターンディザ・誤差拡散を施す.
 void ConvOne::patternDither() {
-    if ((opts_.ditBpp || opts_.ditTyp) && pixBpp_ == 32) {    // ディザを施す.
-        int ditBpp = opts_.ditBpp;
-        if (ditBpp <= 0) {              // デフォルトの色のビット数を出力に合わせて選ぶ.
-            if (mono_) {
-                ditBpp  = (dstBpp_ <=  8) ? dstBpp_*3
-                        : (dstBpp_ <  12) ? 3*3
-                        : (dstBpp_ <= 12) ? 4*3
-                        : (dstBpp_ <= 15) ? 5*3
-                        : (dstBpp_ <= 18) ? 6*3
-                        :                   8*3;
-            } else if (opts_.isFixedClut()) {  // jp or win 固定clutの場合.
-                ditBpp  = (dstBpp_ <   3) ? 15
-                        : (dstBpp_ <=  6) ?  6
-                        : (dstBpp_ <=  8) ? 15
-                        : (dstBpp_ <=  9) ?  9
-                        : (dstBpp_ <= 12) ? 12
-                        : (dstBpp_ == 16) ? 16
-                        :                   15;
-            } else {
-                ditBpp  = (dstBpp_ <   3) ? 15
-                        : (dstBpp_ <=  9) ? dstBpp_
-                        : (dstBpp_ <= 12) ? 12
-                        : (dstBpp_ == 16) ? 16
-                        :                   15;
-            }
-        }
-        int dbpp = (8 < dstBpp_ && dstBpp_ < ditBpp) ? dstBpp_ : ditBpp;
-        if (opts_.ditTyp & 0xC000) {
-            errorDiffusion1b(dbpp);
-        } else {
-            if (varbose_) printf("->dit%d:0x%x", dbpp,opts_.ditTyp);
-            PaternDither    paternDither;
-            paternDither.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, dbpp, opts_.ditTyp | (opts_.ditAlpFlg << 8));
-        }
-    }
-}
+	if (pixBpp_ != 32)
+		return;
+    unsigned ditTyp  = opts_.ditTyp;
+    unsigned typeAndFlags = ditTyp;
 
-/// 誤差拡散.
-void ConvOne::errorDiffusion1b(int dpp) {
-    // RGBを何階調にするか.
-    static unsigned const toneSizeTbl[][3] = {
-        // r   g   b
-        {  2,  2,  2, },    // 0 :  3bit r1g1b1     8色.
-        {  3,  3,  3, },    // 1 :  4bit           27色.
-        {  4,  4,  4, },    // 2 :  6bit r2g2b2    64色.
-        {  5,  5,  5, },    // 3 :  7bit          125色.
-        {  6,  6,  6, },    // 4 :  8bit          216色. sp,(xterm)
-        {  8,  8,  4, },    // 5 :  8bit r3g3b2   256色.
-        {  8,  8,  8, },    // 6 :  9bit r3g3b3   512色.
-        { 16, 16, 16, },    // 7 : 12bit r4g4b4  4096色.
-        { 32, 32, 32, },    // 8 : 15bit r5g5b5 32768色.
-        { 32, 64, 32, },    // 9 : 16bit r5g6b5 65536色.
-        { 64, 64, 64, },    //10 : 18bit r6g6b6 262144色.
-        {  7,  9,  4, },    //11 :  8bit         252色. win clut
-        {  7,  7,  7, },    //12 :  9bit
-    };
-    bool noErrDif = (opts_.ditTyp & 0x8000) == 0;
-//noErrDif = true;
-    uint32_t colNum = colNum_;
+    bool errDif = (ditTyp & 0x8000) != 0;
+ #if 0
+    if (errDif)
+        typeAndFlags |= PaternDither::F_ERRDIF;
+    if (ditTyp & 0x4000)
+        typeAndFlags |= PaternDither::F_HALF_ED;
+ #endif
+
+    switch (opts_.decreaseColorMode) {
+    case DCM_FIX_JP:        typeAndFlags |= PaternDither::F_COL_JP;    break;
+    case DCM_FIX_WIN:       typeAndFlags |= PaternDither::F_COL_WIN;   break;
+    case DCM_FIX_XTERM:     typeAndFlags |= PaternDither::F_COL_XTERM; break;
+    case DCM_FIX_G6R6B6C40: typeAndFlags |= PaternDither::F_COL_SP;    break;
+    default: break;
+    }
+
+    unsigned ditBpp  = opts_.ditBpp;
+	int      bpp     = dstBpp_;
+    int      colNum  = opts_.colNum;
+
+    if (ditBpp == 0 && ditTyp == 0 && typeAndFlags == 0 && (colNum == 0 || bpp >= 24))
+        return;
+
+    if (mono_ || opts_.mono)
+        typeAndFlags |= PaternDither::F_MONO;
+
     if (colNum == 0) {
-        colNum = 1 << dstBpp_;
+        colNum = 1 << bpp;
         if (colNum == 0)
             colNum = 0xffffffff;
     }
-    int ditType  = opts_.ditTyp & 3;
-    int toneType;
-    bool mono = mono_ || opts_.mono;
-    if (mono) {
-        mono_    = mono;
-        toneType = (dstBpp_ <=  1 || colNum <= 2) ? 0
-                 : (                 colNum <= 3) ? 1
-                 : (dstBpp_ <=  2 || colNum <= 4) ? 2
-                 : (                 colNum <= 5) ? 3
-                 : (                 colNum <= 6) ? 4
-                 : (                 colNum <= 7) ? 12
-                 : (dstBpp_ <=  3 || colNum <= 8) ? 6
-                 : (dstBpp_ <=  4) ? 7
-                 : (dstBpp_ <=  5) ? 8
-                 :                  10;
-        ditType |= 0x100;
-    } else {
-        toneType = (dstBpp_ <=  5 || colNum <= 32) ? 0
-                 : (dstBpp_ <=  6 || colNum <= 64) ? 2
-                 : (dstBpp_ <=  7 || colNum <= 128) ? 3
-                 : (dstBpp_ <=  8) ? 5
-                 : (dstBpp_ <= 11) ? 6
-                 : (dstBpp_ <= 12) ? 7
-                 : (dstBpp_ <= 15) ? 8
-                 :                   9;
-    }
-    if (toneType == 5) {
-        switch (opts_.decreaseColorMode) {
-        //case DCM_FIX_JP:      toneType = 5; break;
-        case DCM_FIX_WIN:       toneType =11; break;
-        case DCM_FIX_XTERM:     toneType = 4; ditType |= 0x10; break;
-        case DCM_FIX_G6R6B6C40: toneType = 4; break;
-        default: break;
-        }
-    }
-    if (noErrDif)
-        ditType |= 0x1000;
 
-    unsigned const* toneSize = toneSizeTbl[toneType];
-    ErrorDiffusion ed;
+    // ディザを施す.
+    if (varbose_) {
+        static char const* const nxn[] = { "", "dit2x2", "dit4x4", "dit8x8" };
+        unsigned ditb = (ditBpp < 3 || ditBpp > 24) ? 24 : ditBpp;
+        printf("->%s%s(%d: 0x%x)"
+            , nxn[ditTyp & 3]
+            , (errDif) ? "errDif" : ""
+            , colNum
+            , ditb
+        );
+    }
 
-	bool digColorMode = (opts_.decreaseColorMode == DCM_FIX_JP) || (opts_.decreaseColorMode == DCM_FIX_WIN);
-    if (digColorMode && dstBpp_ <= 4) {
-        unsigned colNum  = 1 << dstBpp_;
-        if (colNum > opts_.colNum && opts_.colNum)
-            colNum = opts_.colNum;
-        unsigned monoCol = opts_.monoCol;
-        if ((monoCol&0xffffff) == 0)
-            monoCol = 0xffffffff;
-		if (dstBpp_ <= 3) {
-		    ed.convDigital8( (UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, colNum, monoCol);
-		} else {
-		    ed.convDigital16((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, colNum, monoCol);
-		}
-    } else {
-	    ed.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, ditType, toneSize, NULL);
-	}
+    PaternDither    paternDither;
+    paternDither.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, bpp, colNum
+    				, ditBpp, typeAndFlags, opts_.monoCol);
 }
+
 
 /// 指定色とαをブレンドし、αを0 or 255 にする.
 void ConvOne::alphaBlendByColor() {
@@ -1284,7 +1216,7 @@ void ConvOne::decreaseColor() {
                     }
                     FixedClut256<>::getFixedClut256(clut_, 256, dstBpp_, md);
                     bool mono = mono_; // || opts_.mono;
-                    if (dstBpp_ == 3) {
+                    if (dstBpp_ <= 3) {
                         //colNum = 8;
                         FixedClut256<>::decreaseColorRGB111(p, (UINT32_T*)pix_, w_, h_, (md == 1), (decrType == 2));
                     } else if (dstBpp_ == 4) {
