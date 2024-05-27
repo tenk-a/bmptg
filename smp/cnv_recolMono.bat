@@ -137,12 +137,21 @@ call :CONV mono064-xdex2    -cg -b6 -xde:1
 call :CONV mono064-xdex4    -cg -b6 -xde:2
 call :CONV mono064-xdex8    -cg -b6 -xde:3
 
+call :CONV mono007xterm-xdpx8 -cg -b8 -cp8 -cn7 -xdp:3
+call :CONV mono007win-xdpx8   -cg -b8 -cp2 -cn7 -xdp:3
+
 call :CONV c1mono003jp4-xdpx8 -cg:0000ff -b4 -cp1 -cn3 -xdp:3
 call :CONV c2mono003jp4-xdpx8 -cg:ff0000 -b4 -cp1 -cn3 -xdp:3
 call :CONV c3mono003jp4-xdpx8 -cg:ff00ff -b4 -cp1 -cn3 -xdp:3
 call :CONV c4mono003jp4-xdpx8 -cg:00ff00 -b4 -cp1 -cn3 -xdp:3
 call :CONV c5mono003jp4-xdpx8 -cg:00ffff -b4 -cp1 -cn3 -xdp:3
 call :CONV c6mono003jp4-xdpx8 -cg:ffff00 -b4 -cp1 -cn3 -xdp:3
+
+call :CONV c4mono009win-xdhx8 -cg:00ff00 -b8 -cp2 -cn9 -xdp:3
+call :CONV c2mono007win-xdhx8 -cg:ff0000 -b8 -cp2 -cn7 -xdp:3
+call :CONV c6mono007win-xdhx8 -cg:ffff00 -b8 -cp2 -cn7 -xdp:3
+
+call :CONV cHmono007win-xdhx8 -cg:ffddaa -b8 -cp2 -cn7 -xdp:3
 
 goto END
 
