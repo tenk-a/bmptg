@@ -21,7 +21,6 @@ public:
 
 	enum {
 		F_ERRDIF	= 0x0010,   // Use ErrorDifusion.
-		F_HALF_ED   = 0x0020,   // Use ErrorDifusion (Half)
 		F_REV	    = 0x0040,   // Reverse G-plane dither pattern.
 		F_MONO  	= 0x0080,   // Monotone
 		F_COL_JP    = 0x0100,   // For JP-RETRO-PC GRB clut (4),8,16,256 (mono 2,3,4,8)
@@ -29,6 +28,7 @@ public:
 		F_COL_XTERM = 0x0400,   // For Xterm-256 clut
 		F_COL_SP    = 0x0800,   // Otameshi(G6R6B6C40)
 
+		F_HALF_VAL    = 0x08000,  // Use PatternDither and ErrorDifusion.
 		F_EX27TO16    = 0x10000,
 		F_OPT_EX1     = 0x20000,  // (with JP for jp16 mono tone 3,4)
 		F_RGB_2BIT_Y  = 0x40000,
@@ -85,9 +85,11 @@ public:
 				if ((typeAndFlags & F_RGB_2BIT_XY) == 0)
 					typeAndFlags |= F_RGB_2BIT_Y;
 			} else {
-				typeAndFlags |= ~F_RGB_2BIT_XY;
+				typeAndFlags &= ~F_RGB_2BIT_XY;
 			}
 		}
+		if ((typeAndFlags & 3) && (typeAndFlags & F_ERRDIF))
+			typeAndFlags |= F_HALF_VAL;
         unsigned const* toneSizes = getToneSize(bpp, colNum, typeAndFlags, ditBpp);
         ditBpp  = getDitBpp(ditBpp, bpp, typeAndFlags);
         if (typeAndFlags & F_MONO)
@@ -142,7 +144,7 @@ public:
                         gd /= 3;
                         bd /= 3;
 					}
-                    if (typeAndFlags & F_HALF_ED) {
+                    if (typeAndFlags & F_HALF_VAL) {
                         rd >>= 1;
                         gd >>= 1;
                         bd >>= 1;
@@ -240,7 +242,7 @@ public:
         diff_t* difBuf = difBuf_;
         if (difBuf)
             memset(difBuf, 0, 4 * w * 3 * sizeof(diff_t));
-        bool halfED = (typeAndFlags & F_HALF_ED);
+        bool half = (typeAndFlags & F_HALF_VAL);
         int  add = 1;
         for (unsigned y = 0; y < h; ++y) {
             unsigned dy = y & 3;
@@ -248,7 +250,7 @@ public:
                 int gd = 0;
                 if (difBuf) {
                     gd = int(difBuf[(dy * w + x) * 3 + G] >> 4);
-                    if (halfED)
+                    if (half)
                         gd >>= 1;
                 }
                 unsigned c = src[y*w+x];
@@ -399,8 +401,6 @@ private:
 
 private:
     /// パターンテーブルの作成.
-    /// typ  : 0=ディザ無し 1=2x2  2=4x4  3=8x8
-    /// mode : ptnディザ値の計算 0=標準 1:正のみ 2:ハーフ 3:ハーフ加算のみ.
     void makePtnDitherTable(
     		  unsigned char it[256],
     		  unsigned char dt[8][8][256],
@@ -443,8 +443,8 @@ private:
             },
         };
 
-        unsigned         typ = typeAndFlags & 3;
-
+        unsigned        typ    = typeAndFlags & 3;
+        unsigned        subIdx = 0;
 		// xterm256 clut 向け補正.
 		bool xterm256 = false;
 		bool win256   = false;
@@ -452,11 +452,19 @@ private:
         //    xterm256 = win256 = 0;
 		if (typeAndFlags & F_COL_XTERM) {
 			xterm256 = true;
-			toneNum  = 7;
+            if (toneNum == 3)
+                subIdx = 2;
+            else if (toneNum == 4)
+                subIdx = 1;
+			else
+                toneNum  = 7;
         } else if (typeAndFlags & F_COL_WIN) {
 			if (toneNum > 3) {
 				win256  = true;
-            	toneNum = (no == G) ? 9 : (no == R) ? 7 : 4;
+                if ((no ==G && toneNum == 4) || (no == R && toneNum == 4))
+                    subIdx = 1;
+                else
+                    toneNum = (no == G) ? 9 : (no == R) ? 7 : 4;
 			}
         }
 
@@ -468,17 +476,28 @@ private:
 			unsigned last = (i+1) * 256 / toneNum;
 			unsigned cc;
             if (xterm256) {
-                static unsigned char const tone[7] = {
-					0x00,0x00,0x5f,0x87,0xaf,0xd7,0xff,
+                static unsigned char const tone[3][7] = {
+                    { 0x00,0x00,0x5f,0x87,0xaf,0xd7,0xff }, // 7
+                    { 0x00,0x5f,0xaf,0xff }, // 4
+                    { 0x00,0x87,0xff }, // 3
 				};
-                cc = tone[i];
+                cc = tone[subIdx][i];
             } else if (win256) {
-                static unsigned char const tone[3][9] = {
-					{ 0x00, 0x2a, 0x55, 0x7f, 0xaa, 0xd4, 0xff, },				// 7
-					{ 0x00, 0x1f, 0x3f, 0x5f, 0x7f, 0x9f, 0xbf, 0xdf, 0xff, },	// 9
-					{ 0x00, 0x55, 0xAA, 0xFF, },								// 4
-				};
-                cc = tone[no][i];
+                if (subIdx == 1) {
+                    static unsigned char const tone[3][4] = {
+					    { 0x00, 0x55, 0xaa, 0xff, },
+					    { 0x00, 0x5f, 0x9f, 0xff, },
+					    { 0x00, 0x55, 0xAA, 0xFF, },
+				    };
+                    cc = tone[no][i];
+                } else {
+                    static unsigned char const tone[3][9] = {
+					    { 0x00, 0x2a, 0x55, 0x7f, 0xaa, 0xd4, 0xff, },				// 7
+					    { 0x00, 0x1f, 0x3f, 0x5f, 0x7f, 0x9f, 0xbf, 0xdf, 0xff, },	// 9
+					    { 0x00, 0x55, 0xAA, 0xFF, },								// 4
+				    };
+                    cc = tone[no][i];
+                }
             } else {
                 cc = i * 255 / toneNumM1;
             }
@@ -507,6 +526,7 @@ private:
         }
 
 		bool	revf = (typeAndFlags & F_REV) != 0;
+		bool	half = (typeAndFlags & F_HALF_VAL) != 0;
 
         // パターンディザを反映したテーブルの作成.
         const signed char (*pPtn)[8] = dmPtn[typ];
@@ -514,6 +534,8 @@ private:
             for (int x  = 0; x < 8; x++) {
                 int yy  = (revf == 0) ? y : 7 - y;
                 int dm  = pPtn[yy][x];
+				if (half)
+					dm >>= 1;
                 dm      = dm / int(toneNum); // dm >>= c_bit;
                 for (int i = 0; i < 256; i++) {
                     int c       = i+dm;

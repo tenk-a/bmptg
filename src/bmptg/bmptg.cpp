@@ -758,8 +758,8 @@ int Opts::scan(const char *a)
                     flag |= PaternDither::F_ERRDIF;
                     p++;
                 } else
-                if (*p == 'H' || *p == 'h') {   // -xdh 誤差拡散 ハーフ反映.
-                    flag |= PaternDither::F_HALF_ED;
+                if (*p == 'H' || *p == 'h') {   // -xdh 誤差拡散 (ハーフ指定廃止)
+                    flag |= PaternDither::F_ERRDIF;
                     p++;
                 }
                 if (*p == 'X' || *p == 'x') {
