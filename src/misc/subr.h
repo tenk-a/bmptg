@@ -32,6 +32,14 @@ extern "C" {
 #else
 #endif
 
+static inline int strStartsWith(char const* str, char const* prefix) {
+	return strncmp(str, prefix, strlen(prefix)) == 0;
+}
+
+static inline int strCaseStartsWith(char const* str, char const* prefix) {
+	return strncasecmp(str, prefix, strlen(prefix)) == 0;
+}
+
 /*--------------------------------------------------------------------------*/
 
 void *mallocE(size_t a);

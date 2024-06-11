@@ -68,15 +68,16 @@ int usage(void)
        "  -ib[N]        入力時(他の変換をする前)に、N(3～24) bit色に変換.\n"
        "                24 = R8G8B8    23 = R8G8B7   22 = R7G8B7\n"
        "                21 = R7G7B7    ...........    3 = R1G1B1\n"
-       "  -xd[N:T]      ディザでN(3～24)bit色に減色. (T:0-7)\n"
-       "                 N= 指定方法は -ib[N] に同じ\n"
-       "                 T=  0:ディザ無し\n"
+       "  -xd[N:T]      パターンディザでN(3～24)bit色に減色.\n"
+       "  -xde[N:T]     誤差拡散+パターンディザで減色.\n"
+       "                 N= 指定方法は -ib[N] に同じ(N=3～24)\n"
+       "                 T=  0:パターンディザ 無し\n"
        "                     1:パターンディザ 2x2\n"
        "                     2:パターンディザ 4x4\n"
        "                     3:パターンディザ 8x8\n"
        //x "                    +4: 誤差拡散する(実験:現状バグってる模様?)\n"
-       "                 +0x80:A,G と R,B とでディザマトリックスを対にする\n"
-       "                +0x100:αもディザする. 有効ビット数はGに同じ\n"
+       //"                 +0x80:A,G と R,B とでディザマトリックスを対にする\n"
+       //"                +0x100:αもディザする. 有効ビット数はGに同じ\n"
        "\n"
        "  -cq[ARGB]     ARGB を、BGRA,AGRB 等の順に並び換.\n"
        "  -t[N]         RGB値を N%% にして出力.\n"
@@ -107,14 +108,14 @@ int usage(void)
        "  -cpc[FILE]    clut内容をc用テキスト出力.\n"
        "  -cpf[FILE]    減色で用いる固定clut.\n"
        "  -cp[N]        固定clut設定or減色アルゴリズム指定.\n"
-       "                1:jp固定clut             2:winシステムclut.\n"
-       "                3:メディアンカット(yuv)  4:メディアンカット(rgb)\n"
-       "                5:頻度順\n"
-       "                Nの指定のない場合は-cp3\n"
+       "                1:jp    jp固定clut            2:win   winシステムclut.\n"
+       "                3:mcyuv メディアンカット(yuv) 4:mcrgb メディアンカット(rgb)\n"
+       "                5:hist  頻度順\n"
+       "                Nの指定のない場合は-cp3(-cp=mcyuv)\n"
        "                -cp3:M:L (-cp4も)\n"
        "                  M=0:中央値は単純に2で割ったもの. M=1:頻度を反映(デフォルト)\n"
        "                  L=1～4.0:Y,U,V,Aの選択で、Y値をL倍して行う(デフォルト1.2)\n"
-       "  -cn[N]        減色時に1<<bpp未満の色数にしたい場合に指定\n"
+       "  -cn[N]        色数. 減色時に1<<bpp未満の色数にしたい場合に指定\n"
        "\n"
        "  -ap           α付clutで出力. これか抜色指定(-ap)がないとα無clutになる\n"
        "  -ap[N]        N:減色時α数. N>=2は強制的に-cp3メディアンカット(yuv)になる\n"
@@ -214,6 +215,7 @@ private:
     static double   strExprD(const char *p, const char ** a_p, int* a_err);
     static int      strToI (const char* &p, int base) { return (int)strtol(p, (char**)&p, base); }
     static unsigned strToUI(const char* &p, int base) { return (unsigned)strtoul(p, (char**)&p, base); }
+	static bool     getOpt(char const*& str, char const* prefix);
 
     void            readClutBin(char const* name, int clutbpp);
 };
@@ -476,7 +478,24 @@ int Opts::scan(const char *a)
             } else {
                 o->fullColFlg      = 1;
                 //x o->dfltClutCg = (*p == 0) ? 1 : strToUI(p, 0);
-                o->decreaseColorMode = Dcm_t((*p == 0) ? 1 : strToUI(p,0));
+                if (isdigit(*p)) {
+	                o->decreaseColorMode = Dcm_t((*p == 0) ? 1 : strToUI(p,0));
+	            } else {
+					if (getOpt(p, "jp") || getOpt(p, "grb"))
+						o->decreaseColorMode = DCM_FIX_JP;
+					else if (getOpt(p, "win"))
+						o->decreaseColorMode = DCM_FIX_WIN;
+					else if (getOpt(p, "xterm"))
+						o->decreaseColorMode = DCM_FIX_XTERM;
+					else if (getOpt(p, "hist"))
+						o->decreaseColorMode = DCM_HIST;
+					else if (getOpt(p, "mcrgb"))
+						o->decreaseColorMode = DCM_MC_RGB;
+					else if (getOpt(p, "mcyuv"))
+						o->decreaseColorMode = DCM_MC_YUV;
+					else if (getOpt(p, "sp"))
+						o->decreaseColorMode = DCM_FIX_G6R6B6C40;
+				}
                 if (*p) {
                     o->decreaseColorParam[0] = strExprD(p+1,&p,0);
                     if (*p) {
@@ -494,7 +513,7 @@ int Opts::scan(const char *a)
 
         case 'Q':   //-cq
             {
-                static const char *tbl[] = {
+                static char const* const tbl[] = {
                     "argb", "ragb", "agrb", "garb", "rgab", "grab",
                     "arbg", "rabg", "abrg", "barg", "rbag", "brag",
                     "agbr", "gabr", "abgr", "bagr", "gbar", "bgar",
@@ -1141,6 +1160,17 @@ int Opts::scan(const char *a)
     return 0;
 }
 
+
+bool Opts::getOpt(char const*& str, char const* prefix) {
+	char const* s = str;
+	if (*s == '=')
+		++s;
+	size_t prefixlen = strlen(prefix);
+	bool rc = strncasecmp(s, prefix, prefixlen) == 0;
+	if (rc)
+		str = s + prefixlen;
+	return rc;
+}
 
 
 double Opts::strExprD(const char *p, const char ** a_p, int* a_err)

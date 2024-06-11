@@ -1212,7 +1212,7 @@ void ConvOne::decreaseColor() {
                     --md;
                     if (varbose_) {
                         static char const tbl[] = "JWXVOP";
-                        printf("->DftlClt%c%d", tbl[md], dstBpp_);
+                        printf("->DfltClt%c%d", tbl[md], dstBpp_);
                     }
                     FixedClut256<>::getFixedClut256(clut_, 256, dstBpp_, md);
                     bool mono = mono_; // || opts_.mono;
