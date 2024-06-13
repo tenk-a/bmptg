@@ -725,7 +725,7 @@ static BOOL ExArgv_loadConfigFile(char_t const* exeName, ExArgv_Vector* pVec)
  #else
     char_t*       base   = ExArgv_fnameBase(exeName);
     size_t        baselen= STR_LEN(base);
-    size_t        nameCap= exelen + extlen + 8;
+    size_t        nameCap= baselen + extlen + 8;
     char_t*       name   = EXARGV_ALLOC(char_t, nameCap);
     if (!name)
         return 0;
