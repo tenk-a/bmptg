@@ -409,7 +409,7 @@ private:
     		  unsigned 		c_bit,
     		  unsigned 		typeAndFlags)
     {
-        static const signed char dmPtn[4][8][8] = {
+        static signed char const dmPtn[4][8][8] = {
             //パターンディザ無し.
             {
                 {0}
