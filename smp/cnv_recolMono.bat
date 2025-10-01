@@ -1,4 +1,4 @@
-if "%BmpTgExe%"=="" set BmpTgExe=..\bld\Release\bmptg.exe
+if "%BmpTgExe%"=="" set BmpTgExe=..\bin\exe64\bmptg.exe
 set SRCDIR=src_img
 set DSTDIR=dst_recolMono
 set CMN_OPTS=:bmp -s%SRCDIR% -if

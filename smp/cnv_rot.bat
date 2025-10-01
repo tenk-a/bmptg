@@ -1,5 +1,5 @@
-rem %1 ÇÕ -xrc or -xrb ÇëzíË
-if "%BmpTgExe%"=="" set BmpTgExe=..\bld\Release\bmptg.exe
+rem %1 „ÅØ -xrc or -xrb „ÇíÊÉ≥ÂÆö...
+if "%BmpTgExe%"=="" set BmpTgExe=..\bin\exe64\bmptg.exe
 set SRCDIR=src_img
 set DSTDIR=dst_rot%1
 set CMN_OPTS=:png -s%SRCDIR% %1 -if

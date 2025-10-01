@@ -1,4 +1,4 @@
-if "%BmpTgExe%"=="" set BmpTgExe=..\bld\Release\bmptg.exe
+if "%BmpTgExe%"=="" set BmpTgExe=..\bin\exe64\bmptg.exe
 set SRCDIR=src_paint
 set DSTDIR=dst_paint
 set CMN_OPTS=:png -s%SRCDIR% -if

@@ -1,14 +1,14 @@
-src_???(src_img, src_paint��)�t�H���_�� jpg,png �摜���ق肱��ŁA�K���ɕϊ����������邽�߂̃t�H���_
+src_???(src_img, src_paint等)フォルダに jpg,png 画像をほりこんで、適当に変換を試し見るためのフォルダ
 
-�ϊ����摜�� src_??? �ɓK���ɓ����
-  src_img	��ʗp
-  src_paint	�S���y�C���g�p
+変換元画像を src_??? に適当に入れる
+  src_img       一般用
+  src_paint     ４隅ペイント用
 
-�\�� visual studio �� x64 release �ŃR���p�C�������ꍇ��
-�R�}���h���C��(dos��)�ɂāA 
+予め visual studio で x64 release でコンパイルした場合は
+コマンドライン(dos窓)にて、
   set1st.bat r64
-�����s�A���̂��� cnv_????.bat �����s���ĉ摜�ϊ�.
+を実行、そのあと cnv_????.bat を実行して画像変換.
 
-bmptg/mk_????.bat �ŃR���p�C���������̂̏ꍇ��
+bmptg/mk_????.bat でコンパイルしたものの場合は
  set1st.bat
-�����s��A���l��.
+を実行後、同様に.
