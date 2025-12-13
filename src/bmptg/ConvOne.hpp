@@ -91,9 +91,10 @@ public:
     int         monoToAlp;
     double      monoToAlp_rate;
     int         monoToAlp_ofs;
-    unsigned    monoCol;			// デジタル8色のモノラル化用.
+    unsigned    monoCol;            // デジタル8色のモノラル化用.
     unsigned    colMul;
     int         colChSquare;
+    int         colAdd[4];
     double      pixScale[4];
     int         pixScaleType;
     int         colrot;
@@ -102,8 +103,8 @@ public:
     int         lvlY, lvlUV;
     int         quality;
     int         quality_grey;
-    int         rszN;       //リサイズ回数.
-    int         rszK[2];    //拡縮時に用いる係数 1..
+    int         rszN;           //リサイズ回数.
+    int         rszK[2];        //拡縮時に用いる係数 1..
     double      rszXpar[2];
     double      rszYpar[2];
     int         rszXsz[2];
@@ -190,6 +191,7 @@ private:
     void rotR90(int type);
     void rotateImage();
     void toMono();
+    void addCol();
     void mulCol();
     void colChSquare();
     void changeTone();

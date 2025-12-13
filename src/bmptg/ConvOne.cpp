@@ -165,6 +165,7 @@ int ConvOne::main() {
     toMono();                           // モノクロ化.
     alphaBlendByColor();                // 指定色とαをブレンドし、αを0 or 255 にする.
 
+    addCol();                           // ARGBに値を足す.
     mulCol();                           // 各ピクセルに色を乗ずる.
     colChSquare();                      // ARGB各々を二乗する.
     changeTone();                       // 抜き色以外の色のトーンを opts_.tone％に変換.
@@ -792,6 +793,15 @@ void ConvOne::toMono() {
 }
 
 
+/// 各ピクセルARGBにオフセットを足す.
+void ConvOne::addCol() {
+    if (opts_.colAdd[0] || opts_.colAdd[1] || opts_.colAdd[2] || opts_.colAdd[3]) {
+        if (varbose_) printf("->colAdd[%d,%d,%d,%d]", opts_.colAdd[0], opts_.colAdd[1], opts_.colAdd[2], opts_.colAdd[3]);
+        if (pixBpp_ == 8) pix32_colAdd(clut_, 1, 256, opts_.colAdd);
+        else              pix32_colAdd((UINT32_T*)pix_, w_, h_, opts_.colAdd);
+    }
+}
+
 /// 各ピクセルに色を乗ずる.
 void ConvOne::mulCol() {
     if (opts_.colMul) {     // 各ピクセルに色を乗ずる.
@@ -1118,8 +1128,8 @@ void ConvOne::aptRect() {
 
 /// パターンディザ・誤差拡散を施す.
 void ConvOne::patternDither() {
-	if (pixBpp_ != 32)
-		return;
+    if (pixBpp_ != 32)
+        return;
     unsigned ditTyp  = opts_.ditTyp;
     unsigned typeAndFlags = ditTyp;
 
@@ -1140,7 +1150,7 @@ void ConvOne::patternDither() {
     }
 
     unsigned ditBpp  = opts_.ditBpp;
-	int      bpp     = dstBpp_;
+    int      bpp     = dstBpp_;
     int      colNum  = opts_.colNum;
 
     if (ditBpp == 0 && ditTyp == 0 && typeAndFlags == 0 && (colNum == 0 || bpp >= 24))
@@ -1169,7 +1179,7 @@ void ConvOne::patternDither() {
 
     PaternDither    paternDither;
     paternDither.conv((UINT32_T*)pix_, (UINT32_T*)pix_, w_, h_, bpp, colNum
-    				, ditBpp, typeAndFlags, opts_.monoCol);
+                    , ditBpp, typeAndFlags, opts_.monoCol);
 }
 
 

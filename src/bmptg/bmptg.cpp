@@ -2,7 +2,7 @@
  *  @file   bmptg.cpp
  *  @brief  画像コンバータ.
  *  @author Masashi Kitamura
- *  @date   2000-2024
+ *  @date   2000-2025
  *  @note
  */
 
@@ -37,7 +37,7 @@ using namespace std;
 int usage(void)
 {
     printf("https://github.com/tenk-a/bmptg/\n"
-           "usage> %s [-opts] file(s)   // v2.40 " __DATE__ "  by tenk*\n", g_appName);
+           "usage> %s [-opts] file(s)   // v2.41 " __DATE__ "  by tenk*\n", g_appName);
     printf(
        "  bmp tga jpg png 等画像を相互に変換.\n"
        "  α値は有効で00:透明～0xFF:不透明. α無画は0xFFとして抜色はα=0として処理.\n"
@@ -86,6 +86,7 @@ int usage(void)
        "  -cem          R,G,B,A値各々を二乗する.\n"
        "  -cs[A:R:G:B]  実数指定でrgbピクセルの各値を何倍するかを指定\n"
        "  -ct[A:Y:U:V]  実数指定でyuvピクセルの各値を何倍するかを指定\n"
+       "  -cd[A:R:G:B]  各ピクセルARGBに -255～255 の値を足す&clamp.\n"
        "  -cg           モノクロ化\n"
        "  -cgc[R|G|B|A] R,G,B,A いずれかのチャンネルを用いてモノクロ化.\n"
        "  -cf[C]        抜色を C (省略時000000)に.\n"
@@ -101,7 +102,7 @@ int usage(void)
        "  -ag[RATE:OFS] ピクセルRGBよりモノクロ値を求めそれをαとする.\n"
        "                 RATE,OFSがあれば色の変換 (r,g,b)*RATE+OFS を先に行う\n"
        "  -ad           抜き色と非抜き色の堺のαをぼかす簡易処理(仮BU作成向)\n"
-       "                (v2.38以前は -ca -xca で機能だったのを分離)\n"
+       //"              (v2.38以前は -ca -xca で機能だったのを分離)\n"
        "  -az           α=0ならRGBも0にする\n"
        "\n"
        " [clut関係]\n"
@@ -203,7 +204,7 @@ public:
     char const*     dstExt;
     int             updateFlg;
     int             dispInfo;
-	bool			dstRec;
+    bool            dstRec;
 
 public:
     Opts(ConvOne_Opts& coo);
@@ -215,7 +216,7 @@ private:
     static double   strExprD(const char *p, const char ** a_p, int* a_err);
     static int      strToI (const char* &p, int base) { return (int)strtol(p, (char**)&p, base); }
     static unsigned strToUI(const char* &p, int base) { return (unsigned)strtoul(p, (char**)&p, base); }
-	static bool     getOpt(char const*& str, char const* prefix);
+    static bool     getOpt(char const*& str, char const* prefix);
 
     void            readClutBin(char const* name, int clutbpp);
 };
@@ -394,10 +395,10 @@ int Opts::scan(const char *a)
             }
             if (*p != '\0') {
                 ++p;
-				o->monoCol = strToUI(p, 16);
-	            if ((o->monoCol & 0xFF000000) == 0)
-	                o->monoCol |= 0xFF000000;
-			}
+                o->monoCol = strToUI(p, 16);
+                if ((o->monoCol & 0xFF000000) == 0)
+                    o->monoCol |= 0xFF000000;
+            }
             break;
 
         case 'M':   //-cm
@@ -417,6 +418,20 @@ int Opts::scan(const char *a)
                     o->pixScale[2] = strExprD(p+1,&p,0);
                     if (*p) {
                         o->pixScale[3] = strExprD(p+1,&p,0);
+                    }
+                }
+            }
+            break;
+
+        case 'D':   //-cd
+            o->colAdd[0]  = o->colAdd[1] = o->colAdd[2] = o->colAdd[3] = 0;
+            o->colAdd[0]  = clamp_i((int)strtol(p,(char**)&p,0), -255, 255);
+            if (*p) {
+                o->colAdd[1] = clamp_i((int)strtol(p+1,(char**)&p,0), -255, 255);
+                if (*p) {
+                    o->colAdd[2] = clamp_i((int)strtol(p+1,(char**)&p,0), -255, 255);
+                    if (*p) {
+                        o->colAdd[3] = clamp_i((int)strtol(p+1,(char**)&p,0), -255, 255);
                     }
                 }
             }
@@ -479,23 +494,23 @@ int Opts::scan(const char *a)
                 o->fullColFlg      = 1;
                 //x o->dfltClutCg = (*p == 0) ? 1 : strToUI(p, 0);
                 if (isdigit(*p)) {
-	                o->decreaseColorMode = Dcm_t((*p == 0) ? 1 : strToUI(p,0));
-	            } else {
-					if (getOpt(p, "jp") || getOpt(p, "grb"))
-						o->decreaseColorMode = DCM_FIX_JP;
-					else if (getOpt(p, "win"))
-						o->decreaseColorMode = DCM_FIX_WIN;
-					else if (getOpt(p, "xterm"))
-						o->decreaseColorMode = DCM_FIX_XTERM;
-					else if (getOpt(p, "hist"))
-						o->decreaseColorMode = DCM_HIST;
-					else if (getOpt(p, "mcrgb"))
-						o->decreaseColorMode = DCM_MC_RGB;
-					else if (getOpt(p, "mcyuv"))
-						o->decreaseColorMode = DCM_MC_YUV;
-					else if (getOpt(p, "sp"))
-						o->decreaseColorMode = DCM_FIX_G6R6B6C40;
-				}
+                    o->decreaseColorMode = Dcm_t((*p == 0) ? 1 : strToUI(p,0));
+                } else {
+                    if (getOpt(p, "jp") || getOpt(p, "grb"))
+                        o->decreaseColorMode = DCM_FIX_JP;
+                    else if (getOpt(p, "win"))
+                        o->decreaseColorMode = DCM_FIX_WIN;
+                    else if (getOpt(p, "xterm"))
+                        o->decreaseColorMode = DCM_FIX_XTERM;
+                    else if (getOpt(p, "hist"))
+                        o->decreaseColorMode = DCM_HIST;
+                    else if (getOpt(p, "mcrgb"))
+                        o->decreaseColorMode = DCM_MC_RGB;
+                    else if (getOpt(p, "mcyuv"))
+                        o->decreaseColorMode = DCM_MC_YUV;
+                    else if (getOpt(p, "sp"))
+                        o->decreaseColorMode = DCM_FIX_G6R6B6C40;
+                }
                 if (*p) {
                     o->decreaseColorParam[0] = strExprD(p+1,&p,0);
                     if (*p) {
@@ -726,7 +741,7 @@ int Opts::scan(const char *a)
         break;
 
     case 'D': // -d
-    	this->dstRec = (b == 'D');
+        this->dstRec = (b == 'D');
         this->dstDir = strdupE(p);
         fname_delLastDirSep(this->dstDir);
         fname_backslashToSlash(this->dstDir);
@@ -769,7 +784,7 @@ int Opts::scan(const char *a)
         case 'D':   //-xd
             {
                 o->fullColFlg   = 1;
-                unsigned flag	= 0;
+                unsigned flag   = 0;
                 if (*p == 'P' || *p == 'p' || *p == 'O' || *p == 'o') {   // -xdp
                     p++;
                 } else
@@ -782,13 +797,13 @@ int Opts::scan(const char *a)
                     p++;
                 }
                 if (*p == 'X' || *p == 'x') {
-					flag |= PaternDither::F_RGB_2BIT_X;
+                    flag |= PaternDither::F_RGB_2BIT_X;
                     p++;
-				}
+                }
                 if (*p == 'Y' || *p == 'y') {
-					flag |= PaternDither::F_RGB_2BIT_Y;
+                    flag |= PaternDither::F_RGB_2BIT_Y;
                     p++;
-				}
+                }
                 if (*p == 'A' || *p == 'a') {   // -xda
                     o->ditAlpFlg = 1;
                     p++;
@@ -1162,14 +1177,14 @@ int Opts::scan(const char *a)
 
 
 bool Opts::getOpt(char const*& str, char const* prefix) {
-	char const* s = str;
-	if (*s == '=')
-		++s;
-	size_t prefixlen = strlen(prefix);
-	bool rc = strncasecmp(s, prefix, prefixlen) == 0;
-	if (rc)
-		str = s + prefixlen;
-	return rc;
+    char const* s = str;
+    if (*s == '=')
+        ++s;
+    size_t prefixlen = strlen(prefix);
+    bool rc = strncasecmp(s, prefix, prefixlen) == 0;
+    if (rc)
+        str = s + prefixlen;
+    return rc;
 }
 
 
@@ -1219,111 +1234,111 @@ void Opts::readClutBin(char const* fname, int clutbpp)
 /* ------------------------------------------------------------------------ */
 
 class App {
-	ConvOne convOne_;
-	Opts    opts_;
-	char   	nameBuf_[ FIL_NMSZ  ];
-	char   	tempBuf_[ FIL_NMSZ  ];
+    ConvOne convOne_;
+    Opts    opts_;
+    char    nameBuf_[ FIL_NMSZ  ];
+    char    tempBuf_[ FIL_NMSZ  ];
 
-	enum { Ok = 0, Er = 1 };
+    enum { Ok = 0, Er = 1 };
 public:
-	App() : convOne_(), opts_(convOne_.opts()) {
+    App() : convOne_(), opts_(convOne_.opts()) {
         memset(nameBuf_, 0, sizeof nameBuf_);
         memset(tempBuf_, 0, sizeof tempBuf_);
     }
 
-	int main(int argc, char *argv[]) {
+    int main(int argc, char *argv[]) {
         // アプリ名取得.
         g_appName = strdupE(fname_baseName(argv[0]));
-	    if (g_appName == NULL)
-	    	return Er;
+        if (g_appName == NULL)
+            return Er;
      #if 0 //defined(_WIN32)
-		if (g_appName)
-	    	fname_strLwr(g_appName);
-	 #endif
+        if (g_appName)
+            fname_strLwr(g_appName);
+     #endif
 
         // コマンド引数調整(レスポンスファイル展開).
         if (ExArgv_convEx(&argc, &argv, 0) == 0)
-	    	return Er;
+            return Er;
 
         if (argc < 2)
-	        return usage();
+            return usage();
 
-		size_t	n = 0;
-		bool 	optCk = true;
-	    // 引数解析.
-	    for (int i = 1; i < argc; i++) {
-	        char* p = argv[i];
-	        if (optCk && *p == '-') {
-				if (*p == '-' && p[1] == '-' && p[2] == 0) {
-					optCk = false;
-					continue;
-				}
-	            opts_.scan(p);
-	        } else if (*p == ':') {
-	            opts_.scan(p);
-	        } else {
-				++n;
-			}
-	    }
-	    if (n == 0) {
-	        err_abortMsg("ファイル名を指定してください\n");
-			return Er;
-	    }
+        size_t  n = 0;
+        bool    optCk = true;
+        // 引数解析.
+        for (int i = 1; i < argc; i++) {
+            char* p = argv[i];
+            if (optCk && *p == '-') {
+                if (*p == '-' && p[1] == '-' && p[2] == 0) {
+                    optCk = false;
+                    continue;
+                }
+                opts_.scan(p);
+            } else if (*p == ':') {
+                opts_.scan(p);
+            } else {
+                ++n;
+            }
+        }
+        if (n == 0) {
+            err_abortMsg("ファイル名を指定してください\n");
+            return Er;
+        }
 
-	    if (opts_.convOne_opts->mapMode >= 2) {  // 合体mapファイルの拡張子を設定する.
-	        if (opts_.convOne_opts->exDstExt == NULL)
-	            opts_.convOne_opts->exDstExt = "mp";
-	        opts_.dstExt = opts_.convOne_opts->exDstExt;
-	    }
+        if (opts_.convOne_opts->mapMode >= 2) {  // 合体mapファイルの拡張子を設定する.
+            if (opts_.convOne_opts->exDstExt == NULL)
+                opts_.convOne_opts->exDstExt = "mp";
+            opts_.dstExt = opts_.convOne_opts->exDstExt;
+        }
 
-		// -s 指定がある場合は、相対パスにソースディレクトリを付加.
-		char const* srcDir = opts_.srcDir;
-		size_t srcDirLen = 0;
-		if (srcDir) {
-			srcDirLen = strlen(srcDir);
-			optCk = true;
-			for (size_t idx = 1; idx < argc; ++idx) {
-		        char* arg = argv[idx];
-		        if (optCk && *arg == '-') {
-					if (*arg == '-' && arg[1] == '-' && arg[2] == 0)
-						optCk = false;
-					continue;
-				} else if (*arg == ':') {
-					continue;
-				}
-				if (!fname_isAbsolutePath(arg)) {
-					snprintf(nameBuf_, FIL_NMSZ, "%s/%s", srcDir, arg);
-					free(arg);
-					argv[idx] = arg = strdupE(nameBuf_);
-					if (arg == NULL)
-						return Er;
-				}
-				if (*fname_getExt(arg) == 0 && opts_.srcExt) {
-					snprintf(nameBuf_, FIL_NMSZ, "%s.%s", arg, opts_.srcExt);
-					free(arg);
-					argv[idx] = arg = strdupE(nameBuf_);
-					if (arg == NULL)
-						return Er;
-				}
-			}
-		}
+        // -s 指定がある場合は、相対パスにソースディレクトリを付加.
+        char const* srcDir = opts_.srcDir;
+        size_t srcDirLen = 0;
+        if (srcDir) {
+            srcDirLen = strlen(srcDir);
+            optCk = true;
+            for (size_t idx = 1; idx < argc; ++idx) {
+                char* arg = argv[idx];
+                if (optCk && *arg == '-') {
+                    if (*arg == '-' && arg[1] == '-' && arg[2] == 0)
+                        optCk = false;
+                    continue;
+                } else if (*arg == ':') {
+                    continue;
+                }
+                if (!fname_isAbsolutePath(arg)) {
+                    snprintf(nameBuf_, FIL_NMSZ, "%s/%s", srcDir, arg);
+                    free(arg);
+                    argv[idx] = arg = strdupE(nameBuf_);
+                    if (arg == NULL)
+                        return Er;
+                }
+                if (*fname_getExt(arg) == 0 && opts_.srcExt) {
+                    snprintf(nameBuf_, FIL_NMSZ, "%s.%s", arg, opts_.srcExt);
+                    free(arg);
+                    argv[idx] = arg = strdupE(nameBuf_);
+                    if (arg == NULL)
+                        return Er;
+                }
+            }
+        }
 
         // ワイルドカード展開.
-	    if (ExArgv_convEx(&argc, &argv, 1) == 0)
-	    	return Er;
+        if (ExArgv_convEx(&argc, &argv, 1) == 0)
+            return Er;
 
         optCk = true;
-		for (size_t idx = 1; idx < argc; ++idx) {
-	        char* arg = argv[idx];
-	        if (optCk && *arg == '-') {
-				if (*arg == '-' && arg[1] == '-' && arg[2] == 0)
-					optCk = false;
-				continue;
-			} else if (*arg == ':') {
-				continue;
+        for (size_t idx = 1; idx < argc; ++idx) {
+            char* arg = argv[idx];
+            if (optCk && *arg == '-') {
+                if (*arg == '-' && arg[1] == '-' && arg[2] == 0)
+                    optCk = false;
+                continue;
+            } else if (*arg == ':') {
+                continue;
             }
 
-			char const* srcpath = arg;
+            char const* srcpath = arg;
             // 出力名を設定.
             if (opts_.oname) {  // -o 指定有.
                 char*   tgtname  = opts_.oname;
@@ -1331,72 +1346,72 @@ public:
                 if (opts_.dstDir && (tgtname[0] == '/' || tgtname[1] == ':'))   // 出力フォルダ指定があればそっち優先.
                     tgtname = basename;
                 if (strchr(basename, '.') == NULL && opts_.dstExt) {    // 拡張子がなければつける.
-					snprintf(tempBuf_, FIL_NMSZ, "%s.%s", tgtname, opts_.dstExt);
-					tgtname = tempBuf_;
+                    snprintf(tempBuf_, FIL_NMSZ, "%s.%s", tgtname, opts_.dstExt);
+                    tgtname = tempBuf_;
                 }
-				if (opts_.dstDir && opts_.dstDir[0])
-					snprintf(nameBuf_, FIL_NMSZ, "%s/%s", opts_.dstDir, tgtname);
-				else
-					snprintf(nameBuf_, FIL_NMSZ, "%s", tgtname);
+                if (opts_.dstDir && opts_.dstDir[0])
+                    snprintf(nameBuf_, FIL_NMSZ, "%s/%s", opts_.dstDir, tgtname);
+                else
+                    snprintf(nameBuf_, FIL_NMSZ, "%s", tgtname);
             } else {
-				char const* tgtname = srcpath;
-				if (srcDirLen && fname_startsWith(srcpath, srcDir)) {    // -sソースディレクトリファイル?
-					tgtname += srcDirLen + 1;
-				} else {
-					tgtname =  fname_baseName(srcpath);                 // 違えば入力のフォルダは無視.
-				}
-				char const* ext = opts_.dstExt;
-				size_t      extSize = strlen(ext) + 1;
-				if (opts_.dstDir && opts_.dstDir[0])    // 出力ディレクトリ有?
-					snprintf(nameBuf_, FIL_NMSZ - 1 - extSize, "%s/%s", opts_.dstDir, tgtname);
-				else
-					snprintf(nameBuf_, FIL_NMSZ - 1 - extSize, "%s", tgtname);
+                char const* tgtname = srcpath;
+                if (srcDirLen && fname_startsWith(srcpath, srcDir)) {    // -sソースディレクトリファイル?
+                    tgtname += srcDirLen + 1;
+                } else {
+                    tgtname =  fname_baseName(srcpath);                 // 違えば入力のフォルダは無視.
+                }
+                char const* ext = opts_.dstExt;
+                size_t      extSize = strlen(ext) + 1;
+                if (opts_.dstDir && opts_.dstDir[0])    // 出力ディレクトリ有?
+                    snprintf(nameBuf_, FIL_NMSZ - 1 - extSize, "%s/%s", opts_.dstDir, tgtname);
+                else
+                    snprintf(nameBuf_, FIL_NMSZ - 1 - extSize, "%s", tgtname);
                 // 拡張子を付け替える.
                 char* basename = fname_baseName(nameBuf_);
                 char* e = strchr(basename, '.');
-				if (e) {
-					memcpy(e+1, ext, extSize);
-				} else {
-					strcat(nameBuf_, ext);
-				}
+                if (e) {
+                    memcpy(e+1, ext, extSize);
+                } else {
+                    strcat(nameBuf_, ext);
+                }
             }
 
             //常に変換の指定か、onamBufの日付が古ければ変換を行う.
             if (opts_.updateFlg == 0 || fil_fdateCmp(nameBuf_, arg) < 0) {
-				char* onm = (opts_.dispInfo) ? NULL : nameBuf_;
+                char* onm = (opts_.dispInfo) ? NULL : nameBuf_;
                 // 実際の変換処理.
                 convOne_.run(srcpath, onm);
             }
 
             if (opts_.oname) // 出力ファイル名が指定されていた場合は１ファイルのみ.
                 break;
-		}
+        }
 
-	    return 0;
-	}
+        return 0;
+    }
 
 };
 
 #if !defined(EXARGV_USE_WCHAR)
 int main(int argc, char* argv[])
 {
-	scoped_console_output_utf8 sav_cp;
-	static App app;
+    scoped_console_output_utf8 sav_cp;
+    static App app;
     int rc = app.main(argc, argv);
     return rc;
 }
 #else
 int wmain(int argc, wchar_t* wargv[])
 {
-	scoped_console_output_utf8 sav_cp;
+    scoped_console_output_utf8 sav_cp;
 
-	int rc = 1;
+    int rc = 1;
     char** argv = ExArgv_wargvToUtf8(argc, wargv);
-	if (argv) {
-		static App app;
-    	rc = app.main(argc, argv);
+    if (argv) {
+        static App app;
+        rc = app.main(argc, argv);
     }
-	ExArgv_release(&argv);
+    ExArgv_release(&argv);
     return rc;
 }
 #endif

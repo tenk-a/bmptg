@@ -13,7 +13,6 @@
 #include "pix32.h"
 #include <stdlib.h>
 
-
 /** dstW*dstHな画像dst の(dstX,dstY) に srcW*srcHな画像srcの(srcX,srcY)の矩形rctW*rctH をコピーする.
  */
 void pix32_copyRect(void *dst, int dstW, int dstH, int dstX, int dstY, void *src, int srcW, int srcH, int rctX, int rctY, int rctW, int rctH)
@@ -273,8 +272,3 @@ void pix32_mergeSrc2Alp(unsigned *dst, const unsigned *src1, const unsigned *src
         }
     }
 }
-
-
-
-
-

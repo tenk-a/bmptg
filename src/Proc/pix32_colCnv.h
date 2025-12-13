@@ -403,6 +403,29 @@ inline void pix32_chARGBtoMono(unsigned *pix, unsigned w, unsigned h, int ch)
 }
 
 
+/** ピクセルの各ARGB値にオフセット値を足す&clamp.
+ */
+inline void pix32_colAdd(unsigned *pix, unsigned w, unsigned h, int const* offs)
+{
+    unsigned        *px = (unsigned*)pix;
+    unsigned        n;
+
+    assert(pix != 0 && w != 0 && h != 0);
+    for (n = 0; n < w * h; ++n) {
+        unsigned        d  = *px;
+        unsigned char   da = d >> 24;
+        unsigned char   dr = (unsigned char)(d >> 16);
+        unsigned char   dg = (unsigned char)(d >>  8);
+        unsigned char   db = (unsigned char)(d);
+        da = PIX32_CLAMP(da + offs[0], 0, 255);
+        dr = PIX32_CLAMP(dr + offs[1], 0, 255);
+        dg = PIX32_CLAMP(dg + offs[2], 0, 255);
+        db = PIX32_CLAMP(db + offs[3], 0, 255);
+        d  = (da << 24) | (dr << 16) | (dg << 8) | db;
+        *px++ = d;
+    }
+}
+
 
 /** 色colの各ARGB値を、ピクセルの各ARGBの各々に乗ずる.
  */
@@ -707,6 +730,12 @@ template<class IMG>
 void pix32_yuvScale(IMG& img, double ratio[4]) {
     assert(img.bpp() == 32);
     pix32_ayuvScale((unsigned*)img.image(), img.width(), img.height(), ratio);
+}
+
+template<class IMG>
+void pix32_colAdd(IMG& img, int const* ofs) {
+    assert(img.bpp() == 32);
+    pix32_colAdd((unsigned*)img.image(), img.width(), img.height(), ofs);
 }
 
 template<class IMG>

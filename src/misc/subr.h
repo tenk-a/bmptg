@@ -27,17 +27,21 @@ extern "C" {
 #define TOUPPER(c)      (((unsigned)(c) < 0x80) ? toupper(c) : (c))
 
 #if defined(_WIN32) || defined(_MSC_VER)
-#define strcasecmp		_stricmp
-#define strncasecmp		_strnicmp
+#define strcasecmp      _stricmp
+#define strncasecmp     _strnicmp
 #else
 #endif
 
 static inline int strStartsWith(char const* str, char const* prefix) {
-	return strncmp(str, prefix, strlen(prefix)) == 0;
+    return strncmp(str, prefix, strlen(prefix)) == 0;
 }
 
 static inline int strCaseStartsWith(char const* str, char const* prefix) {
-	return strncasecmp(str, prefix, strlen(prefix)) == 0;
+    return strncasecmp(str, prefix, strlen(prefix)) == 0;
+}
+
+static inline int clamp_i(int i, int mi, int ma) {
+    return (i < mi) ? mi : (i > ma) ? ma : i;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -53,7 +57,7 @@ int freeE(void *p);
 
 extern int  fname_sjisFlag;
 
-//int   fname_setSjisMode(int sw);			// ファイル名はMS全角(SJIS)を対応する(1)か否(0)か.
+//int   fname_setSjisMode(int sw);          // ファイル名はMS全角(SJIS)を対応する(1)か否(0)か.
 
 static inline int fname_isDirSep(char c) {
  #if defined(_WIN32) || defined(_MSC_VER)
@@ -89,8 +93,8 @@ int fil_fdateCmp(const char *tgt, const char *src);
 
 #define FIL_NMSZ        4096
 
-FILE*	fopenE(const char *name, const char *mod);
-void 	fcloseE(FILE *fp);
+FILE*   fopenE(const char *name, const char *mod);
+void    fcloseE(FILE *fp);
 size_t  fwriteE(const void *buf, size_t sz, size_t num, FILE *fp);
 size_t  freadE(void *buf, size_t sz, size_t num, FILE *fp);
 
@@ -122,15 +126,15 @@ extern int  dbgExLog_sw__;                              ///< [直接使用しち
 #ifdef __cplusplus
 #if defined(_WIN32)
 struct scoped_console_output_utf8 {
-	scoped_console_output_utf8() : cp_(GetConsoleOutputCP()) { SetConsoleOutputCP(65001); }
-	~scoped_console_output_utf8() { SetConsoleOutputCP(cp_); }
+    scoped_console_output_utf8() : cp_(GetConsoleOutputCP()) { SetConsoleOutputCP(65001); }
+    ~scoped_console_output_utf8() { SetConsoleOutputCP(cp_); }
 private:
-	int cp_;
+    int cp_;
 };
 #else
 #include <locale.h>
 struct scoped_console_output_utf8 {
-	scoped_console_output_utf8() { setlocale(LC_ALL, nullptr); }
+    scoped_console_output_utf8() { setlocale(LC_ALL, nullptr); }
 };
 #endif
 #endif
