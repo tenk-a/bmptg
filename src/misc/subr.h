@@ -67,7 +67,8 @@ static inline int fname_isDirSep(char c) {
  #endif
 }
 
-int fname_startsWith(char const* a, char const* prefix);
+int fname_startsWith(char const* fpath, char const* prefix);
+int fname_endsWith(char const* fpath, char const* suffix);
 int fname_isAbsolutePath(char const* s);
 
 char *fname_baseName(const char *adr);

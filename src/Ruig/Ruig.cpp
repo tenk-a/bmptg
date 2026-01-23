@@ -140,7 +140,7 @@ private:
 
     /// 1ファイル処理.
     void oneFile(const char* name) {
-        NamedImgPtr         imgPtr  = jpgLoad(name);
+        NamedImgPtr         imgPtr  = imgLoad(name);
         BppCnvImg const&    rImg    = imgPtr->img();
         if (vflag_)
             fprintf(stderr, "%s %d*%d %dbpp\n", imgPtr->nameptr(), imgPtr->width(), imgPtr->height(), rImg.bpp());
@@ -149,8 +149,8 @@ private:
         sortIniTime_ += PerfCnt_get() - tm;
     }
 
-    /// jpg画像ロード.
-    NamedImgPtr jpgLoad(const char* name) {
+    // 画像ファイル・ロード.
+    NamedImgPtr imgLoad(const char* name) {
         buf_.clear();
         PerfCnt_t tm  = PerfCnt_get();
         bool      rc  = file_load(name, buf_);
@@ -160,7 +160,12 @@ private:
             printf("%s : file load error\n", name);
             return NamedImgPtr();
         }
-        NamedImgPtr p = imgDecoder_.jpgDecode(name, &buf_[0], buf_.size(), thumbMode_);
+        NamedImgPtr p;
+        if (fname_endsWith(name, ".png")) {
+            p = imgDecoder_.pngDecode(name, &buf_[0], buf_.size());
+        } else {
+            p = imgDecoder_.jpgDecode(name, &buf_[0], buf_.size(), thumbMode_);
+        }
         jpgTime_ += PerfCnt_get() - tm2;
         return p;
     }
@@ -343,12 +348,14 @@ private:
     void printFactor1(uint32_t majorNo, uint32_t minorNo, uint32_t subNo, RuigFactor const& rFactor) {
         char    newName[2048];
         if (execType_) {
+            static char const* const s_exts[2]= { "jpg", "png" };
+            static char const* const s_odrs[] = { "", "copy", "move" };
             char const* prefix = prefix_.c_str();
             if (!prefix)
                 prefix = "";
-            static char const* s_odrs[] = { "", "copy", "move" };
-            _snprintf(newName, sizeof newName, "%s%05d%02d-%02d-%04dx%04d.jpg"
-                , prefix, majorNo, minorNo, subNo, rFactor.origWidth(), rFactor.origHeight());
+            bool   pngFlag = fname_endsWith(rFactor.name().c_str(), ".png");
+            _snprintf(newName, sizeof newName, "%s%05d%02d-%02d-%04dx%04d.%s"
+                , prefix, majorNo, minorNo, subNo, rFactor.origWidth(), rFactor.origHeight(), s_exts[pngFlag]);
             printf("%s\t\"%s\"\t\"%s\"\n", s_odrs[execType_], rFactor.name().c_str(), newName);
         } else {
             printf("\"%s\"\n", rFactor.name().c_str());
@@ -360,13 +367,15 @@ private:
         if (!execType_) {
             printf("\"%s\"\n", rFactor.name().c_str());
         } else {
+            static char const* const s_exts[2]= { "jpg", "png" };
+            static char const* const s_odrs[] = { "", "copy", "move" };
             char    newName[2048];
             char const* prefix = prefix_.c_str();
             if (!prefix)
                 prefix = "";
-            static char const* s_odrs[] = { "", "copy", "move" };
-            _snprintf(newName, sizeof newName, "%s%05d%02d-%02d-%04dx%04d.jpg"
-                , prefix, majorNo, minorNo, subNo, rFactor.origWidth(), rFactor.origHeight());
+            bool   pngFlag = fname_endsWith(rFactor.name().c_str(), ".png");
+            _snprintf(newName, sizeof newName, "%s%05d%02d-%02d-%04dx%04d.%s"
+                , prefix, majorNo, minorNo, subNo, rFactor.origWidth(), rFactor.origHeight(), s_exts[pngFlag]);
           #if 1
             printf("%s\t\"%s\"\t\"%s\"\n", s_odrs[execType_], rFactor.name().c_str(), newName);
           #else

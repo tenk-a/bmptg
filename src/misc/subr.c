@@ -29,7 +29,7 @@ extern "C" {
 #endif
 
 #if 1
-#define FNAM_ISKANJI(c) (0) 
+#define FNAM_ISKANJI(c) (0)
 #else
 #define FNAM_ISKANJI(c) (fname_sjisFlag && ISKANJI(c))
 #define ISKANJI(c)      (((unsigned char)(c) >= 0x81 && (unsigned char)(c) <= 0x9F) || ((unsigned char)(c) >= 0xE0 && (unsigned char)(c) <= 0xFC))
@@ -119,16 +119,29 @@ int   fname_setSjisMode(int sw)
 }
 #endif
 
-
-int fname_startsWith(char const* a, char const* prefix)
+#if 1
+int fname_startsWith(char const* fpath, char const* prefix)
 {
  #if defined(_WIN32) || defined(_MSC_VER)
-	return strncasecmp(a, prefix, strlen(prefix)) == 0;
+    return strncasecmp(fpath, prefix, strlen(prefix)) == 0;
  #else
-	return strncmp(a, prefix, strlen(prefix)) == 0;
+    return strncmp(fpath, prefix, strlen(prefix)) == 0;
  #endif
 }
 
+int fname_endsWith(char const* fpath, char const* suffix)
+{
+    size_t flen = strlen(fpath);
+    size_t slen = strlen(suffix);
+    if (flen <= slen)
+        return 0;
+ #if 1 //defined(_WIN32) || defined(_MSC_VER)
+    return strncasecmp(fpath+flen-slen, suffix, slen) == 0;
+ #else
+    return strncmp(fpath+flen-slen, suffix, slen) == 0;
+ #endif
+}
+#endif
 
 int fname_isAbsolutePath(char const* s)
 {
@@ -275,8 +288,8 @@ char *fname_backslashToSlash(char filePath[])
             *p = '/';
             ++p;
         } else {
-			++p;
-		}
+            ++p;
+        }
     }
     return filePath;
 }
@@ -315,16 +328,16 @@ int fil_fdateCmp(const char *tgt, const char *src)
         return 1;
     return 0;
  #else
-	struct stat tgt_st = {0};
-	struct stat src_st = {0};
-	int    tgt_rc = stat(tgt, &tgt_st);
-	int    src_rc = stat(src, &src_st);
-	if (tgt_rc < 0) {
-		return (src_rc < 0) ? 0 : -1;
-	} else if (src_rc < 0) {
-		return 1;
-	}
-	return tgt_st.st_mtime - src_st.st_mtime;
+    struct stat tgt_st = {0};
+    struct stat src_st = {0};
+    int    tgt_rc = stat(tgt, &tgt_st);
+    int    src_rc = stat(src, &src_st);
+    if (tgt_rc < 0) {
+        return (src_rc < 0) ? 0 : -1;
+    } else if (src_rc < 0) {
+        return 1;
+    }
+    return tgt_st.st_mtime - src_st.st_mtime;
  #endif
 }
 
@@ -334,7 +347,7 @@ int fil_fdateCmp(const char *tgt, const char *src)
 
 #if defined(_WIN32)
 #undef mkdir
-#define mkdir(a,b)	_mkdir(a)
+#define mkdir(a,b)  _mkdir(a)
 #endif
 
 /// ディレクトリ掘り機能付きのfopen
@@ -404,7 +417,7 @@ void *fil_loadMallocE(const char *name, size_t *rdszp)
  */
 void *fil_loadMalloc(const char* name, size_t* rdszp)
 {
-	return ExArgv_fileLoadMalloc(name, rdszp);
+    return ExArgv_fileLoadMalloc(name, rdszp);
 }
 
 

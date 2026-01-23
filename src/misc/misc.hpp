@@ -200,6 +200,32 @@ char *fname_addExt(CHR_T filename[], const char *ext)
 }
 
 
+
+template<typename CHR_T>
+int fname_startsWith(CHR_T const* fpath, char const* prefix)
+{
+ #if defined(_WIN32) || defined(_MSC_VER)
+    return _strnicmp(fpath, prefix, strlen(prefix)) == 0;
+ #else
+    return strncmp(fpath, prefix, strlen(prefix)) == 0;
+ #endif
+}
+
+template<typename CHR_T>
+int fname_endsWith(CHR_T const* fpath, char const* suffix)
+{
+    size_t flen = strlen(fpath);
+    size_t slen = strlen(suffix);
+    if (flen <= slen)
+        return 0;
+ #if 1 //defined(_WIN32) || defined(_MSC_VER)
+    return _strnicmp(fpath+flen-slen, suffix, slen) == 0;
+ #else
+    return strncmp(fpath+flen-slen, suffix, slen) == 0;
+ #endif
+}
+
+
 // ------------------------------------------------
 // 非常に手抜きなstd::string対応...
 
